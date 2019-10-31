@@ -90,6 +90,7 @@ function _xyzFromDotOnEdge (length, height, edge) {
   return [x0 + dx, y0 + dy, z0 + height]
 }
 
+export { rotate }
 export default class Plato {
   // Plato can envision 3D architectural spaces, with walls, floors, etc.
 
