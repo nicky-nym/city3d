@@ -22,7 +22,7 @@ const Facing = {
 // const LEFT = 90    // degrees
 // const RIGHT = 270  // degrees
 
-function opposite (facing) {
+function opposite (facing) { // eslint-disable-line no-unused-vars
   return 360 - facing
 }
 
