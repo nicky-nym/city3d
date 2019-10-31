@@ -9,6 +9,7 @@
 import { rgba, countTo, randomInt, nudge } from 'util.js'
 import { Place } from 'place.js'
 import { Facing } from 'facing.js'
+import { print } from 'output.js'
 
 let bpy // TODO!!
 let bmesh // TODO!!
@@ -38,11 +39,6 @@ const COLORS_OF_PLACES = {
   WALL: WHITE,
   ROOF: DARK_GRAY,
   DOOR: YELLOW
-}
-
-function print (str) {
-  // pass
-  return null
 }
 
 function rotate (xyz, facing) {
