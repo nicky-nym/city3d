@@ -6,8 +6,9 @@
 // This is free and unencumbered software released into the public domain.
 // For more information, please refer to <http://unlicense.org>
 
-import { Plato } from 'plato.js'
-import { Manhattan } from 'manhattan.js'
+import * as THREE from './three/three.module.js'
+import Plato from './plato.js'
+import Manhattan from './manhattan.js'
 // import { Merlon } from 'merlon.js'
 // import { Bikeway } from 'bikeway.js'
 // import { Cottage } from 'cottage.js'
@@ -46,6 +47,10 @@ function init () {
 
 function addBuildings () {
   const plato = new Plato()
+
+  // just trying to successfully load for now
+  return
+
   plato.deleteAllObjects()
 
   // plato.study('Cottage(s)', { x0: -100, y0: 100 })

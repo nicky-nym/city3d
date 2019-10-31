@@ -6,10 +6,10 @@
 // This is free and unencumbered software released into the public domain.
 // For more information, please refer to <http://unlicense.org>
 
-import { rgba, countTo, randomInt, nudge } from 'util.js'
-import { Place } from 'place.js'
-import { Facing } from 'facing.js'
-import { print } from 'output.js'
+import { rgba, countTo, randomInt, nudge } from './util.js'
+import Place from './place.js'
+import Facing from './facing.js'
+import { print } from './output.js'
 
 let bpy // TODO!!
 let bmesh // TODO!!
