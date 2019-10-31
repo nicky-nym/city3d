@@ -20,6 +20,8 @@ let camera
 let renderer
 let cube
 
+const MARTIAN_ORANGE = 0xDF4911
+
 function init () {
   const WIDTH = window.innerWidth
   const HEIGHT = window.innerHeight
@@ -36,7 +38,7 @@ function init () {
   scene.add(camera)
 
   const boxGeometry = new THREE.BoxGeometry(10, 10, 10)
-  const material = new THREE.MeshBasicMaterial({ color: 0xDF4911 })
+  const material = new THREE.MeshBasicMaterial({ color: MARTIAN_ORANGE })
   cube = new THREE.Mesh(boxGeometry, material)
   scene.add(cube)
   cube.rotation.set(0.4, 0.2, 0)
