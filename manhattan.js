@@ -6,7 +6,7 @@
 // This is free and unencumbered software released into the public domain.
 // For more information, please refer to <http://unlicense.org>
 
-import { upto, randomInt } from 'util.js'
+import { xyz, countTo, randomInt } from 'util.js'
 import { Place } from 'place.js'
 // import { Plato } from 'plato.js'
 
@@ -29,40 +29,40 @@ const HALF_AVENUE = 60 / 2
 
 // const STORY_HEIGHT = 10
 const BUILDING = [
-  [0, 0, 0],
-  [BUILDING_DX, 0, 0],
-  [BUILDING_DX, BUILDING_DY, 0],
-  [0, BUILDING_DY, 0]]
+  xyz(0, 0),
+  xyz(BUILDING_DX, 0),
+  xyz(BUILDING_DX, BUILDING_DY),
+  xyz(0, BUILDING_DY)]
 const INTERSECTION = [
-  [0, 0, 0],
-  [HALF_AVENUE, 0, 0],
-  [HALF_AVENUE, HALF_STREET, 0],
-  [0, HALF_STREET, 0]]
+  xyz(0, 0),
+  xyz(HALF_AVENUE, 0),
+  xyz(HALF_AVENUE, HALF_STREET),
+  xyz(0, HALF_STREET)]
 const STREET = [
-  [0, 0, 0],
-  [BLOCK_DX, 0, 0],
-  [BLOCK_DX, HALF_STREET, 0],
-  [0, HALF_STREET, 0]]
+  xyz(0, 0),
+  xyz(BLOCK_DX, 0),
+  xyz(BLOCK_DX, HALF_STREET),
+  xyz(0, HALF_STREET)]
 const AVENUE = [
-  [0, 0, 0],
-  [HALF_AVENUE, 0, 0],
-  [HALF_AVENUE, BLOCK_DY, 0],
-  [0, BLOCK_DY, 0]]
+  xyz(0, 0),
+  xyz(HALF_AVENUE, 0),
+  xyz(HALF_AVENUE, BLOCK_DY),
+  xyz(0, BLOCK_DY)]
 const SIDEWALK_FOR_STREET = [
-  [0, 0, 0],
-  [BLOCK_DX, 0, 0],
-  [BLOCK_DX, SIDEWALK_WIDTH_STREETS, 0],
-  [0, SIDEWALK_WIDTH_STREETS, 0]]
+  xyz(0, 0),
+  xyz(BLOCK_DX, 0),
+  xyz(BLOCK_DX, SIDEWALK_WIDTH_STREETS),
+  xyz(0, SIDEWALK_WIDTH_STREETS)]
 const SIDEWALK_FOR_AVENUE = [
-  [0, 0, 0],
-  [0, BLOCK_DY, 0],
-  [SIDEWALK_WIDTH_AVENUES, BLOCK_DY, 0],
-  [SIDEWALK_WIDTH_AVENUES, 0, 0]]
+  xyz(0, 0),
+  xyz(0, BLOCK_DY),
+  xyz(SIDEWALK_WIDTH_AVENUES, BLOCK_DY),
+  xyz(SIDEWALK_WIDTH_AVENUES, 0)]
 // const BLOCK = [
-//   [0, 0, 0],
-//   [BLOCK_DX, 0, 0],
-//   [BLOCK_DX, BLOCK_DY, 0],
-//   [0, BLOCK_DY, 0]]
+//   xyz(0, 0),
+//   xyz(BLOCK_DX, 0),
+//   xyz(BLOCK_DX, BLOCK_DY),
+//   xyz(0, BLOCK_DY)]
 const REPEAT_DX = BLOCK_DX + AVENUE_WIDTH + (SIDEWALK_WIDTH_AVENUES * 2)
 const REPEAT_DY = BLOCK_DY + STREET_WIDTH + (SIDEWALK_WIDTH_STREETS * 2)
 
@@ -93,7 +93,7 @@ export default class Manhattan {
     this.add_place(Place.PARCEL, { shape: BUILDING, x: x, y: y, z: 0 })
     const numFloors = randomInt(4, 60)
     const storyHeight = randomInt(9, 12)
-    for (const i of upto(numFloors)) {
+    for (const i of countTo(numFloors)) {
       const z = i * storyHeight
       this.addPlace(Place.ROOM, { shape: BUILDING, x: x, y: y, z: z, wall: storyHeight, openings: [] })
       this.addPlace(Place.ROOF, { shape: BUILDING, x: x, y: y, z: z + storyHeight })
@@ -104,8 +104,8 @@ export default class Manhattan {
     const x = row * REPEAT_DX
     const y = col * REPEAT_DY
 
-    for (const bx of upto(BUILDINGS_PER_AVENUE)) {
-      for (const by of upto(BUILDINGS_PER_STREET)) {
+    for (const bx of countTo(BUILDINGS_PER_AVENUE)) {
+      for (const by of countTo(BUILDINGS_PER_STREET)) {
         const x0 = HALF_AVENUE + SIDEWALK_WIDTH_AVENUES + x
         const y0 = HALF_STREET + SIDEWALK_WIDTH_STREETS + y
         const dx = bx * BUILDING_DX
@@ -133,8 +133,8 @@ export default class Manhattan {
   }
 
   addBlocks (numRows = 2, numCols = 2) {
-    for (const row of upto(numRows)) {
-      for (const col of upto(numCols)) {
+    for (const row of countTo(numRows)) {
+      for (const col of countTo(numCols)) {
         this.addBlock(row, col)
       }
     }
