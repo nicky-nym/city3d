@@ -6,7 +6,6 @@
 // This is free and unencumbered software released into the public domain.
 // For more information, please refer to <http://unlicense.org>
 
-import * as THREE from './three/three.module.js'
 import Plato from './plato.js'
 import Manhattan from './manhattan.js'
 // import { Merlon } from 'merlon.js'
@@ -14,42 +13,9 @@ import Manhattan from './manhattan.js'
 // import { Cottage } from 'cottage.js'
 
 // declarations for the "standard" linter:
-/* global THREE, requestAnimationFrame */
-
-let scene
-let camera
-let renderer
-let cube
-
-const MARTIAN_ORANGE = 0xDF4911
-
-function init () {
-  const WIDTH = window.innerWidth
-  const HEIGHT = window.innerHeight
-
-  renderer = new THREE.WebGLRenderer({ antialias: true })
-  renderer.setSize(WIDTH, HEIGHT)
-  renderer.setClearColor(0xCCCCCC, 1)
-  document.body.appendChild(renderer.domElement)
-  window.addEventListener('resize', onWindowResize, false)
-
-  scene = new THREE.Scene()
-  camera = new THREE.PerspectiveCamera(70, WIDTH / HEIGHT)
-  camera.position.z = 50
-  scene.add(camera)
-
-  const boxGeometry = new THREE.BoxGeometry(10, 10, 10)
-  const material = new THREE.MeshBasicMaterial({ color: MARTIAN_ORANGE })
-  cube = new THREE.Mesh(boxGeometry, material)
-  scene.add(cube)
-  cube.rotation.set(0.4, 0.2, 0)
-}
 
 function addBuildings () {
   const plato = new Plato()
-
-  // just trying to successfully load for now
-  return
 
   plato.deleteAllObjects()
 
@@ -80,19 +46,4 @@ function addBuildings () {
   // plato.pontificate()
 }
 
-function onWindowResize () {
-  camera.aspect = window.innerWidth / window.innerHeight
-  camera.updateProjectionMatrix()
-  renderer.setSize(window.innerWidth, window.innerHeight)
-}
-
-function animate () {
-  requestAnimationFrame(animate)
-  cube.rotation.x += 0.005
-  cube.rotation.y += 0.01
-  renderer.render(scene, camera)
-}
-
-init()
 addBuildings()
-animate()

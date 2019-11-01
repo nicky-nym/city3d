@@ -9,10 +9,9 @@
 import { rgba, countTo, randomInt, nudge } from './util.js'
 import Place from './place.js'
 import Facing from './facing.js'
-import { print } from './output.js'
+import Output, { print } from './output.js'
 
 let bpy // TODO!!
-let bmesh // TODO!!
 
 const WHITE = rgba(1, 1, 1, 1) // opaque white
 const RED = rgba(0.8, 0, 0, 1) // opaque red
@@ -68,13 +67,16 @@ function rotate (xyz, facing) {
   throw new Error('bad compass facing in plato.rotate(): ' + facing.value.toString())
 }
 
-function _materialByPlace (place) {
-  let material = bpy.data.materials.get(place.name)
-  if (material === null) {
-    material = bpy.data.materials.new(place.name)
-    material.diffuse_color = COLORS_OF_PLACES[place]
+function _materialByPlace (place) { // eslint-disable-line no-unused-vars
+  const oldPythonCode = false
+  if (oldPythonCode) {
+    let material = bpy.data.materials.get(place.name)
+    if (material === null) {
+      material = bpy.data.materials.new(place.name)
+      material.diffuse_color = COLORS_OF_PLACES[place]
+    }
+    return material
   }
-  return material
 }
 
 function _xyzFromDotOnEdge (length, height, edge) {
@@ -102,6 +104,7 @@ export default class Plato {
     this._facing = Facing.NORTH
     this.hurry(hurry)
     this.study()
+    this._output = new Output()
   }
 
   hurry (hurry = false) {
@@ -126,56 +129,27 @@ export default class Plato {
   }
 
   deleteAllObjects () {
-    // Try to delete everything in the Blender scene.
-
-    if (bpy.context.active_object) {
-      let mode = bpy.context.active_object.mode
-      // print('mode: ' + mode)
-      if (mode === 'EDIT') {
-        bpy.ops.object.mode_set('OBJECT')
-        mode = bpy.context.active_object.mode
-        print('new mode: ' + mode)
-        // print('SELECT and delete FACE')
-        // bpy.ops.mesh.select_all(action='SELECT')
-        // bpy.ops.mesh.delete(type='FACE')
-      }
-      if (mode === 'OBJECT') {
-        bpy.ops.object.select_all('SELECT')
-        bpy.ops.object.delete(false)
-      }
-    } else {
-      print('mode: There is no active_object')
-    }
-    return this
+    this._output.deleteAllObjects()
   }
 
   _beginFace () {
-    this._bmesh = bmesh.new()
+    this._output.beginFace()
   }
 
   _endFace () {
-    return this._bmesh.faces.new(this._bmesh.verts)
-  }
-
-  _newBpyObjectForFace () {
-    this._bmesh.normal_update()
-    const myMesh = bpy.data.meshes.new('')
-    this._bmesh.to_mesh(myMesh)
-    this._bmesh.free()
-    return bpy.data.objects.new('', myMesh)
+    this._output.endFace()
   }
 
   _newVert (xyz) {
     xyz = rotate(xyz, this._facing)
     const dxyz = (this._x, this._y, this._z)
     xyz = nudge(xyz, { dxyz: dxyz })
-    this._bmesh.verts.new(xyz)
+    this._output.newVert(xyz)
   }
 
   add (place, { shape, openings = [], nuance = false, flip = false } = {}) {
     // Add a new mesh to the blender scene.
 
-    let face = null
     if (nuance && this._hurry) {
       return this
     }
@@ -185,7 +159,7 @@ export default class Plato {
       for (const xyz of shape) {
         this._newVert(xyz)
       }
-      face = this._endFace()
+      this._endFace()
     } else {
       const edge = (shape[0], shape[1])
       this._newVert(shape[0])
@@ -215,16 +189,13 @@ export default class Plato {
       for (const xyz of shape) {
         this._newVert(xyz)
       }
-      face = this._endFace()
+      this._endFace()
     }
 
-    const area = face.calc_area()
+    // TODO: fix me
+    const area = 0 // + face.calc_area()
     this._squareFeet[place] = area + this._squareFeet.get(place, 0)
 
-    const obj = this._newBpyObjectForFace()
-    obj.data.materials.append(_materialByPlace(place))
-    const scene = bpy.context.scene
-    scene.collection.objects.link(obj)
     return this
   }
 
@@ -265,31 +236,34 @@ export default class Plato {
   pontificate () {
     // Print a report of square footage of rooms, walkways, etc.
 
-    print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
-    print('')
-    print(this._topic.toString() + ' floor area')
-    print('')
-    for (const roleName of this._squareFeet.keys()) {
-      const area = this._squareFeet[roleName]
-      print('  {}: {:,.0f} square feet'.format(roleName.name, area))
-    }
-
-    const floor = this._squareFeet.get(Place.ROOM, 0)
-    const parcel = this._squareFeet.get(Place.PARCEL, 10)
-    const street = this._squareFeet.get(Place.STREET, 0)
-    if (parcel) {
-      const parcelFar = floor / parcel
-      const urbanFar = floor / (parcel + street)
+    const codeComplete = false
+    if (codeComplete) {
+      print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
       print('')
-      print('  Parcel FAR:   {:,.2f} floor area ratio'.format(parcelFar))
-      print('  Citywide FAR: {:,.2f} floor area ratio'.format(urbanFar))
-    }
+      print(this._topic.toString() + ' floor area')
+      print('')
+      for (const roleName of this._squareFeet.keys()) {
+        const area = this._squareFeet[roleName]
+        print('  {}: {:,.0f} square feet'.format(roleName.name, area))
+      }
 
-    const proximity = 0
-    const megastokes = 0
-    print('  Proximity: {:,.2f} ??? square-meters per meter'.format(proximity))
-    print('  Kinematic Fluidity: {:,.2f} ??? megaStokes (MSt)'.format(megastokes))
-    print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
+      const floor = this._squareFeet.get(Place.ROOM, 0)
+      const parcel = this._squareFeet.get(Place.PARCEL, 10)
+      const street = this._squareFeet.get(Place.STREET, 0)
+      if (parcel) {
+        const parcelFar = floor / parcel
+        const urbanFar = floor / (parcel + street)
+        print('')
+        print('  Parcel FAR:   {:,.2f} floor area ratio'.format(parcelFar))
+        print('  Citywide FAR: {:,.2f} floor area ratio'.format(urbanFar))
+      }
+
+      const proximity = 0
+      const megastokes = 0
+      print('  Proximity: {:,.2f} ??? square-meters per meter'.format(proximity))
+      print('  Kinematic Fluidity: {:,.2f} ??? megaStokes (MSt)'.format(megastokes))
+      print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
+    }
     return this
   }
 
