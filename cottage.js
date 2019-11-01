@@ -6,9 +6,9 @@
 // This is free and unencumbered software released into the public domain.
 // For more information, please refer to <http://unlicense.org>
 
-import { xyz, countTo, nudge, xy2xyz, yzwh2rect } from 'util.js'
-import { Place } from 'place.js'
-import { Facing } from 'facing.js'
+import { xyz, countTo, nudge, xy2xyz, yzwh2rect } from './util.js'
+import Place from './place.js'
+import Facing from './facing.js'
 
 const X = 0
 const Y = 1

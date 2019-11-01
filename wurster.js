@@ -6,8 +6,8 @@
 // This is free and unencumbered software released into the public domain.
 // For more information, please refer to <http://unlicense.org>
 
-import { xyz, countTo } from 'util.js'
-import Place from 'place.js'
+import { xyz, countTo } from './util.js'
+import Place from './place.js'
 
 // in feet
 const NUM_TOWER_FLOORS = 10

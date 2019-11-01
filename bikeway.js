@@ -6,10 +6,10 @@
 // This is free and unencumbered software released into the public domain.
 // For more information, please refer to <http://unlicense.org>
 
-import { xyz, countTo } from 'util.js'
-import { Place } from 'place.js'
-import { Facing } from 'facing.js'
-import { rotate } from 'plato.js'
+import { xyz, countTo } from './util.js'
+import Place from './place.js'
+import Facing from './facing.js'
+import { rotate } from './plato.js'
 
 // in feet
 const BLOCK_LENGTH = 660
