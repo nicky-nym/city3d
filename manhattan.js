@@ -6,8 +6,8 @@
 // This is free and unencumbered software released into the public domain.
 // For more information, please refer to <http://unlicense.org>
 
-import { xyz, countTo, randomInt } from 'util.js'
-import { Place } from 'place.js'
+import { xyz, countTo, randomInt } from './util.js'
+import Place from './place.js'
 // import { Plato } from 'plato.js'
 
 // in feet
