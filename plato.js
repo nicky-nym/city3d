@@ -6,7 +6,7 @@
 // This is free and unencumbered software released into the public domain.
 // For more information, please refer to <http://unlicense.org>
 
-import { rgba, countTo, randomInt, nudge } from './util.js'
+import { xyz, rgba, countTo, randomInt, nudge } from './util.js'
 import Place from './place.js'
 import Facing from './facing.js'
 import Output, { print } from './output.js'
@@ -40,8 +40,8 @@ const COLORS_OF_PLACES = {
   DOOR: YELLOW
 }
 
-function rotate (xyz, facing) {
-  const [x, y, z] = xyz
+function rotate (point, facing) {
+  const [x, y, z] = point
   switch (facing) {
     case Facing.NORTH:
       return xyz(x, y, z)
@@ -105,6 +105,7 @@ export default class Plato {
     this.hurry(hurry)
     this.study()
     this._output = new Output()
+    print('plato: "Hello world!"')
   }
 
   hurry (hurry = false) {
@@ -113,6 +114,7 @@ export default class Plato {
   }
 
   study (topic = '', { x0 = 0, y0 = 0 } = {}) {
+    print('plato: studying ' + topic)
     this._topic = topic
     this._squareFeet = {}
     this._x0 = x0
@@ -120,6 +122,7 @@ export default class Plato {
   }
 
   goto ({ x = 0, y = 0, z = 0, facing = Facing.NORTH } = {}) {
+    // print('plato: goto ')
     this._x = this._x0 + x
     this._y = this._y0 + y
     this._z = z
@@ -129,6 +132,7 @@ export default class Plato {
   }
 
   deleteAllObjects () {
+    print('plato: deleteAllObjects ')
     this._output.deleteAllObjects()
   }
 
@@ -142,7 +146,7 @@ export default class Plato {
 
   _newVert (xyz) {
     xyz = rotate(xyz, this._facing)
-    const dxyz = (this._x, this._y, this._z)
+    const dxyz = [this._x, this._y, this._z]
     xyz = nudge(xyz, { dxyz: dxyz })
     this._output.newVert(xyz)
   }
@@ -193,8 +197,8 @@ export default class Plato {
     }
 
     // TODO: fix me
-    const area = 0 // + face.calc_area()
-    this._squareFeet[place] = area + this._squareFeet.get(place, 0)
+    // const area = face.calc_area()
+    // this._squareFeet[place] = area + this._squareFeet.get(place, 0)
 
     return this
   }

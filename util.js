@@ -7,13 +7,11 @@
 // For more information, please refer to <http://unlicense.org>
 
 function * count ({ to, from = 0 } = {}) {
-  for (let i = from; i < to; i++) {
-    yield i
-  }
+  return [...Array(1 + to - from).keys()].map(i => from + i)
 }
 
-function * countTo (to) {
-  count({ to: to })
+function countTo (to) {
+  return [...Array(to).keys()]
 }
 
 function randomInt (min, max) {
