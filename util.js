@@ -6,7 +6,7 @@
 // This is free and unencumbered software released into the public domain.
 // For more information, please refer to <http://unlicense.org>
 
-function * count ({ to, from = 0 } = {}) {
+function count ({ to, from = 0 } = {}) {
   return [...Array(1 + to - from).keys()].map(i => from + i)
 }
 
