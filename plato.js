@@ -44,19 +44,19 @@ function rotate (point, facing) {
   const [x, y, z] = point
   switch (facing) {
     case Facing.NORTH:
-      return xyz(x, y, z)
+      return [x, y, z]
     case Facing.SOUTH:
-      return xyz(-x, -y, z)
+      return [-x, -y, z]
     case Facing.EAST:
-      return xyz(y, -x, z)
+      return [y, -x, z]
     case Facing.WEST:
-      return xyz(-y, x, z)
+      return [-y, x, z]
   }
   const SIN45 = 0.707
   const COS45 = 0.707
   switch (facing) {
     case Facing.NORTHEAST:
-      return xyz(x * COS45 - y * SIN45, x * COS45 + y * SIN45, z)
+      return [x * COS45 - y * SIN45, x * COS45 + y * SIN45, z]
     case Facing.SOUTHEAST:
       throw new Error('not implemented')
     case Facing.SOUTHWEST:
@@ -106,6 +106,10 @@ export default class Plato {
     this.study()
     this._output = new Output()
     print('plato: "Hello world!"')
+  }
+
+  envision () {
+    this._output.render()
   }
 
   hurry (hurry = false) {
@@ -199,7 +203,6 @@ export default class Plato {
     // TODO: fix me
     // const area = face.calc_area()
     // this._squareFeet[place] = area + this._squareFeet.get(place, 0)
-
     return this
   }
 
@@ -251,9 +254,9 @@ export default class Plato {
         print('  {}: {:,.0f} square feet'.format(roleName.name, area))
       }
 
-      const floor = this._squareFeet.get(Place.ROOM, 0)
-      const parcel = this._squareFeet.get(Place.PARCEL, 10)
-      const street = this._squareFeet.get(Place.STREET, 0)
+      const floor = this._squareFeet[Place.ROOM] || 0
+      const parcel = this._squareFeet[Place.PARCEL] || 10
+      const street = this._squareFeet[Place.STREET] || 0
       if (parcel) {
         const parcelFar = floor / parcel
         const urbanFar = floor / (parcel + street)
