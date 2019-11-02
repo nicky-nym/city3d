@@ -85,12 +85,12 @@ export default class Manhattan {
       openings = [] // Sequence[Tuple]
     } = {}) {
     this._plato.goto({ x: x + dx, y: y + dy, z: z })
-    this._plato.addPlace({ place: place, shape: shape, wall: wall, openings: openings })
+    this._plato.addPlace(place, { shape, wall, openings })
   }
 
   addBuildingAt (x = 0, y = 0) {
     // print("  NYC building: {:,.0f}, {:,.0f}".format(x, y))
-    this.add_place(Place.PARCEL, { shape: BUILDING, x: x, y: y, z: 0 })
+    this.addPlace(Place.PARCEL, { shape: BUILDING, x: x, y: y, z: 0 })
     const numFloors = randomInt(4, 60)
     const storyHeight = randomInt(9, 12)
     for (const i of countTo(numFloors)) {

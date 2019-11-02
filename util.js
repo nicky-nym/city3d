@@ -12,8 +12,8 @@ function * count ({ to, from = 0 } = {}) {
   }
 }
 
-function * countTo (to) {
-  count({ to: to })
+function countTo (to) {
+  return count({ to: to })
 }
 
 function randomInt (min, max) {

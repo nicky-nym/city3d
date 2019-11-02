@@ -25,7 +25,9 @@ export default class Output {
     this._shape = null
     this._scene = new THREE.Scene()
     this._camera = new THREE.PerspectiveCamera(70, WIDTH / HEIGHT)
-    this._camera.position.z = 50
+    this._camera.position.x = -1000
+    this._camera.position.y = -500
+    this._camera.position.z = 1500
     this._scene.add(this._camera)
 
     this._renderer = new THREE.WebGLRenderer({ antialias: true })
@@ -45,13 +47,19 @@ export default class Output {
     // PYTHON: this._bmesh = bmesh.new()
 
     this._shape = new THREE.Shape()
+    this.started = false
   }
 
   newVert (xyz) {
     // PYTHON: this._bmesh.verts.new(xyz)
 
-    const [x, y, z] = xyz
-    this._shape.moveTo(x, y, z)
+    const [x, y] = xyz
+    if (this.started) {
+      this._shape.lineTo(x, y)
+    } else {
+      this._shape.moveTo(x, y)
+      this.started = true
+    }
   }
 
   endFace (color = MARTIAN_ORANGE) {
@@ -65,7 +73,13 @@ export default class Output {
     // PYTHON: scene = bpy.context.scene
     // PYTHON: scene.collection.objects.link(obj)
 
+    this._shape.closePath()
+
     const geometry = new THREE.ShapeGeometry(this._shape)
+    if (geometry.vertices.length < 3) {
+      console.log('skipping degenerate face')
+      return
+    }
     const material = new THREE.MeshBasicMaterial({ color: color, side: THREE.DoubleSide })
     const mesh = new THREE.Mesh(geometry, material)
     // mesh.position.x = 5
@@ -81,6 +95,10 @@ export default class Output {
     // requestAnimationFrame(animate)
     // mesh.rotation.x += 0.005
     // mesh.rotation.y += 0.01
+    this._renderer.render(this._scene, this._camera)
+  }
+
+  render () {
     this._renderer.render(this._scene, this._camera)
   }
 

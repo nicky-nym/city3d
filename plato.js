@@ -44,19 +44,19 @@ function rotate (xyz, facing) {
   const [x, y, z] = xyz
   switch (facing) {
     case Facing.NORTH:
-      return xyz(x, y, z)
+      return [x, y, z]
     case Facing.SOUTH:
-      return xyz(-x, -y, z)
+      return [-x, -y, z]
     case Facing.EAST:
-      return xyz(y, -x, z)
+      return [y, -x, z]
     case Facing.WEST:
-      return xyz(-y, x, z)
+      return [-y, x, z]
   }
   const SIN45 = 0.707
   const COS45 = 0.707
   switch (facing) {
     case Facing.NORTHEAST:
-      return xyz(x * COS45 - y * SIN45, x * COS45 + y * SIN45, z)
+      return [x * COS45 - y * SIN45, x * COS45 + y * SIN45, z]
     case Facing.SOUTHEAST:
       throw new Error('not implemented')
     case Facing.SOUTHWEST:
@@ -107,6 +107,10 @@ export default class Plato {
     this._output = new Output()
   }
 
+  envision () {
+    this._output.render()
+  }
+
   hurry (hurry = false) {
     this._hurry = hurry
     return this
@@ -142,7 +146,7 @@ export default class Plato {
 
   _newVert (xyz) {
     xyz = rotate(xyz, this._facing)
-    const dxyz = (this._x, this._y, this._z)
+    const dxyz = [this._x, this._y, this._z]
     xyz = nudge(xyz, { dxyz: dxyz })
     this._output.newVert(xyz)
   }
@@ -194,7 +198,7 @@ export default class Plato {
 
     // TODO: fix me
     const area = 0 // + face.calc_area()
-    this._squareFeet[place] = area + this._squareFeet.get(place, 0)
+    this._squareFeet[place] = area + this._squareFeet[place] || 0
 
     return this
   }
@@ -247,9 +251,9 @@ export default class Plato {
         print('  {}: {:,.0f} square feet'.format(roleName.name, area))
       }
 
-      const floor = this._squareFeet.get(Place.ROOM, 0)
-      const parcel = this._squareFeet.get(Place.PARCEL, 10)
-      const street = this._squareFeet.get(Place.STREET, 0)
+      const floor = this._squareFeet[Place.ROOM] || 0
+      const parcel = this._squareFeet[Place.PARCEL] || 10
+      const street = this._squareFeet[Place.STREET] || 0
       if (parcel) {
         const parcelFar = floor / parcel
         const urbanFar = floor / (parcel + street)
