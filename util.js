@@ -6,14 +6,12 @@
 // This is free and unencumbered software released into the public domain.
 // For more information, please refer to <http://unlicense.org>
 
-function * count ({ to, from = 0 } = {}) {
-  for (let i = from; i < to; i++) {
-    yield i
-  }
+function count ({ to, from = 0 } = {}) {
+  return [...Array(1 + to - from).keys()].map(i => from + i)
 }
 
 function countTo (to) {
-  return count({ to: to })
+  return [...Array(to).keys()]
 }
 
 function randomInt (min, max) {

@@ -86,7 +86,7 @@ export default class Output {
     // mesh.position.y = 6
     // mesh.position.y = 7
     // mesh.rotation.set(0.4, 0.2, 0)
-    print('added another face')
+    // print('added another face')
     this._scene.add(mesh)
   }
 

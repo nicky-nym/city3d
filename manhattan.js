@@ -8,6 +8,7 @@
 
 import { xyz, countTo, randomInt } from './util.js'
 import Place from './place.js'
+import { print } from './output.js'
 // import { Plato } from 'plato.js'
 
 // in feet
@@ -85,7 +86,7 @@ export default class Manhattan {
       openings = [] // Sequence[Tuple]
     } = {}) {
     this._plato.goto({ x: x + dx, y: y + dy, z: z })
-    this._plato.addPlace(place, { shape, wall, openings })
+    this._plato.addPlace(place, { shape: shape, wall: wall, openings: openings })
   }
 
   addBuildingAt (x = 0, y = 0) {
@@ -101,6 +102,7 @@ export default class Manhattan {
   }
 
   addBlock (row = 0, col = 0) {
+    print('addBlock: ' + row + ', ' + col)
     const x = row * REPEAT_DX
     const y = col * REPEAT_DY
 
@@ -133,6 +135,7 @@ export default class Manhattan {
   }
 
   addBlocks (numRows = 2, numCols = 2) {
+    print('addBlocks: ' + numRows + ' by ' + numCols)
     for (const row of countTo(numRows)) {
       for (const col of countTo(numCols)) {
         this.addBlock(row, col)
