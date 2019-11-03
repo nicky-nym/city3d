@@ -27,6 +27,8 @@ const BLUE_GLASS = rgba(0.6, 0.6, 1, 0.8) // eslint-disable-line no-unused-vars
 const MARTIAN_ORANGE = rgba(0.8745, 0.2863, 0.0667, 1) // opaque Martian orange
 
 const COLORS_OF_PLACES = {
+  LANDMARK: RED,
+
   STREET: RED,
   BIKEPATH: MARTIAN_ORANGE,
   WALKWAY: YELLOW,
@@ -35,7 +37,8 @@ const COLORS_OF_PLACES = {
   PARCEL: GREEN_GRASS,
   CANAL: BLUE,
 
-  WALL: WHITE,
+  WALL: BLUE_GLASS, // temporarily making this non-white so it's obvious that it's working
+  //WALL: WHITE,
   ROOF: DARK_GRAY,
   DOOR: YELLOW
 }
@@ -144,8 +147,8 @@ export default class Plato {
     this._output.beginFace()
   }
 
-  _endFace () {
-    this._output.endFace()
+  _endFace (color) {
+    this._output.endFace(color)
   }
 
   _newVert (xyz) {
@@ -161,13 +164,14 @@ export default class Plato {
     if (nuance && this._hurry) {
       return this
     }
+    const color = COLORS_OF_PLACES[place]
     // const at = [this._x, this._y, this._z]
     this._beginFace()
     if (this._hurry || openings.length === 0) {
       for (const xyz of shape) {
         this._newVert(xyz)
       }
-      this._endFace()
+      this._endFace(color)
     } else {
       const edge = (shape[0], shape[1])
       this._newVert(shape[0])
@@ -197,7 +201,7 @@ export default class Plato {
       for (const xyz of shape) {
         this._newVert(xyz)
       }
-      this._endFace()
+      this._endFace(color)
     }
 
     // TODO: fix me

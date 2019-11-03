@@ -8,7 +8,7 @@
 
 import * as THREE from './three/three.module.js'
 
-const MARTIAN_ORANGE = 0xDF4911
+const FIXME_FUCHSIA = [1, 0, 1, 0] // used as a default so it's obvious when a color is missing
 
 function print (str) {
   console.log(str)
@@ -65,7 +65,7 @@ export default class Output {
     this._planarPoints.push(new THREE.Vector3(...xyz))
   }
 
-  endFace (color = MARTIAN_ORANGE) {
+  endFace (rgbaArray = FIXME_FUCHSIA) {
     // PYTHON: this._bmesh.faces.new(this._bmesh.verts)
     // PYTHON: this._bmesh.normal_update()
     // PYTHON: myMesh = bpy.data.meshes.new('')
@@ -117,6 +117,7 @@ export default class Output {
     const shape = new THREE.Shape(xyPoints.map(p => new THREE.Vector2(p.x, p.y)))
     shape.closePath()
     const geometry = new THREE.ShapeGeometry(shape)
+    const color = new THREE.Color(...rgbaArray)
     const material = new THREE.MeshStandardMaterial({ color: color, side: THREE.DoubleSide })
     const mesh = new THREE.Mesh(geometry, material)
     mesh.applyMatrix(RInv)
