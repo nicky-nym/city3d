@@ -19,6 +19,14 @@ function addBuildings () {
 
   plato.deleteAllObjects()
 
+  // make a block for reference
+  plato.add('LANDMARK', {shape: [[-100, 100,   0], [-100, 200,   0], [ 100, 200,   0], [ 100, 100,   0]]})
+  plato.add('LANDMARK', {shape: [[-100, 100, 300], [-100, 200, 300], [ 100, 200, 300], [ 100, 100, 300]]})
+  plato.add('LANDMARK', {shape: [[-100, 100,   0], [ 100, 100,   0], [ 100, 100, 300], [-100, 100, 300]]})
+  plato.add('LANDMARK', {shape: [[-100, 200,   0], [ 100, 200,   0], [ 100, 200, 300], [-100, 200, 300]]})
+  plato.add('LANDMARK', {shape: [[-100, 100,   0], [-100, 200,   0], [-100, 200, 300], [-100, 100, 300]]})
+  plato.add('LANDMARK', {shape: [[ 100, 100,   0], [ 100, 200,   0], [ 100, 200, 300], [ 100, 100, 300]]})
+
   // plato.study('Cottage(s)', { x0: -100, y0: 100 })
   // const cottage = new Cottage(plato)
   // cottage.addStreet(12)

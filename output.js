@@ -25,10 +25,20 @@ export default class Output {
     this._shape = null
     this._scene = new THREE.Scene()
     this._camera = new THREE.PerspectiveCamera(70, WIDTH / HEIGHT)
-    this._camera.position.x = -1000
+    this._camera.position.x = -700
     this._camera.position.y = -500
     this._camera.position.z = 1500
     this._scene.add(this._camera)
+
+    const light = new THREE.DirectionalLight( 0xffffff, 3.0 );
+    light.position.set( -500, -800, 1500 );
+    this._scene.add(light);
+    const ambientLight = new THREE.HemisphereLight(
+      0xddeeff, // bright sky color
+      0x202020, // dim ground color
+      3, // intensity
+    );
+    this._scene.add(ambientLight);
 
     this._renderer = new THREE.WebGLRenderer({ antialias: true })
     this._renderer.setSize(WIDTH, HEIGHT)
@@ -46,20 +56,13 @@ export default class Output {
   beginFace () {
     // PYTHON: this._bmesh = bmesh.new()
 
-    this._shape = new THREE.Shape()
-    this.started = false
+    this._planarPoints = []
   }
 
   newVert (xyz) {
     // PYTHON: this._bmesh.verts.new(xyz)
 
-    const [x, y] = xyz
-    if (this.started) {
-      this._shape.lineTo(x, y)
-    } else {
-      this._shape.moveTo(x, y)
-      this.started = true
-    }
+    this._planarPoints.push(new THREE.Vector3(...xyz))
   }
 
   endFace (color = MARTIAN_ORANGE) {
@@ -73,20 +76,51 @@ export default class Output {
     // PYTHON: scene = bpy.context.scene
     // PYTHON: scene.collection.objects.link(obj)
 
-    this._shape.closePath()
-
-    const geometry = new THREE.ShapeGeometry(this._shape)
-    if (geometry.vertices.length < 3) {
+    if (this._planarPoints.length < 3) {
       console.log('skipping degenerate face')
       return
     }
-    const material = new THREE.MeshBasicMaterial({ color: color, side: THREE.DoubleSide })
+
+    // translate to origin
+    const p0 = this._planarPoints[0].clone()
+    const T = new THREE.Matrix4().setPosition(p0)
+    const translatedPoints = this._planarPoints.map(p => p.sub(p0))
+
+    const [ , p1, p2] = translatedPoints // enough to determine the transformation matrix
+
+    // For now, just considering 3 possibilities: triangle origin-p1-p2 is in one of the three
+    // planes x=0, y=0 or z=0. (Note that this means all the remaining points are also in the same plane.)
+    let xyPoints
+    let R = new THREE.Matrix4()
+    let RInv = new THREE.Matrix4()
+    if (p1.z == 0 && p2.z == 0) {
+      // case 1: z=0
+      // all points already in x-y plane, so we're done
+      xyPoints = translatedPoints
+    } else if (p1.x == 0 && p2.x == 0) {
+      // case 2: x=0
+      // rotate 90 around y-axis
+      R.makeRotationY(Math.PI / 2)
+      RInv.makeRotationY(-Math.PI / 2)
+      xyPoints = translatedPoints.map(p => p.applyMatrix4(R))
+    } else if (p1.y == 0 && p2.y == 0) {
+      // case 3: y=0
+      // rotate 90 around x-axis
+      R.makeRotationX(Math.PI / 2)
+      RInv.makeRotationX(-Math.PI / 2)
+      xyPoints = translatedPoints.map(p => p.applyMatrix4(R))
+    } else {
+      // something unexpected happened, so ignore this face
+      return
+    }
+
+    const shape = new THREE.Shape(xyPoints.map(p => new THREE.Vector2(p.x, p.y)))
+    shape.closePath()
+    const geometry = new THREE.ShapeGeometry(shape)
+    const material = new THREE.MeshStandardMaterial({ color: color, side: THREE.DoubleSide })
     const mesh = new THREE.Mesh(geometry, material)
-    // mesh.position.x = 5
-    // mesh.position.y = 6
-    // mesh.position.y = 7
-    // mesh.rotation.set(0.4, 0.2, 0)
-    // print('added another face')
+    mesh.applyMatrix(RInv)
+    mesh.applyMatrix(T)
     this._scene.add(mesh)
   }
 
