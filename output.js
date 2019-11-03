@@ -30,15 +30,15 @@ export default class Output {
     this._camera.position.z = 1500
     this._scene.add(this._camera)
 
-    const light = new THREE.DirectionalLight( 0xffffff, 3.0 );
-    light.position.set( -500, -800, 1500 );
-    this._scene.add(light);
+    const light = new THREE.DirectionalLight(0xffffff, 3.0)
+    light.position.set(-500, -800, 1500)
+    this._scene.add(light)
     const ambientLight = new THREE.HemisphereLight(
       0xddeeff, // bright sky color
       0x202020, // dim ground color
-      3, // intensity
-    );
-    this._scene.add(ambientLight);
+      3 // intensity
+    )
+    this._scene.add(ambientLight)
 
     this._renderer = new THREE.WebGLRenderer({ antialias: true })
     this._renderer.setSize(WIDTH, HEIGHT)
@@ -86,13 +86,15 @@ export default class Output {
     const T = new THREE.Matrix4().setPosition(p0)
     const translatedPoints = this._planarPoints.map(p => p.sub(p0))
 
-    const [ , p1, p2] = translatedPoints // enough to determine the transformation matrix
+    const [, p1, p2] = translatedPoints // enough to determine the transformation matrix
 
     // For now, just considering 3 possibilities: triangle origin-p1-p2 is in one of the three
     // planes x=0, y=0 or z=0. (Note that this means all the remaining points are also in the same plane.)
     let xyPoints
-    let R = new THREE.Matrix4()
-    let RInv = new THREE.Matrix4()
+    const R = new THREE.Matrix4()
+    const RInv = new THREE.Matrix4()
+    /* eslint-disable eqeqeq */
+    // TODO: '==' vs '===' is not the issue: we really should be comparing to Number.EPSILON.
     if (p1.z == 0 && p2.z == 0) {
       // case 1: z=0
       // all points already in x-y plane, so we're done
@@ -113,6 +115,7 @@ export default class Output {
       // something unexpected happened, so ignore this face
       return
     }
+    /* eslint-enable eqeqeq */
 
     const shape = new THREE.Shape(xyPoints.map(p => new THREE.Vector2(p.x, p.y)))
     shape.closePath()

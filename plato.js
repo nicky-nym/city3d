@@ -6,14 +6,14 @@
 // This is free and unencumbered software released into the public domain.
 // For more information, please refer to <http://unlicense.org>
 
-import { xyz, rgba, countTo, randomInt, nudge } from './util.js'
+import { rgba, countTo, randomInt, nudge } from './util.js'
 import Place from './place.js'
 import Facing from './facing.js'
 import Output, { print } from './output.js'
 
 let bpy // TODO!!
 
-const WHITE = rgba(1, 1, 1, 1) // opaque white
+const WHITE = rgba(1, 1, 1, 1) // eslint-disable-line no-unused-vars
 const RED = rgba(0.8, 0, 0, 1) // opaque red
 const GREEN = rgba(0, 1, 0, 1) // eslint-disable-line no-unused-vars
 const BLUE = rgba(0, 0, 1, 1) // opaque blue
@@ -38,7 +38,7 @@ const COLORS_OF_PLACES = {
   CANAL: BLUE,
 
   WALL: BLUE_GLASS, // temporarily making this non-white so it's obvious that it's working
-  //WALL: WHITE,
+  // WALL: WHITE,
   ROOF: DARK_GRAY,
   DOOR: YELLOW
 }
