@@ -224,10 +224,10 @@ export default class Plato {
           windows = opening[1]
         }
       }
-      if (cap || i + 1 < shape.length) {
+      if (cap || i < shape.length) {
         let next = 0
-        if (i + 1 < shape.length) {
-          next = i + 1
+        if (i < shape.length) {
+          next = i
         }
         const wall = [
           xyz,
