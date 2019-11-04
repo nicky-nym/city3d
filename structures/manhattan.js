@@ -6,10 +6,11 @@
 // This is free and unencumbered software released into the public domain.
 // For more information, please refer to <http://unlicense.org>
 
-import { xyz, countTo, randomInt } from './util.js'
-import Place from './place.js'
-import { print } from './output.js'
+import { xyz, countTo, randomInt } from '../city3d/util.js'
+import Place from '../city3d/place.js'
+import Structure from '../city3d/structure.js'
 // import { Plato } from 'plato.js'
+// import { print } from '../city3d/output.js'
 
 // in feet
 const BLOCK_DX = 600
@@ -67,12 +68,8 @@ const SIDEWALK_FOR_AVENUE = [
 const REPEAT_DX = BLOCK_DX + AVENUE_WIDTH + (SIDEWALK_WIDTH_AVENUES * 2)
 const REPEAT_DY = BLOCK_DY + STREET_WIDTH + (SIDEWALK_WIDTH_STREETS * 2)
 
-export default class Manhattan {
+export default class Manhattan extends Structure {
   // Manhattan objects know how to describe the city blocks in New York.
-
-  constructor (plato) {
-    this._plato = plato
-  }
 
   addPlace (place,
     {
@@ -90,7 +87,7 @@ export default class Manhattan {
   }
 
   addBuildingAt (x = 0, y = 0) {
-    // print("  NYC building: {:,.0f}, {:,.0f}".format(x, y))
+    // print(`NYC: addBuildingAt(${x}, ${y})`)
     this.addPlace(Place.PARCEL, { shape: BUILDING, x: x, y: y, z: 0 })
     const numFloors = randomInt(4, 60)
     const storyHeight = randomInt(9, 12)
@@ -102,7 +99,7 @@ export default class Manhattan {
   }
 
   addBlock (row = 0, col = 0) {
-    print('addBlock: ' + row + ', ' + col)
+    // print(`NYC: addBlock(${row}, ${col})`)
     const x = row * REPEAT_DX
     const y = col * REPEAT_DY
 
@@ -135,7 +132,7 @@ export default class Manhattan {
   }
 
   addBlocks (numRows = 2, numCols = 2) {
-    print('addBlocks: ' + numRows + ' by ' + numCols)
+    // print(`NYC: addBlocks(${numRows} by ${numCols})`)
     for (const row of countTo(numRows)) {
       for (const col of countTo(numCols)) {
         this.addBlock(row, col)

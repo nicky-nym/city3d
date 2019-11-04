@@ -6,8 +6,9 @@
 // This is free and unencumbered software released into the public domain.
 // For more information, please refer to <http://unlicense.org>
 
-import { xyz, countTo } from './util.js'
-import Place from './place.js'
+import { xyz, countTo } from '../city3d/util.js'
+import Place from '../city3d/place.js'
+import Structure from '../city3d/structure.js'
 
 // in feet
 const NUM_TOWER_FLOORS = 10
@@ -141,12 +142,8 @@ const PARCEL = [
   xyz(0, PARCEL_DY, 0)
 ]
 
-export default class Wurster {
+export default class Wurster extends Structure {
   // Wurster objects know how to describe UC Berkeley's Wurster Hall.
-
-  constructor (plato) {
-    this._plato = plato
-  }
 
   addParcel () {
     this._plato.goto({ x: 0, y: 0, z: 0 })

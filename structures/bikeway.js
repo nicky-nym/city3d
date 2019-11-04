@@ -6,10 +6,11 @@
 // This is free and unencumbered software released into the public domain.
 // For more information, please refer to <http://unlicense.org>
 
-import { xyz, countTo } from './util.js'
-import Place from './place.js'
-import Facing from './facing.js'
-import { rotate } from './plato.js'
+import { xyz, countTo } from '../city3d/util.js'
+import Place from '../city3d/place.js'
+import Facing from '../city3d/facing.js'
+import Structure from '../city3d/structure.js'
+import { rotate } from '../city3d/plato.js'
 
 // in feet
 const BLOCK_LENGTH = 660
@@ -133,12 +134,8 @@ const LOWER_PLAZA_WALKWAY_D = [
   xyz(WALKWAY_XD + WALKWAY_WIDTH, 129, -15),
   xyz(WALKWAY_XD + WALKWAY_WIDTH, 45, -15)]
 
-export default class Bikeway {
+export default class Bikeway extends Structure {
   // Bikeway objects know how to describe the Kinematic city bikeways.
-
-  constructor (plato) {
-    this._plato = plato
-  }
 
   addBoulevard ({ x = 0, y = 0, z = 0, facing = Facing.NORTH } = {}) {
     const NUM_LANES = 4

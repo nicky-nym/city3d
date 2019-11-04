@@ -1,4 +1,4 @@
-// city3d.js
+// sandbox.js
 //
 // Authored in 2019 at <https://github.com/nicky-nym/city3d>
 
@@ -6,11 +6,12 @@
 // This is free and unencumbered software released into the public domain.
 // For more information, please refer to <http://unlicense.org>
 
-import Plato from './plato.js'
-import Manhattan from './manhattan.js'
-// import { Merlon } from 'merlon.js'
-// import { Bikeway } from 'bikeway.js'
-// import { Cottage } from 'cottage.js'
+import Plato from './city3d/plato.js'
+import Manhattan from './structures/manhattan.js'
+// import Merlon from './structures/merlon.js'
+// import Bikeway from './structures/bikeway.js'
+// import Cottage from './structures/cottage.js'
+// import Wurster from './structures/wurster.js'
 
 // declarations for the "standard" linter:
 

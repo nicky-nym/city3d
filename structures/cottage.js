@@ -6,9 +6,10 @@
 // This is free and unencumbered software released into the public domain.
 // For more information, please refer to <http://unlicense.org>
 
-import { xyz, countTo, nudge, xy2xyz, yzwh2rect } from './util.js'
-import Place from './place.js'
-import Facing from './facing.js'
+import { xyz, countTo, nudge, xy2xyz, yzwh2rect } from '../city3d/util.js'
+import Place from '../city3d/place.js'
+import Facing from '../city3d/facing.js'
+import Structure from '../city3d/structure.js'
 
 const X = 0
 const Y = 1
@@ -220,12 +221,8 @@ const CRAWL_SPACE_HEIGHT = 4
 const GROUND_FLOOR_HEIGHT = 11.5
 const ADDON_HEIGHT = 8
 
-export default class Cottage {
+export default class Cottage extends Structure {
   // Cottage objects know how to describe a Queen Anne cottage.
-
-  constructor (plato) {
-    this._plato = plato
-  }
 
   addStreet (numStreets = 5) {
     // Tell plato about the street the cottages are on.

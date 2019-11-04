@@ -6,8 +6,8 @@
 // This is free and unencumbered software released into the public domain.
 // For more information, please refer to <http://unlicense.org>
 
-import * as THREE from './three/build/three.module.js'
-import { OrbitControls } from './three/examples/jsm/controls/OrbitControls.js'
+import * as THREE from '../three/build/three.module.js'
+import { OrbitControls } from '../three/examples/jsm/controls/OrbitControls.js'
 
 const FIXME_FUCHSIA = [1, 0, 1, 0] // used as a default so it's obvious when a color is missing
 

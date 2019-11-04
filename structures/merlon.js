@@ -6,9 +6,10 @@
 // This is free and unencumbered software released into the public domain.
 // For more information, please refer to <http://unlicense.org>
 
-import { xyz, yzwh2rect, nudge, count, countTo, randomInt } from './util.js'
-import Place from './place.js'
-import Facing from './facing.js'
+import { xyz, yzwh2rect, nudge, count, countTo, randomInt } from '../city3d/util.js'
+import Place from '../city3d/place.js'
+import Facing from '../city3d/facing.js'
+import Structure from '../city3d/structure.js'
 
 // Data types
 // Landing = Tuple[Num, Iterable[Facing]]  # (landing_altitude, [ramp_facings])
@@ -312,11 +313,7 @@ function _addFeaturesAtLanding (plato, rampBearings, at, buildings = true) {
   }
 }
 
-export default class Merlon {
-  constructor (plato) {
-    this._plato = plato
-  }
-
+export default class Merlon extends Structure {
   addBuildings (numRows = 2, numCols = 2, buildings = true) {
     // Tell plato about all of our landings, ramps, rooms, and roofs.
     let i = 0
