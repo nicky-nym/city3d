@@ -6,7 +6,8 @@
 // This is free and unencumbered software released into the public domain.
 // For more information, please refer to <http://unlicense.org>
 
-import * as THREE from './three/three.module.js'
+import * as THREE from './three/build/three.module.js'
+import { OrbitControls } from './three/examples/jsm/controls/OrbitControls.js'
 
 const FIXME_FUCHSIA = [1, 0, 1, 0] // used as a default so it's obvious when a color is missing
 
@@ -25,9 +26,10 @@ export default class Output {
     this._shape = null
     this._scene = new THREE.Scene()
     this._camera = new THREE.PerspectiveCamera(70, WIDTH / HEIGHT)
-    this._camera.position.x = -700
-    this._camera.position.y = -500
-    this._camera.position.z = 1500
+    this._camera.position.x = 300
+    this._camera.position.y = 500
+    this._camera.position.z = 600
+    this._camera.up.set(0, 0, 1) // make z be up instead of y
     this._scene.add(this._camera)
 
     const light = new THREE.DirectionalLight(0xffffff, 3.0)
@@ -45,6 +47,14 @@ export default class Output {
     this._renderer.setClearColor(0xCCCCCC, 1) // set our background color
     document.body.appendChild(this._renderer.domElement)
     window.addEventListener('resize', evt => this._onWindowResize(evt), false)
+
+    this.controls = new OrbitControls(this._camera, this._renderer.domElement)
+
+    // add an origin marker for debugging purposes
+    const geometry = new THREE.BoxGeometry(10, 10, 100)
+    const material = new THREE.MeshStandardMaterial({ color: 0xFF00FF })
+    const mesh = new THREE.Mesh(geometry, material)
+    this._scene.add(mesh)
   }
 
   _onWindowResize () {
@@ -129,11 +139,9 @@ export default class Output {
   }
 
   animate () {
-    // TODO: fix me!
-    // requestAnimationFrame(animate)
-    // mesh.rotation.x += 0.005
-    // mesh.rotation.y += 0.01
-    this._renderer.render(this._scene, this._camera)
+    window.requestAnimationFrame(() => this.animate())
+    this.controls.update()
+    this.render()
   }
 
   render () {

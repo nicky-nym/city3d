@@ -27,8 +27,6 @@ const BLUE_GLASS = rgba(0.6, 0.6, 1, 0.8) // eslint-disable-line no-unused-vars
 const MARTIAN_ORANGE = rgba(0.8745, 0.2863, 0.0667, 1) // opaque Martian orange
 
 const COLORS_OF_PLACES = {
-  LANDMARK: RED,
-
   STREET: RED,
   BIKEPATH: MARTIAN_ORANGE,
   WALKWAY: YELLOW,
@@ -112,7 +110,7 @@ export default class Plato {
   }
 
   envision () {
-    this._output.render()
+    this._output.animate()
   }
 
   hurry (hurry = false) {
