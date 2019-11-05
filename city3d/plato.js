@@ -39,6 +39,10 @@ const COLORS_OF_PLACES = {
   DOOR: YELLOW
 }
 
+function xy (x, y) {
+  return [x, y]
+}
+
 function rotate (xy, facing) {
   const [x, y] = xy
   switch (facing) {
@@ -97,7 +101,7 @@ function nudge2 (xy, { dx = 0, dy = 0, dxy = [0, 0] } = {}) {
   return [x + dx + dX, y + dy + dY]
 }
 
-export { rotate }
+export { rotate, xy }
 export default class Plato {
   // Plato can envision 3D architectural spaces, with walls, floors, etc.
 

@@ -6,8 +6,9 @@
 // This is free and unencumbered software released into the public domain.
 // For more information, please refer to <http://unlicense.org>
 
-import { xyz, countTo } from '../city3d/util.js'
+import { countTo } from '../city3d/util.js'
 import Place from '../city3d/place.js'
+import { xy } from '../city3d/plato.js'
 import Structure from '../city3d/structure.js'
 
 // in feet
@@ -32,10 +33,10 @@ const SOUTH_WING_X0 = 100
 const SOUTH_WING_Y0 = 140
 
 const SOUTH_WING = [
-  xyz(0, 0, 0),
-  xyz(SOUTH_WING_DX, 0, 0),
-  xyz(SOUTH_WING_DX, SOUTH_WING_DY, 0),
-  xyz(0, SOUTH_WING_DY, 0)
+  xy(0, 0),
+  xy(SOUTH_WING_DX, 0),
+  xy(SOUTH_WING_DX, SOUTH_WING_DY),
+  xy(0, SOUTH_WING_DY)
 ]
 
 const CENTER_WING_DX = 53
@@ -44,10 +45,10 @@ const CENTER_WING_X0 = SOUTH_WING_X0
 const CENTER_WING_Y0 = SOUTH_WING_Y0 + SOUTH_WING_DY
 
 const CENTER_WING = [
-  xyz(0, 0, 0),
-  xyz(CENTER_WING_DX, 0, 0),
-  xyz(CENTER_WING_DX, CENTER_WING_DY, 0),
-  xyz(0, CENTER_WING_DY, 0)
+  xy(0, 0),
+  xy(CENTER_WING_DX, 0),
+  xy(CENTER_WING_DX, CENTER_WING_DY),
+  xy(0, CENTER_WING_DY)
 ]
 
 const NUM_SOUTH_WING_CRENELS_X = 18 // eslint-disable-line no-unused-vars
@@ -59,10 +60,10 @@ const TOWER_X0 = CENTER_WING_X0 + CENTER_WING_DX
 const TOWER_Y0 = CENTER_WING_Y0 + CENTER_WING_DY
 
 const TOWER = [
-  xyz(0, 0, 0),
-  xyz(TOWER_DX, 0, 0),
-  xyz(TOWER_DX, TOWER_DY, 0),
-  xyz(0, TOWER_DY, 0)
+  xy(0, 0),
+  xy(TOWER_DX, 0),
+  xy(TOWER_DX, TOWER_DY),
+  xy(0, TOWER_DY)
 ]
 
 const TOWER_EAST_DX = 29
@@ -71,10 +72,10 @@ const TOWER_EAST_X0 = TOWER_X0 + TOWER_DX
 const TOWER_EAST_Y0 = TOWER_Y0 + 5
 
 const TOWER_EAST = [
-  xyz(0, 0, 0),
-  xyz(TOWER_EAST_DX, 0, 0),
-  xyz(TOWER_EAST_DX, TOWER_EAST_DY, 0),
-  xyz(0, TOWER_EAST_DY, 0)
+  xy(0, 0),
+  xy(TOWER_EAST_DX, 0),
+  xy(TOWER_EAST_DX, TOWER_EAST_DY),
+  xy(0, TOWER_EAST_DY)
 ]
 
 const TOWER_WEST_DX = 29
@@ -84,10 +85,10 @@ const TOWER_WEST_X0 = TOWER_X0 - TOWER_EAST_DX
 const TOWER_WEST_Y0 = TOWER_Y0 + TOWER_WEST_OFFSET_Y
 
 const TOWER_WEST = [
-  xyz(0, 0, 0),
-  xyz(TOWER_WEST_DX, 0, 0),
-  xyz(TOWER_WEST_DX, TOWER_WEST_DY, 0),
-  xyz(0, TOWER_WEST_DY, 0)
+  xy(0, 0),
+  xy(TOWER_WEST_DX, 0),
+  xy(TOWER_WEST_DX, TOWER_WEST_DY),
+  xy(0, TOWER_WEST_DY)
 ]
 
 const ATRIUM_DX = 22
@@ -102,20 +103,20 @@ const NORTH_WING_X0 = SOUTH_WING_X0 - (NORTH_WING_DX - TOWER_DX - CENTER_WING_DX
 const NORTH_WING_Y0 = TOWER_Y0
 
 const NORTH_WING = [
-  xyz(0, 0, 0),
-  xyz(NORTH_WING_DX - TOWER_DX, 0, 0),
-  xyz(NORTH_WING_DX - TOWER_DX, TOWER_WEST_OFFSET_Y, 0),
-  xyz(NORTH_WING_DX - TOWER_DX - TOWER_WEST_DX, TOWER_WEST_OFFSET_Y, 0),
-  xyz(NORTH_WING_DX - TOWER_DX - TOWER_WEST_DX, TOWER_WEST_OFFSET_Y + ATRIUM_OFFSET_Y, 0),
-  xyz(NORTH_WING_DX - TOWER_DX - TOWER_WEST_DX - ATRIUM_DX, TOWER_WEST_OFFSET_Y + ATRIUM_OFFSET_Y, 0),
-  xyz(NORTH_WING_DX - TOWER_DX - TOWER_WEST_DX - ATRIUM_DX, TOWER_WEST_OFFSET_Y + ATRIUM_OFFSET_Y + ATRIUM_DY, 0),
-  xyz(NORTH_WING_DX - TOWER_DX - TOWER_WEST_DX, TOWER_WEST_OFFSET_Y + ATRIUM_OFFSET_Y + ATRIUM_DY, 0),
-  xyz(NORTH_WING_DX - TOWER_DX - TOWER_WEST_DX, TOWER_WEST_OFFSET_Y + TOWER_WEST_DY, 0),
-  xyz(NORTH_WING_DX - TOWER_DX, TOWER_WEST_OFFSET_Y + TOWER_WEST_DY, 0),
-  xyz(NORTH_WING_DX - TOWER_DX, TOWER_DY, 0),
-  xyz(NORTH_WING_DX, TOWER_DY, 0),
-  xyz(NORTH_WING_DX, NORTH_WING_DY, 0),
-  xyz(0, NORTH_WING_DY, 0)
+  xy(0, 0),
+  xy(NORTH_WING_DX - TOWER_DX, 0),
+  xy(NORTH_WING_DX - TOWER_DX, TOWER_WEST_OFFSET_Y),
+  xy(NORTH_WING_DX - TOWER_DX - TOWER_WEST_DX, TOWER_WEST_OFFSET_Y),
+  xy(NORTH_WING_DX - TOWER_DX - TOWER_WEST_DX, TOWER_WEST_OFFSET_Y + ATRIUM_OFFSET_Y),
+  xy(NORTH_WING_DX - TOWER_DX - TOWER_WEST_DX - ATRIUM_DX, TOWER_WEST_OFFSET_Y + ATRIUM_OFFSET_Y),
+  xy(NORTH_WING_DX - TOWER_DX - TOWER_WEST_DX - ATRIUM_DX, TOWER_WEST_OFFSET_Y + ATRIUM_OFFSET_Y + ATRIUM_DY),
+  xy(NORTH_WING_DX - TOWER_DX - TOWER_WEST_DX, TOWER_WEST_OFFSET_Y + ATRIUM_OFFSET_Y + ATRIUM_DY),
+  xy(NORTH_WING_DX - TOWER_DX - TOWER_WEST_DX, TOWER_WEST_OFFSET_Y + TOWER_WEST_DY),
+  xy(NORTH_WING_DX - TOWER_DX, TOWER_WEST_OFFSET_Y + TOWER_WEST_DY),
+  xy(NORTH_WING_DX - TOWER_DX, TOWER_DY),
+  xy(NORTH_WING_DX, TOWER_DY),
+  xy(NORTH_WING_DX, NORTH_WING_DY),
+  xy(0, NORTH_WING_DY)
 ]
 
 const NUM_NORTH_WING_CRENELS_Y = 12 // eslint-disable-line no-unused-vars
@@ -127,19 +128,19 @@ const FLOOR_TEN_BALCONY_X0 = TOWER_WEST_X0 - FLOOR_TEN_BALCONY_DX
 const FLOOR_TEN_BALCONY_Y0 = TOWER_WEST_Y0
 
 const FLOOR_TEN_BALCONY = [
-  xyz(0, 0, 0),
-  xyz(FLOOR_TEN_BALCONY_DX, 0, 0),
-  xyz(FLOOR_TEN_BALCONY_DX, FLOOR_TEN_BALCONY_DY, 0),
-  xyz(0, FLOOR_TEN_BALCONY_DY, 0)
+  xy(0, 0),
+  xy(FLOOR_TEN_BALCONY_DX, 0),
+  xy(FLOOR_TEN_BALCONY_DX, FLOOR_TEN_BALCONY_DY),
+  xy(0, FLOOR_TEN_BALCONY_DY)
 ]
 const PARCEL_DX = 360
 const PARCEL_DY = 540
 
 const PARCEL = [
-  xyz(0, 0, 0),
-  xyz(PARCEL_DX, 0, 0),
-  xyz(PARCEL_DX, PARCEL_DY, 0),
-  xyz(0, PARCEL_DY, 0)
+  xy(0, 0),
+  xy(PARCEL_DX, 0),
+  xy(PARCEL_DX, PARCEL_DY),
+  xy(0, PARCEL_DY)
 ]
 
 export default class Wurster extends Structure {

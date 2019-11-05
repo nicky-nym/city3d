@@ -124,7 +124,7 @@ export default class Output {
         }
         const near = vector2
         const far = area[next]
-        let wall
+        let wall = null
         if (near.x === far.x) {
           wall = [
             new THREE.Vector2(near.y, 0),
@@ -139,21 +139,25 @@ export default class Output {
             new THREE.Vector2(far.x, height),
             new THREE.Vector2(near.x, height)
           ]
+        } else {
+          print('output.addWalls: found angled wall')
         }
-        const shape = new THREE.Shape(wall)
-        shape.closePath()
-        const geometry = new THREE.ShapeGeometry(shape)
-        geometry.rotateX(Math.PI / 2)
-        if (near.x === far.x) {
-          geometry.rotateZ(Math.PI / 2)
-          geometry.translate(near.x, 0, z)
-        } else if (near.y === far.y) {
-          geometry.translate(0, near.y, z)
+        if (wall) {
+          const shape = new THREE.Shape(wall)
+          shape.closePath()
+          const geometry = new THREE.ShapeGeometry(shape)
+          geometry.rotateX(Math.PI / 2)
+          if (near.x === far.x) {
+            geometry.rotateZ(Math.PI / 2)
+            geometry.translate(near.x, 0, z)
+          } else if (near.y === far.y) {
+            geometry.translate(0, near.y, z)
+          }
+          const color = new THREE.Color(BLUE_GLASS)
+          const material = new THREE.MeshStandardMaterial({ color: color, transparent: true, opacity: 0.7, side: THREE.DoubleSide })
+          const mesh = new THREE.Mesh(geometry, material)
+          this._scene.add(mesh)
         }
-        const color = new THREE.Color(BLUE_GLASS)
-        const material = new THREE.MeshStandardMaterial({ color: color, transparent: true, opacity: 0.7, side: THREE.DoubleSide })
-        const mesh = new THREE.Mesh(geometry, material)
-        this._scene.add(mesh)
       }
     }
   }

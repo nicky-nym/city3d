@@ -7,7 +7,7 @@
 // For more information, please refer to <http://unlicense.org>
 
 // import Bikeway from './structures/bikeway.js'
-// import Cottage from './structures/cottage.js'
+import Cottage from './structures/cottage.js'
 import Manhattan from './structures/manhattan.js'
 // import Merlon from './structures/merlon.js'
 import Plato from './city3d/plato.js'
@@ -20,10 +20,10 @@ function addBuildings () {
 
   plato.deleteAllObjects()
 
-  // plato.study('Cottage(s)', { x0: -100, y0: 100 })
-  // const cottage = new Cottage(plato)
-  // cottage.addStreet(12)
-  // plato.pontificate()
+  plato.study('Cottage(s)', { x0: -100, y0: 100 })
+  const cottage = new Cottage(plato)
+  cottage.addStreet(1)
+  plato.pontificate()
 
   const CITY_SIZE = 1
   plato.study('Manhattan New York', { x0: -800 * CITY_SIZE, y0: -600 * CITY_SIZE })

@@ -9,12 +9,8 @@
 import { countTo, randomInt } from '../city3d/util.js'
 import Place from '../city3d/place.js'
 import Structure from '../city3d/structure.js'
-// import { Plato } from 'plato.js'
+import { xy } from '../city3d/plato.js'
 // import { print } from '../city3d/output.js'
-
-function xy (x, y) {
-  return [x, y]
-}
 
 // in feet
 const BLOCK_DX = 600

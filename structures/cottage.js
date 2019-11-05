@@ -7,8 +7,9 @@
 // For more information, please refer to <http://unlicense.org>
 
 import { xyz, countTo, nudge, xy2xyz, yzwh2rect } from '../city3d/util.js'
-import Place from '../city3d/place.js'
 import Facing from '../city3d/facing.js'
+import Place from '../city3d/place.js'
+import { xy } from '../city3d/plato.js'
 import Structure from '../city3d/structure.js'
 
 const X = 0
@@ -20,58 +21,58 @@ const PARCEL_DY = 50
 const PARCEL_X0_NORTH = -232.72
 const PARCEL_X0_SOUTH = -224.15
 const PARCEL = [
-  xyz(PARCEL_X0_SOUTH, 0, 0),
-  xyz(PARCEL_X0_NORTH, PARCEL_DY, 0),
-  xyz(0, PARCEL_DY, 0),
-  xyz(0, 0, 0)]
+  xy(PARCEL_X0_SOUTH, 0),
+  xy(PARCEL_X0_NORTH, PARCEL_DY),
+  xy(0, PARCEL_DY),
+  xy(0, 0)]
 
 const FENCE_HEIGHT = 6
 const FENCE_LINE = [
-  xyz(-52, 0, 0),
-  xyz(PARCEL_X0_SOUTH, 0, 0),
-  xyz(PARCEL_X0_NORTH, PARCEL_DY, 0),
-  xyz(0, PARCEL_DY, 0)]
+  xy(-52, 0),
+  xy(PARCEL_X0_SOUTH, 0),
+  xy(PARCEL_X0_NORTH, PARCEL_DY),
+  xy(0, PARCEL_DY)]
 
 const DRIVEWAY = [
-  xyz(-194, 2, 0.01),
-  xyz(-194, 13, 0.01),
-  xyz(-181, 13, 0.01),
-  xyz(-181, 23, 0.01),
-  xyz(-165, 23, 0.01),
-  xyz(-165, 13, 0.01),
-  xyz(-0, 13, 0.01),
-  xyz(-0, 2, 0.01)]
+  xy(-194, 2),
+  xy(-194, 13),
+  xy(-181, 13),
+  xy(-181, 23),
+  xy(-165, 23),
+  xy(-165, 13),
+  xy(-0, 13),
+  xy(-0, 2)]
 
 const DOORPATH = [
-  xyz(-15.5, 31.75, 0.01),
-  xyz(-0, 31.75, 0.01),
-  xyz(-0, 26.75, 0.01),
-  xyz(-15.5, 26.75, 0.01)]
+  xy(-15.5, 31.75),
+  xy(-0, 31.75),
+  xy(-0, 26.75),
+  xy(-15.5, 26.75)]
 
 const GARAGE_HEIGHT = 8
 const GARAGE_SPEC = [
-  [xyz(-185, 23, 0), []],
-  [xyz(-185, 44, 0), []],
-  [xyz(-161, 44, 0), []],
-  [xyz(-161, 23, 0), []]]
+  [xy(-185, 23), []],
+  [xy(-185, 44), []],
+  [xy(-161, 44), []],
+  [xy(-161, 23), []]]
 // const GARAGE = [entry[0] for entry in GARAGE_SPEC] // TODO: fix me!!
 const GARAGE = GARAGE_SPEC.map(([point, openings]) => point)
 // const GARAGE = GARAGE_SPEC.map((entry) => entry[0])
 
 const ADU_SPEC = [
-  [xyz(-154, 23, 0), []],
-  [xyz(-154, 44, 0), []],
-  [xyz(-124, 44, 0), []],
-  [xyz(-124, 23, 0), []]]
+  [xy(-154, 23), []],
+  [xy(-154, 44), []],
+  [xy(-124, 44), []],
+  [xy(-124, 23), []]]
 // const ADU = [entry[0] for entry in ADU_SPEC] // TODO: fix me!!
 const ADU = ADU_SPEC.map(([point, openings]) => point)
 // const ADU = ADU_SPEC.map((entry) => entry[0])
 
 const ADU_DOORPATH = [
-  xyz(-160, 13, 0),
-  xyz(-160, 36, 0),
-  xyz(-155, 36, 0),
-  xyz(-155, 13, 0)]
+  xy(-160, 13),
+  xy(-160, 36),
+  xy(-155, 36),
+  xy(-155, 13)]
 
 // exterior walls (0.5 feet thick), clockwise from the back wall of the house
 const KITCHEN_WINDOWS = [yzwh2rect(3.958, 2.583, 5.750, 4.083)]
@@ -90,18 +91,18 @@ const BED_AND_BATH_WINDOWS = [
   yzwh2rect(3.875, 2.166, 3.666, 6.250), // bedroom
   yzwh2rect(12.708, 4.166, 2.375, 3.083)] // bathroom
 const HOUSE_SPEC = [
-  [xyz(-57.792, 44.542, 0), KITCHEN_WINDOWS],
-  [xyz(-44.333, 44.542, 0), []],
-  [xyz(-44.333, 47, 0), DINING_ROOM_WINDOWS],
-  [xyz(-19.375, 47, 0), BAY_WINDOW_NORTHEAST],
-  [xyz(-16, 43.65, 0), BAY_WINDOW_EAST],
-  [xyz(-16, 36.1, 0), BAY_WINDOW_SOUTHEAST],
-  [xyz(-19.375, 32.75, 0), []],
-  [xyz(-25.792, 32.75, 0), PORCH_WINDOWS],
-  [xyz(-25.792, 14.75, 0), OFFICE_WINDOW],
-  [xyz(-41.167, 14.75, 0), []],
-  [xyz(-41.167, 16.75, 0), BED_AND_BATH_WINDOWS],
-  [xyz(-57.792, 16.75, 0), []]
+  [xy(-57.792, 44.542), KITCHEN_WINDOWS],
+  [xy(-44.333, 44.542), []],
+  [xy(-44.333, 47), DINING_ROOM_WINDOWS],
+  [xy(-19.375, 47), BAY_WINDOW_NORTHEAST],
+  [xy(-16, 43.65), BAY_WINDOW_EAST],
+  [xy(-16, 36.1), BAY_WINDOW_SOUTHEAST],
+  [xy(-19.375, 32.75), []],
+  [xy(-25.792, 32.75), PORCH_WINDOWS],
+  [xy(-25.792, 14.75), OFFICE_WINDOW],
+  [xy(-41.167, 14.75), []],
+  [xy(-41.167, 16.75), BED_AND_BATH_WINDOWS],
+  [xy(-57.792, 16.75), []]
 ]
 // const HOUSE = [entry[0] for entry in HOUSE_SPEC]
 const HOUSE = HOUSE_SPEC.map(([point, openings]) => point)
@@ -122,10 +123,10 @@ const WEST_WINDOWS = [
   yzwh2rect(11.354, 0, 2.666, 6.666), // door
   yzwh2rect(18.875, 4.333, 3.750, 2.083)] // kitchen
 const ADDON_SPEC = [
-  [xyz(-63.75, 43.625, 0), []],
-  [xyz(-57.792, 43.625, 0), []],
-  [xyz(-57.792, 17.833, 0), []],
-  [xyz(-63.75, 17.833, 0), WEST_WINDOWS]
+  [xy(-63.75, 43.625), []],
+  [xy(-57.792, 43.625), []],
+  [xy(-57.792, 17.833), []],
+  [xy(-63.75, 17.833), WEST_WINDOWS]
 ]
 
 // const ADDON = [entry[0] for entry in ADDON_SPEC]
@@ -144,33 +145,33 @@ const ATTIC = [
   nudge(HOUSE[0], { dx: -1, dy: 1 }),
   nudge(HOUSE[1], { dx: -1, dy: 1 }),
   nudge(HOUSE[2], { dx: -1, dy: 1 }),
-  nudge(xyz(HOUSE[4][X], HOUSE[3][Y], 0), { dx: 1, dy: 1 }),
-  nudge(xyz(HOUSE[5][X], HOUSE[6][Y], 0), { dx: 1, dy: -1 }),
+  nudge(xy(HOUSE[4][X], HOUSE[3][Y]), { dx: 1, dy: 1 }),
+  nudge(xy(HOUSE[5][X], HOUSE[6][Y]), { dx: 1, dy: -1 }),
   nudge(HOUSE[7], { dx: 1, dy: -1 }),
   nudge(HOUSE[8], { dx: 1, dy: -1 }),
   nudge(HOUSE[9], { dx: -1, dy: -1 }),
   nudge(HOUSE[10], { dx: -1, dy: -1 }),
   nudge(HOUSE[11], { dx: -1, dy: -1 })]
 const PORCH = [
-  xyz(-25.792, 32.75, 0),
-  xyz(-25.792 + 5.333, 32.75, 0),
-  xyz(-25.792 + 5.333, 32.75 - 17.083, 0),
-  xyz(-25.792, 32.75 - 17.083, 0)]
+  xy(-25.792, 32.75),
+  xy(-25.792 + 5.333, 32.75),
+  xy(-25.792 + 5.333, 32.75 - 17.083),
+  xy(-25.792, 32.75 - 17.083)]
 const NUM_STAIR_STEPS = 5
 const STAIR_X = -25.792 + 5.333 + NUM_STAIR_STEPS
 const STAIR = [
-  xyz(STAIR_X, 31.75, 0),
-  xyz(STAIR_X + 1, 31.75, 0),
-  xyz(STAIR_X + 1, 26.75, 0),
-  xyz(STAIR_X, 26.75, 0)]
+  xy(STAIR_X, 31.75),
+  xy(STAIR_X + 1, 31.75),
+  xy(STAIR_X + 1, 26.75),
+  xy(STAIR_X, 26.75)]
 
 const D1 = (ATTIC[0][Y] - ATTIC[9][Y]) / 2.0
-const PEAK_BACK = (HOUSE[0][X] + D1, HOUSE[0][Y] - D1, D1)
-const PEAK_BACK_INSET = (ATTIC[5][X] - D1, PEAK_BACK[Y], D1)
+const PEAK_BACK = xyz(HOUSE[0][X] + D1, HOUSE[0][Y] - D1, D1)
+const PEAK_BACK_INSET = xyz(ATTIC[5][X] - D1, PEAK_BACK[Y], D1)
 
 const D2 = (ATTIC[5][X] - ATTIC[1][X]) / 2.0
-const PEAK_NORTH = (ATTIC[2][X] + D2, ATTIC[2][Y] - D2, D2)
-const PEAK_NORTH_INSET = (PEAK_NORTH[X], PEAK_NORTH[Y] - (ATTIC[2][Y] - ATTIC[1][Y]), D2)
+const PEAK_NORTH = xyz(ATTIC[2][X] + D2, ATTIC[2][Y] - D2, D2)
+const PEAK_NORTH_INSET = xyz(PEAK_NORTH[X], PEAK_NORTH[Y] - (ATTIC[2][Y] - ATTIC[1][Y]), D2)
 
 const D3 = (ATTIC[6][X] - ATTIC[7][X]) / 2.0
 const PEAK_OFFICE = xyz(ATTIC[7][X] + D3, ATTIC[7][Y] + D3, D3)
@@ -234,10 +235,10 @@ export default class Cottage extends Structure {
 
     const SIDEWALK_WIDTH = 6
     const SIDEWALK = [
-      xyz(0, 0, 0),
-      xyz(SIDEWALK_WIDTH, 0, 0),
-      xyz(SIDEWALK_WIDTH, STREET_DY, 0),
-      xyz(0, STREET_DY, 0)]
+      xy(0, 0),
+      xy(SIDEWALK_WIDTH, 0),
+      xy(SIDEWALK_WIDTH, STREET_DY),
+      xy(0, STREET_DY)]
 
     const CURB_HEIGHT = 0.4
     const STREET = [
@@ -247,12 +248,13 @@ export default class Cottage extends Structure {
       xyz(SIDEWALK_WIDTH + STREET_DX, 0, -CURB_HEIGHT)]
 
     this._plato.goto({ x: 0, y: 0 })
-    this._plato.addPlace(Place.WALKWAY, { shape: SIDEWALK })
-    const CURB = [
-      xyz(SIDEWALK_WIDTH, 0, -CURB_HEIGHT),
-      xyz(SIDEWALK_WIDTH, STREET_DY, -CURB_HEIGHT)]
-    this._plato.add_wall({ shape: CURB, height: CURB_HEIGHT, cap: false })
-    this._plato.addPlace(Place.STREET, { shape: STREET })
+    this._plato.addPlace(Place.WALKWAY, SIDEWALK)
+    // TODO: get this code working again
+    // const CURB = [
+    //   xyz(SIDEWALK_WIDTH, 0, -CURB_HEIGHT),
+    //   xyz(SIDEWALK_WIDTH, STREET_DY, -CURB_HEIGHT)]
+    // this._plato.add_wall(CURB, { height: CURB_HEIGHT, cap: false })
+    this._plato.addPlace(Place.STREET, STREET)
     this._plato.goto({ x: STREET_DX + SIDEWALK_WIDTH })
 
     const xNorth = 0 // TODO: ???
@@ -276,26 +278,27 @@ export default class Cottage extends Structure {
       const z = CRAWL_SPACE_HEIGHT / NUM_STAIR_STEPS * i
       x -= 1
       this._plato.goto({ x: x, y: y, z: z, facing: facing })
-      this._plato.add(Place.WALKWAY, { shape: STAIR, nuance: true })
+      this._plato.addPlace(Place.WALKWAY, STAIR, { nuance: true })
     }
   }
 
   addParcel (x = 0, y = 0, facing = Facing.NORTH) {
     // Tell plato about the yard, fence, sidewalk, etc.
     this._plato.goto({ x: x, y: y, z: 0, facing: facing })
-    this._plato.addPlace(Place.PARCEL, { shape: PARCEL })
-    this._plato.add_wall({ shape: FENCE_LINE, height: FENCE_HEIGHT, cap: false })
-    this._plato.addPlace(Place.WALKWAY, { shape: DOORPATH, nuance: true })
-    this._plato.addPlace(Place.STREET, { shape: DRIVEWAY, nuance: true })
+    this._plato.addPlace(Place.PARCEL, PARCEL)
+    // TODO: get this code working again
+    // this._plato.add_wall(FENCE_LINE, { height: FENCE_HEIGHT, cap: false })
+    this._plato.addPlace(Place.WALKWAY, DOORPATH, { nuance: true })
+    this._plato.addPlace(Place.STREET, DRIVEWAY, { nuance: true })
     this.addStairs(x, y, facing)
     return this
   }
 
   addGarageAndAdu (x = 0, y = 0, facing = Facing.NORTH) {
     this._plato.goto({ x: x, y: y, z: 0, facing: facing })
-    this._plato.addPlace(Place.BARE, { shape: GARAGE, wall: GARAGE_HEIGHT, nuance: true })
-    this._plato.addPlace(Place.ROOM, { shape: ADU, wall: GARAGE_HEIGHT, nuance: true })
-    this._plato.addPlace(Place.WALKWAY, { shape: ADU_DOORPATH, nuance: true })
+    this._plato.addPlace(Place.BARE, GARAGE, { wall: GARAGE_HEIGHT, nuance: true })
+    this._plato.addPlace(Place.ROOM, ADU, { wall: GARAGE_HEIGHT, nuance: true })
+    this._plato.addPlace(Place.WALKWAY, ADU_DOORPATH, { nuance: true })
     return this
   }
 
@@ -305,31 +308,33 @@ export default class Cottage extends Structure {
 
     // Crawl space
     plato.goto({ x: x, y: y, z: 0, facing: facing })
-    plato.addPlace(Place.BARE, { shape: HOUSE, wall: CRAWL_SPACE_HEIGHT })
-    plato.addPlace(Place.BARE, { shape: ADDON, wall: CRAWL_SPACE_HEIGHT })
-    plato.addPlace(Place.BARE, { shape: PORCH, wall: CRAWL_SPACE_HEIGHT })
+    plato.addPlace(Place.BARE, HOUSE, { wall: CRAWL_SPACE_HEIGHT })
+    plato.addPlace(Place.BARE, ADDON, { wall: CRAWL_SPACE_HEIGHT })
+    plato.addPlace(Place.BARE, PORCH, { wall: CRAWL_SPACE_HEIGHT })
 
     // Main floor
     plato.goto({ x: x, y: y, z: CRAWL_SPACE_HEIGHT, facing: facing })
-    plato.addPlace(Place.ROOM, { shape: HOUSE, wall: GROUND_FLOOR_HEIGHT, openings: HOUSE_WINDOWS })
-    plato.addPlace(Place.BARE, { shape: PORCH })
-    plato.addPlace(Place.ROOM, { shape: ADDON, wall: ADDON_HEIGHT, openings: ADDON_WINDOWS })
+    plato.addPlace(Place.ROOM, HOUSE, { wall: GROUND_FLOOR_HEIGHT, openings: HOUSE_WINDOWS })
+    plato.addPlace(Place.BARE, PORCH)
+    plato.addPlace(Place.ROOM, ADDON, { wall: ADDON_HEIGHT, openings: ADDON_WINDOWS })
 
     // Attic
     const ATTIC_ELEVATION = GROUND_FLOOR_HEIGHT + CRAWL_SPACE_HEIGHT
     plato.goto({ x: x, y: y, z: ATTIC_ELEVATION, facing: facing })
-    plato.addPlace(Place.BARE, { shape: ATTIC })
-    for (const roof of ROOF) {
-      plato.add(Place.ROOF, { shape: roof })
-    }
-    plato.add_wall({ shape: CHIMNEY, height: CHIMNEY_HEIGHT, nuance: true })
+    plato.addPlace(Place.BARE, ATTIC)
+    // TODO: get this code working again
+    // for (const roof of ROOF) {
+    //   plato.add(Place.ROOF, roof)
+    // }
+    plato.addPlace(Place.BARE, CHIMNEY, { height: CHIMNEY_HEIGHT, nuance: true })
 
     // Porch roofs
     const PORCH_TOP_ELEVATION = ADDON_HEIGHT + CRAWL_SPACE_HEIGHT
     plato.goto({ x: x, y: y, z: PORCH_TOP_ELEVATION, facing: facing })
-    for (const roof of PORCH_ROOF) {
-      plato.add(Place.ROOF, { shape: roof })
-    }
+    // TODO: get this code working again
+    // for (const roof of PORCH_ROOF) {
+    //   plato.add(Place.ROOF, roof)
+    // }
     return this
   }
 }
