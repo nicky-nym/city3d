@@ -6,12 +6,10 @@
 // This is free and unencumbered software released into the public domain.
 // For more information, please refer to <http://unlicense.org>
 
-import { rgba, countTo, randomInt, nudge } from './util.js'
+import { rgba } from './util.js'
 import Place from './place.js'
 import Facing from './facing.js'
 import Output, { print } from './output.js'
-
-let bpy // TODO!!
 
 const WHITE = rgba(1, 1, 1, 1) // eslint-disable-line no-unused-vars
 const RED = rgba(0.8, 0, 0, 1) // opaque red
@@ -41,23 +39,23 @@ const COLORS_OF_PLACES = {
   DOOR: YELLOW
 }
 
-function rotate (point, facing) {
-  const [x, y, z] = point
+function rotate (xy, facing) {
+  const [x, y] = xy
   switch (facing) {
     case Facing.NORTH:
-      return [x, y, z]
+      return [x, y]
     case Facing.SOUTH:
-      return [-x, -y, z]
+      return [-x, -y]
     case Facing.EAST:
-      return [y, -x, z]
+      return [y, -x]
     case Facing.WEST:
-      return [-y, x, z]
+      return [-y, x]
   }
   const SIN45 = 0.707
   const COS45 = 0.707
   switch (facing) {
     case Facing.NORTHEAST:
-      return [x * COS45 - y * SIN45, x * COS45 + y * SIN45, z]
+      return [x * COS45 - y * SIN45, x * COS45 + y * SIN45]
     case Facing.SOUTHEAST:
       throw new Error('not implemented')
     case Facing.SOUTHWEST:
@@ -70,6 +68,7 @@ function rotate (point, facing) {
 
 function _materialByPlace (place) { // eslint-disable-line no-unused-vars
   const oldPythonCode = false
+  let bpy // TODO!!
   if (oldPythonCode) {
     let material = bpy.data.materials.get(place.name)
     if (material === null) {
@@ -80,17 +79,22 @@ function _materialByPlace (place) { // eslint-disable-line no-unused-vars
   }
 }
 
-function _xyzFromDotOnEdge (length, height, edge) {
-  const [x0, y0, z0] = edge[0]
-  const [x1, y1, z1] = edge[1] // eslint-disable-line no-unused-vars
-  const xSpan = x1 - x0
-  const ySpan = y1 - y0
-  const edgeLength = Math.sqrt(xSpan ** 2 + ySpan ** 2)
+// function _xyzFromDotOnEdge (length, height, edge) {
+//   const [x0, y0, z0] = edge[0]
+//   const [x1, y1, z1] = edge[1] // eslint-disable-line no-unused-vars
+//   const xSpan = x1 - x0
+//   const ySpan = y1 - y0
+//   const edgeLength = Math.sqrt(xSpan ** 2 + ySpan ** 2)
 
-  // ;[d_edge, dz] = dot
-  const dx = length * xSpan / edgeLength
-  const dy = length * ySpan / edgeLength
-  return [x0 + dx, y0 + dy, z0 + height]
+//   const dx = length * xSpan / edgeLength
+//   const dy = length * ySpan / edgeLength
+//   return [x0 + dx, y0 + dy, z0 + height]
+// }
+
+function nudge2 (xy, { dx = 0, dy = 0, dxy = [0, 0] } = {}) {
+  const [x, y] = xy
+  const [dX, dY] = dxy
+  return [x + dx + dX, y + dy + dY]
 }
 
 export { rotate }
@@ -130,12 +134,10 @@ export default class Plato {
   }
 
   goto ({ x = 0, y = 0, z = 0, facing = Facing.NORTH } = {}) {
-    // print('plato: goto ')
     this._x = this._x0 + x
     this._y = this._y0 + y
     this._z = z
     this._facing = facing
-    // print('  goto: ({:,.0f},{:,.0f},{:,.0f})'.format(x, y, z))
     return this
   }
 
@@ -144,153 +146,98 @@ export default class Plato {
     this._output.deleteAllObjects()
   }
 
-  _beginFace () {
-    this._output.beginFace()
-  }
-
-  _endFace (color) {
-    this._output.endFace(color)
-  }
-
-  _newVert (xyz) {
-    xyz = rotate(xyz, this._facing)
-    const dxyz = [this._x, this._y, this._z]
-    xyz = nudge(xyz, { dxyz: dxyz })
-    this._output.newVert(xyz)
-  }
-
-  add (place, { shape, openings = [], nuance = false, flip = false } = {}) {
-    // Add a new mesh to the blender scene.
-
-    if (nuance && this._hurry) {
-      return this
-    }
+  addPlace (place, area, { z = 0, nuance = false, flip = false, wall = 0, openings = [] } = {}) {
+    z = z + this._z
     const color = COLORS_OF_PLACES[place]
-    // const at = [this._x, this._y, this._z]
-    this._beginFace()
-    if (this._hurry || openings.length === 0) {
-      for (const xyz of shape) {
-        this._newVert(xyz)
-      }
-      this._endFace(color)
-    } else {
-      const edge = (shape[0], shape[1])
-      this._newVert(shape[0])
-      // let i = 0
-      for (let opening of openings) {
-        // i++
-        opening = opening.copy()
-        const first = opening.shift()
-        opening.push(first)
-        opening.reverse()
-        let length = 0
-        let height = 0
-        ;[length, height] = opening[0]
-        const Z = 2
-        const basePoint = _xyzFromDotOnEdge(length, shape[0][Z], edge)
-        this._newVert(basePoint)
-        for (const qz of opening) {
-          ;[length, height] = qz
-          const xyz = _xyzFromDotOnEdge(length, height, edge)
-          this._newVert(xyz)
-        }
-        ;[length, height] = opening[0]
-        const xyz = _xyzFromDotOnEdge(length, height, edge)
-        this._newVert(xyz)
-        this._newVert(basePoint)
-      }
-      for (const xyz of shape) {
-        this._newVert(xyz)
-      }
-      this._endFace(color)
+    this._output.beginArea()
+    for (let xy of area) {
+      xy = rotate(xy, this._facing)
+      const dxy = [this._x, this._y]
+      xy = nudge2(xy, { dxy: dxy })
+      this._output.addCorner(xy)
     }
-
-    // TODO: fix me
-    // const area = face.calc_area()
-    // this._squareFeet[place] = area + this._squareFeet.get(place, 0)
-    return this
-  }
-
-  addPlace (place, { shape, nuance = false, flip = false, wall = 0, openings = [] } = {}) {
-    this.add(place, { shape: shape, nuance: nuance, flip: flip })
+    const squareFeet = this._output.endArea(color, z)
+    this._squareFeet[place] = squareFeet + (this._squareFeet[place] || 0)
     if (wall !== 0) {
-      this.addWall({ shape: shape, height: wall, openings: openings, nuance: nuance })
+      this._output.addWalls(wall, { z: z, openings: openings, nuance: nuance })
     }
     return this
   }
 
-  addWall ({ shape, nuance = false, cap = true, height = 10, openings = [] } = {}) {
-    let i = 0
-    for (const xyz of shape) {
-      i++
-      let windows = []
-      for (const opening of openings) {
-        if (opening[0] === i) {
-          windows = opening[1]
-        }
-      }
-      if (cap || i < shape.length) {
-        let next = 0
-        if (i < shape.length) {
-          next = i
-        }
-        const wall = [
-          xyz,
-          shape[next],
-          nudge(shape[next], { dz: height }),
-          nudge(xyz, { dz: height })]
-        this.add(Place.WALL, { shape: wall, nuance: nuance, openings: windows })
-      }
-    }
-    return this
-  }
+  // add (place, { shape, openings = [], nuance = false, flip = false } = {}) {
+  //   // Add a new mesh to the blender scene.
+
+  //   if (nuance && this._hurry) {
+  //     return this
+  //   }
+  //   const color = COLORS_OF_PLACES[place]
+  //   // const at = [this._x, this._y, this._z]
+  //   this._beginFace()
+  //   if (this._hurry || openings.length === 0) {
+  //     for (const xyz of shape) {
+  //       this._newVert(xyz)
+  //     }
+  //     this._endFace(color)
+  //   } else {
+  //     const edge = (shape[0], shape[1])
+  //     this._newVert(shape[0])
+  //     // let i = 0
+  //     for (let opening of openings) {
+  //       // i++
+  //       opening = opening.copy()
+  //       const first = opening.shift()
+  //       opening.push(first)
+  //       opening.reverse()
+  //       let length = 0
+  //       let height = 0
+  //       ;[length, height] = opening[0]
+  //       const Z = 2
+  //       const basePoint = _xyzFromDotOnEdge(length, shape[0][Z], edge)
+  //       this._newVert(basePoint)
+  //       for (const qz of opening) {
+  //         ;[length, height] = qz
+  //         const xyz = _xyzFromDotOnEdge(length, height, edge)
+  //         this._newVert(xyz)
+  //       }
+  //       ;[length, height] = opening[0]
+  //       const xyz = _xyzFromDotOnEdge(length, height, edge)
+  //       this._newVert(xyz)
+  //       this._newVert(basePoint)
+  //     }
+  //     for (const xyz of shape) {
+  //       this._newVert(xyz)
+  //     }
+  //     this._endFace(color)
+  //   }
+  //   return this
+  // }
 
   pontificate () {
     // Print a report of square footage of rooms, walkways, etc.
     const milliseconds = Date.now() - this._t0
     print(`plato: construction time was ${milliseconds} milliseconds`)
-
-    const codeComplete = false
-    if (codeComplete) {
-      print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
-      print('')
-      print(this._topic.toString() + ' floor area')
-      print('')
-      for (const roleName of this._squareFeet.keys()) {
-        const area = this._squareFeet[roleName]
-        print('  {}: {:,.0f} square feet'.format(roleName.name, area))
-      }
-
-      const floor = this._squareFeet[Place.ROOM] || 0
-      const parcel = this._squareFeet[Place.PARCEL] || 10
-      const street = this._squareFeet[Place.STREET] || 0
-      if (parcel) {
-        const parcelFar = floor / parcel
-        const urbanFar = floor / (parcel + street)
-        print('')
-        print('  Parcel FAR:   {:,.2f} floor area ratio'.format(parcelFar))
-        print('  Citywide FAR: {:,.2f} floor area ratio'.format(urbanFar))
-      }
-
-      const proximity = 0
-      const megastokes = 0
-      print('  Proximity: {:,.2f} ??? square-meters per meter'.format(proximity))
-      print('  Kinematic Fluidity: {:,.2f} ??? megaStokes (MSt)'.format(megastokes))
-      print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
+    print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
+    print(this._topic.toString() + ' floor area')
+    for (const roleName of Object.keys(this._squareFeet)) {
+      const area = this._squareFeet[roleName]
+      print(`  ${roleName}: ${area} square feet`)
     }
-    return this
-  }
-
-  addCubes (numberOfCubes = 1) {
-    // Create N new cubes at random locations, with different orientations.
-    for (const i of countTo(numberOfCubes)) {
-      const x = randomInt(-10, 20)
-      const y = randomInt(-10, 20)
-      const z = randomInt(-10, 20)
-      bpy.ops.mesh.primitive_cube_add([x, y, z], 4)
-      const radians = i * (3.14 / (4 * numberOfCubes))
-      bpy.ops.transform.rotate('Z', radians)
+    const floor = this._squareFeet[Place.ROOM] || 0
+    const parcel = this._squareFeet[Place.PARCEL] || 10
+    const street = this._squareFeet[Place.STREET] || 0
+    if (parcel) {
+      const parcelFar = (floor / parcel).toFixed(1)
+      const urbanFar = (floor / (parcel + street)).toFixed(1)
+      print('')
+      print(`  Parcel FAR:  ${parcelFar} floor area ratio`)
+      print(`  Overall FAR: ${urbanFar} floor area ratio`)
     }
+    // const proximity = 0
+    // const megastokes = 0
+    // print('  Proximity: {:,.2f} ??? square-meters per meter'.format(proximity))
+    // print('  Kinematic Fluidity: {:,.2f} ??? megaStokes (MSt)'.format(megastokes))
+    print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
+
     return this
   }
 }

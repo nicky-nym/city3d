@@ -17,6 +17,7 @@ function print (str) {
 
 const ONE_MILE = 5280
 const COLOR_GREY = 0x808080
+const BLUE_GLASS = 0x9999ff
 const COLOR_BRIGHT_SKY = 0xddeeff
 const COLOR_DIM_GROUND = 0x202020
 
@@ -77,66 +78,146 @@ export default class Output {
     this._renderer.setSize(window.innerWidth, window.innerHeight)
   }
 
-  beginFace () {
-    this._planarPoints = []
+  beginArea () {
+    this._areaCorners = []
   }
 
-  newVert (xyz) {
-    this._planarPoints.push(new THREE.Vector3(...xyz))
+  addCorner (xy) {
+    this._areaCorners.push(new THREE.Vector2(...xy))
   }
 
-  endFace (rgbaArray = FIXME_FUCHSIA) {
-    if (this._planarPoints.length < 3) {
-      console.log('skipping degenerate face')
-      return
-    }
-
-    // translate to origin
-    const p0 = this._planarPoints[0].clone()
-    const T = new THREE.Matrix4().setPosition(p0)
-    const translatedPoints = this._planarPoints.map(p => p.sub(p0))
-
-    const [, p1, p2] = translatedPoints // enough to determine the transformation matrix
-
-    // For now, just considering 3 possibilities: triangle origin-p1-p2 is in one of the three
-    // planes x=0, y=0 or z=0. (Note that this means all the remaining points are also in the same plane.)
-    let xyPoints
-    const R = new THREE.Matrix4()
-    const RInv = new THREE.Matrix4()
-    /* eslint-disable eqeqeq */
-    // TODO: '==' vs '===' is not the issue: we really should be comparing to Number.EPSILON.
-    if (p1.z == 0 && p2.z == 0) {
-      // case 1: z=0
-      // all points already in x-y plane, so we're done
-      xyPoints = translatedPoints
-    } else if (p1.x == 0 && p2.x == 0) {
-      // case 2: x=0
-      // rotate 90 around y-axis
-      R.makeRotationY(Math.PI / 2)
-      RInv.makeRotationY(-Math.PI / 2)
-      xyPoints = translatedPoints.map(p => p.applyMatrix4(R))
-    } else if (p1.y == 0 && p2.y == 0) {
-      // case 3: y=0
-      // rotate 90 around x-axis
-      R.makeRotationX(Math.PI / 2)
-      RInv.makeRotationX(-Math.PI / 2)
-      xyPoints = translatedPoints.map(p => p.applyMatrix4(R))
-    } else {
-      // something unexpected happened, so ignore this face
-      return
-    }
-    /* eslint-enable eqeqeq */
-
-    const shape = new THREE.Shape(xyPoints.map(p => new THREE.Vector2(p.x, p.y)))
+  endArea (rgbaArray = FIXME_FUCHSIA, z = 0) {
+    const shape = new THREE.Shape(this._areaCorners)
     shape.closePath()
     const geometry = new THREE.ShapeGeometry(shape)
+    geometry.translate(0, 0, z)
     const color = new THREE.Color(...rgbaArray)
-    const material = new THREE.MeshStandardMaterial({ color: color, side: THREE.DoubleSide })
+    const opacity = rgbaArray[3]
+    const material = new THREE.MeshStandardMaterial({
+      color: color,
+      opacity: opacity,
+      transparent: (opacity === 1),
+      side: THREE.DoubleSide
+    })
     const mesh = new THREE.Mesh(geometry, material)
-    mesh.applyMatrix(RInv)
-    mesh.applyMatrix(T)
     this._scene.add(mesh)
+
+    const squareFeet = THREE.ShapeUtils.area(this._areaCorners)
+    return squareFeet
   }
+
+  addWalls (height, { z = 0, openings = [], nuance = false, cap = true } = {}) {
+    let i = 0
+    const area = this._areaCorners
+    for (const vector2 of area) {
+      i++
+      // let windows = []
+      // for (const opening of openings) {
+      //   if (opening[0] === i) {
+      //     windows = opening[1]
+      //   }
+      // }
+      if (cap || i < area.length) {
+        let next = 0
+        if (i < area.length) {
+          next = i
+        }
+        const near = vector2
+        const far = area[next]
+        let wall
+        if (near.x === far.x) {
+          wall = [
+            new THREE.Vector2(near.y, 0),
+            new THREE.Vector2(far.y, 0),
+            new THREE.Vector2(far.y, height),
+            new THREE.Vector2(near.y, height)
+          ]
+        } else if (near.y === far.y) {
+          wall = [
+            new THREE.Vector2(near.x, 0),
+            new THREE.Vector2(far.x, 0),
+            new THREE.Vector2(far.x, height),
+            new THREE.Vector2(near.x, height)
+          ]
+        }
+        const shape = new THREE.Shape(wall)
+        shape.closePath()
+        const geometry = new THREE.ShapeGeometry(shape)
+        geometry.rotateX(Math.PI / 2)
+        if (near.x === far.x) {
+          geometry.rotateZ(Math.PI / 2)
+          geometry.translate(near.x, 0, z)
+        } else if (near.y === far.y) {
+          geometry.translate(0, near.y, z)
+        }
+        const color = new THREE.Color(BLUE_GLASS)
+        const material = new THREE.MeshStandardMaterial({ color: color, transparent: true, opacity: 0.7, side: THREE.DoubleSide })
+        const mesh = new THREE.Mesh(geometry, material)
+        this._scene.add(mesh)
+      }
+    }
+  }
+
+  // beginFace () {
+  //   this._planarPoints = []
+  // }
+
+  // newVert (xyz) {
+  //   this._planarPoints.push(new THREE.Vector3(...xyz))
+  // }
+
+  // endFace (rgbaArray = FIXME_FUCHSIA) {
+  //   if (this._planarPoints.length < 3) {
+  //     console.log('skipping degenerate face')
+  //     return
+  //   }
+
+  //   // translate to origin
+  //   const p0 = this._planarPoints[0].clone()
+  //   const T = new THREE.Matrix4().setPosition(p0)
+  //   const translatedPoints = this._planarPoints.map(p => p.sub(p0))
+
+  //   const [, p1, p2] = translatedPoints // enough to determine the transformation matrix
+
+  //   // For now, just considering 3 possibilities: triangle origin-p1-p2 is in one of the three
+  //   // planes x=0, y=0 or z=0. (Note that this means all the remaining points are also in the same plane.)
+  //   let xyPoints
+  //   const R = new THREE.Matrix4()
+  //   const RInv = new THREE.Matrix4()
+  //   /* eslint-disable eqeqeq */
+  //   // TODO: '==' vs '===' is not the issue: we really should be comparing to Number.EPSILON.
+  //   if (p1.z == 0 && p2.z == 0) {
+  //     // case 1: z=0
+  //     // all points already in x-y plane, so we're done
+  //     xyPoints = translatedPoints
+  //   } else if (p1.x == 0 && p2.x == 0) {
+  //     // case 2: x=0
+  //     // rotate 90 around y-axis
+  //     R.makeRotationY(Math.PI / 2)
+  //     RInv.makeRotationY(-Math.PI / 2)
+  //     xyPoints = translatedPoints.map(p => p.applyMatrix4(R))
+  //   } else if (p1.y == 0 && p2.y == 0) {
+  //     // case 3: y=0
+  //     // rotate 90 around x-axis
+  //     R.makeRotationX(Math.PI / 2)
+  //     RInv.makeRotationX(-Math.PI / 2)
+  //     xyPoints = translatedPoints.map(p => p.applyMatrix4(R))
+  //   } else {
+  //     // something unexpected happened, so ignore this face
+  //     return
+  //   }
+  //   /* eslint-enable eqeqeq */
+
+  //   const shape = new THREE.Shape(xyPoints.map(p => new THREE.Vector2(p.x, p.y)))
+  //   shape.closePath()
+  //   const geometry = new THREE.ShapeGeometry(shape)
+  //   const color = new THREE.Color(...rgbaArray)
+  //   const material = new THREE.MeshStandardMaterial({ color: color, side: THREE.DoubleSide })
+  //   const mesh = new THREE.Mesh(geometry, material)
+  //   mesh.applyMatrix(RInv)
+  //   mesh.applyMatrix(T)
+  //   this._scene.add(mesh)
+  // }
 
   animate () {
     window.requestAnimationFrame(() => this.animate())
