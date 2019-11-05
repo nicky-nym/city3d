@@ -15,6 +15,11 @@ function print (str) {
   console.log(str)
 }
 
+const ONE_MILE = 5280
+const COLOR_GREY = 0x808080
+const COLOR_BRIGHT_SKY = 0xddeeff
+const COLOR_DIM_GROUND = 0x202020
+
 export { print }
 export default class Output {
   // Output can render faces in three.js.
@@ -22,22 +27,31 @@ export default class Output {
   constructor () {
     const WIDTH = window.innerWidth
     const HEIGHT = window.innerHeight
+    const NEAR_CAMERA_LIMIT = 1
+    const FAR_CAMERA_LIMIT = ONE_MILE * 2
 
     this._shape = null
     this._scene = new THREE.Scene()
-    this._camera = new THREE.PerspectiveCamera(70, WIDTH / HEIGHT)
+    this._camera = new THREE.PerspectiveCamera(70, WIDTH / HEIGHT, NEAR_CAMERA_LIMIT, FAR_CAMERA_LIMIT)
     this._camera.position.x = 300
     this._camera.position.y = 500
     this._camera.position.z = 600
     this._camera.up.set(0, 0, 1) // make z be up instead of y
     this._scene.add(this._camera)
 
+    const axesHelper = new THREE.AxesHelper(ONE_MILE)
+    this._scene.add(axesHelper)
+
+    const gridHelper = new THREE.GridHelper(ONE_MILE, 8, COLOR_GREY, COLOR_GREY)
+    gridHelper.geometry.rotateX(Math.PI / 2)
+    this._scene.add(gridHelper)
+
     const light = new THREE.DirectionalLight(0xffffff, 3.0)
     light.position.set(-500, -800, 1500)
     this._scene.add(light)
     const ambientLight = new THREE.HemisphereLight(
-      0xddeeff, // bright sky color
-      0x202020, // dim ground color
+      COLOR_BRIGHT_SKY,
+      COLOR_DIM_GROUND,
       3 // intensity
     )
     this._scene.add(ambientLight)
@@ -64,28 +78,14 @@ export default class Output {
   }
 
   beginFace () {
-    // PYTHON: this._bmesh = bmesh.new()
-
     this._planarPoints = []
   }
 
   newVert (xyz) {
-    // PYTHON: this._bmesh.verts.new(xyz)
-
     this._planarPoints.push(new THREE.Vector3(...xyz))
   }
 
   endFace (rgbaArray = FIXME_FUCHSIA) {
-    // PYTHON: this._bmesh.faces.new(this._bmesh.verts)
-    // PYTHON: this._bmesh.normal_update()
-    // PYTHON: myMesh = bpy.data.meshes.new('')
-    // PYTHON: this._bmesh.to_mesh(myMesh)
-    // PYTHON: this._bmesh.free()
-    // PYTHON: obj =  bpy.data.objects.new('', myMesh)
-    // PYTHON: obj.data.materials.append(_materialByPlace(place))
-    // PYTHON: scene = bpy.context.scene
-    // PYTHON: scene.collection.objects.link(obj)
-
     if (this._planarPoints.length < 3) {
       console.log('skipping degenerate face')
       return
@@ -157,14 +157,10 @@ export default class Output {
       const bpy = null
       if (bpy.context.active_object) {
         let mode = bpy.context.active_object.mode
-        // print('mode: ' + mode)
         if (mode === 'EDIT') {
           bpy.ops.object.mode_set('OBJECT')
           mode = bpy.context.active_object.mode
           print('new mode: ' + mode)
-          // print('SELECT and delete FACE')
-          // bpy.ops.mesh.select_all(action='SELECT')
-          // bpy.ops.mesh.delete(type='FACE')
         }
         if (mode === 'OBJECT') {
           bpy.ops.object.select_all('SELECT')

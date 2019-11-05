@@ -110,7 +110,9 @@ export default class Plato {
   }
 
   envision () {
+    const t0 = Date.now()
     this._output.animate()
+    print(`plato: rendering time time was ${Date.now() - t0} milliseconds`)
   }
 
   hurry (hurry = false) {
@@ -124,6 +126,7 @@ export default class Plato {
     this._squareFeet = {}
     this._x0 = x0
     this._y0 = y0
+    this._t0 = Date.now()
   }
 
   goto ({ x = 0, y = 0, z = 0, facing = Facing.NORTH } = {}) {
@@ -244,6 +247,8 @@ export default class Plato {
 
   pontificate () {
     // Print a report of square footage of rooms, walkways, etc.
+    const milliseconds = Date.now() - this._t0
+    print(`plato: construction time was ${milliseconds} milliseconds`)
 
     const codeComplete = false
     if (codeComplete) {
