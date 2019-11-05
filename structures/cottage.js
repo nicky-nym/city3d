@@ -6,7 +6,7 @@
 // This is free and unencumbered software released into the public domain.
 // For more information, please refer to <http://unlicense.org>
 
-import { xyz, countTo, nudge, xy2xyz, yzwh2rect } from '../city3d/util.js'
+import { xyz, countTo, nudge, xy2xyz } from '../city3d/util.js'
 import Facing from '../city3d/facing.js'
 import Place from '../city3d/place.js'
 import { xy, nudge2 } from '../city3d/plato.js'
@@ -56,24 +56,25 @@ const GARAGE_SPEC = [
   [xy(-185, 44), []],
   [xy(-161, 44), []],
   [xy(-161, 23), []]]
-// const GARAGE = [entry[0] for entry in GARAGE_SPEC] // TODO: fix me!!
 const GARAGE = GARAGE_SPEC.map(([point, openings]) => point)
-// const GARAGE = GARAGE_SPEC.map((entry) => entry[0])
 
 const ADU_SPEC = [
   [xy(-154, 23), []],
   [xy(-154, 44), []],
   [xy(-124, 44), []],
   [xy(-124, 23), []]]
-// const ADU = [entry[0] for entry in ADU_SPEC] // TODO: fix me!!
 const ADU = ADU_SPEC.map(([point, openings]) => point)
-// const ADU = ADU_SPEC.map((entry) => entry[0])
 
 const ADU_DOORPATH = [
   xy(-160, 13),
   xy(-160, 36),
   xy(-155, 36),
   xy(-155, 13)]
+
+function yzwh2rect (y, z, width, height) {
+  // [(3, 2), (8, 2), (8, 6), (3, 6)] == yzwh2rect(3, 2, 5, 4)
+  return [xy(y, z), xy(y + width, z), xy(y + width, z + height), xy(y, z + height)]
+}
 
 // exterior walls (0.5 feet thick), clockwise from the back wall of the house
 const KITCHEN_WINDOWS = [yzwh2rect(3.958, 2.583, 5.750, 4.083)]
@@ -105,16 +106,15 @@ const HOUSE_SPEC = [
   [xy(-41.167, 16.75), BED_AND_BATH_WINDOWS],
   [xy(-57.792, 16.75), []]
 ]
-// const HOUSE = [entry[0] for entry in HOUSE_SPEC]
 const HOUSE = HOUSE_SPEC.map(([point, openings]) => point)
-// const HOUSE = HOUSE_SPEC.map((entry) => entry[0])
 
 // const HOUSE_WINDOWS = [(i, entry[1]) for i, entry in enumerate(HOUSE_SPEC)] // TODO: fix me!!
 // TODO: refactor this code for both HOUSE_WINDOWS and ADDON_WINDOWS
 const HOUSE_WINDOWS = []
 let i = 0
-for (const entry in HOUSE_SPEC) {
-  HOUSE_WINDOWS.push([i, entry])
+for (const [point, windows] of HOUSE_SPEC) { // eslint-disable-line no-unused-vars
+  // print(`cottage HOUSE_WINDOWS.push:    ${i}, ${windows}`)
+  HOUSE_WINDOWS.push([i, windows])
   i++
 }
 
@@ -130,16 +130,14 @@ const ADDON_SPEC = [
   [xy(-63.75, 17.833), WEST_WINDOWS]
 ]
 
-// const ADDON = [entry[0] for entry in ADDON_SPEC]
 const ADDON = ADDON_SPEC.map(([point, openings]) => point)
-// const ADDON = ADDON_SPEC.map((entry) => entry[0])
 
 // const ADDON_WINDOWS = [(i, entry[1]) for i, entry in enumerate(ADDON_SPEC)] // TODO: fix me!!
 // TODO: refactor this code for both HOUSE_WINDOWS and ADDON_WINDOWS
 const ADDON_WINDOWS = []
 let j = 0
-for (const entry in ADDON_SPEC) {
-  ADDON_WINDOWS.push([j, entry])
+for (const [point, windows] of ADDON_SPEC) { // eslint-disable-line no-unused-vars
+  ADDON_WINDOWS.push([j, windows])
   j++
 }
 const ATTIC = [
@@ -351,17 +349,17 @@ export default class Cottage extends Structure {
     // Attic
     const ATTIC_ELEVATION = GROUND_FLOOR_HEIGHT + CRAWL_SPACE_HEIGHT
     plato.goto({ x: x, y: y, z: ATTIC_ELEVATION, facing: facing })
+    plato.addPlace(Place.BARE, CHIMNEY, { height: CHIMNEY_HEIGHT, nuance: true })
     plato.addPlace(Place.BARE, ATTIC)
     plato.addRoof(Place.ROOF, VERTICES_OF_ROOF, INDICES_OF_ROOF_FACES)
-    plato.addPlace(Place.BARE, CHIMNEY, { height: CHIMNEY_HEIGHT, nuance: true })
+    // TODO: get this code working
+    // plato.addRoof(Place.ROOF, VERTICES_OF_DORMER, INDICES_OF_DORMER_FACES)
 
     // Porch roofs
     const PORCH_TOP_ELEVATION = ADDON_HEIGHT + CRAWL_SPACE_HEIGHT
     plato.goto({ x: x, y: y, z: PORCH_TOP_ELEVATION, facing: facing })
-    // TODO: get this code working again
-    // for (const roof of PORCH_ROOF) {
-    //   plato.add(Place.ROOF, roof)
-    // }
+    // TODO: get this code working
+    // plato.addRoof(Place.ROOF, VERTICES_OF_PORCH, INDICES_OF_PORCH_FACES)
     return this
   }
 }

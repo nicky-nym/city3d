@@ -112,13 +112,18 @@ export default class Output {
     let i = 0
     const area = this._areaCorners
     for (const vector2 of area) {
+      let windows = []
+      for (const opening of openings) {
+        if (opening[0] === i) {
+          windows = opening[1]
+        }
+      }
+      if (windows.length) {
+        print(`output.addWalls wall#:    ${i}`)
+        print(`output.addWalls #windows: ${windows.length}`)
+        print(`output.addWalls windows:  ${windows[0]}`)
+      }
       i++
-      // let windows = []
-      // for (const opening of openings) {
-      //   if (opening[0] === i) {
-      //     windows = opening[1]
-      //   }
-      // }
       if (cap || i < area.length) {
         let next = 0
         if (i < area.length) {
@@ -152,6 +157,22 @@ export default class Output {
         }
         if (wall) {
           const shape = new THREE.Shape(wall)
+          for (const window of windows) {
+            const dx = wall[0].x
+            const points = window.map(xy => {
+              const [x, y] = xy
+              return new THREE.Vector2(dx + x, y)
+            })
+            let opening = new THREE.Path(points)
+            // let opening = new THREE.Path([
+            //   new THREE.Vector2(x + 0.2, 1),
+            //   new THREE.Vector2(x + 0.8, 1),
+            //   new THREE.Vector2(x + 0.8, 5),
+            //   new THREE.Vector2(x + 0.2, 5)
+            // ])
+            shape.holes.push(opening)
+            print(`output.addWalls: shape.holes.push() ${opening.toString()}`)
+          }
           shape.closePath()
           const geometry = new THREE.ShapeGeometry(shape)
           geometry.rotateX(Math.PI / 2)
@@ -169,8 +190,13 @@ export default class Output {
             geometry.rotateZ(netAngle - Math.PI)
             geometry.translate(near.x, near.y, z)
           }
-          const color = new THREE.Color(BLUE_GLASS)
-          const material = new THREE.MeshStandardMaterial({ color: color, transparent: true, opacity: 0.7, side: THREE.DoubleSide })
+          let material
+          if (windows.length) {
+            material = new THREE.MeshStandardMaterial({ color: new THREE.Color(BLUE_GLASS), side: THREE.DoubleSide })
+          } else {
+            // material = new THREE.MeshStandardMaterial({ color: new THREE.Color(BLUE_GLASS), side: THREE.DoubleSide })
+            material = new THREE.MeshStandardMaterial({ color: new THREE.Color(BLUE_GLASS), transparent: true, opacity: 0.7, side: THREE.DoubleSide })
+          }
           const mesh = new THREE.Mesh(geometry, material)
           this._scene.add(mesh)
         }
@@ -179,9 +205,6 @@ export default class Output {
   }
 
   addRoof (rgba, verticesOfRoof, indicesOfFaces) {
-    print(`addRoof vertices:  ${verticesOfRoof}`)
-    print(`addRoof indexes:  ${indicesOfFaces}`)
-
     const geometry = new THREE.Geometry()
     geometry.vertices = verticesOfRoof.map(xyz => new THREE.Vector3(...xyz))
     geometry.faces = indicesOfFaces.map(abc => new THREE.Face3(...abc))

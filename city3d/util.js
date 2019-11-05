@@ -41,9 +41,4 @@ function xy2xyz (xyz, deltaZ = 0) {
   return [xyz[X], xyz[Y], z]
 }
 
-function yzwh2rect (y, z, width, height) {
-  // [(3, 2), (8, 2), (8, 6), (3, 6)] == yzwh2rect(3, 2, 5, 4)
-  return [xyz(y, z), xyz(y + width, z), xyz(y + width, z + height), xyz(y, z + height)]
-}
-
-export { xyz, rgba, count, countTo, randomInt, nudge, xy2xyz, yzwh2rect }
+export { xyz, rgba, count, countTo, randomInt, nudge, xy2xyz }
