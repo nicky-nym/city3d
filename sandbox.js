@@ -6,12 +6,12 @@
 // This is free and unencumbered software released into the public domain.
 // For more information, please refer to <http://unlicense.org>
 
-import Plato from './city3d/plato.js'
-import Manhattan from './structures/manhattan.js'
-// import Merlon from './structures/merlon.js'
 // import Bikeway from './structures/bikeway.js'
 // import Cottage from './structures/cottage.js'
-// import Wurster from './structures/wurster.js'
+import Manhattan from './structures/manhattan.js'
+// import Merlon from './structures/merlon.js'
+import Plato from './city3d/plato.js'
+import Wurster from './structures/wurster.js'
 
 // declarations for the "standard" linter:
 
@@ -25,10 +25,10 @@ function addBuildings () {
   // cottage.addStreet(12)
   // plato.pontificate()
 
-  const CITY_SIZE = 2
+  const CITY_SIZE = 1
   plato.study('Manhattan New York', { x0: -800 * CITY_SIZE, y0: -600 * CITY_SIZE })
   const nyc = new Manhattan(plato)
-  nyc.addBlocks(CITY_SIZE, CITY_SIZE * 2)
+  nyc.addBlocks(CITY_SIZE, CITY_SIZE * 1)
   plato.pontificate()
   plato.envision()
 
@@ -42,10 +42,10 @@ function addBuildings () {
   // bikeway.addBikeways(3, 3, { buildings: true })
   // plato.pontificate()
 
-  // plato.study('Wurster Hall(s)', { x0: 100, y0: -600 })
-  // const wurster = new Wurster(plato)
-  // wurster.addBuildings(1)
-  // plato.pontificate()
+  plato.study('Wurster Hall(s)', { x0: 100, y0: -600 })
+  const wurster = new Wurster(plato)
+  wurster.addBuildings(1)
+  plato.pontificate()
 }
 
 addBuildings()

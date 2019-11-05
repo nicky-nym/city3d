@@ -147,7 +147,7 @@ export default class Wurster extends Structure {
 
   addParcel () {
     this._plato.goto({ x: 0, y: 0, z: 0 })
-    this._plato.addPlace(Place.PARCEL, { shape: PARCEL })
+    this._plato.addPlace(Place.PARCEL, PARCEL)
     return this
   }
 
@@ -156,10 +156,10 @@ export default class Wurster extends Structure {
     for (const i in countTo(NUM_SOUTH_WING_FLOORS)) {
       z = i * STORY_HEIGHT
       this._plato.goto({ x: SOUTH_WING_X0, y: SOUTH_WING_Y0, z: z })
-      this._plato.addPlace(Place.ROOM, { shape: SOUTH_WING, wall: STORY_HEIGHT })
+      this._plato.addPlace(Place.ROOM, SOUTH_WING, { wall: STORY_HEIGHT })
     }
     this._plato.goto({ x: SOUTH_WING_X0, y: SOUTH_WING_Y0, z: z + STORY_HEIGHT })
-    this._plato.addPlace(Place.ROOF, { shape: SOUTH_WING, wall: PARAPET_HEIGHT })
+    this._plato.addPlace(Place.ROOF, SOUTH_WING, { wall: PARAPET_HEIGHT })
     return this
   }
 
@@ -168,10 +168,10 @@ export default class Wurster extends Structure {
     for (const i in countTo(NUM_CENTER_WING_FLOORS)) {
       z = i * STORY_HEIGHT
       this._plato.goto({ x: CENTER_WING_X0, y: CENTER_WING_Y0, z: z })
-      this._plato.addPlace(Place.ROOM, { shape: CENTER_WING, wall: STORY_HEIGHT })
+      this._plato.addPlace(Place.ROOM, CENTER_WING, { wall: STORY_HEIGHT })
     }
     this._plato.goto({ x: CENTER_WING_X0, y: CENTER_WING_Y0, z: z + STORY_HEIGHT })
-    this._plato.addPlace(Place.ROOF, { shape: CENTER_WING, wall: PARAPET_HEIGHT })
+    this._plato.addPlace(Place.ROOF, CENTER_WING, { wall: PARAPET_HEIGHT })
     return this
   }
 
@@ -180,10 +180,10 @@ export default class Wurster extends Structure {
     for (const i in countTo(NUM_NORTH_WING_FLOORS)) {
       z = i * STORY_HEIGHT
       this._plato.goto({ x: NORTH_WING_X0, y: NORTH_WING_Y0, z: z })
-      this._plato.addPlace(Place.ROOM, { shape: NORTH_WING, wall: STORY_HEIGHT })
+      this._plato.addPlace(Place.ROOM, NORTH_WING, { wall: STORY_HEIGHT })
     }
     this._plato.goto({ x: NORTH_WING_X0, y: NORTH_WING_Y0, z: z + STORY_HEIGHT })
-    this._plato.addPlace(Place.ROOF, { shape: NORTH_WING, wall: PARAPET_HEIGHT })
+    this._plato.addPlace(Place.ROOF, NORTH_WING, { wall: PARAPET_HEIGHT })
     return this
   }
 
@@ -193,30 +193,30 @@ export default class Wurster extends Structure {
       z = i * STORY_HEIGHT
 
       this._plato.goto({ x: TOWER_X0, y: TOWER_Y0, z: z })
-      this._plato.addPlace(Place.ROOM, { shape: TOWER, wall: STORY_HEIGHT })
+      this._plato.addPlace(Place.ROOM, TOWER, { wall: STORY_HEIGHT })
 
       this._plato.goto({ x: TOWER_EAST_X0, y: TOWER_EAST_Y0, z: z })
-      this._plato.addPlace(Place.ROOM, { shape: TOWER_EAST, wall: STORY_HEIGHT })
+      this._plato.addPlace(Place.ROOM, TOWER_EAST, { wall: STORY_HEIGHT })
 
       this._plato.goto({ x: TOWER_WEST_X0, y: TOWER_WEST_Y0, z: z })
-      this._plato.addPlace(Place.ROOM, { shape: TOWER_WEST, wall: STORY_HEIGHT })
+      this._plato.addPlace(Place.ROOM, TOWER_WEST, { wall: STORY_HEIGHT })
     }
 
     this._plato.goto({ x: TOWER_X0, y: TOWER_Y0, z: z + STORY_HEIGHT })
-    this._plato.addPlace(Place.ROOF, { shape: TOWER, wall: PARAPET_HEIGHT })
+    this._plato.addPlace(Place.ROOF, TOWER, { wall: PARAPET_HEIGHT })
 
     this._plato.goto({ x: TOWER_EAST_X0, y: TOWER_EAST_Y0, z: z + STORY_HEIGHT })
-    this._plato.addPlace(Place.ROOF, { shape: TOWER_EAST, wall: PARAPET_HEIGHT })
+    this._plato.addPlace(Place.ROOF, TOWER_EAST, { wall: PARAPET_HEIGHT })
 
     z += STORY_HEIGHT
     this._plato.goto({ x: TOWER_WEST_X0, y: TOWER_WEST_Y0, z: z })
-    this._plato.addPlace(Place.ROOM, { shape: TOWER_WEST, wall: STORY_HEIGHT })
+    this._plato.addPlace(Place.ROOM, TOWER_WEST, { wall: STORY_HEIGHT })
 
     this._plato.goto({ x: FLOOR_TEN_BALCONY_X0, y: FLOOR_TEN_BALCONY_Y0, z: z })
-    this._plato.addPlace(Place.ROOM, { shape: FLOOR_TEN_BALCONY, wall: PARAPET_HEIGHT })
+    this._plato.addPlace(Place.ROOM, FLOOR_TEN_BALCONY, { wall: PARAPET_HEIGHT })
 
     this._plato.goto({ x: TOWER_WEST_X0, y: TOWER_WEST_Y0, z: z + STORY_HEIGHT })
-    this._plato.addPlace(Place.ROOF, { shape: TOWER_WEST, wall: PARAPET_HEIGHT })
+    this._plato.addPlace(Place.ROOF, TOWER_WEST, { wall: PARAPET_HEIGHT })
 
     return this
   }
