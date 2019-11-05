@@ -8,6 +8,8 @@
 
 import * as THREE from '../three/build/three.module.js'
 import { OrbitControls } from '../three/examples/jsm/controls/OrbitControls.js'
+// import { ConvexHull } from '../three/examples/jsm/math/ConvexHull.js'
+// import { ConvexGeometry } from '../three/examples/jsm/geometries/ConvexGeometry.js'
 
 const FIXME_FUCHSIA = [1, 0, 1, 0] // used as a default so it's obvious when a color is missing
 
@@ -174,6 +176,20 @@ export default class Output {
         }
       }
     }
+  }
+
+  addRoof (rgba, verticesOfRoof, indicesOfFaces) {
+    print(`addRoof vertices:  ${verticesOfRoof}`)
+    print(`addRoof indexes:  ${indicesOfFaces}`)
+
+    const geometry = new THREE.Geometry()
+    geometry.vertices = verticesOfRoof.map(xyz => new THREE.Vector3(...xyz))
+    geometry.faces = indicesOfFaces.map(abc => new THREE.Face3(...abc))
+    geometry.computeBoundingSphere()
+    const color = new THREE.Color(...FIXME_FUCHSIA)
+    const material = new THREE.MeshStandardMaterial({ color: color, side: THREE.DoubleSide })
+    const mesh = new THREE.Mesh(geometry, material)
+    this._scene.add(mesh)
   }
 
   // beginFace () {

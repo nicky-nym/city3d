@@ -13,8 +13,6 @@ import Manhattan from './structures/manhattan.js'
 import Plato from './city3d/plato.js'
 import Wurster from './structures/wurster.js'
 
-// declarations for the "standard" linter:
-
 function addBuildings () {
   const plato = new Plato()
 

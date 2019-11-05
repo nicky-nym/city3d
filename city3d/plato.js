@@ -6,7 +6,7 @@
 // This is free and unencumbered software released into the public domain.
 // For more information, please refer to <http://unlicense.org>
 
-import { rgba } from './util.js'
+import { rgba, nudge } from './util.js'
 import Place from './place.js'
 import Facing from './facing.js'
 import Output, { print } from './output.js'
@@ -17,7 +17,7 @@ const GREEN = rgba(0, 1, 0, 1) // eslint-disable-line no-unused-vars
 const BLUE = rgba(0, 0, 1, 1) // opaque blue
 const YELLOW = rgba(1, 1, 0, 1) // opaque yellow
 
-const GREEN_GRASS = rgba(0, 0.3, 0, 1) // opaque dark green
+const GREEN_GRASS = rgba(0, 0.2, 0, 1) // opaque dark green
 const BROWN = rgba(0.5, 0.4, 0.2, 1)
 const DARK_GRAY = rgba(0.25, 0.25, 0.25, 1) // opaque dark gray
 const LIGHT_GRAY = rgba(0.8745, 0.8745, 0.8745, 1) // opaque light gray
@@ -101,7 +101,7 @@ function nudge2 (xy, { dx = 0, dy = 0, dxy = [0, 0] } = {}) {
   return [x + dx + dX, y + dy + dY]
 }
 
-export { rotate, xy }
+export { rotate, xy, nudge2 }
 export default class Plato {
   // Plato can envision 3D architectural spaces, with walls, floors, etc.
 
@@ -171,6 +171,13 @@ export default class Plato {
       this._output.addWalls(wall, { z: z, openings: openings, nuance: nuance, cap: cap })
     }
     return this
+  }
+
+  addRoof (place, verticesOfRoof, indicesOfFaces) {
+    const color = COLORS_OF_PLACES[place]
+    const dxyz = [this._x, this._y, this._z]
+    const vertices = verticesOfRoof.map(xyz => nudge(xyz, { dxyz: dxyz }))
+    this._output.addRoof(color, vertices, indicesOfFaces)
   }
 
   // add (place, { shape, openings = [], nuance = false, flip = false } = {}) {

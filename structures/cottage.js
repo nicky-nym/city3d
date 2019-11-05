@@ -9,8 +9,9 @@
 import { xyz, countTo, nudge, xy2xyz, yzwh2rect } from '../city3d/util.js'
 import Facing from '../city3d/facing.js'
 import Place from '../city3d/place.js'
-import { xy } from '../city3d/plato.js'
+import { xy, nudge2 } from '../city3d/plato.js'
 import Structure from '../city3d/structure.js'
+import { print } from '../city3d/output.js'
 
 const X = 0
 const Y = 1
@@ -142,16 +143,16 @@ for (const entry in ADDON_SPEC) {
   j++
 }
 const ATTIC = [
-  nudge(HOUSE[0], { dx: -1, dy: 1 }),
-  nudge(HOUSE[1], { dx: -1, dy: 1 }),
-  nudge(HOUSE[2], { dx: -1, dy: 1 }),
-  nudge(xy(HOUSE[4][X], HOUSE[3][Y]), { dx: 1, dy: 1 }),
-  nudge(xy(HOUSE[5][X], HOUSE[6][Y]), { dx: 1, dy: -1 }),
-  nudge(HOUSE[7], { dx: 1, dy: -1 }),
-  nudge(HOUSE[8], { dx: 1, dy: -1 }),
-  nudge(HOUSE[9], { dx: -1, dy: -1 }),
-  nudge(HOUSE[10], { dx: -1, dy: -1 }),
-  nudge(HOUSE[11], { dx: -1, dy: -1 })]
+  nudge2(HOUSE[0], { dx: -1, dy: 1 }),
+  nudge2(HOUSE[1], { dx: -1, dy: 1 }),
+  nudge2(HOUSE[2], { dx: -1, dy: 1 }),
+  nudge2(xy(HOUSE[4][X], HOUSE[3][Y]), { dx: 1, dy: 1 }),
+  nudge2(xy(HOUSE[5][X], HOUSE[6][Y]), { dx: 1, dy: -1 }),
+  nudge2(HOUSE[7], { dx: 1, dy: -1 }),
+  nudge2(HOUSE[8], { dx: 1, dy: -1 }),
+  nudge2(HOUSE[9], { dx: -1, dy: -1 }),
+  nudge2(HOUSE[10], { dx: -1, dy: -1 }),
+  nudge2(HOUSE[11], { dx: -1, dy: -1 })]
 const PORCH = [
   xy(-25.792, 32.75),
   xy(-25.792 + 5.333, 32.75),
@@ -194,19 +195,48 @@ const PORCH_ROOF = [
   [xy2xyz(PORCH[0], 2), PORCH[1], PORCH[2], xy2xyz(PORCH[3], 2)]
 ]
 
-const ROOF = [
-  [PEAK_BACK, ATTIC[0], ATTIC[9]],
-  [PEAK_NORTH_INSET, PEAK_BACK_INSET, PEAK_BACK, ATTIC[0], ATTIC[1]],
-  [PEAK_NORTH, PEAK_NORTH_INSET, ATTIC[1], ATTIC[2]],
-  [PEAK_FRONT, PEAK_FRONT_INSET, PEAK_NORTH, ATTIC[2], ATTIC[3]],
-  [PEAK_FRONT, ATTIC[3], ATTIC[4]],
-  [PEAK_FRONT_INSET, PEAK_FRONT, ATTIC[4], ATTIC[5]],
-  [PEAK_OFFICE, PEAK_OFFICE_INSET, PEAK_BACK_INSET, PEAK_NORTH_INSET, PEAK_NORTH, PEAK_FRONT_INSET, ATTIC[5], ATTIC[6]],
-  [PEAK_OFFICE, ATTIC[6], ATTIC[7]],
-  [PEAK_OFFICE_INSET, PEAK_OFFICE, ATTIC[7], ATTIC[8]],
-  [PEAK_BACK, PEAK_BACK_INSET, PEAK_OFFICE_INSET, ATTIC[8], ATTIC[9]],
-  [PEAK_DORMER, PEAK_DORMER_INSET, DORMER_NW, DORMER_NE],
-  [PEAK_DORMER_INSET, PEAK_DORMER, DORMER_SE, DORMER_SW]
+// corners of attic roof
+const vertices = []
+for (const i of countTo(ATTIC.length)) {
+  vertices[i] = xyz(...ATTIC[i])
+}
+vertices[10] = PEAK_BACK
+vertices[11] = PEAK_BACK_INSET
+vertices[12] = PEAK_NORTH
+vertices[13] = PEAK_NORTH_INSET
+vertices[14] = PEAK_FRONT
+vertices[15] = PEAK_FRONT_INSET
+vertices[16] = PEAK_OFFICE
+vertices[17] = PEAK_OFFICE_INSET
+
+function face (a, b, c) {
+  return [a, b, c]
+}
+const VERTICES_OF_ROOF = vertices
+const INDICES_OF_ROOF_FACES = [
+  face(10, 9, 0),
+  face(10, 0, 1),
+  face(10, 1, 13),
+  face(10, 13, 11),
+  face(13, 1, 2),
+  face(13, 2, 12),
+  face(12, 2, 15),
+  face(15, 2, 3),
+  face(15, 3, 14),
+  face(15, 14, 4),
+  face(15, 4, 5),
+  face(5, 12, 15),
+  face(5, 13, 12),
+  face(5, 11, 13),
+  face(5, 17, 11),
+  face(5, 16, 17),
+  face(5, 6, 16),
+  face(6, 7, 16),
+  face(7, 8, 16),
+  face(8, 17, 16),
+  face(8, 11, 17),
+  face(8, 10, 11),
+  face(8, 9, 10)
 ]
 
 const CHIMNEY_HEIGHT = 16
@@ -322,10 +352,7 @@ export default class Cottage extends Structure {
     const ATTIC_ELEVATION = GROUND_FLOOR_HEIGHT + CRAWL_SPACE_HEIGHT
     plato.goto({ x: x, y: y, z: ATTIC_ELEVATION, facing: facing })
     plato.addPlace(Place.BARE, ATTIC)
-    // TODO: get this code working again
-    // for (const roof of ROOF) {
-    //   plato.add(Place.ROOF, roof)
-    // }
+    plato.addRoof(Place.ROOF, VERTICES_OF_ROOF, INDICES_OF_ROOF_FACES)
     plato.addPlace(Place.BARE, CHIMNEY, { height: CHIMNEY_HEIGHT, nuance: true })
 
     // Porch roofs
