@@ -140,7 +140,13 @@ export default class Output {
             new THREE.Vector2(near.x, height)
           ]
         } else {
-          print('output.addWalls: found angled wall')
+          const length = near.distanceTo(far)
+          wall = [
+            new THREE.Vector2(0, 0),
+            new THREE.Vector2(length, 0),
+            new THREE.Vector2(length, height),
+            new THREE.Vector2(0, height)
+          ]
         }
         if (wall) {
           const shape = new THREE.Shape(wall)
@@ -152,6 +158,14 @@ export default class Output {
             geometry.translate(near.x, 0, z)
           } else if (near.y === far.y) {
             geometry.translate(0, near.y, z)
+          } else {
+            const net = new THREE.Vector2()
+            const netAngle = net.subVectors(near, far).angle()
+            // print(`output.addWalls: found wall at angle ${netAngle.toFixed(2)} radians`)
+            // print(`                 near (${near.x.toFixed(0)}, ${near.y.toFixed(0)})`)
+            // print(`                  far (${far.x.toFixed(0)}, ${far.y.toFixed(0)})`)
+            geometry.rotateZ(netAngle - Math.PI)
+            geometry.translate(near.x, near.y, z)
           }
           const color = new THREE.Color(BLUE_GLASS)
           const material = new THREE.MeshStandardMaterial({ color: color, transparent: true, opacity: 0.7, side: THREE.DoubleSide })

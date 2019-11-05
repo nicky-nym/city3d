@@ -129,7 +129,9 @@ export default class Plato {
   }
 
   study (topic = '', { x0 = 0, y0 = 0 } = {}) {
-    print('plato: studying ' + topic)
+    if (topic) {
+      print('plato: studying ' + topic)
+    }
     this._topic = topic
     this._squareFeet = {}
     this._x0 = x0
@@ -230,11 +232,11 @@ export default class Plato {
     const parcel = this._squareFeet[Place.PARCEL] || 10
     const street = this._squareFeet[Place.STREET] || 0
     if (parcel) {
-      const parcelFar = (floor / parcel).toFixed(1)
-      const urbanFar = (floor / (parcel + street)).toFixed(1)
+      const parcelFar = floor / parcel
+      const urbanFar = floor / (parcel + street)
       print('')
-      print(`  Parcel FAR:  ${parcelFar} floor area ratio`)
-      print(`  Overall FAR: ${urbanFar} floor area ratio`)
+      print(`  Parcel FAR:  ${parcelFar.toFixed(1)} floor area ratio`)
+      print(`  Overall FAR: ${urbanFar.toFixed(1)} floor area ratio`)
     }
     // const proximity = 0
     // const megastokes = 0

@@ -30,7 +30,6 @@ function addBuildings () {
   const nyc = new Manhattan(plato)
   nyc.addBlocks(CITY_SIZE, CITY_SIZE * 1)
   plato.pontificate()
-  plato.envision()
 
   // plato.study('Merlon Buildings', { x0: 238, y0: 238 })
   // const merlon = new Merlon(plato)
@@ -46,6 +45,8 @@ function addBuildings () {
   const wurster = new Wurster(plato)
   wurster.addBuildings(1)
   plato.pontificate()
+
+  plato.envision()
 }
 
 addBuildings()

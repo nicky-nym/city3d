@@ -284,8 +284,9 @@ export default class Cottage extends Structure {
 
   addParcel (x = 0, y = 0, facing = Facing.NORTH) {
     // Tell plato about the yard, fence, sidewalk, etc.
-    this._plato.goto({ x: x, y: y, z: 0, facing: facing })
+    this._plato.goto({ x: x, y: y, z: -0.01, facing: facing })
     this._plato.addPlace(Place.PARCEL, PARCEL)
+    this._plato.goto({ x: x, y: y, z: 0, facing: facing })
     // TODO: get this code working again
     // this._plato.add_wall(FENCE_LINE, { height: FENCE_HEIGHT, cap: false })
     this._plato.addPlace(Place.WALKWAY, DOORPATH, { nuance: true })
