@@ -152,9 +152,9 @@ export default class Plato {
     this._output.deleteAllObjects()
   }
 
-  addPlace (place, area, { z = 0, nuance = false, flip = false, wall = 0, openings = [] } = {}) {
+  addPlace (place, area, { z = 0, nuance = false, flip = false, cap = true, wall = 0, openings = [] } = {}) {
+    // print(`plato: adding ${place} with cap = ${cap}, wall = ${wall}`)
     z = z + this._z
-    const color = COLORS_OF_PLACES[place]
     this._output.beginArea()
     for (let xy of area) {
       xy = rotate(xy, this._facing)
@@ -162,10 +162,13 @@ export default class Plato {
       xy = nudge2(xy, { dxy: dxy })
       this._output.addCorner(xy)
     }
-    const squareFeet = this._output.endArea(color, z)
-    this._squareFeet[place] = squareFeet + (this._squareFeet[place] || 0)
+    if (cap) {
+      const color = COLORS_OF_PLACES[place]
+      const squareFeet = this._output.endArea(color, z)
+      this._squareFeet[place] = squareFeet + (this._squareFeet[place] || 0)
+    }
     if (wall !== 0) {
-      this._output.addWalls(wall, { z: z, openings: openings, nuance: nuance })
+      this._output.addWalls(wall, { z: z, openings: openings, nuance: nuance, cap: cap })
     }
     return this
   }
