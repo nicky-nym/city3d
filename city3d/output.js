@@ -118,11 +118,6 @@ export default class Output {
           windows = opening[1]
         }
       }
-      if (windows.length) {
-        print(`output.addWalls wall#:    ${i}`)
-        print(`output.addWalls #windows: ${windows.length}`)
-        print(`output.addWalls windows:  ${windows[0]}`)
-      }
       i++
       if (cap || i < area.length) {
         let next = 0
@@ -131,75 +126,39 @@ export default class Output {
         }
         const near = vector2
         const far = area[next]
-        let wall = null
-        if (near.x === far.x) {
-          wall = [
-            new THREE.Vector2(near.y, 0),
-            new THREE.Vector2(far.y, 0),
-            new THREE.Vector2(far.y, height),
-            new THREE.Vector2(near.y, height)
-          ]
-        } else if (near.y === far.y) {
-          wall = [
-            new THREE.Vector2(near.x, 0),
-            new THREE.Vector2(far.x, 0),
-            new THREE.Vector2(far.x, height),
-            new THREE.Vector2(near.x, height)
-          ]
+        const length = near.distanceTo(far)
+        const wall = [
+          new THREE.Vector2(0, 0),
+          new THREE.Vector2(length, 0),
+          new THREE.Vector2(length, height),
+          new THREE.Vector2(0, height)
+        ]
+
+        const shape = new THREE.Shape(wall)
+        shape.closePath()
+        for (const window of windows) {
+          const points = window.map(xy => new THREE.Vector2(...xy))
+          const opening = new THREE.Path(points)
+          shape.holes.push(opening)
+        }
+        const geometry = new THREE.ShapeGeometry(shape)
+        geometry.rotateX(Math.PI / 2)
+
+        const difference = new THREE.Vector2()
+        const netAngle = difference.subVectors(near, far).angle()
+        geometry.rotateZ(netAngle - Math.PI)
+        geometry.translate(near.x, near.y, z)
+
+        let material
+        if (windows.length) {
+          material = new THREE.MeshStandardMaterial({ color: new THREE.Color(BLUE_GLASS), side: THREE.DoubleSide })
         } else {
-          const length = near.distanceTo(far)
-          wall = [
-            new THREE.Vector2(0, 0),
-            new THREE.Vector2(length, 0),
-            new THREE.Vector2(length, height),
-            new THREE.Vector2(0, height)
-          ]
+          // material = new THREE.MeshStandardMaterial({ color: new THREE.Color(BLUE_GLASS), side: THREE.DoubleSide })
+          material = new THREE.MeshStandardMaterial({ color: new THREE.Color(BLUE_GLASS), transparent: true, opacity: 0.7, side: THREE.DoubleSide })
         }
-        if (wall) {
-          const shape = new THREE.Shape(wall)
-          for (const window of windows) {
-            const dx = wall[0].x
-            const points = window.map(xy => {
-              const [x, y] = xy
-              return new THREE.Vector2(dx + x, y)
-            })
-            let opening = new THREE.Path(points)
-            // let opening = new THREE.Path([
-            //   new THREE.Vector2(x + 0.2, 1),
-            //   new THREE.Vector2(x + 0.8, 1),
-            //   new THREE.Vector2(x + 0.8, 5),
-            //   new THREE.Vector2(x + 0.2, 5)
-            // ])
-            shape.holes.push(opening)
-            print(`output.addWalls: shape.holes.push() ${opening.toString()}`)
-          }
-          shape.closePath()
-          const geometry = new THREE.ShapeGeometry(shape)
-          geometry.rotateX(Math.PI / 2)
-          if (near.x === far.x) {
-            geometry.rotateZ(Math.PI / 2)
-            geometry.translate(near.x, 0, z)
-          } else if (near.y === far.y) {
-            geometry.translate(0, near.y, z)
-          } else {
-            const net = new THREE.Vector2()
-            const netAngle = net.subVectors(near, far).angle()
-            // print(`output.addWalls: found wall at angle ${netAngle.toFixed(2)} radians`)
-            // print(`                 near (${near.x.toFixed(0)}, ${near.y.toFixed(0)})`)
-            // print(`                  far (${far.x.toFixed(0)}, ${far.y.toFixed(0)})`)
-            geometry.rotateZ(netAngle - Math.PI)
-            geometry.translate(near.x, near.y, z)
-          }
-          let material
-          if (windows.length) {
-            material = new THREE.MeshStandardMaterial({ color: new THREE.Color(BLUE_GLASS), side: THREE.DoubleSide })
-          } else {
-            // material = new THREE.MeshStandardMaterial({ color: new THREE.Color(BLUE_GLASS), side: THREE.DoubleSide })
-            material = new THREE.MeshStandardMaterial({ color: new THREE.Color(BLUE_GLASS), transparent: true, opacity: 0.7, side: THREE.DoubleSide })
-          }
-          const mesh = new THREE.Mesh(geometry, material)
-          this._scene.add(mesh)
-        }
+        const mesh = new THREE.Mesh(geometry, material)
+        this._scene.add(mesh)
+
       }
     }
   }
