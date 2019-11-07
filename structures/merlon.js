@@ -25,11 +25,11 @@ const TOWER_SPACING = TOWER_WIDTH + RAMP_WIDTH
 
 const D1 = LANDING_WIDTH / 2.0
 const D2 = RAMP_WIDTH / 2.0
-const RAMP = [
-  xyz(+D2, D1, 0),
-  xyz(+D2, D1 + RAMP_LENGTH, RAMP_HEIGHT),
-  xyz(-D2, D1 + RAMP_LENGTH, RAMP_HEIGHT),
-  xyz(-D2, D1, 0)
+const RAMP_CORNERS = [
+  xy(+D2, D1),
+  xy(+D2, D1 + RAMP_LENGTH),
+  xy(-D2, D1 + RAMP_LENGTH),
+  xy(-D2, D1)
 ]
 const OCTAGONAL_LANDING = [
   xy(-D1, -D2),
@@ -224,8 +224,6 @@ function _trimEdgeRampsFromPattern (grid) {
     return out
   }
 
-  // const numRows = grid.length
-  // const numCols = grid[0].length
   for (const column of grid) {
     const LAST = column.length - 1
     column[0] = _trimEdgeRampsFromLandings(column[0], Facing.SOUTH)
@@ -294,12 +292,12 @@ function _addFeaturesAtLanding (plato, rampBearings, at, buildings = true) {
   // Ramps
   for (const bearing of rampBearings) {
     plato.goto({ x: x, y: y, z: z, facing: bearing })
-    // TODO: Fix me!
-    // plato.addPlace(Place.WALKWAY, RAMP)
+    plato.addPlace(Place.WALKWAY, RAMP_CORNERS, { incline: RAMP_HEIGHT })
   }
 
   // Floors, Walls, and Roof
-  if (buildings && z % STORY_HEIGHT === 0) {
+  const FIXME_hide_while_debugging = false
+  if (!FIXME_hide_while_debugging && buildings && z % STORY_HEIGHT === 0) {
     for (const bearing of rampBearings) {
       // parcel
       plato.goto({ x: x, y: y, z: 0, facing: bearing })

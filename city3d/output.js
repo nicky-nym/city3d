@@ -41,9 +41,9 @@ export default class Output {
 
     // camera
     this._camera = new THREE.PerspectiveCamera(70, WIDTH / HEIGHT, NEAR_CAMERA_LIMIT, FAR_CAMERA_LIMIT)
-    this._camera.position.x = 300
-    this._camera.position.y = 500
-    this._camera.position.z = 600
+    this._camera.position.x = -200
+    this._camera.position.y = -300
+    this._camera.position.z = 300
     this._camera.up.set(0, 0, 1) // make z be up instead of y
     this._scene.add(this._camera)
 
@@ -123,11 +123,13 @@ export default class Output {
     this._areaCorners.push(new THREE.Vector2(...xy))
   }
 
-  endArea (rgbaArray = FIXME_FUCHSIA, z = 0) {
+  endArea (rgbaArray = FIXME_FUCHSIA, z = 0, incline = 0) {
+    const x0 = this._areaCorners[0].x
+    const y0 = this._areaCorners[0].y
     const shape = new THREE.Shape(this._areaCorners)
     shape.closePath()
     const geometry = new THREE.ShapeGeometry(shape)
-    geometry.translate(0, 0, z)
+    geometry.translate(-x0, -y0, 0)
     const color = new THREE.Color(...rgbaArray)
     const opacity = rgbaArray[3]
     const material = new THREE.MeshStandardMaterial({
@@ -137,6 +139,18 @@ export default class Output {
       side: THREE.DoubleSide
     })
     const mesh = new THREE.Mesh(geometry, material)
+    mesh.castShadow = true
+    if (incline) {
+      const LAST = this._areaCorners.length - 1
+      const xN = this._areaCorners[LAST].x
+      const yN = this._areaCorners[LAST].y
+      const axis = new THREE.Vector3(xN - x0, yN - y0, 0)
+      print(`axis(${xN - x0}, ${yN - y0})`)
+      mesh.rotateOnAxis(axis, -Math.PI / 128) // mesh.rotateOnAxis(axis, -Math.PI / 32)
+    }
+    mesh.translateX(x0)
+    mesh.translateY(y0)
+    mesh.translateZ(z)
     this._scene.add(mesh)
 
     const squareFeet = THREE.ShapeUtils.area(this._areaCorners)
@@ -191,6 +205,7 @@ export default class Output {
           material = new THREE.MeshStandardMaterial({ color: new THREE.Color(BLUE_GLASS), transparent: true, opacity: 0.7, side: THREE.DoubleSide })
         }
         const mesh = new THREE.Mesh(geometry, material)
+        mesh.castShadow = true
         this._scene.add(mesh)
       }
     }
