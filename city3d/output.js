@@ -18,6 +18,7 @@ function print (str) {
 const ONE_MILE = 5280
 const COLOR_GREY = 0x808080
 const BLUE_GLASS = 0x9999ff
+const ALMOST_WHITE = 0x999999
 const COLOR_BRIGHT_SKY = 0xddeeff
 const COLOR_DIM_GROUND = 0x202020
 
@@ -32,7 +33,13 @@ export default class Output {
     const FAR_CAMERA_LIMIT = ONE_MILE * 2
 
     this._shape = null
+
+    // scene
     this._scene = new THREE.Scene()
+    this._scene.background = new THREE.Color(0xcce0ff)
+    this._scene.fog = new THREE.Fog(0xcce0ff, 500, 10000)
+
+    // camera
     this._camera = new THREE.PerspectiveCamera(70, WIDTH / HEIGHT, NEAR_CAMERA_LIMIT, FAR_CAMERA_LIMIT)
     this._camera.position.x = 300
     this._camera.position.y = 500
@@ -40,22 +47,50 @@ export default class Output {
     this._camera.up.set(0, 0, 1) // make z be up instead of y
     this._scene.add(this._camera)
 
+    // XYZ axes
     const axesHelper = new THREE.AxesHelper(ONE_MILE)
     this._scene.add(axesHelper)
 
+    // grid
     const gridHelper = new THREE.GridHelper(ONE_MILE, 8, COLOR_GREY, COLOR_GREY)
     gridHelper.geometry.rotateX(Math.PI / 2)
     this._scene.add(gridHelper)
 
-    const light = new THREE.DirectionalLight(0xffffff, 3.0)
-    light.position.set(-500, -800, 1500)
+    // lights
+    const light = new THREE.DirectionalLight(0xdfebff, 3.0)
+    light.position.set(500, 2000, 1000)
+    light.castShadow = true
+    light.shadow.mapSize.width = 1024
+    light.shadow.mapSize.height = 1024
+    const D = 300
+    light.shadow.camera.left = -D
+    light.shadow.camera.right = D
+    light.shadow.camera.top = D
+    light.shadow.camera.bottom = -D
+    light.shadow.camera.far = 1000
     this._scene.add(light)
-    const ambientLight = new THREE.HemisphereLight(
-      COLOR_BRIGHT_SKY,
-      COLOR_DIM_GROUND,
-      3 // intensity
-    )
-    this._scene.add(ambientLight)
+    this._scene.add(new THREE.AmbientLight(0x666666))
+    // const ambientLight = new THREE.HemisphereLight(
+    //   COLOR_BRIGHT_SKY,
+    //   COLOR_DIM_GROUND,
+    //   3 // intensity
+    // )
+    // this._scene.add(ambientLight)
+
+    // ground
+    const loader = new THREE.TextureLoader()
+    const texture = loader.load('./city3d/textures/metallic-green-glitter-texture.jpg')
+    texture.wrapS = texture.wrapT = THREE.RepeatWrapping
+    texture.repeat.set(100, 100) // 25, 25)
+    texture.anisotropy = 16
+    var groundMaterial = new THREE.MeshLambertMaterial({ map: texture })
+    const ground = new THREE.Mesh(new THREE.PlaneBufferGeometry(ONE_MILE, ONE_MILE), groundMaterial)
+    ground.geometry.rotateX(Math.PI / 2)
+    ground.position.y = -250
+    ground.position.z = -1
+    ground.rotation.x = -Math.PI / 2
+    ground.receiveShadow = true
+    this._scene.add(ground)
 
     this._renderer = new THREE.WebGLRenderer({ antialias: true })
     this._renderer.setSize(WIDTH, HEIGHT)
@@ -150,10 +185,9 @@ export default class Output {
         geometry.translate(near.x, near.y, z)
 
         let material
-        if (windows.length) {
-          material = new THREE.MeshStandardMaterial({ color: new THREE.Color(BLUE_GLASS), side: THREE.DoubleSide })
+        if (openings.length) {
+          material = new THREE.MeshStandardMaterial({ color: new THREE.Color(ALMOST_WHITE), side: THREE.DoubleSide })
         } else {
-          // material = new THREE.MeshStandardMaterial({ color: new THREE.Color(BLUE_GLASS), side: THREE.DoubleSide })
           material = new THREE.MeshStandardMaterial({ color: new THREE.Color(BLUE_GLASS), transparent: true, opacity: 0.7, side: THREE.DoubleSide })
         }
         const mesh = new THREE.Mesh(geometry, material)

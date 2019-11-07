@@ -13,11 +13,12 @@ import Output, { print } from './output.js'
 
 const WHITE = rgba(1, 1, 1, 1) // eslint-disable-line no-unused-vars
 const RED = rgba(0.8, 0, 0, 1) // opaque red
+const BLACKTOP = rgba(0.1, 0.1, 0.1, 1) // very dark grey
 const GREEN = rgba(0, 1, 0, 1) // eslint-disable-line no-unused-vars
 const BLUE = rgba(0, 0, 1, 1) // opaque blue
 const YELLOW = rgba(1, 1, 0, 1) // opaque yellow
 
-const GREEN_GRASS = rgba(0, 0.2, 0, 1) // opaque dark green
+const GREEN_GRASS = rgba(0, 0.8, 0, 1) // opaque dark green
 const BROWN = rgba(0.5, 0.4, 0.2, 1)
 const DARK_GRAY = rgba(0.25, 0.25, 0.25, 1) // opaque dark gray
 const LIGHT_GRAY = rgba(0.8745, 0.8745, 0.8745, 1) // opaque light gray
@@ -25,7 +26,7 @@ const BLUE_GLASS = rgba(0.6, 0.6, 1, 0.8) // eslint-disable-line no-unused-vars
 const MARTIAN_ORANGE = rgba(0.8745, 0.2863, 0.0667, 1) // opaque Martian orange
 
 const COLORS_OF_PLACES = {
-  STREET: RED,
+  STREET: BLACKTOP,
   BIKEPATH: MARTIAN_ORANGE,
   WALKWAY: YELLOW,
   ROOM: BROWN,
@@ -87,18 +88,6 @@ function _materialByPlace (place) { // eslint-disable-line no-unused-vars
     return material
   }
 }
-
-// function _xyzFromDotOnEdge (length, height, edge) {
-//   const [x0, y0, z0] = edge[0]
-//   const [x1, y1, z1] = edge[1] // eslint-disable-line no-unused-vars
-//   const xSpan = x1 - x0
-//   const ySpan = y1 - y0
-//   const edgeLength = Math.sqrt(xSpan ** 2 + ySpan ** 2)
-
-//   const dx = length * xSpan / edgeLength
-//   const dy = length * ySpan / edgeLength
-//   return [x0 + dx, y0 + dy, z0 + height]
-// }
 
 function nudgeXY (xy, { dx = 0, dy = 0, dxy = [0, 0] } = {}) {
   const [x, y] = xy
@@ -184,54 +173,6 @@ export default class Plato {
     const vertices = verticesOfRoof.map(xyz => nudge(xyz, { dxyz: dxyz }))
     this._output.addRoof(color, vertices, indicesOfFaces)
   }
-
-  // add (place, { shape, openings = [], nuance = false, flip = false } = {}) {
-  //   // Add a new mesh to the blender scene.
-
-  //   if (nuance && this._hurry) {
-  //     return this
-  //   }
-  //   const color = COLORS_OF_PLACES[place]
-  //   // const at = [this._x, this._y, this._z]
-  //   this._beginFace()
-  //   if (this._hurry || openings.length === 0) {
-  //     for (const xyz of shape) {
-  //       this._newVert(xyz)
-  //     }
-  //     this._endFace(color)
-  //   } else {
-  //     const edge = (shape[0], shape[1])
-  //     this._newVert(shape[0])
-  //     // let i = 0
-  //     for (let opening of openings) {
-  //       // i++
-  //       opening = opening.copy()
-  //       const first = opening.shift()
-  //       opening.push(first)
-  //       opening.reverse()
-  //       let length = 0
-  //       let height = 0
-  //       ;[length, height] = opening[0]
-  //       const Z = 2
-  //       const basePoint = _xyzFromDotOnEdge(length, shape[0][Z], edge)
-  //       this._newVert(basePoint)
-  //       for (const qz of opening) {
-  //         ;[length, height] = qz
-  //         const xyz = _xyzFromDotOnEdge(length, height, edge)
-  //         this._newVert(xyz)
-  //       }
-  //       ;[length, height] = opening[0]
-  //       const xyz = _xyzFromDotOnEdge(length, height, edge)
-  //       this._newVert(xyz)
-  //       this._newVert(basePoint)
-  //     }
-  //     for (const xyz of shape) {
-  //       this._newVert(xyz)
-  //     }
-  //     this._endFace(color)
-  //   }
-  //   return this
-  // }
 
   pontificate () {
     // Print a report of square footage of rooms, walkways, etc.
