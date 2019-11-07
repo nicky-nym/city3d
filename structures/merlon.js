@@ -261,16 +261,21 @@ function _getLandingPattern (numRows, numCols) {
 
 function _addRoofAroundFloor (plato, shape, peakXyz) {
   const Z = 2
-  if (true) { // TODO: if (peakXyz[Z] === 0) {
+  if (peakXyz[Z] === 0) {
     plato.addPlace(Place.ROOF, shape)
   } else {
     plato.addPlace(Place.BARE, shape)
     let i = 0
-    for (xyz of shape) {
+    for (const corner of shape) {
       const next = i + 1 < shape.length ? i + 1 : 0
       i++
-      const triangle = [xyz, shape[next], peakXyz]
-      plato.addPlace(Place.ROOF, triangle)
+      const vertices = [
+        xyz(...corner),
+        xyz(...shape[next]),
+        peakXyz
+      ]
+      const indices = [[0, 1, 2]]
+      plato.addRoof(Place.ROOF, vertices, indices)
     }
   }
 }

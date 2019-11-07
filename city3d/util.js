@@ -7,7 +7,7 @@
 // For more information, please refer to <http://unlicense.org>
 
 function count (from, to, by = 1) {
-  const total = 1 + ((to - from) / by)
+  const total = (to - from) / by
   return [...Array(total).keys()].map(i => from + i * by)
 }
 
