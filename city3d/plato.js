@@ -43,6 +43,11 @@ function xy (x, y) {
   return [x, y]
 }
 
+function xywh2rect (y, z, width, height) {
+  // [(3, 2), (8, 2), (8, 6), (3, 6)] == yzwh2rect(3, 2, 5, 4)
+  return [xy(y, z), xy(y + width, z), xy(y + width, z + height), xy(y, z + height)]
+}
+
 function rotate (xy, facing) {
   const [x, y] = xy
   switch (facing) {
@@ -95,13 +100,13 @@ function _materialByPlace (place) { // eslint-disable-line no-unused-vars
 //   return [x0 + dx, y0 + dy, z0 + height]
 // }
 
-function nudge2 (xy, { dx = 0, dy = 0, dxy = [0, 0] } = {}) {
+function nudgeXY (xy, { dx = 0, dy = 0, dxy = [0, 0] } = {}) {
   const [x, y] = xy
   const [dX, dY] = dxy
   return [x + dx + dX, y + dy + dY]
 }
 
-export { rotate, xy, nudge2 }
+export { rotate, xy, nudgeXY, xywh2rect }
 export default class Plato {
   // Plato can envision 3D architectural spaces, with walls, floors, etc.
 
@@ -159,7 +164,7 @@ export default class Plato {
     for (let xy of area) {
       xy = rotate(xy, this._facing)
       const dxy = [this._x, this._y]
-      xy = nudge2(xy, { dxy: dxy })
+      xy = nudgeXY(xy, { dxy: dxy })
       this._output.addCorner(xy)
     }
     if (cap) {

@@ -9,9 +9,9 @@
 import { xyz, countTo, nudge, xy2xyz } from '../city3d/util.js'
 import Facing from '../city3d/facing.js'
 import Place from '../city3d/place.js'
-import { xy, nudge2 } from '../city3d/plato.js'
+import { xy, xywh2rect, nudgeXY } from '../city3d/plato.js'
 import Structure from '../city3d/structure.js'
-import { print } from '../city3d/output.js'
+// import { print } from '../city3d/output.js'
 
 const X = 0
 const Y = 1
@@ -71,27 +71,22 @@ const ADU_DOORPATH = [
   xy(-155, 36),
   xy(-155, 13)]
 
-function yzwh2rect (y, z, width, height) {
-  // [(3, 2), (8, 2), (8, 6), (3, 6)] == yzwh2rect(3, 2, 5, 4)
-  return [xy(y, z), xy(y + width, z), xy(y + width, z + height), xy(y, z + height)]
-}
-
 // exterior walls (0.5 feet thick), clockwise from the back wall of the house
-const KITCHEN_WINDOWS = [yzwh2rect(3.958, 2.583, 5.750, 4.083)]
+const KITCHEN_WINDOWS = [xywh2rect(3.958, 2.583, 5.750, 4.083)]
 const DINING_ROOM_WINDOWS = [
-  yzwh2rect(4.166, 2.0, 2.250, 6.400),
-  yzwh2rect(7.083, 2.0, 2.250, 6.400)]
-const BAY_WINDOW_NORTHEAST = [yzwh2rect(1.000, 2.0, 2.750, 6.400)]
-const BAY_WINDOW_EAST = [yzwh2rect(1.525, 2.0, 4.333, 6.400)]
-const BAY_WINDOW_SOUTHEAST = [yzwh2rect(1.000, 2.0, 2.750, 6.400)]
+  xywh2rect(4.166, 2.0, 2.250, 6.400),
+  xywh2rect(7.083, 2.0, 2.250, 6.400)]
+const BAY_WINDOW_NORTHEAST = [xywh2rect(1.000, 2.0, 2.750, 6.400)]
+const BAY_WINDOW_EAST = [xywh2rect(1.525, 2.0, 4.333, 6.400)]
+const BAY_WINDOW_SOUTHEAST = [xywh2rect(1.000, 2.0, 2.750, 6.400)]
 const PORCH_WINDOWS = [
-  yzwh2rect(0.875, 0, 3.0, 7.0), // door
-  yzwh2rect(7.583, 2.0, 2.250, 6.400),
-  yzwh2rect(10.500, 2.0, 2.250, 6.400)]
-const OFFICE_WINDOW = [yzwh2rect(6.916, 2.0, 2.250, 6.400)]
+  xywh2rect(0.875, 0, 3.0, 7.0), // door
+  xywh2rect(7.583, 2.0, 2.250, 6.400),
+  xywh2rect(10.500, 2.0, 2.250, 6.400)]
+const OFFICE_WINDOW = [xywh2rect(6.916, 2.0, 2.250, 6.400)]
 const BED_AND_BATH_WINDOWS = [
-  yzwh2rect(3.875, 2.166, 3.666, 6.250), // bedroom
-  yzwh2rect(12.708, 4.166, 2.375, 3.083)] // bathroom
+  xywh2rect(3.875, 2.166, 3.666, 6.250), // bedroom
+  xywh2rect(12.708, 4.166, 2.375, 3.083)] // bathroom
 const HOUSE_SPEC = [
   [xy(-57.792, 44.542), KITCHEN_WINDOWS],
   [xy(-44.333, 44.542), []],
@@ -113,16 +108,15 @@ const HOUSE = HOUSE_SPEC.map(([point, openings]) => point)
 const HOUSE_WINDOWS = []
 let i = 0
 for (const [point, windows] of HOUSE_SPEC) { // eslint-disable-line no-unused-vars
-  // print(`cottage HOUSE_WINDOWS.push:    ${i}, ${windows}`)
   HOUSE_WINDOWS.push([i, windows])
   i++
 }
 
 const WEST_WINDOWS = [
-  yzwh2rect(1.500, 4.500, 1.750, 2.083), // half-bath
-  yzwh2rect(5.104, 2.583, 5.750, 4.083), // laundry
-  yzwh2rect(11.354, 0, 2.666, 6.666), // door
-  yzwh2rect(18.875, 4.333, 3.750, 2.083)] // kitchen
+  xywh2rect(1.500, 4.500, 1.750, 2.083), // half-bath
+  xywh2rect(5.104, 2.583, 5.750, 4.083), // laundry
+  xywh2rect(11.354, 0, 2.666, 6.666), // door
+  xywh2rect(18.875, 4.333, 3.750, 2.083)] // kitchen
 const ADDON_SPEC = [
   [xy(-63.75, 43.625), []],
   [xy(-57.792, 43.625), []],
@@ -141,16 +135,16 @@ for (const [point, windows] of ADDON_SPEC) { // eslint-disable-line no-unused-va
   j++
 }
 const ATTIC = [
-  nudge2(HOUSE[0], { dx: -1, dy: 1 }),
-  nudge2(HOUSE[1], { dx: -1, dy: 1 }),
-  nudge2(HOUSE[2], { dx: -1, dy: 1 }),
-  nudge2(xy(HOUSE[4][X], HOUSE[3][Y]), { dx: 1, dy: 1 }),
-  nudge2(xy(HOUSE[5][X], HOUSE[6][Y]), { dx: 1, dy: -1 }),
-  nudge2(HOUSE[7], { dx: 1, dy: -1 }),
-  nudge2(HOUSE[8], { dx: 1, dy: -1 }),
-  nudge2(HOUSE[9], { dx: -1, dy: -1 }),
-  nudge2(HOUSE[10], { dx: -1, dy: -1 }),
-  nudge2(HOUSE[11], { dx: -1, dy: -1 })]
+  nudgeXY(HOUSE[0], { dx: -1, dy: 1 }),
+  nudgeXY(HOUSE[1], { dx: -1, dy: 1 }),
+  nudgeXY(HOUSE[2], { dx: -1, dy: 1 }),
+  nudgeXY(xy(HOUSE[4][X], HOUSE[3][Y]), { dx: 1, dy: 1 }),
+  nudgeXY(xy(HOUSE[5][X], HOUSE[6][Y]), { dx: 1, dy: -1 }),
+  nudgeXY(HOUSE[7], { dx: 1, dy: -1 }),
+  nudgeXY(HOUSE[8], { dx: 1, dy: -1 }),
+  nudgeXY(HOUSE[9], { dx: -1, dy: -1 }),
+  nudgeXY(HOUSE[10], { dx: -1, dy: -1 }),
+  nudgeXY(HOUSE[11], { dx: -1, dy: -1 })]
 const PORCH = [
   xy(-25.792, 32.75),
   xy(-25.792 + 5.333, 32.75),

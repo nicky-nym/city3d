@@ -6,8 +6,9 @@
 // This is free and unencumbered software released into the public domain.
 // For more information, please refer to <http://unlicense.org>
 
-function count ({ to, from = 0 } = {}) {
-  return [...Array(1 + to - from).keys()].map(i => from + i)
+function count (from, to, by = 1) {
+  const total = 1 + ((to - from) / by)
+  return [...Array(total).keys()].map(i => from + i * by)
 }
 
 function countTo (to) {

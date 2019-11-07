@@ -6,15 +6,12 @@
 // This is free and unencumbered software released into the public domain.
 // For more information, please refer to <http://unlicense.org>
 
-import { xyz, yzwh2rect, nudge, count, countTo, randomInt } from '../city3d/util.js'
+import { xyz, count, countTo, randomInt } from '../city3d/util.js'
 import Place from '../city3d/place.js'
 import Facing from '../city3d/facing.js'
 import Structure from '../city3d/structure.js'
-
-// Data types
-// Landing = Tuple[Num, Iterable[Facing]]  # (landing_altitude, [ramp_facings])
-// const LANDING_ALTITUDE = 0
-// const RAMP_FACINGS = 1
+import { xy, xywh2rect, nudgeXY } from '../city3d/plato.js'
+// import { print } from '../city3d/output.js'
 
 // in feet
 const STORY_HEIGHT = 10
@@ -32,79 +29,84 @@ const RAMP = [
   xyz(+D2, D1, 0),
   xyz(+D2, D1 + RAMP_LENGTH, RAMP_HEIGHT),
   xyz(-D2, D1 + RAMP_LENGTH, RAMP_HEIGHT),
-  xyz(-D2, D1, 0)]
+  xyz(-D2, D1, 0)
+]
 const OCTAGONAL_LANDING = [
-  xyz(-D1, -D2, 0),
-  xyz(-D2, -D1, 0),
-  xyz(+D2, -D1, 0),
-  xyz(+D1, -D2, 0),
-  xyz(+D1, +D2, 0),
-  xyz(+D2, +D1, 0),
-  xyz(-D2, +D1, 0),
-  xyz(-D1, +D2, 0)]
+  xy(-D1, -D2),
+  xy(-D2, -D1),
+  xy(+D2, -D1),
+  xy(+D1, -D2),
+  xy(+D1, +D2),
+  xy(+D2, +D1),
+  xy(-D2, +D1),
+  xy(-D1, +D2)
+]
 const DIAMOND_CENTER = [
-  xyz(-3, 0, 0),
-  xyz(0, +3, 0),
-  xyz(+3, 0, 0),
-  xyz(0, -3, 0)]
+  xy(-3, 0),
+  xy(0, +3),
+  xy(+3, 0),
+  xy(0, -3)
+]
 const BASEMENT = [
-  xyz(D1, 0, 0),
-  xyz(D1, D2, 0),
-  xyz(D2, D1, 0),
-  xyz(0, D1, 0),
-  xyz(0, 2 * D1 + RAMP_LENGTH, 0),
-  xyz(2 * D1 + RAMP_LENGTH, 2 * D1 + RAMP_LENGTH, 0),
-  xyz(2 * D1 + RAMP_LENGTH, 0, 0)]
+  xy(D1, 0),
+  xy(D1, D2),
+  xy(D2, D1),
+  xy(0, D1),
+  xy(0, 2 * D1 + RAMP_LENGTH),
+  xy(2 * D1 + RAMP_LENGTH, 2 * D1 + RAMP_LENGTH),
+  xy(2 * D1 + RAMP_LENGTH, 0)
+]
 const APARTMENT_WIDTH = D1 + RAMP_LENGTH + (D1 + D2) / 2
 
 const DOOR_HEIGHT = 6 + 8 / 12
 const DOORS = [
-  yzwh2rect(1.2, 0.01, 3, DOOR_HEIGHT),
-  yzwh2rect(4.285, 0.01, 3, DOOR_HEIGHT)]
+  xywh2rect(1.2, 0.01, 3, DOOR_HEIGHT),
+  xywh2rect(4.285, 0.01, 3, DOOR_HEIGHT)
+]
 const WINDOWS = [
-  yzwh2rect(1.75, 3, 2.5, 5),
-  yzwh2rect(4.75, 3, 2.5, 5),
+  xywh2rect(1.75, 3, 2.5, 5),
+  xywh2rect(4.75, 3, 2.5, 5),
 
-  yzwh2rect(8.75, 3, 2.5, 5),
-  yzwh2rect(11.75, 3, 2.5, 5),
+  xywh2rect(8.75, 3, 2.5, 5),
+  xywh2rect(11.75, 3, 2.5, 5),
 
-  yzwh2rect(15.75, 3, 2.5, 5),
-  yzwh2rect(18.75, 3, 2.5, 5),
+  xywh2rect(15.75, 3, 2.5, 5),
+  xywh2rect(18.75, 3, 2.5, 5),
 
-  yzwh2rect(22.75, 3, 2.5, 5),
-  yzwh2rect(25.75, 3, 2.5, 5)]
+  xywh2rect(22.75, 3, 2.5, 5),
+  xywh2rect(25.75, 3, 2.5, 5)
+]
 const SPAN = RAMP_LENGTH + (D1 + D2) / 2
 const APARTMENT_SPEC = [
-  (xyz(D1, D2, 0), DOORS),
-  (xyz(D2, D1, 0), WINDOWS),
-  (xyz(D2, D1 + RAMP_LENGTH, 0), []),
-  (xyz(D1, D1 + SPAN, 0), WINDOWS),
-  (xyz(D1 + RAMP_LENGTH, D1 + SPAN, 0), []),
-  (xyz(D1 + SPAN, D1 + RAMP_LENGTH, 0), WINDOWS),
-  (xyz(D1 + SPAN, D1, 0), []),
-  (xyz(D1 + RAMP_LENGTH, D2, 0), WINDOWS)]
-// const APARTMENT = [entry[0] for entry in APARTMENT_SPEC] // TODO: fix me!!
+  [xy(D1, D2), DOORS],
+  [xy(D2, D1), WINDOWS],
+  [xy(D2, D1 + RAMP_LENGTH), []],
+  [xy(D1, D1 + SPAN), WINDOWS],
+  [xy(D1 + RAMP_LENGTH, D1 + SPAN), []],
+  [xy(D1 + SPAN, D1 + RAMP_LENGTH), WINDOWS],
+  [xy(D1 + SPAN, D1), []],
+  [xy(D1 + RAMP_LENGTH, D2), WINDOWS]
+]
 const APARTMENT = APARTMENT_SPEC.map(([point, openings]) => point)
-// const APARTMENT = APARTMENT_SPEC.map((entry) => entry[0])
 
-// const APARTMENT_WINDOWS = [(i, entry[1]) for i, entry in enumerate(APARTMENT_SPEC)] // TODO: fix me!!
 // TODO: refactor this code with code in cottage.js for HOUSE_WINDOWS and ADDON_WINDOWS
 const APARTMENT_WINDOWS = []
 let i = 0
-for (const entry in APARTMENT_SPEC) {
-  APARTMENT_WINDOWS.push([i, entry])
+for (const [point, windows] of APARTMENT_SPEC) { // eslint-disable-line no-unused-vars
+  APARTMENT_WINDOWS.push([i, windows])
   i++
 }
 
 const ATTIC = [
-  nudge(APARTMENT[0], { dx: -1.2, dy: -2 }),
-  nudge(APARTMENT[1], { dx: -2, dy: -1.2 }),
-  nudge(APARTMENT[2], { dx: -2, dy: 1.2 }),
-  nudge(APARTMENT[3], { dx: -1.2, dy: 2 }),
-  nudge(APARTMENT[4], { dx: 1.2, dy: 2 }),
-  nudge(APARTMENT[5], { dx: 2, dy: 1.2 }),
-  nudge(APARTMENT[6], { dx: 2, dy: -1.2 }),
-  nudge(APARTMENT[7], { dx: 1.2, dy: -2 })]
+  nudgeXY(APARTMENT[0], { dx: -1.2, dy: -2 }),
+  nudgeXY(APARTMENT[1], { dx: -2, dy: -1.2 }),
+  nudgeXY(APARTMENT[2], { dx: -2, dy: 1.2 }),
+  nudgeXY(APARTMENT[3], { dx: -1.2, dy: 2 }),
+  nudgeXY(APARTMENT[4], { dx: 1.2, dy: 2 }),
+  nudgeXY(APARTMENT[5], { dx: 2, dy: 1.2 }),
+  nudgeXY(APARTMENT[6], { dx: 2, dy: -1.2 }),
+  nudgeXY(APARTMENT[7], { dx: 1.2, dy: -2 })
+]
 
 function _getCloverleafLandingPattern () {
   // Make an empty 3-by-3 spatial grid for planning landings and ramps
@@ -117,49 +119,49 @@ function _getCloverleafLandingPattern () {
   const SOUTH_WEST_FIRST_PATTERN = true
   if (SOUTH_WEST_FIRST_PATTERN) {
     // Start the first spiral on the SOUTH WEST corner
-    landings[1][1].append([0.0, [Facing.WEST]])
-    landings[0][1].append([2.5, [Facing.SOUTH]])
-    landings[0][0].append([5.0, [Facing.EAST, Facing.WEST]])
-    landings[1][0].append([7.5, [Facing.NORTH, Facing.SOUTH]])
+    landings[1][1].push([0.0, [Facing.WEST]])
+    landings[0][1].push([2.5, [Facing.SOUTH]])
+    landings[0][0].push([5.0, [Facing.EAST, Facing.WEST]])
+    landings[1][0].push([7.5, [Facing.NORTH, Facing.SOUTH]])
 
-    landings[1][1].append([10.0, [Facing.NORTH]])
-    landings[1][2].append([12.5, [Facing.WEST]])
-    landings[0][2].append([15.0, [Facing.NORTH, Facing.SOUTH]])
-    landings[0][1].append([17.5, [Facing.EAST, Facing.WEST]])
+    landings[1][1].push([10.0, [Facing.NORTH]])
+    landings[1][2].push([12.5, [Facing.WEST]])
+    landings[0][2].push([15.0, [Facing.NORTH, Facing.SOUTH]])
+    landings[0][1].push([17.5, [Facing.EAST, Facing.WEST]])
 
-    landings[1][1].append([20.0, [Facing.EAST]])
-    landings[2][1].append([22.5, [Facing.NORTH]])
-    landings[2][2].append([25.0, [Facing.EAST, Facing.WEST]])
-    landings[1][2].append([27.5, [Facing.NORTH, Facing.SOUTH]])
+    landings[1][1].push([20.0, [Facing.EAST]])
+    landings[2][1].push([22.5, [Facing.NORTH]])
+    landings[2][2].push([25.0, [Facing.EAST, Facing.WEST]])
+    landings[1][2].push([27.5, [Facing.NORTH, Facing.SOUTH]])
 
-    landings[1][1].append([30.0, [Facing.SOUTH]])
-    landings[1][0].append([32.5, [Facing.EAST]])
-    landings[2][0].append([35.0, [Facing.NORTH, Facing.SOUTH]])
-    landings[2][1].append([37.5, [Facing.EAST, Facing.WEST]])
+    landings[1][1].push([30.0, [Facing.SOUTH]])
+    landings[1][0].push([32.5, [Facing.EAST]])
+    landings[2][0].push([35.0, [Facing.NORTH, Facing.SOUTH]])
+    landings[2][1].push([37.5, [Facing.EAST, Facing.WEST]])
   } else {
     // Start the first spiral on the NORTH EAST corner
-    landings[1][1].append([0.0, [Facing.NORTH]])
-    landings[1][2].append([2.5, [Facing.EAST]])
-    landings[2][2].append([5.0, [Facing.NORTH, Facing.SOUTH]])
-    landings[2][1].append([7.5, [Facing.EAST, Facing.WEST]])
+    landings[1][1].push([0.0, [Facing.NORTH]])
+    landings[1][2].push([2.5, [Facing.EAST]])
+    landings[2][2].push([5.0, [Facing.NORTH, Facing.SOUTH]])
+    landings[2][1].push([7.5, [Facing.EAST, Facing.WEST]])
 
-    landings[1][1].append([10.0, [Facing.WEST]])
-    landings[0][1].append([12.5, [Facing.NORTH]])
-    landings[0][2].append([15.0, [Facing.EAST, Facing.WEST]])
-    landings[1][2].append([17.5, [Facing.NORTH, Facing.SOUTH]])
+    landings[1][1].push([10.0, [Facing.WEST]])
+    landings[0][1].push([12.5, [Facing.NORTH]])
+    landings[0][2].push([15.0, [Facing.EAST, Facing.WEST]])
+    landings[1][2].push([17.5, [Facing.NORTH, Facing.SOUTH]])
 
-    landings[1][1].append([20.0, [Facing.SOUTH]])
-    landings[1][0].append([22.5, [Facing.WEST]])
-    landings[0][0].append([25.0, [Facing.NORTH, Facing.SOUTH]])
-    landings[0][1].append([27.5, [Facing.EAST, Facing.WEST]])
+    landings[1][1].push([20.0, [Facing.SOUTH]])
+    landings[1][0].push([22.5, [Facing.WEST]])
+    landings[0][0].push([25.0, [Facing.NORTH, Facing.SOUTH]])
+    landings[0][1].push([27.5, [Facing.EAST, Facing.WEST]])
 
-    landings[1][1].append([30.0, [Facing.EAST]])
-    landings[2][1].append([32.5, [Facing.SOUTH]])
-    landings[2][0].append([35.0, [Facing.EAST, Facing.WEST]])
-    landings[1][0].append([37.5, [Facing.NORTH, Facing.SOUTH]])
+    landings[1][1].push([30.0, [Facing.EAST]])
+    landings[2][1].push([32.5, [Facing.SOUTH]])
+    landings[2][0].push([35.0, [Facing.EAST, Facing.WEST]])
+    landings[1][0].push([37.5, [Facing.NORTH, Facing.SOUTH]])
   }
 
-  landings[1][1].append([40.0, []])
+  landings[1][1].push([40.0, []])
   return landings
 }
 
@@ -185,7 +187,7 @@ function _getLandingPatternForFourCloverleafs () {
     for (const landing of landings) {
       const [z, ramps] = landing
       const flippedRamps = ramps.map((ramp) => _flipRamp(ramp, northSouth, eastWest))
-      out.append([z, flippedRamps])
+      out.push([z, flippedRamps])
     }
     return out
   }
@@ -212,12 +214,12 @@ function _getLandingPatternForFourCloverleafs () {
 }
 
 function _trimEdgeRampsFromPattern (grid) {
-  function _trimEdgeRampsFromLandings (landings, facing) {
+  function _trimEdgeRampsFromLandings (grid, facing) {
     const out = []
-    for (const landing of landings) {
+    for (const landing of grid) {
       const [z, ramps] = landing
       const trimmedRamps = ramps.filter(ramp => ramp !== facing)
-      out.append([z, trimmedRamps])
+      out.push([z, trimmedRamps])
     }
     return out
   }
@@ -225,8 +227,9 @@ function _trimEdgeRampsFromPattern (grid) {
   // const numRows = grid.length
   // const numCols = grid[0].length
   for (const column of grid) {
+    const LAST = column.length - 1
     column[0] = _trimEdgeRampsFromLandings(column[0], Facing.SOUTH)
-    column[-1] = _trimEdgeRampsFromLandings(column[-1], Facing.NORTH)
+    column[LAST] = _trimEdgeRampsFromLandings(column[LAST], Facing.NORTH)
   }
   let i = 0
   for (const landings of grid[0]) {
@@ -234,8 +237,9 @@ function _trimEdgeRampsFromPattern (grid) {
     i++
   }
   i = 0
-  for (const landings of grid[-1]) {
-    grid[-1][i] = _trimEdgeRampsFromLandings(landings, Facing.EAST)
+  const LAST = grid.length - 1
+  for (const landings of grid[LAST]) {
+    grid[LAST][i] = _trimEdgeRampsFromLandings(landings, Facing.EAST)
     i++
   }
   return grid
@@ -247,9 +251,9 @@ function _getLandingPattern (numRows, numCols) {
   for (const i of countTo(numRows + 1)) {
     const row = []
     for (const j of countTo(numCols + 1)) {
-      row.append(pattern[i % 4][j % 4])
+      row.push(pattern[i % 4][j % 4])
     }
-    grid.append(row)
+    grid.push(row)
   }
   grid = _trimEdgeRampsFromPattern(grid)
   return grid
@@ -257,16 +261,16 @@ function _getLandingPattern (numRows, numCols) {
 
 function _addRoofAroundFloor (plato, shape, peakXyz) {
   const Z = 2
-  if (peakXyz[Z] === 0) {
-    plato.add_place(Place.ROOF, { shape: shape })
+  if (true) { // TODO: if (peakXyz[Z] === 0) {
+    plato.addPlace(Place.ROOF, shape)
   } else {
-    plato.add_place(Place.BARE, { shape: shape })
+    plato.addPlace(Place.BARE, shape)
     let i = 0
     for (xyz of shape) {
       const next = i + 1 < shape.length ? i + 1 : 0
       i++
       const triangle = [xyz, shape[next], peakXyz]
-      plato.addPlace(Place.ROOF, { shape: triangle })
+      plato.addPlace(Place.ROOF, triangle)
     }
   }
 }
@@ -277,15 +281,16 @@ function _addFeaturesAtLanding (plato, rampBearings, at, buildings = true) {
 
   // Landing
   plato.goto({ x: x, y: y, z: z, facing: Facing.NORTH })
-  plato.add_place(Place.WALKWAY, { shape: OCTAGONAL_LANDING })
+  plato.addPlace(Place.WALKWAY, OCTAGONAL_LANDING)
   if (!buildings && z % 10 === 0) {
-    plato.add_place(Place.BARE, { shape: DIAMOND_CENTER, wall: 3 })
+    plato.addPlace(Place.BARE, DIAMOND_CENTER, { wall: 3 })
   }
 
   // Ramps
   for (const bearing of rampBearings) {
     plato.goto({ x: x, y: y, z: z, facing: bearing })
-    plato.add_place(Place.WALKWAY, { shape: RAMP })
+    // TODO: Fix me!
+    // plato.addPlace(Place.WALKWAY, RAMP)
   }
 
   // Floors, Walls, and Roof
@@ -293,22 +298,25 @@ function _addFeaturesAtLanding (plato, rampBearings, at, buildings = true) {
     for (const bearing of rampBearings) {
       // parcel
       plato.goto({ x: x, y: y, z: 0, facing: bearing })
-      plato.add_place(Place.PARCEL, { shape: BASEMENT })
+      plato.addPlace(Place.PARCEL, BASEMENT)
+
       // lower floors
       for (const altitude of count(0, z, STORY_HEIGHT)) {
         plato.goto({ x: x, y: y, z: altitude, facing: bearing })
-        plato.add_place(Place.ROOM, { shape: BASEMENT })
+        plato.addPlace(Place.ROOM, BASEMENT)
       }
+
       // upper floors
       for (const altitude of count(z, ROOFLINE, STORY_HEIGHT)) {
         plato.goto({ x: x, y: y, z: altitude, facing: bearing })
-        plato.add_place(Place.ROOM, { shape: APARTMENT, wall: STORY_HEIGHT, openings: APARTMENT_WINDOWS })
+        plato.addPlace(Place.ROOM, APARTMENT, { wall: STORY_HEIGHT, openings: APARTMENT_WINDOWS })
       }
-      // Roof
+
+      // roof
       const midpoint = (APARTMENT_WIDTH + D2) / 2
       const peak = xyz(midpoint, midpoint, randomInt(0, 4) * 7)
       plato.goto({ x: x, y: y, z: ROOFLINE, facing: bearing })
-      _addRoofAroundFloor(plato, { shape: ATTIC, peakXyz: peak })
+      _addRoofAroundFloor(plato, ATTIC, peak)
     }
   }
 }
