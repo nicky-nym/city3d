@@ -6,11 +6,11 @@
 // This is free and unencumbered software released into the public domain.
 // For more information, please refer to <http://unlicense.org>
 
-import { xyz, countTo } from '../city3d/util.js'
+import { xyz, count, countTo } from '../city3d/util.js'
 import Place from '../city3d/place.js'
 import Facing from '../city3d/facing.js'
 import Structure from '../city3d/structure.js'
-import { xy, rotate } from '../city3d/plato.js'
+import { xy, xywh2rect, rotate } from '../city3d/plato.js'
 
 // in feet
 const BLOCK_LENGTH = 660
@@ -228,7 +228,9 @@ export default class Bikeway extends Structure {
       xy(30, 35)
     ]
     // TODO: fix me!
-    const WINDOWS = [] // [(2, [yzwh2rect(y, 3, 4, height-2) for y in range(5, 585, 5)])]
+    const WINDOW_RECTS = count(5, 585, 5).map(x => xywh2rect(x, 3, 4, height - 5))
+    const WINDOWS = [[2, WINDOW_RECTS]]
+
     this._plato.goto({ x: x, y: y, z: z, facing: facing })
     this._plato.addPlace(Place.ROOM, LONGHOUSE, { wall: height, openings: WINDOWS })
     return this
