@@ -6,7 +6,7 @@
 // This is free and unencumbered software released into the public domain.
 // For more information, please refer to <http://unlicense.org>
 
-// import Bikeway from './structures/bikeway.js'
+import Bikeway from './structures/bikeway.js'
 import Cottage from './structures/cottage.js'
 import Manhattan from './structures/manhattan.js'
 // import Merlon from './structures/merlon.js'
@@ -34,10 +34,10 @@ function addBuildings () {
   // merlon.addBuildings(8, 8, { buildings: true })
   // plato.pontificate()
 
-  // plato.study('Bikeways', { x0: 100, y0: 100 })
-  // const bikeway = new Bikeway(plato)
-  // bikeway.addBikeways(3, 3, { buildings: true })
-  // plato.pontificate()
+  plato.study('Bikeways', { x0: 100, y0: 100 })
+  const bikeway = new Bikeway(plato)
+  bikeway.addBikeways(3, 3, { buildings: true })
+  plato.pontificate()
 
   plato.study('Wurster Hall(s)', { x0: 100, y0: -600 })
   const wurster = new Wurster(plato)

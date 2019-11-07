@@ -8,8 +8,6 @@
 
 import * as THREE from '../three/build/three.module.js'
 import { OrbitControls } from '../three/examples/jsm/controls/OrbitControls.js'
-// import { ConvexHull } from '../three/examples/jsm/math/ConvexHull.js'
-// import { ConvexGeometry } from '../three/examples/jsm/geometries/ConvexGeometry.js'
 
 const FIXME_FUCHSIA = [1, 0, 1, 0] // used as a default so it's obvious when a color is missing
 
@@ -68,9 +66,11 @@ export default class Output {
     this.controls = new OrbitControls(this._camera, this._renderer.domElement)
 
     // add an origin marker for debugging purposes
-    const geometry = new THREE.BoxGeometry(10, 10, 100)
-    const material = new THREE.MeshStandardMaterial({ color: 0xFF00FF })
+    const ORIGIN_MARKER_HEIGHT = 100
+    const geometry = new THREE.BoxGeometry(4, 4, ORIGIN_MARKER_HEIGHT)
+    const material = new THREE.MeshStandardMaterial({ color: 0x0000FF })
     const mesh = new THREE.Mesh(geometry, material)
+    mesh.position.z = ORIGIN_MARKER_HEIGHT / 2
     this._scene.add(mesh)
   }
 
@@ -158,7 +158,6 @@ export default class Output {
         }
         const mesh = new THREE.Mesh(geometry, material)
         this._scene.add(mesh)
-
       }
     }
   }

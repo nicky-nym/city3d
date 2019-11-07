@@ -10,129 +10,148 @@ import { xyz, countTo } from '../city3d/util.js'
 import Place from '../city3d/place.js'
 import Facing from '../city3d/facing.js'
 import Structure from '../city3d/structure.js'
-import { rotate } from '../city3d/plato.js'
+import { xy, rotate } from '../city3d/plato.js'
 
 // in feet
 const BLOCK_LENGTH = 660
 
 const PARCEL = [
-  xyz(0, 0, 0),
-  xyz(BLOCK_LENGTH, 0, 0),
-  xyz(BLOCK_LENGTH, BLOCK_LENGTH, 0),
-  xyz(0, BLOCK_LENGTH, 0)]
-
+  xy(0, 0),
+  xy(BLOCK_LENGTH, 0),
+  xy(BLOCK_LENGTH, BLOCK_LENGTH),
+  xy(0, BLOCK_LENGTH)
+]
 const EXIT_DOWN = [
-  xyz(25, 0, 0.1),
-  xyz(25, 45, 0.1),
-  xyz(30, 90, 0.1),
-  xyz(40, 90, 0.1),
-  xyz(30, 0, 0.1)]
+  xy(25, 0),
+  xy(25, 45),
+  xy(30, 90),
+  xy(40, 90),
+  xy(30, 0)
+]
 const RAMP_DOWN_TO_LANDING = [
   xyz(30, 90, 0),
   xyz(30, 270, -7.5),
   xyz(40, 270, -7.5),
-  xyz(40, 90, 0)]
+  xyz(40, 90, 0)
+]
 const LANDING = [
-  xyz(30, 270, -7.5),
-  xyz(30, 390, -7.5),
-  xyz(50, 390, -7.5),
-  xyz(50, 270, -7.5)]
+  xy(30, 270),
+  xy(30, 390),
+  xy(50, 390),
+  xy(50, 270)
+]
 const LANDING_PARKING = [
-  xyz(50, 270, -7.5),
-  xyz(50, 390, -7.5),
-  xyz(55, 390, -7.5),
-  xyz(55, 270, -7.5)]
+  xy(50, 270),
+  xy(50, 390),
+  xy(55, 390),
+  xy(55, 270)
+]
 const LANDING_PLAZA = [
-  xyz(55, 270, -7.5),
-  xyz(55, 390, -7.5),
-  xyz(70, 390, -7.5),
-  xyz(70, 270, -7.5)]
+  xy(55, 270),
+  xy(55, 390),
+  xy(70, 390),
+  xy(70, 270)
+]
 const LANDING_NORTH_WALKWAY = [
   xyz(70, 381, -7.5),
   xyz(129, 381, -5),
   xyz(129, 375, -5),
-  xyz(70, 375, -7.5)]
+  xyz(70, 375, -7.5)
+]
 const LANDING_SOUTH_WALKWAY = [
   xyz(70, 285, -7.5),
   xyz(129, 285, -5),
   xyz(129, 279, -5),
-  xyz(70, 279, -7.5)]
+  xyz(70, 279, -7.5)
+]
 
 const RAMP_UP_FROM_LANDING = [
   xyz(30, 390, -7.5),
   xyz(30, 570, 0),
   xyz(40, 570, 0),
-  xyz(40, 390, -7.5)]
+  xyz(40, 390, -7.5)
+]
 const ENTRANCE_FROM_BELOW = [
-  xyz(30, 570, 0.1),
-  xyz(25, 615, 0.1),
-  xyz(25, 660, 0.1),
-  xyz(30, 660, 0.1),
-  xyz(40, 570, 0.1)]
+  xy(30, 570),
+  xy(25, 615),
+  xy(25, 660),
+  xy(30, 660),
+  xy(40, 570)
+]
 const RAMP_DOWN_FROM_LANDING = [
   xyz(40, 390, -7.5),
   xyz(40, 570, -15),
   xyz(50, 570, -15),
-  xyz(50, 390, -7.5)]
+  xyz(50, 390, -7.5)
+]
 const RIGHT_TURN_TO_ENTER = [
   xyz(40, 570, -15),
   xyz(55, 620, -14.9),
   xyz(100, 635, -14.9),
   xyz(100, 625, -14.9),
   xyz(64, 612, -15),
-  xyz(50, 570, -15)]
+  xyz(50, 570, -15)
+]
 const ENTRANCE_FROM_ABOVE = [
-  xyz(100, 635, -14.9),
-  xyz(170, 635, -14.9),
-  xyz(100, 625, -14.9)]
+  xy(100, 635),
+  xy(170, 635),
+  xy(100, 625)]
 const EXIT_UP = [
-  xyz(170, 25, -14.9),
-  xyz(100, 25, -14.9),
-  xyz(100, 35, -14.9)]
+  xy(170, 25),
+  xy(100, 25),
+  xy(100, 35)
+]
 const RIGHT_TURN_FROM_EXIT = [
-  xyz(100, 25, -14.9),
-  xyz(55, 40, -14.9),
-  xyz(40, 90, -15),
-  xyz(50, 90, -15),
-  xyz(64, 48, -15),
-  xyz(100, 35, -14.9)]
+  xy(100, 25),
+  xy(55, 40),
+  xy(40, 90),
+  xy(50, 90),
+  xy(64, 48),
+  xy(100, 35)
+]
 const RAMP_UP_TO_LANDING = [
   xyz(40, 90, -15),
   xyz(40, 270, -7.5),
   xyz(50, 270, -7.5),
-  xyz(50, 90, -15)]
+  xyz(50, 90, -15)
+]
 const LOWER_PLAZA = [
-  xyz(170, 30, -14.9),
-  xyz(170, 45, -14.9),
-  xyz(490, 45, -14.9),
-  xyz(490, 30, -14.9)]
+  xy(170, 30),
+  xy(170, 45),
+  xy(490, 45),
+  xy(490, 30)
+]
 
 const WALKWAY_SPACING = 96
 const WALKWAY_WIDTH = 6
 const WALKWAY_XA = 183
 const LOWER_PLAZA_WALKWAY_A = [
-  xyz(WALKWAY_XA, 45, -15),
-  xyz(WALKWAY_XA, 129, -15),
-  xyz(WALKWAY_XA + WALKWAY_WIDTH, 129, -15),
-  xyz(WALKWAY_XA + WALKWAY_WIDTH, 45, -15)]
+  xy(WALKWAY_XA, 45),
+  xy(WALKWAY_XA, 129),
+  xy(WALKWAY_XA + WALKWAY_WIDTH, 129),
+  xy(WALKWAY_XA + WALKWAY_WIDTH, 45)
+]
 const WALKWAY_XB = WALKWAY_XA + WALKWAY_SPACING
 const LOWER_PLAZA_WALKWAY_B = [
-  xyz(WALKWAY_XB, 45, -15),
-  xyz(WALKWAY_XB, 129, -15),
-  xyz(WALKWAY_XB + WALKWAY_WIDTH, 129, -15),
-  xyz(WALKWAY_XB + WALKWAY_WIDTH, 45, -15)]
+  xy(WALKWAY_XB, 45),
+  xy(WALKWAY_XB, 129),
+  xy(WALKWAY_XB + WALKWAY_WIDTH, 129),
+  xy(WALKWAY_XB + WALKWAY_WIDTH, 45)
+]
 const WALKWAY_XC = WALKWAY_XB + WALKWAY_SPACING
 const LOWER_PLAZA_WALKWAY_C = [
-  xyz(WALKWAY_XC, 45, -15),
-  xyz(WALKWAY_XC, 129, -15),
-  xyz(WALKWAY_XC + WALKWAY_WIDTH, 129, -15),
-  xyz(WALKWAY_XC + WALKWAY_WIDTH, 45, -15)]
+  xy(WALKWAY_XC, 45),
+  xy(WALKWAY_XC, 129),
+  xy(WALKWAY_XC + WALKWAY_WIDTH, 129),
+  xy(WALKWAY_XC + WALKWAY_WIDTH, 45)
+]
 const WALKWAY_XD = WALKWAY_XC + WALKWAY_SPACING
 const LOWER_PLAZA_WALKWAY_D = [
-  xyz(WALKWAY_XD, 45, -15),
-  xyz(WALKWAY_XD, 129, -15),
-  xyz(WALKWAY_XD + WALKWAY_WIDTH, 129, -15),
-  xyz(WALKWAY_XD + WALKWAY_WIDTH, 45, -15)]
+  xy(WALKWAY_XD, 45),
+  xy(WALKWAY_XD, 129),
+  xy(WALKWAY_XD + WALKWAY_WIDTH, 129),
+  xy(WALKWAY_XD + WALKWAY_WIDTH, 45)
+]
 
 export default class Bikeway extends Structure {
   // Bikeway objects know how to describe the Kinematic city bikeways.
@@ -141,75 +160,77 @@ export default class Bikeway extends Structure {
     const NUM_LANES = 4
     const LANE_WIDTH = 5
     const LANE = [
-      xyz(0, 0, 0),
-      xyz(LANE_WIDTH, 0, 0),
-      xyz(LANE_WIDTH, BLOCK_LENGTH, 0),
-      xyz(0, BLOCK_LENGTH, 0)]
+      xy(0, 0),
+      xy(LANE_WIDTH, 0),
+      xy(LANE_WIDTH, BLOCK_LENGTH),
+      xy(0, BLOCK_LENGTH)]
     this._plato.goto({ x: x, y: y, z: z, facing: facing })
-    this._plato.addPlace(Place.BARE, { shape: LANE }) // median strip
+    this._plato.addPlace(Place.BARE, LANE) // median strip
     let delta = 0
     for (const i of countTo(NUM_LANES)) { // eslint-disable-line no-unused-vars
       delta += LANE_WIDTH
-      const [dx, dy, dz] = rotate((delta, 0, 0), facing)
-      this._plato.goto({ x: x + dx, y: y + dy, z: z + dz, facing: facing })
-      this._plato.addPlace(Place.BIKEPATH, { shape: LANE })
+      const [dx, dy] = rotate(xy(delta, 0), facing)
+      this._plato.goto({ x: x + dx, y: y + dy, z: z, facing: facing })
+      this._plato.addPlace(Place.BIKEPATH, LANE)
     }
     delta += LANE_WIDTH
-    const [dx, dy, dz] = rotate((delta, 0, 0), facing)
-    this._plato.goto({ x: x + dx, y: y + dy, z: z + dz, facing: facing })
-    this._plato.addPlace(Place.BARE, { shape: LANE }) // shoulder
+    const [dx, dy] = rotate(xy(delta, 0), facing)
+    this._plato.goto({ x: x + dx, y: y + dy, z: z, facing: facing })
+    this._plato.addPlace(Place.BARE, LANE) // shoulder
     return this
   }
 
   addRamps (self) {
-    this._plato.addPlace(Place.BIKEPATH, { shape: EXIT_DOWN })
-    this._plato.addPlace(Place.BIKEPATH, { shape: RAMP_DOWN_TO_LANDING })
-    this._plato.addPlace(Place.BIKEPATH, { shape: LANDING })
+    this._plato.addPlace(Place.BIKEPATH, EXIT_DOWN, { z: 0.1 })
+    // this._plato.addPlace(Place.BIKEPATH, RAMP_DOWN_TO_LANDING)
+    this._plato.addPlace(Place.BIKEPATH, LANDING, { z: -7.5 })
 
-    this._plato.addPlace(Place.BARE, { shape: LANDING_PARKING })
-    this._plato.addPlace(Place.WALKWAY, { shape: LANDING_PLAZA })
-    this._plato.addPlace(Place.WALKWAY, { shape: LANDING_NORTH_WALKWAY })
-    this._plato.addPlace(Place.WALKWAY, { shape: LANDING_SOUTH_WALKWAY })
+    this._plato.addPlace(Place.BARE, LANDING_PARKING, { z: -7.5 })
+    this._plato.addPlace(Place.WALKWAY, LANDING_PLAZA, { z: -7.5 })
+    // this._plato.addPlace(Place.WALKWAY, LANDING_NORTH_WALKWAY)
+    // this._plato.addPlace(Place.WALKWAY, LANDING_SOUTH_WALKWAY)
 
-    this._plato.addPlace(Place.BIKEPATH, { shape: RAMP_UP_FROM_LANDING })
-    this._plato.addPlace(Place.BIKEPATH, { shape: ENTRANCE_FROM_BELOW })
-    this._plato.addPlace(Place.BIKEPATH, { shape: RAMP_DOWN_FROM_LANDING })
-    this._plato.addPlace(Place.BIKEPATH, { shape: RIGHT_TURN_TO_ENTER })
-    this._plato.addPlace(Place.BIKEPATH, { shape: ENTRANCE_FROM_ABOVE })
-    this._plato.addPlace(Place.BIKEPATH, { shape: EXIT_UP })
-    this._plato.addPlace(Place.BIKEPATH, { shape: RIGHT_TURN_FROM_EXIT })
-    this._plato.addPlace(Place.BIKEPATH, { shape: RAMP_UP_TO_LANDING })
+    // this._plato.addPlace(Place.BIKEPATH, RAMP_UP_FROM_LANDING)
+    this._plato.addPlace(Place.BIKEPATH, ENTRANCE_FROM_BELOW, { z: 0.1 })
+    // this._plato.addPlace(Place.BIKEPATH, RAMP_DOWN_FROM_LANDING)
+    this._plato.addPlace(Place.BIKEPATH, RIGHT_TURN_TO_ENTER)
+    this._plato.addPlace(Place.BIKEPATH, ENTRANCE_FROM_ABOVE, { z: -14.9 })
+    this._plato.addPlace(Place.BIKEPATH, EXIT_UP, { z: -14.9 })
+    this._plato.addPlace(Place.BIKEPATH, RIGHT_TURN_FROM_EXIT, { z: -14.9 })
+    // this._plato.addPlace(Place.BIKEPATH, RAMP_UP_TO_LANDING)
 
-    this._plato.addPlace(Place.WALKWAY, { shape: LOWER_PLAZA })
-    this._plato.addPlace(Place.WALKWAY, { shape: LOWER_PLAZA_WALKWAY_A })
-    this._plato.addPlace(Place.WALKWAY, { shape: LOWER_PLAZA_WALKWAY_B })
-    this._plato.addPlace(Place.WALKWAY, { shape: LOWER_PLAZA_WALKWAY_C })
-    this._plato.addPlace(Place.WALKWAY, { shape: LOWER_PLAZA_WALKWAY_D })
+    this._plato.addPlace(Place.WALKWAY, LOWER_PLAZA, { z: -14.9 })
+    this._plato.addPlace(Place.WALKWAY, LOWER_PLAZA_WALKWAY_A, { z: -15 })
+    this._plato.addPlace(Place.WALKWAY, LOWER_PLAZA_WALKWAY_B, { z: -15 })
+    this._plato.addPlace(Place.WALKWAY, LOWER_PLAZA_WALKWAY_C, { z: -15 })
+    this._plato.addPlace(Place.WALKWAY, LOWER_PLAZA_WALKWAY_D, { z: -15 })
     return this
   }
 
   addHighline ({ x = 0, y = 0, z = 0, facing = Facing.NORTH } = {}) {
     const HIGHLINE = [
-      xyz(0, 0, 0),
-      xyz(0, 630, 0),
-      xyz(30, 630, 0),
-      xyz(30, 0, 0)]
+      xy(0, 0),
+      xy(0, 630),
+      xy(30, 630),
+      xy(30, 0)
+    ]
     this._plato.goto({ x: x, y: y, z: z, facing: facing })
-    this._plato.addPlace(Place.PARCEL, { shape: HIGHLINE })
-    this._plato.addWall({ shape: [xyz(30, 630, 0), xyz(30, 30, 0)], height: 3, cap: false })
+    this._plato.addPlace(Place.PARCEL, HIGHLINE)
+    this._plato.addPlace(Place.BARE, [xy(30, 630), xy(30, 30)], { height: 3, cap: false })
     return this
   }
 
   addLonghouse ({ x = 0, y = 0, z = 0, height = 10, facing = Facing.NORTH } = {}) {
     const LONGHOUSE = [
-      xyz(0, 35, 0),
-      xyz(0, 625, 0),
-      xyz(30, 625, 0),
-      xyz(30, 35, 0)]
+      xy(0, 35),
+      xy(0, 625),
+      xy(30, 625),
+      xy(30, 35)
+    ]
     // TODO: fix me!
     const WINDOWS = [] // [(2, [yzwh2rect(y, 3, 4, height-2) for y in range(5, 585, 5)])]
     this._plato.goto({ x: x, y: y, z: z, facing: facing })
-    this._plato.addPlace(Place.ROOM, { shape: LONGHOUSE, wall: height, openings: WINDOWS })
+    this._plato.addPlace(Place.ROOM, LONGHOUSE, { wall: height, openings: WINDOWS })
     return this
   }
 
@@ -221,7 +242,7 @@ export default class Bikeway extends Structure {
     const HIGHLINE_ALTITUDE = 37.5
 
     this._plato.goto({ x: x, y: y, z: -0.1, facing: Facing.NORTH })
-    this._plato.addPlace(Place.PARCEL, { shape: PARCEL })
+    this._plato.addPlace(Place.PARCEL, PARCEL)
 
     this.addBoulevard({ x: x, y: y, z: NORTH_SOUTH_ALTITUDE, facing: Facing.NORTH })
     if (buildings) {
