@@ -140,17 +140,18 @@ export default class Output {
     })
     const mesh = new THREE.Mesh(geometry, material)
     mesh.castShadow = true
+    const T = new THREE.Matrix4().setPosition(new THREE.Vector3(x0, y0, z))
     if (incline) {
       const LAST = this._areaCorners.length - 1
       const xN = this._areaCorners[LAST].x
       const yN = this._areaCorners[LAST].y
       const axis = new THREE.Vector3(xN - x0, yN - y0, 0)
-      print(`axis(${xN - x0}, ${yN - y0})`)
-      mesh.rotateOnAxis(axis, -Math.PI / 128) // mesh.rotateOnAxis(axis, -Math.PI / 32)
+      axis.normalize()
+      print(`axis(${axis.x}, ${axis.y}, ${axis.z})`)
+      const R = new THREE.Matrix4().makeRotationAxis(axis, -Math.PI / 32)
+      mesh.applyMatrix(R)
     }
-    mesh.translateX(x0)
-    mesh.translateY(y0)
-    mesh.translateZ(z)
+    mesh.applyMatrix(T)
     this._scene.add(mesh)
 
     const squareFeet = THREE.ShapeUtils.area(this._areaCorners)
