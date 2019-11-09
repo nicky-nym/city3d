@@ -19,8 +19,8 @@ const ONE_MILE = 5280
 const COLOR_GREY = 0x808080
 const BLUE_GLASS = 0x9999ff
 const ALMOST_WHITE = 0x999999
-const COLOR_BRIGHT_SKY = 0xddeeff
-const COLOR_DIM_GROUND = 0x202020
+const COLOR_BRIGHT_SKY = 0xddeeff // eslint-disable-line no-unused-vars
+const COLOR_DIM_GROUND = 0x202020 // eslint-disable-line no-unused-vars
 
 export { print }
 export default class Output {
@@ -99,6 +99,20 @@ export default class Output {
     window.addEventListener('resize', evt => this._onWindowResize(evt), false)
 
     this.controls = new OrbitControls(this._camera, this._renderer.domElement)
+    if (window.sessionStorage.getItem('OrbitControls')) {
+      const oc = JSON.parse(window.sessionStorage.getItem('OrbitControls'))
+      this.controls.position0 = new THREE.Vector3(...oc.position)
+      this.controls.target0 = new THREE.Vector3(...oc.target)
+      this.controls.zoom0 = oc.zoom
+      this.controls.reset()
+      console.log('Restored camera coordinates from sessionStorage. To revert to default coordinates, open in a new tab.')
+    }
+    window.addEventListener('keydown', evt => {
+      switch (evt.code) {
+        case 'KeyS': return this._onSaveOrbitControlsState()
+        case 'KeyR': return this._onRestoreOrbitControlsState()
+      }
+    }, false)
 
     // add an origin marker for debugging purposes
     const ORIGIN_MARKER_HEIGHT = 100
@@ -113,6 +127,18 @@ export default class Output {
     this._camera.aspect = window.innerWidth / window.innerHeight
     this._camera.updateProjectionMatrix()
     this._renderer.setSize(window.innerWidth, window.innerHeight)
+  }
+
+  _onSaveOrbitControlsState () {
+    this.controls.saveState()
+    const { position0: { x: px, y: py, z: pz }, target0: { x: tx, y: ty, z: tz }, zoom0 } = this.controls
+    const oc = { position: [px, py, pz], target: [tx, ty, tz], zoom: zoom0 }
+    window.sessionStorage.setItem('OrbitControls', JSON.stringify(oc))
+    console.log('Camera coordinates saved. To return to this view, type "R" or reload the page. To revert to default coordinates, open in a new tab.')
+  }
+
+  _onRestoreOrbitControlsState () {
+    this.controls.reset()
   }
 
   beginArea () {
@@ -147,7 +173,7 @@ export default class Output {
       const yN = this._areaCorners[LAST].y
       const axis = new THREE.Vector3(xN - x0, yN - y0, 0)
       axis.normalize()
-      print(`axis(${axis.x}, ${axis.y}, ${axis.z})`)
+      // print(`axis(${axis.x}, ${axis.y}, ${axis.z})`)
       const R = new THREE.Matrix4().makeRotationAxis(axis, -Math.PI / 32)
       mesh.applyMatrix(R)
     }
