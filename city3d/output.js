@@ -114,6 +114,8 @@ export default class Output {
       }
     }, false)
 
+    this._animatedComponents = []
+
     // add an origin marker for debugging purposes
     const ORIGIN_MARKER_HEIGHT = 100
     const geometry = new THREE.BoxGeometry(4, 4, ORIGIN_MARKER_HEIGHT)
@@ -133,6 +135,7 @@ export default class Output {
     this.controls.saveState()
     const { position0: { x: px, y: py, z: pz }, target0: { x: tx, y: ty, z: tz }, zoom0 } = this.controls
     const oc = { position: [px, py, pz], target: [tx, ty, tz], zoom: zoom0 }
+    console.log(`position: [${px}, ${py}, ${pz}], target: [${tx}, ${ty}, ${tz}]`)
     window.sessionStorage.setItem('OrbitControls', JSON.stringify(oc))
     console.log('Camera coordinates saved. To return to this view, type "R" or reload the page. To revert to default coordinates, open in a new tab.')
   }
@@ -250,70 +253,16 @@ export default class Output {
     this._scene.add(mesh)
   }
 
-  // beginFace () {
-  //   this._planarPoints = []
-  // }
-
-  // newVert (xyz) {
-  //   this._planarPoints.push(new THREE.Vector3(...xyz))
-  // }
-
-  // endFace (rgbaArray = FIXME_FUCHSIA) {
-  //   if (this._planarPoints.length < 3) {
-  //     console.log('skipping degenerate face')
-  //     return
-  //   }
-
-  //   // translate to origin
-  //   const p0 = this._planarPoints[0].clone()
-  //   const T = new THREE.Matrix4().setPosition(p0)
-  //   const translatedPoints = this._planarPoints.map(p => p.sub(p0))
-
-  //   const [, p1, p2] = translatedPoints // enough to determine the transformation matrix
-
-  //   // For now, just considering 3 possibilities: triangle origin-p1-p2 is in one of the three
-  //   // planes x=0, y=0 or z=0. (Note that this means all the remaining points are also in the same plane.)
-  //   let xyPoints
-  //   const R = new THREE.Matrix4()
-  //   const RInv = new THREE.Matrix4()
-  //   /* eslint-disable eqeqeq */
-  //   // TODO: '==' vs '===' is not the issue: we really should be comparing to Number.EPSILON.
-  //   if (p1.z == 0 && p2.z == 0) {
-  //     // case 1: z=0
-  //     // all points already in x-y plane, so we're done
-  //     xyPoints = translatedPoints
-  //   } else if (p1.x == 0 && p2.x == 0) {
-  //     // case 2: x=0
-  //     // rotate 90 around y-axis
-  //     R.makeRotationY(Math.PI / 2)
-  //     RInv.makeRotationY(-Math.PI / 2)
-  //     xyPoints = translatedPoints.map(p => p.applyMatrix4(R))
-  //   } else if (p1.y == 0 && p2.y == 0) {
-  //     // case 3: y=0
-  //     // rotate 90 around x-axis
-  //     R.makeRotationX(Math.PI / 2)
-  //     RInv.makeRotationX(-Math.PI / 2)
-  //     xyPoints = translatedPoints.map(p => p.applyMatrix4(R))
-  //   } else {
-  //     // something unexpected happened, so ignore this face
-  //     return
-  //   }
-  //   /* eslint-enable eqeqeq */
-
-  //   const shape = new THREE.Shape(xyPoints.map(p => new THREE.Vector2(p.x, p.y)))
-  //   shape.closePath()
-  //   const geometry = new THREE.ShapeGeometry(shape)
-  //   const color = new THREE.Color(...rgbaArray)
-  //   const material = new THREE.MeshStandardMaterial({ color: color, side: THREE.DoubleSide })
-  //   const mesh = new THREE.Mesh(geometry, material)
-  //   mesh.applyMatrix(RInv)
-  //   mesh.applyMatrix(T)
-  //   this._scene.add(mesh)
-  // }
+  addTopLevelObject (object) {
+    this._scene.add(object)
+  }
 
   animate () {
     window.requestAnimationFrame(() => this.animate())
     this.controls.update()
+    for (const component of this._animatedComponents) {
+      component.update()
+    }
     this.render()
   }
 

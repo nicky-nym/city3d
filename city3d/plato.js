@@ -117,6 +117,14 @@ export default class Plato {
     print(`plato: rendering time time was ${Date.now() - t0} milliseconds`)
   }
 
+  addAnimatedComponent (component) {
+    this._output._animatedComponents.push(component)
+  }
+
+  addMover (mover) {
+    this._output.addTopLevelObject(mover)
+  }
+
   hurry (hurry = false) {
     this._hurry = hurry
     return this

@@ -6,6 +6,7 @@
 // This is free and unencumbered software released into the public domain.
 // For more information, please refer to <http://unlicense.org>
 
+import Bicycle from './movers/bicycle.js'
 import Bikeway from './structures/bikeway.js'
 import Cottage from './structures/cottage.js'
 import Manhattan from './structures/manhattan.js'
@@ -14,10 +15,6 @@ import Plato from './city3d/plato.js'
 import Wurster from './structures/wurster.js'
 
 function addBuildings () {
-  const plato = new Plato()
-
-  plato.deleteAllObjects()
-
   plato.study('Cottage(s)', { x0: -100, y0: 100 })
   const cottage = new Cottage(plato)
   cottage.addStreet(1)
@@ -43,8 +40,15 @@ function addBuildings () {
   const wurster = new Wurster(plato)
   wurster.addBuildings(1)
   plato.pontificate()
-
-  plato.envision()
 }
 
+function addMovers () {
+  const bicycle = new Bicycle(plato)
+  bicycle.addBicycles(10)
+}
+
+const plato = new Plato()
+plato.deleteAllObjects()
 addBuildings()
+addMovers()
+plato.envision()
