@@ -44,7 +44,7 @@ function addBuildings () {
 
 function addMovers () {
   const bicycle = new Bicycle(plato)
-  bicycle.addBicycles(10)
+  bicycle.addBicycles(1000)
 }
 
 const plato = new Plato()
