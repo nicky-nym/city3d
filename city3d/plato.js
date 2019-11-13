@@ -108,6 +108,7 @@ export default class Plato {
     this.hurry(hurry)
     this.study()
     this._output = new Output()
+    this._paths = []
     print('plato: "Hello world!"')
   }
 
@@ -117,12 +118,31 @@ export default class Plato {
     print(`plato: rendering time time was ${Date.now() - t0} milliseconds`)
   }
 
-  addAnimatedComponent (component) {
-    this._output._animatedComponents.push(component)
-  }
+  //addAnimatedComponent (component) {
+  //  this._output._animatedComponents.push(component)
+  //}
 
+  // mover must have a method named 'update' used for animation
   addMover (mover) {
     this._output.addTopLevelObject(mover)
+    this._output._animatedComponents.push(mover)
+  }
+
+  addLine (line) {
+    this._output.addTopLevelObject(line)
+  }
+
+  addPath (place, relPath) {
+    const dxyz = [this._x, this._y, this._z]
+    const path = []
+    for (const segment of relPath) {
+      const [x, y, z] = segment
+      const xy = rotate([x, y], this._facing)
+      const xyz = [...xy, z]
+      path.push(nudge(xyz, { dxyz }))
+    }
+    this._paths.push(path)
+    return path
   }
 
   hurry (hurry = false) {

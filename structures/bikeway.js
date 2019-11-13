@@ -6,7 +6,8 @@
 // This is free and unencumbered software released into the public domain.
 // For more information, please refer to <http://unlicense.org>
 
-import { xyz, count, countTo } from '../city3d/util.js'
+import { xyz, count, countTo, randomInt, nudge } from '../city3d/util.js'
+import Bicycle from '../movers/bicycle.js'
 import Place from '../city3d/place.js'
 import Facing from '../city3d/facing.js'
 import Structure from '../city3d/structure.js'
@@ -39,6 +40,10 @@ const LANDING = [
   xy(30, 390),
   xy(50, 390),
   xy(50, 270)
+]
+const LANDING_LANE = [
+  xyz(40, 270, -7.5),
+  xyz(40, 390, -7.5)
 ]
 const LANDING_PARKING = [
   xy(50, 270),
@@ -172,6 +177,10 @@ export default class Bikeway extends Structure {
       const [dx, dy] = rotate(xy(delta, 0), facing)
       this._plato.goto({ x: x + dx, y: y + dy, z: z, facing: facing })
       this._plato.addPlace(Place.BIKEPATH, LANE)
+      const path = this._plato.addPath(Place.BIKEPATH, [
+        [LANE_WIDTH / 2, 0, 0],
+        [LANE_WIDTH / 2, BLOCK_LENGTH, 0]])
+      this.bicycle.addBicycle(path, randomInt(1, 9) * 0.04)
     }
     delta += LANE_WIDTH
     const [dx, dy] = rotate(xy(delta, 0), facing)
@@ -184,6 +193,11 @@ export default class Bikeway extends Structure {
     this._plato.addPlace(Place.BIKEPATH, EXIT_DOWN, { z: 0.1 })
     // this._plato.addPlace(Place.BIKEPATH, RAMP_DOWN_TO_LANDING)
     this._plato.addPlace(Place.BIKEPATH, LANDING, { z: -7.5 })
+    let path = this._plato.addPath(Place.BIKEPATH, [
+      [25, 0, 0.1], [35, 90, 0.1], // start and end of EXIT_DOWN
+      ...LANDING_LANE.map(xyz => nudge(xyz, {dx: -7.5}))
+    ])
+    this.bicycle.addBicycle(path, randomInt(6, 10) * 0.04)
 
     this._plato.addPlace(Place.BARE, LANDING_PARKING, { z: -7.5 })
     this._plato.addPlace(Place.WALKWAY, LANDING_PLAZA, { z: -7.5 })
@@ -192,11 +206,30 @@ export default class Bikeway extends Structure {
 
     // this._plato.addPlace(Place.BIKEPATH, RAMP_UP_FROM_LANDING)
     this._plato.addPlace(Place.BIKEPATH, ENTRANCE_FROM_BELOW, { z: 0.1 })
+    path = this._plato.addPath(Place.BIKEPATH, [
+      ...LANDING_LANE.map(xyz => nudge(xyz, {dx: -2.5})),
+      [35, 570, 0.1], [25, 660, 0.1] // start and end of ENTRANCE_FROM_BELOW
+    ])
+    this.bicycle.addBicycle(path, randomInt(3, 6) * 0.04)
+
     // this._plato.addPlace(Place.BIKEPATH, RAMP_DOWN_FROM_LANDING)
-    this._plato.addPlace(Place.BIKEPATH, RIGHT_TURN_TO_ENTER)
+    this._plato.addPlace(Place.BIKEPATH, RIGHT_TURN_TO_ENTER, { z: -14.9 })
     this._plato.addPlace(Place.BIKEPATH, ENTRANCE_FROM_ABOVE, { z: -14.9 })
+    path = this._plato.addPath(Place.BIKEPATH, [
+      ...LANDING_LANE.map(xyz => nudge(xyz, {dx: 7.5})),
+      [45, 570, -14.9], [60, 616, -14.9], [100, 630, -14.9], // start, middle, end of RIGHT_TURN_TO_ENTER
+      [170, 635, -14.9] // end of ENTRANCE_FROM_ABOVE
+    ])
+    this.bicycle.addBicycle(path, randomInt(6, 10) * 0.04)
+
     this._plato.addPlace(Place.BIKEPATH, EXIT_UP, { z: -14.9 })
     this._plato.addPlace(Place.BIKEPATH, RIGHT_TURN_FROM_EXIT, { z: -14.9 })
+    path = this._plato.addPath(Place.BIKEPATH, [
+      [170, 25, -14.9], // start of EXIT_UP
+      [100, 30, -14.9], [60, 44, -14.9], [45, 90, -14.9], // start, middle, end of RIGHT_TURN_FROM_EXIT
+      ...LANDING_LANE.map(xyz => nudge(xyz, {dx: 2.5}))
+    ])
+    this.bicycle.addBicycle(path, randomInt(3, 6) * 0.04)
     // this._plato.addPlace(Place.BIKEPATH, RAMP_UP_TO_LANDING)
 
     this._plato.addPlace(Place.WALKWAY, LOWER_PLAZA, { z: -14.9 })
@@ -284,6 +317,7 @@ export default class Bikeway extends Structure {
   }
 
   addBikeways (num_rows = 0, num_cols = 0, { buildings = true } = {}) {
+    this.bicycle = new Bicycle(this._plato)
     for (const row of countTo(num_rows)) {
       for (const col of countTo(num_cols)) {
         this.addBlock(row, col, buildings)

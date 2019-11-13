@@ -6,6 +6,8 @@
 // This is free and unencumbered software released into the public domain.
 // For more information, please refer to <http://unlicense.org>
 
+import * as THREE from '../three/build/three.module.js'
+
 function count (from, to, by = 1) {
   const total = (to - from) / by
   return [...Array(total).keys()].map(i => from + i * by)
@@ -42,4 +44,14 @@ function xy2xyz (xyz, deltaZ = 0) {
   return [xyz[X], xyz[Y], z]
 }
 
-export { xyz, rgba, count, countTo, randomInt, nudge, xy2xyz }
+const UP = new THREE.Vector3(0, 0, -1)
+
+function lookAt (obj, focus, up = UP) {
+  let f = focus.clone().sub(obj.position).normalize()
+  let s = new THREE.Vector3().crossVectors(f, up).normalize()
+  let v = new THREE.Vector3().crossVectors(s, f)
+  let m = new THREE.Matrix4().makeBasis(v, s, f)
+  obj.setRotationFromMatrix(m)
+}
+
+export { xyz, rgba, count, countTo, randomInt, nudge, xy2xyz, lookAt }

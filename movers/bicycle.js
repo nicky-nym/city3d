@@ -7,7 +7,7 @@
 // For more information, please refer to <http://unlicense.org>
 
 import * as THREE from '../three/build/three.module.js'
-import { countTo, randomInt } from '../city3d/util.js'
+import { countTo, randomInt, lookAt } from '../city3d/util.js'
 
 const TIRE_COLOR = 0x202020
 const SPOKE_COLOR = 0x606060
@@ -121,39 +121,78 @@ export default class Bicycle {
     this.bicycleModel.scale.set(s, s, s)
   }
 
-  update () {
-    const ff = 0.04
-    for (const bike of this.bicycles) {
-      if (bike.position.lengthSq() > 528 * 528) {
-        bike.velocity.negate()
-        bike.rotateZ(Math.PI)
-      }
-      bike.position.addScaledVector(bike.velocity, ff)
-      for (const wheel of bike.wheels) {
-        wheel.rotation.y += ff * bike.velocity.length() / Math.PI
-      }
+  updateBicycle () {
+    // TODO: update speed based on slope of current segment
+    this.remainingDist -= this.delta
+    if (this.remainingDist <= 0) {
+      this.pathIndex = (this.pathIndex + 1) % (this.path.length - 1)
+      this.vNorm = this.pathSegments[this.pathIndex].vNorm
+      this.position.copy(this.path[this.pathIndex])
+      this.position.addScaledVector(this.vNorm, -this.remainingDist)
+      this.remainingDist += this.pathSegments[this.pathIndex].len
+      lookAt(this, this.path[this.pathIndex + 1])
+      // make them go upside down
+      //lookAt(this, this.path[this.pathIndex + 1], new THREE.Vector3(0, 0, 1))
+    } else {
+      this.position.addScaledVector(this.vNorm, this.delta)
+    }
+
+    for (const wheel of this.wheels) {
+      wheel.rotation.y += this.speed / Math.PI
     }
   }
 
   addBicycles (n) {
     for (const i of countTo(n)) {
-      const p = new THREE.Vector3(-50 * i % 311, randomInt(-50, 50), 0)
-      const v = new THREE.Vector3(randomInt(-5, 5) + 0.5, randomInt(-5, 5), 0)
-      this.addBicycle(p, v)
+      const p1 = new THREE.Vector3(250 + -50 * i, randomInt(-50, 50), 0)
+      const p2 = new THREE.Vector3(p1.y, -p1.x, 40)
+      const p3 = new THREE.Vector3()
+      const speed = randomInt(1, 20) * 0.04
+      this._addBicycle([p1, p2, p3, p1], speed)
     }
-    this._plato.addAnimatedComponent(this)
   }
 
-  addBicycle (p, v) {
-    const bike = this.bicycleModel.clone()
-    bike.position.copy(p)
+  addBicycle (path, speed = 1) {
+    this._addBicycle(path.map(p => new THREE.Vector3(...p)), speed)
+  }
+
+  // for now, speed is in units of unit vectors per frame
+  _addBicycle (path, speed = 1) {
+    const bike = new THREE.Group()
+    const innerbike = this.bicycleModel.clone()
+    bike.add(innerbike)
     bike.wheels = [this.frontWheel.clone(), this.backWheel.clone()]
-    bike.add(...bike.wheels)
-    bike.velocity = v
-    if (v.lengthSq() > 0) {
-      bike.rotation.z = v.angleTo(new THREE.Vector3(1, 0, 0)) * (v.y > 0 ? 1 : -1)
+    innerbike.add(...bike.wheels)
+
+    // Situate innerbike in bike so it faces in the +z direction
+    innerbike.rotation.y = -Math.PI / 2
+
+    bike.path = path
+    bike.speed = speed
+    bike.delta = speed
+    bike.position.copy(path[0])
+    bike.pathSegments = []
+    for (const i of countTo(path.length - 1)) {
+      const v = path[i + 1].clone().sub(path[i])
+      const len = v.length() // compute before normalizing
+      bike.pathSegments.push({ vNorm: v.normalize(), len })
     }
-    this.bicycles.push(bike)
+
+    lookAt(bike, path[1])
+
+    const showPath = true
+    if (showPath) {
+      var material = new THREE.LineBasicMaterial({ color: 0xFF00FF })
+      var geometry = new THREE.Geometry()
+      geometry.vertices.push(...path)
+      var line = new THREE.Line(geometry, material)
+      this._plato.addLine(line)
+    }
+
+    bike.pathIndex = 0
+    bike.remainingDist = bike.pathSegments[0].len
+    bike.vNorm = bike.pathSegments[0].vNorm
+    bike.update = this.updateBicycle.bind(bike)
     this._plato.addMover(bike)
   }
 }
