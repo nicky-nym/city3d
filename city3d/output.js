@@ -157,12 +157,17 @@ export default class Output {
     this._areaCorners.push(new THREE.Vector2(...xy))
   }
 
-  endArea (rgbaArray = FIXME_FUCHSIA, z = 0, incline = 0) {
+  endArea (rgbaArray = FIXME_FUCHSIA, z = 0, { incline = 0, depth = -0.5 } = {}) {
     const x0 = this._areaCorners[0].x
     const y0 = this._areaCorners[0].y
     const shape = new THREE.Shape(this._areaCorners)
     shape.closePath()
-    const geometry = new THREE.ShapeGeometry(shape)
+
+    const geometry = new THREE.ExtrudeGeometry(shape, {
+      depth: depth,
+      bevelEnabled: false
+    })
+
     geometry.translate(-x0, -y0, 0)
     const color = new THREE.Color(...rgbaArray)
     const opacity = rgbaArray[3]
@@ -225,7 +230,12 @@ export default class Output {
           const opening = new THREE.Path(points)
           shape.holes.push(opening)
         }
-        const geometry = new THREE.ShapeGeometry(shape)
+
+        const DEFAULT_WALL_THICKNESS = 0.5
+        const geometry = new THREE.ExtrudeGeometry(shape, {
+          depth: DEFAULT_WALL_THICKNESS,
+          bevelEnabled: false
+        })
         geometry.rotateX(Math.PI / 2)
 
         const difference = new THREE.Vector2()
@@ -233,12 +243,13 @@ export default class Output {
         geometry.rotateZ(netAngle - Math.PI)
         geometry.translate(near.x, near.y, z)
 
-        let material
-        if (openings.length) {
-          material = new THREE.MeshStandardMaterial({ color: new THREE.Color(ALMOST_WHITE), side: THREE.DoubleSide })
-        } else {
-          material = new THREE.MeshStandardMaterial({ color: new THREE.Color(BLUE_GLASS), transparent: true, opacity: 0.7, side: THREE.DoubleSide })
-        }
+        const material = new THREE.MeshStandardMaterial({ color: new THREE.Color(ALMOST_WHITE), side: THREE.DoubleSide })
+        // let material
+        // if (openings.length) {
+        //   material = new THREE.MeshStandardMaterial({ color: new THREE.Color(ALMOST_WHITE), side: THREE.DoubleSide })
+        // } else {
+        //   material = new THREE.MeshStandardMaterial({ color: new THREE.Color(BLUE_GLASS), transparent: true, opacity: 0.7, side: THREE.DoubleSide })
+        // }
         const mesh = new THREE.Mesh(geometry, material)
         mesh.castShadow = true
         this._scene.add(mesh)

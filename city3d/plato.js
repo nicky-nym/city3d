@@ -174,7 +174,7 @@ export default class Plato {
     this._output.deleteAllObjects()
   }
 
-  addPlace (place, area, { z = 0, incline = 0, nuance = false, flip = false, cap = true, wall = 0, openings = [] } = {}) {
+  addPlace (place, area, { z = 0, incline = 0, depth = -0.5, nuance = false, flip = false, cap = true, wall = 0, openings = [] } = {}) {
     // print(`plato: adding ${place} with cap = ${cap}, wall = ${wall}`)
     z = z + this._z
     this._output.beginArea()
@@ -186,7 +186,7 @@ export default class Plato {
     }
     if (cap) {
       const color = COLORS_OF_PLACES[place]
-      const squareFeet = this._output.endArea(color, z, incline)
+      const squareFeet = this._output.endArea(color, z, { incline: incline, depth: depth })
       this._squareFeet[place] = squareFeet + (this._squareFeet[place] || 0)
     }
     if (wall !== 0) {

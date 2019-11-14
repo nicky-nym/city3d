@@ -241,15 +241,21 @@ export default class Bikeway extends Structure {
   }
 
   addHighline ({ x = 0, y = 0, z = 0, facing = Facing.NORTH } = {}) {
-    const HIGHLINE = [
-      xy(0, 0),
-      xy(0, 630),
+    const RETAINING_WALL = [
       xy(30, 630),
-      xy(30, 0)
+      xy(30, 30)
     ]
+    const HIGHLINE_SOIL = [
+      xy(0, 0),
+      xy(0, 630.5),
+      xy(29.5, 630.5),
+      xy(29.5, 0)
+    ]
+    const HIGHLINE_SOIL_THICKNESS = 4
+    const HIGHLINE_WALL_HEIGHT = 3 + HIGHLINE_SOIL_THICKNESS
     this._plato.goto({ x: x, y: y, z: z, facing: facing })
-    this._plato.addPlace(Place.PARCEL, HIGHLINE)
-    this._plato.addPlace(Place.BARE, [xy(30, 630), xy(30, 30)], { height: 3, cap: false })
+    this._plato.addPlace(Place.BARE, RETAINING_WALL, { wall: HIGHLINE_WALL_HEIGHT, cap: false })
+    this._plato.addPlace(Place.PARCEL, HIGHLINE_SOIL, { depth: HIGHLINE_SOIL_THICKNESS })
     return this
   }
 
