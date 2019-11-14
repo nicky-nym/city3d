@@ -195,7 +195,7 @@ export default class Bikeway extends Structure {
     this._plato.addPlace(Place.BIKEPATH, LANDING, { z: -7.5 })
     let path = this._plato.addPath(Place.BIKEPATH, [
       [25, 0, 0.1], [35, 90, 0.1], // start and end of EXIT_DOWN
-      ...LANDING_LANE.map(xyz => nudge(xyz, {dx: -7.5}))
+      ...LANDING_LANE.map(xyz => nudge(xyz, { dx: -7.5 }))
     ])
     this.bicycle.addBicycle(path, randomInt(6, 10) * 0.04)
 
@@ -207,7 +207,7 @@ export default class Bikeway extends Structure {
     // this._plato.addPlace(Place.BIKEPATH, RAMP_UP_FROM_LANDING)
     this._plato.addPlace(Place.BIKEPATH, ENTRANCE_FROM_BELOW, { z: 0.1 })
     path = this._plato.addPath(Place.BIKEPATH, [
-      ...LANDING_LANE.map(xyz => nudge(xyz, {dx: -2.5})),
+      ...LANDING_LANE.map(xyz => nudge(xyz, { dx: -2.5 })),
       [35, 570, 0.1], [25, 660, 0.1] // start and end of ENTRANCE_FROM_BELOW
     ])
     this.bicycle.addBicycle(path, randomInt(3, 6) * 0.04)
@@ -216,7 +216,7 @@ export default class Bikeway extends Structure {
     this._plato.addPlace(Place.BIKEPATH, RIGHT_TURN_TO_ENTER, { z: -14.9 })
     this._plato.addPlace(Place.BIKEPATH, ENTRANCE_FROM_ABOVE, { z: -14.9 })
     path = this._plato.addPath(Place.BIKEPATH, [
-      ...LANDING_LANE.map(xyz => nudge(xyz, {dx: 7.5})),
+      ...LANDING_LANE.map(xyz => nudge(xyz, { dx: 7.5 })),
       [45, 570, -14.9], [60, 616, -14.9], [100, 630, -14.9], // start, middle, end of RIGHT_TURN_TO_ENTER
       [170, 635, -14.9] // end of ENTRANCE_FROM_ABOVE
     ])
@@ -227,7 +227,7 @@ export default class Bikeway extends Structure {
     path = this._plato.addPath(Place.BIKEPATH, [
       [170, 25, -14.9], // start of EXIT_UP
       [100, 30, -14.9], [60, 44, -14.9], [45, 90, -14.9], // start, middle, end of RIGHT_TURN_FROM_EXIT
-      ...LANDING_LANE.map(xyz => nudge(xyz, {dx: 2.5}))
+      ...LANDING_LANE.map(xyz => nudge(xyz, { dx: 2.5 }))
     ])
     this.bicycle.addBicycle(path, randomInt(3, 6) * 0.04)
     // this._plato.addPlace(Place.BIKEPATH, RAMP_UP_TO_LANDING)

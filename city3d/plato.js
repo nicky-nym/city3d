@@ -12,7 +12,7 @@ import Facing from './facing.js'
 import Output, { print } from './output.js'
 
 const WHITE = rgba(1, 1, 1, 1) // eslint-disable-line no-unused-vars
-const RED = rgba(0.8, 0, 0, 1) // opaque red
+// const RED = rgba(0.8, 0, 0, 1) // opaque red
 const BLACKTOP = rgba(0.1, 0.1, 0.1, 1) // very dark grey
 const GREEN = rgba(0, 1, 0, 1) // eslint-disable-line no-unused-vars
 const BLUE = rgba(0, 0, 1, 1) // opaque blue
@@ -118,9 +118,9 @@ export default class Plato {
     print(`plato: rendering time time was ${Date.now() - t0} milliseconds`)
   }
 
-  //addAnimatedComponent (component) {
+  // addAnimatedComponent (component) {
   //  this._output._animatedComponents.push(component)
-  //}
+  // }
 
   // mover must have a method named 'update' used for animation
   addMover (mover) {
