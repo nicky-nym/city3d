@@ -14,7 +14,7 @@ const stats = new Stats()
 stats.showPanel(0) // 0: fps, 1: ms, 2: mb, 3+: custom
 document.body.appendChild(stats.dom)
 
-const FIXME_FUCHSIA = [1, 0, 1, 0] // used as a default so it's obvious when a color is missing
+const FIXME_FUCHSIA = 0xff00ff // used as a default so it's obvious when a color is missing
 
 function print (str) {
   console.log(str)
@@ -22,7 +22,8 @@ function print (str) {
 
 const ONE_MILE = 5280
 const COLOR_GREY = 0x808080
-const BLUE_GLASS = 0x9999ff
+const BLUE = 0x0000ff
+const BLUE_GLASS = 0x9999ff // eslint-disable-line no-unused-vars
 const ALMOST_WHITE = 0x999999
 const COLOR_BRIGHT_SKY = 0xddeeff // eslint-disable-line no-unused-vars
 const COLOR_DIM_GROUND = 0x202020 // eslint-disable-line no-unused-vars
@@ -37,6 +38,7 @@ export default class Output {
     const NEAR_CAMERA_LIMIT = 1
     const FAR_CAMERA_LIMIT = ONE_MILE * 2
 
+    this._materialsByHexColor = {}
     this._shape = null
 
     // scene
@@ -124,7 +126,7 @@ export default class Output {
     // add an origin marker for debugging purposes
     const ORIGIN_MARKER_HEIGHT = 100
     const geometry = new THREE.BoxGeometry(4, 4, ORIGIN_MARKER_HEIGHT)
-    const material = new THREE.MeshStandardMaterial({ color: 0x0000FF })
+    const material = this._materialByHexColor(BLUE)
     const mesh = new THREE.Mesh(geometry, material)
     mesh.position.z = ORIGIN_MARKER_HEIGHT / 2
     this._scene.add(mesh)
@@ -149,6 +151,17 @@ export default class Output {
     this.controls.reset()
   }
 
+  _materialByHexColor (hexColor) {
+    if (!(hexColor in this._materialsByHexColor)) {
+      const material = new THREE.MeshStandardMaterial({
+        color: hexColor,
+        side: THREE.DoubleSide
+      })
+      this._materialsByHexColor[hexColor] = material
+    }
+    return this._materialsByHexColor[hexColor]
+  }
+
   beginArea () {
     this._areaCorners = []
   }
@@ -157,7 +170,7 @@ export default class Output {
     this._areaCorners.push(new THREE.Vector2(...xy))
   }
 
-  endArea (rgbaArray = FIXME_FUCHSIA, z = 0, { incline = 0, depth = -0.5 } = {}) {
+  endArea (hexColor = FIXME_FUCHSIA, z = 0, { incline = 0, depth = -0.5 } = {}) {
     const x0 = this._areaCorners[0].x
     const y0 = this._areaCorners[0].y
     const shape = new THREE.Shape(this._areaCorners)
@@ -169,14 +182,13 @@ export default class Output {
     })
 
     geometry.translate(-x0, -y0, 0)
-    const color = new THREE.Color(...rgbaArray)
-    const opacity = rgbaArray[3]
-    const material = new THREE.MeshStandardMaterial({
-      color: color,
-      opacity: opacity,
-      transparent: (opacity === 1),
-      side: THREE.DoubleSide
-    })
+    const material = this._materialByHexColor(hexColor)
+    // const material = new THREE.MeshStandardMaterial({
+    //   color: color,
+    //   opacity: opacity,
+    //   transparent: (opacity === 1),
+    //   side: THREE.DoubleSide
+    // })
     const mesh = new THREE.Mesh(geometry, material)
     mesh.castShadow = true
     const T = new THREE.Matrix4().setPosition(new THREE.Vector3(x0, y0, z))
@@ -243,13 +255,7 @@ export default class Output {
         geometry.rotateZ(netAngle - Math.PI)
         geometry.translate(near.x, near.y, z)
 
-        const material = new THREE.MeshStandardMaterial({ color: new THREE.Color(ALMOST_WHITE), side: THREE.DoubleSide })
-        // let material
-        // if (openings.length) {
-        //   material = new THREE.MeshStandardMaterial({ color: new THREE.Color(ALMOST_WHITE), side: THREE.DoubleSide })
-        // } else {
-        //   material = new THREE.MeshStandardMaterial({ color: new THREE.Color(BLUE_GLASS), transparent: true, opacity: 0.7, side: THREE.DoubleSide })
-        // }
+        const material = this._materialByHexColor(ALMOST_WHITE)
         const mesh = new THREE.Mesh(geometry, material)
         mesh.castShadow = true
         this._scene.add(mesh)
@@ -257,14 +263,13 @@ export default class Output {
     }
   }
 
-  addRoof (rgba, verticesOfRoof, indicesOfFaces) {
+  addRoof (hexColor, verticesOfRoof, indicesOfFaces) {
     const geometry = new THREE.Geometry()
     geometry.vertices = verticesOfRoof.map(xyz => new THREE.Vector3(...xyz))
     geometry.faces = indicesOfFaces.map(abc => new THREE.Face3(...abc))
     geometry.computeBoundingSphere()
     geometry.computeFaceNormals()
-    const color = new THREE.Color(...rgba)
-    const material = new THREE.MeshStandardMaterial({ color: color, side: THREE.DoubleSide })
+    const material = this._materialByHexColor(hexColor)
     const mesh = new THREE.Mesh(geometry, material)
     this._scene.add(mesh)
   }

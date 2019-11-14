@@ -6,24 +6,24 @@
 // This is free and unencumbered software released into the public domain.
 // For more information, please refer to <http://unlicense.org>
 
-import { rgba, nudge } from './util.js'
+import { nudge } from './util.js'
 import Place from './place.js'
 import Facing from './facing.js'
 import Output, { print } from './output.js'
 
-const WHITE = rgba(1, 1, 1, 1) // eslint-disable-line no-unused-vars
-// const RED = rgba(0.8, 0, 0, 1) // opaque red
-const BLACKTOP = rgba(0.1, 0.1, 0.1, 1) // very dark grey
-const GREEN = rgba(0, 1, 0, 1) // eslint-disable-line no-unused-vars
-const BLUE = rgba(0, 0, 1, 1) // opaque blue
-const YELLOW = rgba(1, 1, 0, 1) // opaque yellow
+const WHITE = 0xffffff // eslint-disable-line no-unused-vars
+const RED = 0xcc0000 // eslint-disable-line no-unused-vars
+const BLACKTOP = 0x1a1a1a // very dark grey
+const GREEN = 0x00ff00 // eslint-disable-line no-unused-vars
+const BLUE = 0x0000ff
+const YELLOW = 0xffff00
 
-const GREEN_GRASS = rgba(0, 0.8, 0, 1) // opaque dark green
-const BROWN = rgba(0.5, 0.4, 0.2, 1)
-const DARK_GRAY = rgba(0.25, 0.25, 0.25, 1) // opaque dark gray
-const LIGHT_GRAY = rgba(0.8745, 0.8745, 0.8745, 1) // opaque light gray
-const BLUE_GLASS = rgba(0.6, 0.6, 1, 0.8) // eslint-disable-line no-unused-vars
-const MARTIAN_ORANGE = rgba(0.8745, 0.2863, 0.0667, 1) // opaque Martian orange
+const GREEN_GRASS = 0x00cc00
+const BROWN = 0x806633
+const DARK_GRAY = 0x404040
+const LIGHT_GRAY = 0xdddddd
+const BLUE_GLASS = 0x9a9aff // eslint-disable-line no-unused-vars
+const MARTIAN_ORANGE = 0xdf4911
 
 const COLORS_OF_PLACES = {
   STREET: BLACKTOP,
@@ -33,9 +33,7 @@ const COLORS_OF_PLACES = {
   BARE: LIGHT_GRAY,
   PARCEL: GREEN_GRASS,
   CANAL: BLUE,
-
-  WALL: BLUE_GLASS, // temporarily making this non-white so it's obvious that it's working
-  // WALL: WHITE,
+  WALL: WHITE,
   ROOF: DARK_GRAY,
   DOOR: YELLOW
 }
@@ -74,19 +72,6 @@ function rotate (xy, facing) {
       throw new Error('not implemented')
   }
   throw new Error('bad compass facing in plato.rotate(): ' + facing.value.toString())
-}
-
-function _materialByPlace (place) { // eslint-disable-line no-unused-vars
-  const oldPythonCode = false
-  let bpy // TODO!!
-  if (oldPythonCode) {
-    let material = bpy.data.materials.get(place.name)
-    if (material === null) {
-      material = bpy.data.materials.new(place.name)
-      material.diffuse_color = COLORS_OF_PLACES[place]
-    }
-    return material
-  }
 }
 
 function nudgeXY (xy, { dx = 0, dy = 0, dxy = [0, 0] } = {}) {

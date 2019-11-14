@@ -25,10 +25,6 @@ function xyz (x, y, z = 0) {
   return [x, y, z]
 }
 
-function rgba (r, g, b, a = 0) {
-  return [r, g, b, a]
-}
-
 function nudge (xyz, { dx = 0, dy = 0, dz = 0, dxyz = [0, 0, 0] } = {}) {
   const [x, y, z] = xyz
   const [dX, dY, dZ] = dxyz
@@ -54,4 +50,4 @@ function lookAt (obj, focus, up = UP) {
   obj.setRotationFromMatrix(m)
 }
 
-export { xyz, rgba, count, countTo, randomInt, nudge, xy2xyz, lookAt }
+export { xyz, count, countTo, randomInt, nudge, xy2xyz, lookAt }
