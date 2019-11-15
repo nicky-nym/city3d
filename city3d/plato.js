@@ -162,7 +162,7 @@ export default class Plato {
   addPlace (place, area, { z = 0, incline = 0, depth = -0.5, nuance = false, flip = false, cap = true, wall = 0, openings = [] } = {}) {
     // print(`plato: adding ${place} with cap = ${cap}, wall = ${wall}`)
     z = z + this._z
-    this._output.beginArea()
+    this._output.beginArea(`${Place[place]}${area.name ? ` (${area.name})` : ''}`)
     for (let xy of area) {
       xy = rotate(xy, this._facing)
       const dxy = [this._x, this._y]

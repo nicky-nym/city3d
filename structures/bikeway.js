@@ -29,6 +29,7 @@ const EXIT_DOWN = [
   xy(40, 90),
   xy(30, 0)
 ]
+EXIT_DOWN.name = 'exit down'
 
 const RAMP_RUN_LENGTH = 180
 const RAMP_RISE_HEIGHT = 7.5
@@ -39,6 +40,7 @@ const RAMP_DOWN_TO_LANDING = [
   xy(40, 90 + HYPOTENUSE),
   xy(40, 90)
 ]
+RAMP_DOWN_TO_LANDING.name = 'ramp down to landing'
 const RAMP_UP_FROM_LANDING = [
   xy(30, 390),
   xy(30, 390 + HYPOTENUSE),
@@ -63,6 +65,11 @@ const LANDING = [
   xy(30, 390),
   xy(50, 390),
   xy(50, 270)
+]
+LANDING.name = 'landing'
+const LANDING_LANE = [
+  xyz(40, 270, -7.5),
+  xyz(40, 390, -7.5)
 ]
 const LANDING_PARKING = [
   xy(50, 270),
@@ -126,6 +133,7 @@ const RIGHT_TURN_FROM_EXIT = [
   xy(64, 48),
   xy(100, 35)
 ]
+RIGHT_TURN_FROM_EXIT.name = 'right turn from exit'
 
 const LOWER_PLAZA = [
   xy(170, 30),

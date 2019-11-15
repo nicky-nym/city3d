@@ -8,6 +8,7 @@
 
 import * as THREE from '../three/build/three.module.js'
 import { OrbitControls } from '../three/examples/jsm/controls/OrbitControls.js'
+import { CSS2DRenderer, CSS2DObject } from '../three/examples/jsm/renderers/CSS2DRenderer.js';
 import Stats from 'http://mrdoob.github.io/stats.js/build/stats.module.js'
 
 const stats = new Stats()
@@ -97,6 +98,7 @@ export default class Output {
     ground.position.z = -1
     ground.rotation.x = -Math.PI / 2
     ground.receiveShadow = true
+    ground.userData.noHighlight = true
     this._scene.add(ground)
 
     this._renderer = new THREE.WebGLRenderer({ antialias: true })
@@ -105,7 +107,20 @@ export default class Output {
     document.body.appendChild(this._renderer.domElement)
     window.addEventListener('resize', evt => this._onWindowResize(evt), false)
 
-    this.controls = new OrbitControls(this._camera, this._renderer.domElement)
+    // DOM setup for tooltips
+    this._tooltipRenderer = new CSS2DRenderer();
+    this._tooltipRenderer.setSize(window.innerWidth, window.innerHeight);
+    this._tooltipRenderer.domElement.style.position = 'absolute';
+    this._tooltipRenderer.domElement.style.top = 0;
+    document.body.appendChild(this._tooltipRenderer.domElement);
+    this._tooltipDiv = document.createElement('div')
+    this._tooltipDiv.className = 'tooltip'
+    this._cssObj = new CSS2DObject(this._tooltipDiv)
+
+    // For some reason, this._renderer doesn't work here if _tooltipRenderer is in play.
+    this.controls = new OrbitControls(this._camera, this._tooltipRenderer.domElement)
+    //this.controls = new OrbitControls(this._camera, this._renderer.domElement)
+
     if (window.sessionStorage.getItem('OrbitControls')) {
       const oc = JSON.parse(window.sessionStorage.getItem('OrbitControls'))
       this.controls.position0 = new THREE.Vector3(...oc.position)
@@ -119,6 +134,17 @@ export default class Output {
         case 'KeyS': return this._onSaveOrbitControlsState()
         case 'KeyR': return this._onRestoreOrbitControlsState()
       }
+    }, false)
+
+    // enable selecting objects with mouse
+    this._raycaster = new THREE.Raycaster();
+    this._mouse = new THREE.Vector2();
+    this._intersected = null;
+    window.addEventListener('mousemove', evt => {
+      // calculate mouse position in normalized device coordinates
+      // (-1 to +1) for both components
+      this._mouse.x = (evt.clientX / window.innerWidth) * 2 - 1;
+      this._mouse.y = - (evt.clientY / window.innerHeight) * 2 + 1;
     }, false)
 
     this._animatedComponents = []
@@ -162,7 +188,10 @@ export default class Output {
     return this._materialsByHexColor[hexColor]
   }
 
-  beginArea () {
+  beginArea (name) {
+    this._currentGroup = new THREE.Group()
+    this._currentGroup.name = name
+    this._scene.add(this._currentGroup)
     this._areaCorners = []
   }
 
@@ -208,8 +237,7 @@ export default class Output {
       mesh.applyMatrix(R)
     }
     mesh.applyMatrix(T)
-    this._scene.add(mesh)
-
+    this._currentGroup.add(mesh)
     const squareFeet = THREE.ShapeUtils.area(this._areaCorners)
     return squareFeet
   }
@@ -262,8 +290,9 @@ export default class Output {
 
         const material = this._materialByHexColor(ALMOST_WHITE)
         const mesh = new THREE.Mesh(geometry, material)
+        mesh.name = `wall from ${JSON.stringify(near)} to ${JSON.stringify(far)}`
         mesh.castShadow = true
-        this._scene.add(mesh)
+        this._currentGroup.add(mesh)
       }
     }
   }
@@ -294,7 +323,52 @@ export default class Output {
   }
 
   render () {
+    // update the picking ray with the camera and mouse position
+    this._raycaster.setFromCamera(this._mouse, this._camera);
+
+    // calculate objects intersecting the picking ray
+    const intersects = this._raycaster.intersectObjects(this._scene.children, true);
+
+    if (intersects.length > 0) {
+      if (this._intersected != intersects[0].object) {
+        if (this._intersected) this.unhighlight(this._intersected);
+        this._intersected = intersects[0].object;
+        if (this._intersected.userData.noHighlight) {
+          this._intersected = null;
+        } else {
+          this.highlight(this._intersected);
+        }
+      }
+    } else {
+      if (this._intersected) this.unhighlight(this._intersected);
+      this._intersected = null;
+    }
+
     this._renderer.render(this._scene, this._camera)
+    this._tooltipRenderer.render(this._scene, this._camera)
+  }
+
+  highlight (obj) {
+    const names = []
+    for (let o = obj; o.parent; o = o.parent) {
+      if (o.name) names.push(o.name)
+    }
+    console.log(names.join('-of-'))
+    this._tooltipDiv.textContent = names.join('-of-')
+
+    // TODO: This positions the tooltip at the top left corner of the target object, which
+    // is bad if it's off screen. Even the center of the object could be offscreen if it's
+    // large, so this might have to take into account the mouse coordinates somehow.
+    this._cssObj.position.set(0, 0, 0)
+    obj.add(this._cssObj)
+
+    obj.currentHex = obj.material.color.getHex()
+    obj.material.color.setHex(0xff00ff);
+  }
+
+  unhighlight (obj) {
+    obj.material.color.setHex(obj.currentHex)
+    obj.remove(this._cssObj)
   }
 
   deleteAllObjects () {
