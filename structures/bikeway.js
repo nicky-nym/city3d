@@ -64,10 +64,6 @@ const LANDING = [
   xy(50, 390),
   xy(50, 270)
 ]
-const LANDING_LANE = [
-  xyz(40, 270, -7.5),
-  xyz(40, 390, -7.5)
-]
 const LANDING_PARKING = [
   xy(50, 270),
   xy(50, 390),
@@ -205,8 +201,11 @@ export default class Bikeway extends Structure {
     this._plato.addPlace(Place.BIKEPATH, RAMP_DOWN_TO_LANDING, { incline: RAMP_RISE_HEIGHT })
     this._plato.addPlace(Place.BIKEPATH, LANDING, { z: -7.5 })
     let path = this._plato.addPath(Place.BIKEPATH, [
-      [25, 0, 0.1], [35, 90, 0.1], // start and end of EXIT_DOWN
-      ...LANDING_LANE.map(xyz => nudge(xyz, { dx: -7.5 }))
+      xyz(25, 0, 0.1), xyz(35, 90, 0.1), // start and end of EXIT_DOWN
+      xyz(35, 270, -7.5), // landing
+      xyz(45, 390, -7.5),
+      xyz(45, 570, -14.9), xyz(60, 616, -14.9), xyz(100, 630, -14.9), // start, middle, end of RIGHT_TURN_TO_ENTER
+      xyz(170, 637.5, -14.9) // end of ENTRANCE_FROM_ABOVE
     ])
     this.bicycle.addBicycle(path, randomInt(6, 10) * 0.04)
 
@@ -217,28 +216,19 @@ export default class Bikeway extends Structure {
 
     this._plato.addPlace(Place.BIKEPATH, RAMP_UP_FROM_LANDING, { z: -7.5, incline: -RAMP_RISE_HEIGHT })
     this._plato.addPlace(Place.BIKEPATH, ENTRANCE_FROM_BELOW, { z: 0.1 })
-    path = this._plato.addPath(Place.BIKEPATH, [
-      ...LANDING_LANE.map(xyz => nudge(xyz, { dx: -2.5 })),
-      [35, 570, 0.1], [25, 660, 0.1] // start and end of ENTRANCE_FROM_BELOW
-    ])
-    this.bicycle.addBicycle(path, randomInt(3, 6) * 0.04)
 
     this._plato.addPlace(Place.BIKEPATH, RAMP_DOWN_FROM_LANDING, { z: -7.5, incline: RAMP_RISE_HEIGHT })
     this._plato.addPlace(Place.BIKEPATH, RIGHT_TURN_TO_ENTER, { z: -14.9 })
     this._plato.addPlace(Place.BIKEPATH, ENTRANCE_FROM_ABOVE, { z: -14.9 })
-    path = this._plato.addPath(Place.BIKEPATH, [
-      ...LANDING_LANE.map(xyz => nudge(xyz, { dx: 7.5 })),
-      [45, 570, -14.9], [60, 616, -14.9], [100, 630, -14.9], // start, middle, end of RIGHT_TURN_TO_ENTER
-      [170, 635, -14.9] // end of ENTRANCE_FROM_ABOVE
-    ])
-    this.bicycle.addBicycle(path, randomInt(6, 10) * 0.04)
 
     this._plato.addPlace(Place.BIKEPATH, EXIT_UP, { z: -14.9 })
     this._plato.addPlace(Place.BIKEPATH, RIGHT_TURN_FROM_EXIT, { z: -14.9 })
     path = this._plato.addPath(Place.BIKEPATH, [
-      [170, 25, -14.9], // start of EXIT_UP
-      [100, 30, -14.9], [60, 44, -14.9], [45, 90, -14.9], // start, middle, end of RIGHT_TURN_FROM_EXIT
-      ...LANDING_LANE.map(xyz => nudge(xyz, { dx: 2.5 }))
+      xyz(170, 22.5, -14.9), // start of EXIT_UP
+      xyz(100, 30, -14.9), xyz(60, 44, -14.9), xyz(45, 90, -14.9), // start, middle, end of RIGHT_TURN_FROM_EXIT
+      xyz(45, 270, -7.5), // landing
+      xyz(35, 390, -7.5),
+      xyz(35, 570, 0.1), xyz(25, 660, 0.1) // start and end of ENTRANCE_FROM_BELOW
     ])
     this.bicycle.addBicycle(path, randomInt(3, 6) * 0.04)
     this._plato.addPlace(Place.BIKEPATH, RAMP_UP_TO_LANDING, { z: -15, incline: -RAMP_RISE_HEIGHT })
