@@ -193,13 +193,18 @@ export default class Output {
     mesh.castShadow = true
     const T = new THREE.Matrix4().setPosition(new THREE.Vector3(x0, y0, z))
     if (incline) {
+      const x1 = this._areaCorners[1].x
+      const y1 = this._areaCorners[1].y
+      const edge = new THREE.Vector2(x1 - x0, y1 - y0)
+      const hypotenuse = edge.length()
+      const angle = Math.asin(incline / hypotenuse)
+
       const LAST = this._areaCorners.length - 1
       const xN = this._areaCorners[LAST].x
       const yN = this._areaCorners[LAST].y
       const axis = new THREE.Vector3(xN - x0, yN - y0, 0)
       axis.normalize()
-      // print(`axis(${axis.x}, ${axis.y}, ${axis.z})`)
-      const R = new THREE.Matrix4().makeRotationAxis(axis, -Math.PI / 32)
+      const R = new THREE.Matrix4().makeRotationAxis(axis, -angle)
       mesh.applyMatrix(R)
     }
     mesh.applyMatrix(T)

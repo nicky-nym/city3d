@@ -17,18 +17,19 @@ import { xy, xywh2rect, nudgeXY } from '../city3d/plato.js'
 const STORY_HEIGHT = 10
 const ROOFLINE = STORY_HEIGHT * 5
 const RAMP_WIDTH = 6
-const RAMP_LENGTH = 30
-const RAMP_HEIGHT = 2.5
-const TOWER_WIDTH = RAMP_LENGTH + 12
-const LANDING_WIDTH = RAMP_WIDTH + TOWER_WIDTH - RAMP_LENGTH
+const RAMP_RUN_LENGTH = 30
+const RAMP_RISE_HEIGHT = 2.5
+const TOWER_WIDTH = RAMP_RUN_LENGTH + 12
+const LANDING_WIDTH = RAMP_WIDTH + TOWER_WIDTH - RAMP_RUN_LENGTH
 const TOWER_SPACING = TOWER_WIDTH + RAMP_WIDTH
 
 const D1 = LANDING_WIDTH / 2.0
 const D2 = RAMP_WIDTH / 2.0
+const RAMP_HYPOTENUSE = Math.sqrt(RAMP_RUN_LENGTH ** 2 + RAMP_RISE_HEIGHT ** 2)
 const RAMP_CORNERS = [
   xy(+D2, D1),
-  xy(+D2, D1 + RAMP_LENGTH),
-  xy(-D2, D1 + RAMP_LENGTH),
+  xy(+D2, D1 + RAMP_HYPOTENUSE),
+  xy(-D2, D1 + RAMP_HYPOTENUSE),
   xy(-D2, D1)
 ]
 const OCTAGONAL_LANDING = [
@@ -52,11 +53,11 @@ const BASEMENT = [
   xy(D1, D2),
   xy(D2, D1),
   xy(0, D1),
-  xy(0, 2 * D1 + RAMP_LENGTH),
-  xy(2 * D1 + RAMP_LENGTH, 2 * D1 + RAMP_LENGTH),
-  xy(2 * D1 + RAMP_LENGTH, 0)
+  xy(0, 2 * D1 + RAMP_RUN_LENGTH),
+  xy(2 * D1 + RAMP_RUN_LENGTH, 2 * D1 + RAMP_RUN_LENGTH),
+  xy(2 * D1 + RAMP_RUN_LENGTH, 0)
 ]
-const APARTMENT_WIDTH = D1 + RAMP_LENGTH + (D1 + D2) / 2
+const APARTMENT_WIDTH = D1 + RAMP_RUN_LENGTH + (D1 + D2) / 2
 
 const DOOR_HEIGHT = 6 + 8 / 12
 const DOORS = [
@@ -76,16 +77,16 @@ const WINDOWS = [
   xywh2rect(22.75, 3, 2.5, 5),
   xywh2rect(25.75, 3, 2.5, 5)
 ]
-const SPAN = RAMP_LENGTH + (D1 + D2) / 2
+const SPAN = RAMP_RUN_LENGTH + (D1 + D2) / 2
 const APARTMENT_SPEC = [
   [xy(D1, D2), DOORS],
   [xy(D2, D1), WINDOWS],
-  [xy(D2, D1 + RAMP_LENGTH), []],
+  [xy(D2, D1 + RAMP_RUN_LENGTH), []],
   [xy(D1, D1 + SPAN), WINDOWS],
-  [xy(D1 + RAMP_LENGTH, D1 + SPAN), []],
-  [xy(D1 + SPAN, D1 + RAMP_LENGTH), WINDOWS],
+  [xy(D1 + RAMP_RUN_LENGTH, D1 + SPAN), []],
+  [xy(D1 + SPAN, D1 + RAMP_RUN_LENGTH), WINDOWS],
   [xy(D1 + SPAN, D1), []],
-  [xy(D1 + RAMP_LENGTH, D2), WINDOWS]
+  [xy(D1 + RAMP_RUN_LENGTH, D2), WINDOWS]
 ]
 const APARTMENT = APARTMENT_SPEC.map(([point, openings]) => point)
 
@@ -292,12 +293,11 @@ function _addFeaturesAtLanding (plato, rampBearings, at, buildings = true) {
   // Ramps
   for (const bearing of rampBearings) {
     plato.goto({ x: x, y: y, z: z, facing: bearing })
-    plato.addPlace(Place.WALKWAY, RAMP_CORNERS, { incline: RAMP_HEIGHT })
+    plato.addPlace(Place.WALKWAY, RAMP_CORNERS, { incline: RAMP_RISE_HEIGHT })
   }
 
   // Floors, Walls, and Roof
-  const FIXME_hide_while_debugging = false
-  if (!FIXME_hide_while_debugging && buildings && z % STORY_HEIGHT === 0) {
+  if (buildings && z % STORY_HEIGHT === 0) {
     for (const bearing of rampBearings) {
       // parcel
       plato.goto({ x: x, y: y, z: 0, facing: bearing })
