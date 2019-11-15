@@ -29,18 +29,21 @@ const EXIT_DOWN = [
   xy(40, 90),
   xy(30, 0)
 ]
+EXIT_DOWN.name = 'exit down'
 const RAMP_DOWN_TO_LANDING = [
   xyz(30, 90, 0),
   xyz(30, 270, -7.5),
   xyz(40, 270, -7.5),
   xyz(40, 90, 0)
 ]
+RAMP_DOWN_TO_LANDING.name = 'ramp down to landing'
 const LANDING = [
   xy(30, 270),
   xy(30, 390),
   xy(50, 390),
   xy(50, 270)
 ]
+LANDING.name = 'landing'
 const LANDING_LANE = [
   xyz(40, 270, -7.5),
   xyz(40, 390, -7.5)
@@ -114,6 +117,7 @@ const RIGHT_TURN_FROM_EXIT = [
   xy(64, 48),
   xy(100, 35)
 ]
+RIGHT_TURN_FROM_EXIT.name = 'right turn from exit'
 const RAMP_UP_TO_LANDING = [
   xyz(40, 90, -15),
   xyz(40, 270, -7.5),

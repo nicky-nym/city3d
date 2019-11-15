@@ -42,12 +42,14 @@ const DRIVEWAY = [
   xy(-165, 13),
   xy(-0, 13),
   xy(-0, 2)]
+DRIVEWAY.name = 'driveway'
 
 const DOORPATH = [
   xy(-15.5, 31.75),
   xy(-0, 31.75),
   xy(-0, 26.75),
   xy(-15.5, 26.75)]
+DOORPATH.name = 'door path'
 
 const GARAGE_HEIGHT = 8
 const GARAGE_SPEC = [
