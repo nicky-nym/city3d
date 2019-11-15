@@ -6,7 +6,7 @@
 // This is free and unencumbered software released into the public domain.
 // For more information, please refer to <http://unlicense.org>
 
-import { xyz, count, countTo, randomInt } from '../city3d/util.js'
+import { xyz, count, countTo, randomInt, hypotenuse } from '../city3d/util.js'
 import Place from '../city3d/place.js'
 import Facing from '../city3d/facing.js'
 import Structure from '../city3d/structure.js'
@@ -25,7 +25,7 @@ const TOWER_SPACING = TOWER_WIDTH + RAMP_WIDTH
 
 const D1 = LANDING_WIDTH / 2.0
 const D2 = RAMP_WIDTH / 2.0
-const RAMP_HYPOTENUSE = Math.sqrt(RAMP_RUN_LENGTH ** 2 + RAMP_RISE_HEIGHT ** 2)
+const RAMP_HYPOTENUSE = hypotenuse(RAMP_RUN_LENGTH, RAMP_RISE_HEIGHT)
 const RAMP_CORNERS = [
   xy(+D2, D1),
   xy(+D2, D1 + RAMP_HYPOTENUSE),

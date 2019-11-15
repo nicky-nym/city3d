@@ -21,6 +21,10 @@ function randomInt (min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min
 }
 
+function hypotenuse (run, rise) {
+  return Math.sqrt(run ** 2 + rise ** 2)
+}
+
 function xyz (x, y, z = 0) {
   return [x, y, z]
 }
@@ -50,4 +54,4 @@ function lookAt (obj, focus, up = UP) {
   obj.setRotationFromMatrix(m)
 }
 
-export { xyz, count, countTo, randomInt, nudge, xy2xyz, lookAt }
+export { xyz, count, countTo, randomInt, nudge, xy2xyz, lookAt, hypotenuse }

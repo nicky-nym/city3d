@@ -6,7 +6,7 @@
 // This is free and unencumbered software released into the public domain.
 // For more information, please refer to <http://unlicense.org>
 
-import { xyz, count, countTo, randomInt, nudge } from '../city3d/util.js'
+import { xyz, count, countTo, randomInt, nudge, hypotenuse } from '../city3d/util.js'
 import Bicycle from '../movers/bicycle.js'
 import Place from '../city3d/place.js'
 import Facing from '../city3d/facing.js'
@@ -29,12 +29,35 @@ const EXIT_DOWN = [
   xy(40, 90),
   xy(30, 0)
 ]
+
+const RAMP_RUN_LENGTH = 180
+const RAMP_RISE_HEIGHT = 7.5
+const HYPOTENUSE = hypotenuse(RAMP_RUN_LENGTH, RAMP_RISE_HEIGHT)
 const RAMP_DOWN_TO_LANDING = [
-  xyz(30, 90, 0),
-  xyz(30, 270, -7.5),
-  xyz(40, 270, -7.5),
-  xyz(40, 90, 0)
+  xy(30, 90),
+  xy(30, 90 + HYPOTENUSE),
+  xy(40, 90 + HYPOTENUSE),
+  xy(40, 90)
 ]
+const RAMP_UP_FROM_LANDING = [
+  xy(30, 390),
+  xy(30, 390 + HYPOTENUSE),
+  xy(40, 390 + HYPOTENUSE),
+  xy(40, 390)
+]
+const RAMP_DOWN_FROM_LANDING = [
+  xy(40, 390),
+  xy(40, 390 + HYPOTENUSE),
+  xy(50, 390 + HYPOTENUSE),
+  xy(50, 390)
+]
+const RAMP_UP_TO_LANDING = [
+  xy(40, 90),
+  xy(40, 90 + HYPOTENUSE),
+  xy(50, 90 + HYPOTENUSE),
+  xy(50, 90)
+]
+
 const LANDING = [
   xy(30, 270),
   xy(30, 390),
@@ -57,25 +80,23 @@ const LANDING_PLAZA = [
   xy(70, 390),
   xy(70, 270)
 ]
+
+const RUN_LENGTH = 59
+const RISE_HEIGHT = 2.5
+const WALKWAY_HYPOTENUSE = hypotenuse(RUN_LENGTH, RISE_HEIGHT)
 const LANDING_NORTH_WALKWAY = [
-  xyz(70, 381, -7.5),
-  xyz(129, 381, -5),
-  xyz(129, 375, -5),
-  xyz(70, 375, -7.5)
+  xy(70, 381),
+  xy(70 + WALKWAY_HYPOTENUSE, 381),
+  xy(70 + WALKWAY_HYPOTENUSE, 375),
+  xy(70, 375)
 ]
 const LANDING_SOUTH_WALKWAY = [
-  xyz(70, 285, -7.5),
-  xyz(129, 285, -5),
-  xyz(129, 279, -5),
-  xyz(70, 279, -7.5)
+  xy(70, 285),
+  xy(70 + WALKWAY_HYPOTENUSE, 285),
+  xy(70 + WALKWAY_HYPOTENUSE, 279),
+  xy(70, 279)
 ]
 
-const RAMP_UP_FROM_LANDING = [
-  xyz(30, 390, -7.5),
-  xyz(30, 570, 0),
-  xyz(40, 570, 0),
-  xyz(40, 390, -7.5)
-]
 const ENTRANCE_FROM_BELOW = [
   xy(30, 570),
   xy(25, 615),
@@ -83,12 +104,7 @@ const ENTRANCE_FROM_BELOW = [
   xy(30, 660),
   xy(40, 570)
 ]
-const RAMP_DOWN_FROM_LANDING = [
-  xyz(40, 390, -7.5),
-  xyz(40, 570, -15),
-  xyz(50, 570, -15),
-  xyz(50, 390, -7.5)
-]
+
 const RIGHT_TURN_TO_ENTER = [
   xyz(40, 570, -15),
   xyz(55, 620, -14.9),
@@ -114,12 +130,7 @@ const RIGHT_TURN_FROM_EXIT = [
   xy(64, 48),
   xy(100, 35)
 ]
-const RAMP_UP_TO_LANDING = [
-  xyz(40, 90, -15),
-  xyz(40, 270, -7.5),
-  xyz(50, 270, -7.5),
-  xyz(50, 90, -15)
-]
+
 const LOWER_PLAZA = [
   xy(170, 30),
   xy(170, 45),
@@ -191,7 +202,7 @@ export default class Bikeway extends Structure {
 
   addRamps (self) {
     this._plato.addPlace(Place.BIKEPATH, EXIT_DOWN, { z: 0.1 })
-    // this._plato.addPlace(Place.BIKEPATH, RAMP_DOWN_TO_LANDING)
+    this._plato.addPlace(Place.BIKEPATH, RAMP_DOWN_TO_LANDING, { incline: RAMP_RISE_HEIGHT })
     this._plato.addPlace(Place.BIKEPATH, LANDING, { z: -7.5 })
     let path = this._plato.addPath(Place.BIKEPATH, [
       [25, 0, 0.1], [35, 90, 0.1], // start and end of EXIT_DOWN
@@ -201,10 +212,10 @@ export default class Bikeway extends Structure {
 
     this._plato.addPlace(Place.BARE, LANDING_PARKING, { z: -7.5 })
     this._plato.addPlace(Place.WALKWAY, LANDING_PLAZA, { z: -7.5 })
-    // this._plato.addPlace(Place.WALKWAY, LANDING_NORTH_WALKWAY)
-    // this._plato.addPlace(Place.WALKWAY, LANDING_SOUTH_WALKWAY)
+    this._plato.addPlace(Place.WALKWAY, LANDING_NORTH_WALKWAY, { z: -7.5, incline: -RISE_HEIGHT })
+    this._plato.addPlace(Place.WALKWAY, LANDING_SOUTH_WALKWAY, { z: -7.5, incline: -RISE_HEIGHT })
 
-    // this._plato.addPlace(Place.BIKEPATH, RAMP_UP_FROM_LANDING)
+    this._plato.addPlace(Place.BIKEPATH, RAMP_UP_FROM_LANDING, { z: -7.5, incline: -RAMP_RISE_HEIGHT })
     this._plato.addPlace(Place.BIKEPATH, ENTRANCE_FROM_BELOW, { z: 0.1 })
     path = this._plato.addPath(Place.BIKEPATH, [
       ...LANDING_LANE.map(xyz => nudge(xyz, { dx: -2.5 })),
@@ -212,7 +223,7 @@ export default class Bikeway extends Structure {
     ])
     this.bicycle.addBicycle(path, randomInt(3, 6) * 0.04)
 
-    // this._plato.addPlace(Place.BIKEPATH, RAMP_DOWN_FROM_LANDING)
+    this._plato.addPlace(Place.BIKEPATH, RAMP_DOWN_FROM_LANDING, { z: -7.5, incline: RAMP_RISE_HEIGHT })
     this._plato.addPlace(Place.BIKEPATH, RIGHT_TURN_TO_ENTER, { z: -14.9 })
     this._plato.addPlace(Place.BIKEPATH, ENTRANCE_FROM_ABOVE, { z: -14.9 })
     path = this._plato.addPath(Place.BIKEPATH, [
@@ -230,7 +241,7 @@ export default class Bikeway extends Structure {
       ...LANDING_LANE.map(xyz => nudge(xyz, { dx: 2.5 }))
     ])
     this.bicycle.addBicycle(path, randomInt(3, 6) * 0.04)
-    // this._plato.addPlace(Place.BIKEPATH, RAMP_UP_TO_LANDING)
+    this._plato.addPlace(Place.BIKEPATH, RAMP_UP_TO_LANDING, { z: -15, incline: -RAMP_RISE_HEIGHT })
 
     this._plato.addPlace(Place.WALKWAY, LOWER_PLAZA, { z: -14.9 })
     this._plato.addPlace(Place.WALKWAY, LOWER_PLAZA_WALKWAY_A, { z: -15 })
