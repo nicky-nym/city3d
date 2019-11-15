@@ -127,18 +127,18 @@ export default class Bicycle {
     u.remainingDist -= u.delta
     if (u.remainingDist <= 0) {
       u.pathIndex = (u.pathIndex + 1) % (u.path.length - 1)
-      u.vNorm = u.pathSegments[u.pathIndex].vNorm
+      u.currSegment = u.pathSegments[u.pathIndex]
       this.position.copy(u.path[u.pathIndex])
-      this.position.addScaledVector(u.vNorm, -u.remainingDist)
-      u.remainingDist += u.pathSegments[u.pathIndex].len
+      this.position.addScaledVector(u.currSegment.vNorm, -u.remainingDist)
+      u.remainingDist += u.currSegment.len
       lookAt(this, u.path[u.pathIndex + 1])
       // make them go upside down
       //lookAt(this, u.path[u.pathIndex + 1], new THREE.Vector3(0, 0, 1))
     } else {
-      this.position.addScaledVector(u.vNorm, u.delta)
+      this.position.addScaledVector(u.currSegment.vNorm, u.delta)
     }
 
-    for (const wheel of this.wheels) {
+    for (const wheel of this.getObjectByName('wheels').children) {
       wheel.rotation.y += u.speed / Math.PI
     }
   }
@@ -162,21 +162,26 @@ export default class Bicycle {
     const bike = new THREE.Group()
     const innerbike = this.bicycleModel.clone()
     bike.add(innerbike)
-    bike.wheels = [this.frontWheel.clone(), this.backWheel.clone()]
-    innerbike.add(...bike.wheels)
+    const wheels = new THREE.Group()
+    wheels.name = 'wheels'
+    wheels.add(this.frontWheel.clone(), this.backWheel.clone())
+    innerbike.add(wheels)
 
     // Situate innerbike in bike so it faces in the +z direction
     innerbike.rotation.y = -Math.PI / 2
 
-    bike.userData = { path, speed, delta: speed, pathSegments: [] }
     bike.position.copy(path[0])
+    lookAt(bike, path[1])
+
+    bike.name = 'bicycle'
+    bike.userData = { path, pathIndex: 0, pathSegments: [], speed, delta: speed }
     for (const i of countTo(path.length - 1)) {
       const v = path[i + 1].clone().sub(path[i])
       const len = v.length() // compute before normalizing
       bike.userData.pathSegments.push({ vNorm: v.normalize(), len })
     }
-
-    lookAt(bike, path[1])
+    bike.userData.remainingDist = bike.userData.pathSegments[0].len
+    bike.userData.currSegment = bike.userData.pathSegments[0]
 
     const showPath = true
     if (showPath) {
@@ -187,9 +192,6 @@ export default class Bicycle {
       this._plato.addLine(line)
     }
 
-    bike.userData.pathIndex = 0
-    bike.userData.remainingDist = bike.userData.pathSegments[0].len
-    bike.userData.vNorm = bike.userData.pathSegments[0].vNorm
     bike.update = this.updateBicycle.bind(bike)
     this._plato.addMover(bike)
   }
