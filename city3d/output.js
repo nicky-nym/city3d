@@ -8,7 +8,7 @@
 
 import * as THREE from '../three/build/three.module.js'
 import { OrbitControls } from '../three/examples/jsm/controls/OrbitControls.js'
-import { CSS2DRenderer, CSS2DObject } from '../three/examples/jsm/renderers/CSS2DRenderer.js';
+import { CSS2DRenderer, CSS2DObject } from '../three/examples/jsm/renderers/CSS2DRenderer.js'
 import Stats from 'http://mrdoob.github.io/stats.js/build/stats.module.js'
 
 const stats = new Stats()
@@ -108,18 +108,18 @@ export default class Output {
     window.addEventListener('resize', evt => this._onWindowResize(evt), false)
 
     // DOM setup for tooltips
-    this._tooltipRenderer = new CSS2DRenderer();
-    this._tooltipRenderer.setSize(window.innerWidth, window.innerHeight);
-    this._tooltipRenderer.domElement.style.position = 'absolute';
-    this._tooltipRenderer.domElement.style.top = 0;
-    document.body.appendChild(this._tooltipRenderer.domElement);
+    this._tooltipRenderer = new CSS2DRenderer()
+    this._tooltipRenderer.setSize(window.innerWidth, window.innerHeight)
+    this._tooltipRenderer.domElement.style.position = 'absolute'
+    this._tooltipRenderer.domElement.style.top = 0
+    document.body.appendChild(this._tooltipRenderer.domElement)
     this._tooltipDiv = document.createElement('div')
     this._tooltipDiv.className = 'tooltip'
     this._cssObj = new CSS2DObject(this._tooltipDiv)
 
     // For some reason, this._renderer doesn't work here if _tooltipRenderer is in play.
+    // this.controls = new OrbitControls(this._camera, this._renderer.domElement)
     this.controls = new OrbitControls(this._camera, this._tooltipRenderer.domElement)
-    //this.controls = new OrbitControls(this._camera, this._renderer.domElement)
 
     if (window.sessionStorage.getItem('OrbitControls')) {
       const oc = JSON.parse(window.sessionStorage.getItem('OrbitControls'))
@@ -137,14 +137,14 @@ export default class Output {
     }, false)
 
     // enable selecting objects with mouse
-    this._raycaster = new THREE.Raycaster();
-    this._mouse = new THREE.Vector2();
-    this._intersected = null;
+    this._raycaster = new THREE.Raycaster()
+    this._mouse = new THREE.Vector2()
+    this._intersected = null
     window.addEventListener('mousemove', evt => {
       // calculate mouse position in normalized device coordinates
       // (-1 to +1) for both components
-      this._mouse.x = (evt.clientX / window.innerWidth) * 2 - 1;
-      this._mouse.y = - (evt.clientY / window.innerHeight) * 2 + 1;
+      this._mouse.x = (evt.clientX / window.innerWidth) * 2 - 1
+      this._mouse.y = -(evt.clientY / window.innerHeight) * 2 + 1
     }, false)
 
     this._animatedComponents = []
@@ -324,24 +324,24 @@ export default class Output {
 
   render () {
     // update the picking ray with the camera and mouse position
-    this._raycaster.setFromCamera(this._mouse, this._camera);
+    this._raycaster.setFromCamera(this._mouse, this._camera)
 
     // calculate objects intersecting the picking ray
-    const intersects = this._raycaster.intersectObjects(this._scene.children, true);
+    const intersects = this._raycaster.intersectObjects(this._scene.children, true)
 
     if (intersects.length > 0) {
-      if (this._intersected != intersects[0].object) {
-        if (this._intersected) this.unhighlight(this._intersected);
-        this._intersected = intersects[0].object;
+      if (this._intersected !== intersects[0].object) {
+        if (this._intersected) this.unhighlight(this._intersected)
+        this._intersected = intersects[0].object
         if (this._intersected.userData.noHighlight) {
-          this._intersected = null;
+          this._intersected = null
         } else {
-          this.highlight(this._intersected);
+          this.highlight(this._intersected)
         }
       }
     } else {
-      if (this._intersected) this.unhighlight(this._intersected);
-      this._intersected = null;
+      if (this._intersected) this.unhighlight(this._intersected)
+      this._intersected = null
     }
 
     this._renderer.render(this._scene, this._camera)
@@ -363,7 +363,7 @@ export default class Output {
     obj.add(this._cssObj)
 
     obj.currentHex = obj.material.color.getHex()
-    obj.material.color.setHex(0xff00ff);
+    obj.material.color.setHex(0xff00ff)
   }
 
   unhighlight (obj) {

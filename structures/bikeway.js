@@ -6,7 +6,7 @@
 // This is free and unencumbered software released into the public domain.
 // For more information, please refer to <http://unlicense.org>
 
-import { xyz, count, countTo, randomInt, nudge, hypotenuse } from '../city3d/util.js'
+import { xyz, count, countTo, randomInt, hypotenuse } from '../city3d/util.js'
 import Bicycle from '../movers/bicycle.js'
 import Place from '../city3d/place.js'
 import Facing from '../city3d/facing.js'
@@ -67,10 +67,6 @@ const LANDING = [
   xy(50, 270)
 ]
 LANDING.name = 'landing'
-const LANDING_LANE = [
-  xyz(40, 270, -7.5),
-  xyz(40, 390, -7.5)
-]
 const LANDING_PARKING = [
   xy(50, 270),
   xy(50, 390),
