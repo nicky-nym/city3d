@@ -20,7 +20,7 @@ const BACK_WHEEL_X_OFFSET = -1.25
 const INNERTUBE_RADIUS = 0.06
 const BICYCLE_SCALE_FACTOR = 2.5
 
-export default class Bicycle {
+class BicycleFactory {
   constructor (plato) {
     this._plato = plato
     this.bicycles = []
@@ -133,7 +133,7 @@ export default class Bicycle {
       u.remainingDist += u.currSegment.len
       lookAt(this, u.path[u.pathIndex + 1])
       // make them go upside down
-      //lookAt(this, u.path[u.pathIndex + 1], new THREE.Vector3(0, 0, 1))
+      // lookAt(this, u.path[u.pathIndex + 1], new THREE.Vector3(0, 0, 1))
     } else {
       this.position.addScaledVector(u.currSegment.vNorm, u.delta)
     }
@@ -143,22 +143,20 @@ export default class Bicycle {
     }
   }
 
-  addBicycles (n) {
-    for (const i of countTo(n)) {
-      const p1 = new THREE.Vector3(250 + -50 * i, randomInt(-50, 50), 0)
-      const p2 = new THREE.Vector3(p1.y, -p1.x, 40)
-      const p3 = new THREE.Vector3()
-      const speed = randomInt(1, 20) * 0.04
-      this._addBicycle([p1, p2, p3, p1], speed)
+  makeBicycle (path, speed = 1) {
+    if (path) {
+      return this._makeBicycle(path.map(p => new THREE.Vector3(...p)), speed)
+    } else {
+      const p1 = new THREE.Vector3(-randomInt(50, 250), -randomInt(50, 250), 0)
+      const p2 = new THREE.Vector3(-randomInt(50, 250), -randomInt(50, 250), 0)
+      const p3 = new THREE.Vector3(-randomInt(50, 500), -randomInt(50, 250), 0)
+      const speed = randomInt(5, 10) * 0.04
+      return this._makeBicycle([p1, p2, p3, p1], speed)
     }
   }
 
-  addBicycle (path, speed = 1) {
-    this._addBicycle(path.map(p => new THREE.Vector3(...p)), speed)
-  }
-
   // for now, speed is in units of unit vectors per frame
-  _addBicycle (path, speed = 1) {
+  _makeBicycle (path, speed = 1) {
     const bike = new THREE.Group()
     const innerbike = this.bicycleModel.clone()
     bike.add(innerbike)
@@ -183,16 +181,21 @@ export default class Bicycle {
     bike.userData.remainingDist = bike.userData.pathSegments[0].len
     bike.userData.currSegment = bike.userData.pathSegments[0]
 
-    const showPath = true
-    if (showPath) {
-      var material = new THREE.LineBasicMaterial({ color: 0xFF00FF })
-      var geometry = new THREE.Geometry()
-      geometry.vertices.push(...path)
-      var line = new THREE.Line(geometry, material)
-      this._plato.addLine(line)
-    }
-
     bike.update = this.updateBicycle.bind(bike)
-    this._plato.addMover(bike)
+    return bike
+  }
+}
+
+const bicycleFactory = new BicycleFactory()
+
+export default class Bicycle {
+  // new Bicycle([[0, 0, 0], [0, 200, 10], [100, 200, 10], [0, 0, 0]], 0.8)
+  constructor (path, speed = 1) {
+    this.threeComponent = bicycleFactory.makeBicycle(path, speed)
+  }
+
+  // This makes Bicycle a ThreeOutput plugin.
+  threeComponent () {
+    return this.threeComponent
   }
 }

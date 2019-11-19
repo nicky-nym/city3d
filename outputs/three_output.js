@@ -1,4 +1,4 @@
-// output.js
+// three_output.js
 //
 // Authored in 2019 at <https://github.com/nicky-nym/city3d>
 
@@ -6,6 +6,8 @@
 // This is free and unencumbered software released into the public domain.
 // For more information, please refer to <http://unlicense.org>
 
+import { Geometry } from '../city3d/geometry.js'
+import Output from './output.js'
 import * as THREE from '../three/build/three.module.js'
 import { OrbitControls } from '../three/examples/jsm/controls/OrbitControls.js'
 import Stats from 'http://mrdoob.github.io/stats.js/build/stats.module.js'
@@ -14,25 +16,26 @@ const stats = new Stats()
 stats.showPanel(0) // 0: fps, 1: ms, 2: mb, 3+: custom
 document.body.appendChild(stats.dom)
 
-const FIXME_FUCHSIA = 0xff00ff // used as a default so it's obvious when a color is missing
-
 function print (str) {
   console.log(str)
 }
 
 const ONE_MILE = 5280
+const FIXME_FUCHSIA = 0xff00ff // used as a default so it's obvious when a color is missing
 const COLOR_GREY = 0x808080
 const BLUE = 0x0000ff
 const BLUE_GLASS = 0x9999ff // eslint-disable-line no-unused-vars
-const ALMOST_WHITE = 0x999999
+const ALMOST_WHITE = 0x999999 // eslint-disable-line no-unused-vars
 const COLOR_BRIGHT_SKY = 0xddeeff // eslint-disable-line no-unused-vars
 const COLOR_DIM_GROUND = 0x202020 // eslint-disable-line no-unused-vars
 
 export { print }
-export default class Output {
-  // Output can render faces in three.js.
+export default class ThreeOutput extends Output {
+  // ThreeOutput can render faces in three.js.
 
-  constructor () {
+  constructor (city) {
+    super(city)
+
     const WIDTH = window.innerWidth
     const HEIGHT = window.innerHeight
     const NEAR_CAMERA_LIMIT = 1
@@ -148,8 +151,126 @@ export default class Output {
     const geometry = new THREE.BoxGeometry(4, 4, ORIGIN_MARKER_HEIGHT)
     const material = this._materialByHexColor(BLUE)
     const mesh = new THREE.Mesh(geometry, material)
+    mesh.name = 'origin marker'
     mesh.position.z = ORIGIN_MARKER_HEIGHT / 2
     this._scene.add(mesh)
+
+    this._traverse(this._city, this._scene)
+  }
+
+  _traverse (thing, threeObject) {
+    if (thing.children) {
+      const group = new THREE.Group()
+      group.name = thing.name
+      threeObject.add(group)
+      for (const child of thing.children) {
+        this._traverse(child, group)
+      }
+    } else if (thing.threeComponent) {
+      threeObject.add(thing.threeComponent)
+      if (thing.threeComponent.update) {
+        this._animatedComponents.push(thing.threeComponent)
+      }
+    } else if (thing instanceof Geometry.Instance) {
+      const material = this._materialByHexColor(thing.hexColor)
+      let mesh
+      if (thing.geometry instanceof Geometry.ThickPolygon) {
+        mesh = this.makeThickPolygonMesh(thing.geometry, thing.zOffset, material)
+      } else if (thing.geometry instanceof Geometry.Wall) {
+        mesh = this.makeWallMesh(thing.geometry, thing.zOffset, material)
+      } else if (thing.geometry instanceof Geometry.TriangularPolyhedron) {
+        mesh = this.makeTriangularPolyhedronMesh(thing.geometry, material)
+      } else {
+        console.error('unknown geometry')
+        return
+      }
+      mesh.name = thing.name
+      threeObject.add(mesh)
+    } else {
+      // TODO
+    }
+  }
+
+  makeThickPolygonMesh (thickPolygon, zOffset, material) {
+    const xyPolygon = thickPolygon.xyPolygon
+    const x0 = xyPolygon[0].x
+    const y0 = xyPolygon[0].y
+    const shape = new THREE.Shape(xyPolygon)
+    shape.closePath()
+
+    const geometry = new THREE.ExtrudeGeometry(shape, {
+      depth: thickPolygon.depth,
+      bevelEnabled: false
+    })
+
+    geometry.translate(-x0, -y0, 0)
+    const mesh = new THREE.Mesh(geometry, material)
+    mesh.castShadow = true
+    if (thickPolygon.incline) {
+      const x1 = xyPolygon[1].x
+      const y1 = xyPolygon[1].y
+      const edge = new THREE.Vector2(x1 - x0, y1 - y0)
+      const hypotenuse = edge.length()
+      const angle = Math.asin(thickPolygon.incline / hypotenuse)
+
+      const LAST = xyPolygon.length - 1
+      const xN = xyPolygon[LAST].x
+      const yN = xyPolygon[LAST].y
+      const axis = new THREE.Vector3(xN - x0, yN - y0, 0)
+      axis.normalize()
+      const R = new THREE.Matrix4().makeRotationAxis(axis, -angle)
+      mesh.applyMatrix(R)
+    }
+    const T = new THREE.Matrix4().setPosition(x0, y0, zOffset)
+    mesh.applyMatrix(T)
+    return mesh
+  }
+
+  makeWallMesh (wall, zOffset, material) {
+    const { x: x0, y: y0 } = wall.xyVertex0
+    const near = new THREE.Vector2(x0, y0)
+    const { x: x1, y: y1 } = wall.xyVertex1
+    const far = new THREE.Vector2(x1, y1)
+    const length = near.distanceTo(far)
+    const height = wall.height
+    const rectangle = [
+      new THREE.Vector2(0, 0),
+      new THREE.Vector2(length, 0),
+      new THREE.Vector2(length, height),
+      new THREE.Vector2(0, height)
+    ]
+    const shape = new THREE.Shape(rectangle)
+    shape.closePath()
+    for (const opening of wall.openings) {
+      const points = opening.map(xy => new THREE.Vector2(...xy))
+      const path = new THREE.Path(points)
+      shape.holes.push(path)
+    }
+
+    const geometry = new THREE.ExtrudeGeometry(shape, {
+      depth: wall.depth,
+      bevelEnabled: false
+    })
+    geometry.rotateX(Math.PI / 2)
+
+    const difference = new THREE.Vector2()
+    const netAngle = difference.subVectors(near, far).angle()
+    geometry.rotateZ(netAngle - Math.PI)
+    geometry.translate(x0, y0, zOffset)
+
+    const mesh = new THREE.Mesh(geometry, material)
+    mesh.castShadow = true
+    return mesh
+  }
+
+  makeTriangularPolyhedronMesh (triangularPolyhedron, material) {
+    const geometry = new THREE.Geometry()
+    geometry.vertices = triangularPolyhedron.vertices.map(xyz => new THREE.Vector3(...xyz))
+    geometry.faces = triangularPolyhedron.indicesOfFaces.map(abc => new THREE.Face3(...abc))
+    geometry.computeBoundingSphere()
+    geometry.computeFaceNormals()
+    const mesh = new THREE.Mesh(geometry, material)
+    return mesh
   }
 
   _onWindowResize () {
@@ -172,6 +293,9 @@ export default class Output {
   }
 
   _materialByHexColor (hexColor) {
+    if (isNaN(hexColor)) {
+      hexColor = FIXME_FUCHSIA
+    }
     if (!(hexColor in this._materialsByHexColor)) {
       const material = new THREE.MeshStandardMaterial({
         color: hexColor,
@@ -180,130 +304,6 @@ export default class Output {
       this._materialsByHexColor[hexColor] = material
     }
     return this._materialsByHexColor[hexColor]
-  }
-
-  beginArea (name) {
-    this._currentGroup = new THREE.Group()
-    this._currentGroup.name = name
-    this._scene.add(this._currentGroup)
-    this._areaCorners = []
-  }
-
-  addCorner (xy) {
-    this._areaCorners.push(new THREE.Vector2(...xy))
-  }
-
-  endArea (hexColor = FIXME_FUCHSIA, z = 0, { incline = 0, depth = -0.5 } = {}) {
-    const x0 = this._areaCorners[0].x
-    const y0 = this._areaCorners[0].y
-    const shape = new THREE.Shape(this._areaCorners)
-    shape.closePath()
-
-    const geometry = new THREE.ExtrudeGeometry(shape, {
-      depth: depth,
-      bevelEnabled: false
-    })
-
-    geometry.translate(-x0, -y0, 0)
-    const material = this._materialByHexColor(hexColor)
-    // const material = new THREE.MeshStandardMaterial({
-    //   color: color,
-    //   opacity: opacity,
-    //   transparent: (opacity === 1),
-    //   side: THREE.DoubleSide
-    // })
-    const mesh = new THREE.Mesh(geometry, material)
-    mesh.castShadow = true
-    const T = new THREE.Matrix4().setPosition(new THREE.Vector3(x0, y0, z))
-    if (incline) {
-      const x1 = this._areaCorners[1].x
-      const y1 = this._areaCorners[1].y
-      const edge = new THREE.Vector2(x1 - x0, y1 - y0)
-      const hypotenuse = edge.length()
-      const angle = Math.asin(incline / hypotenuse)
-
-      const LAST = this._areaCorners.length - 1
-      const xN = this._areaCorners[LAST].x
-      const yN = this._areaCorners[LAST].y
-      const axis = new THREE.Vector3(xN - x0, yN - y0, 0)
-      axis.normalize()
-      const R = new THREE.Matrix4().makeRotationAxis(axis, -angle)
-      mesh.applyMatrix(R)
-    }
-    mesh.applyMatrix(T)
-    this._currentGroup.add(mesh)
-    const squareFeet = THREE.ShapeUtils.area(this._areaCorners)
-    return squareFeet
-  }
-
-  addWalls (height, { z = 0, openings = [], nuance = false, cap = true } = {}) {
-    let i = 0
-    const area = this._areaCorners
-    for (const vector2 of area) {
-      let windows = []
-      for (const opening of openings) {
-        if (opening[0] === i) {
-          windows = opening[1]
-        }
-      }
-      i++
-      if (cap || i < area.length) {
-        let next = 0
-        if (i < area.length) {
-          next = i
-        }
-        const near = vector2
-        const far = area[next]
-        const length = near.distanceTo(far)
-        const wall = [
-          new THREE.Vector2(0, 0),
-          new THREE.Vector2(length, 0),
-          new THREE.Vector2(length, height),
-          new THREE.Vector2(0, height)
-        ]
-
-        const shape = new THREE.Shape(wall)
-        shape.closePath()
-        for (const window of windows) {
-          const points = window.map(xy => new THREE.Vector2(...xy))
-          const opening = new THREE.Path(points)
-          shape.holes.push(opening)
-        }
-
-        const DEFAULT_WALL_THICKNESS = 0.5
-        const geometry = new THREE.ExtrudeGeometry(shape, {
-          depth: DEFAULT_WALL_THICKNESS,
-          bevelEnabled: false
-        })
-        geometry.rotateX(Math.PI / 2)
-
-        const difference = new THREE.Vector2()
-        const netAngle = difference.subVectors(near, far).angle()
-        geometry.rotateZ(netAngle - Math.PI)
-        geometry.translate(near.x, near.y, z)
-
-        const material = this._materialByHexColor(ALMOST_WHITE)
-        const mesh = new THREE.Mesh(geometry, material)
-        mesh.name = `wall from ${JSON.stringify(near)} to ${JSON.stringify(far)}`
-        mesh.castShadow = true
-        this._currentGroup.add(mesh)
-      }
-    }
-  }
-
-  addRoof (hexColor, verticesOfRoof, indicesOfFaces) {
-    const geometry = new THREE.Geometry()
-    geometry.vertices = verticesOfRoof.map(xyz => new THREE.Vector3(...xyz))
-    geometry.faces = indicesOfFaces.map(abc => new THREE.Face3(...abc))
-    geometry.computeBoundingSphere()
-    geometry.computeFaceNormals()
-    const material = this._materialByHexColor(hexColor)
-    const mesh = new THREE.Mesh(geometry, material)
-    this._scene.add(mesh)
-  }
-
-  addTopLevelObject (object) {
-    this._scene.add(object)
   }
 
   animate () {

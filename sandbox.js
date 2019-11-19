@@ -8,15 +8,18 @@
 
 import Bicycle from './movers/bicycle.js'
 import Bikeway from './structures/bikeway.js'
+import City from './city3d/city.js'
 import Cottage from './structures/cottage.js'
 import Manhattan from './structures/manhattan.js'
 import Merlon from './structures/merlon.js'
 import Plato from './city3d/plato.js'
+import SummaryOutput from './outputs/summary_output.js'
+import ThreeOutput from './outputs/three_output.js'
 import Wurster from './structures/wurster.js'
 
 function addBuildings () {
   plato.study('Cottage(s)', { x0: -100, y0: 100 })
-  const cottage = new Cottage(plato)
+  const cottage = new Cottage(plato, city)
   cottage.addStreet(1)
   plato.pontificate()
 
@@ -32,7 +35,7 @@ function addBuildings () {
   plato.pontificate()
 
   plato.study('Bikeways', { x0: 100, y0: 100 })
-  const bikeway = new Bikeway(plato)
+  const bikeway = new Bikeway(plato, city)
   bikeway.addBikeways(3, 3, { buildings: true })
   plato.pontificate()
 
@@ -43,12 +46,25 @@ function addBuildings () {
 }
 
 function addMovers () {
-  const bicycle = new Bicycle(plato)
-  bicycle.addBicycles(10)
+  // TODO: Would like to do this:
+  /*
+  const randomBikes = new city.Group('random bicycles')
+  randomBikes.add(new Bicycle())
+  */
+
+  const randomBikes = city.makeGroup('random bicycles')
+  randomBikes.children.push(new Bicycle())
+  randomBikes.children.push(new Bicycle())
+  randomBikes.children.push(new Bicycle())
+  city.add(randomBikes)
 }
 
-const plato = new Plato()
+const city = new City('Paracosm')
+const plato = new Plato(city)
 plato.deleteAllObjects()
 addBuildings()
 addMovers()
-plato.envision()
+const threeOutput = new ThreeOutput(city)
+threeOutput.envision()
+const summaryOutput = new SummaryOutput(city)
+summaryOutput.envision()

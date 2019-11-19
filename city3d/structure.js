@@ -9,7 +9,8 @@
 export default class Structure {
   // Structure is an abstract superclass for buildings, city blocks, and other types of structures.
 
-  constructor (plato) {
+  constructor (plato, city) {
     this._plato = plato
+    this._city = city
   }
 }

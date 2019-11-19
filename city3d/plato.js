@@ -7,9 +7,10 @@
 // For more information, please refer to <http://unlicense.org>
 
 import { nudge } from './util.js'
-import Place from './place.js'
 import Facing from './facing.js'
-import Output, { print } from './output.js'
+import { Geometry } from './geometry.js'
+import Place from './place.js'
+import Sector from './sector.js'
 
 const WHITE = 0xffffff // eslint-disable-line no-unused-vars
 const RED = 0xcc0000 // eslint-disable-line no-unused-vars
@@ -24,6 +25,7 @@ const DARK_GRAY = 0x404040
 const LIGHT_GRAY = 0xdddddd
 const BLUE_GLASS = 0x9a9aff // eslint-disable-line no-unused-vars
 const MARTIAN_ORANGE = 0xdf4911
+const ALMOST_WHITE = 0x999999
 
 const COLORS_OF_PLACES = {
   STREET: BLACKTOP,
@@ -80,11 +82,15 @@ function nudgeXY (xy, { dx = 0, dy = 0, dxy = [0, 0] } = {}) {
   return [x + dx + dX, y + dy + dY]
 }
 
+function print (str) {
+  console.log(str)
+}
+
 export { rotate, xy, nudgeXY, xywh2rect }
 export default class Plato {
   // Plato can envision 3D architectural spaces, with walls, floors, etc.
 
-  constructor (hurry = false) {
+  constructor (city, hurry = false) {
     // Sets plato's initial mental state.
     this._x = 0
     this._y = 0
@@ -92,29 +98,9 @@ export default class Plato {
     this._facing = Facing.NORTH
     this.hurry(hurry)
     this.study()
-    this._output = new Output()
+    this._city = city
     this._paths = []
     print('plato: "Hello world!"')
-  }
-
-  envision () {
-    const t0 = Date.now()
-    this._output.animate()
-    print(`plato: rendering time time was ${Date.now() - t0} milliseconds`)
-  }
-
-  // addAnimatedComponent (component) {
-  //  this._output._animatedComponents.push(component)
-  // }
-
-  // mover must have a method named 'update' used for animation
-  addMover (mover) {
-    this._output.addTopLevelObject(mover)
-    this._output._animatedComponents.push(mover)
-  }
-
-  addLine (line) {
-    this._output.addTopLevelObject(line)
   }
 
   addPath (place, relPath) {
@@ -138,6 +124,8 @@ export default class Plato {
   study (topic = '', { x0 = 0, y0 = 0 } = {}) {
     if (topic) {
       print('plato: studying ' + topic)
+      this._sector = new Sector(topic)
+      this._city.add(this._sector)
     }
     this._topic = topic
     this._squareFeet = {}
@@ -156,62 +144,80 @@ export default class Plato {
 
   deleteAllObjects () {
     print('plato: deleteAllObjects ')
-    this._output.deleteAllObjects()
+    this._city.deleteAllObjects()
   }
 
   addPlace (place, area, { z = 0, incline = 0, depth = -0.5, nuance = false, flip = false, cap = true, wall = 0, openings = [] } = {}) {
     // print(`plato: adding ${place} with cap = ${cap}, wall = ${wall}`)
     z = z + this._z
-    this._output.beginArea(`${Place[place]}${area.name ? ` (${area.name})` : ''}`)
+    const group = this._city.makeGroup(`${Place[place]}${area.name ? ` (${area.name})` : ''}`)
+    const xyPolygon = new Geometry.XYPolygon()
     for (let xy of area) {
       xy = rotate(xy, this._facing)
       const dxy = [this._x, this._y]
       xy = nudgeXY(xy, { dxy: dxy })
-      this._output.addCorner(xy)
+      xyPolygon.push({ x: xy[0], y: xy[1] })
     }
     if (cap) {
       const color = COLORS_OF_PLACES[place]
-      const squareFeet = this._output.endArea(color, z, { incline: incline, depth: depth })
+      const abstractThickPolygon = new Geometry.ThickPolygon(xyPolygon, { incline: incline, depth: depth })
+      const concreteThickPolygon = new Geometry.Instance(abstractThickPolygon, z, color)
+      group.children.push(concreteThickPolygon)
+      const squareFeet = xyPolygon.area()
       this._squareFeet[place] = squareFeet + (this._squareFeet[place] || 0)
     }
     if (wall !== 0) {
-      this._output.addWalls(wall, { z: z, openings: openings, nuance: nuance, cap: cap })
+      this.addWalls(group, xyPolygon, wall, z, openings, cap)
     }
+    this._sector.add(group)
     return this
   }
 
-  addRoof (place, verticesOfRoof, indicesOfFaces) {
+  addWalls (group, xyPolygon, height, z, openingsByWall, cap) {
+    let i = 0
+    for (const v of xyPolygon) {
+      const entryForThisWall = openingsByWall.find(item => item[0] === i)
+      const openings = entryForThisWall ? entryForThisWall[1] : []
+      i++
+      if (cap || i < xyPolygon.length) {
+        const next = i % xyPolygon.length
+        const near = v
+        const far = xyPolygon[next]
+        const abstractWall = new Geometry.Wall(near, far, height, { openings })
+        const name = `wall from ${JSON.stringify(near)} to ${JSON.stringify(far)}`
+        const concreteWall = new Geometry.Instance(abstractWall, z, ALMOST_WHITE, name)
+        group.children.push(concreteWall)
+      }
+    }
+  }
+
+  addRoof (place, verticesOfRoof, indicesOfFaces, name) {
     const color = COLORS_OF_PLACES[place]
     const dxyz = [this._x, this._y, this._z]
     const vertices = verticesOfRoof.map(xyz => nudge(xyz, { dxyz: dxyz }))
-    this._output.addRoof(color, vertices, indicesOfFaces)
+    const abstractRoof = new Geometry.TriangularPolyhedron(vertices, indicesOfFaces)
+    const concreteRoof = new Geometry.Instance(abstractRoof, 0, color, name || 'roof')
+    this._sector.add(concreteRoof)
   }
 
   pontificate () {
     // Print a report of square footage of rooms, walkways, etc.
     const milliseconds = Date.now() - this._t0
     print(`plato: construction time was ${milliseconds} milliseconds`)
-    print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
-    print(this._topic.toString() + ' floor area')
-    for (const roleName of Object.keys(this._squareFeet)) {
-      const area = this._squareFeet[roleName]
-      print(`  ${roleName}: ${area} square feet`)
-    }
+    this._sector.addMetric('Floor area', this._squareFeet, 'square feet')
     const floor = this._squareFeet[Place.ROOM] || 0
     const parcel = this._squareFeet[Place.PARCEL] || 10
     const street = this._squareFeet[Place.STREET] || 0
     if (parcel) {
       const parcelFar = floor / parcel
       const urbanFar = floor / (parcel + street)
-      print('')
-      print(`  Parcel FAR:  ${parcelFar.toFixed(1)} floor area ratio`)
-      print(`  Overall FAR: ${urbanFar.toFixed(1)} floor area ratio`)
+      this._sector.addMetric('Parcel FAR', parcelFar.toFixed(1), 'floor area ratio')
+      this._sector.addMetric('Overall FAR', urbanFar.toFixed(1), 'floor area ratio')
     }
     // const proximity = 0
     // const megastokes = 0
-    // print('  Proximity: {:,.2f} ??? square-meters per meter'.format(proximity))
-    // print('  Kinematic Fluidity: {:,.2f} ??? megaStokes (MSt)'.format(megastokes))
-    print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
+    // this._sector.addMetric('Proximity', proximity, 'square-meters per meter')
+    // this._sector.addMetric('Kinematic Fluidity', megastokes, 'megaStokes (MSt)')
 
     return this
   }
