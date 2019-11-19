@@ -8,7 +8,6 @@
 
 import * as THREE from '../three/build/three.module.js'
 import { OrbitControls } from '../three/examples/jsm/controls/OrbitControls.js'
-import { CSS2DRenderer, CSS2DObject } from '../three/examples/jsm/renderers/CSS2DRenderer.js'
 import Stats from 'http://mrdoob.github.io/stats.js/build/stats.module.js'
 
 const stats = new Stats()
@@ -108,18 +107,11 @@ export default class Output {
     window.addEventListener('resize', evt => this._onWindowResize(evt), false)
 
     // DOM setup for tooltips
-    this._tooltipRenderer = new CSS2DRenderer()
-    this._tooltipRenderer.setSize(window.innerWidth, window.innerHeight)
-    this._tooltipRenderer.domElement.style.position = 'absolute'
-    this._tooltipRenderer.domElement.style.top = 0
-    document.body.appendChild(this._tooltipRenderer.domElement)
     this._tooltipDiv = document.createElement('div')
     this._tooltipDiv.className = 'tooltip'
-    this._cssObj = new CSS2DObject(this._tooltipDiv)
+    document.body.appendChild(this._tooltipDiv)
 
-    // For some reason, this._renderer doesn't work here if _tooltipRenderer is in play.
-    // this.controls = new OrbitControls(this._camera, this._renderer.domElement)
-    this.controls = new OrbitControls(this._camera, this._tooltipRenderer.domElement)
+    this.controls = new OrbitControls(this._camera, this._renderer.domElement)
 
     if (window.sessionStorage.getItem('OrbitControls')) {
       const oc = JSON.parse(window.sessionStorage.getItem('OrbitControls'))
@@ -145,6 +137,8 @@ export default class Output {
       // (-1 to +1) for both components
       this._mouse.x = (evt.clientX / window.innerWidth) * 2 - 1
       this._mouse.y = -(evt.clientY / window.innerHeight) * 2 + 1
+      this._mouseClientX = evt.clientX
+      this._mouseClientY = evt.clientY
     }, false)
 
     this._animatedComponents = []
@@ -323,6 +317,11 @@ export default class Output {
   }
 
   render () {
+    this.handleCurrentTarget()
+    this._renderer.render(this._scene, this._camera)
+  }
+
+  handleCurrentTarget () {
     // update the picking ray with the camera and mouse position
     this._raycaster.setFromCamera(this._mouse, this._camera)
 
@@ -343,9 +342,6 @@ export default class Output {
       if (this._intersected) this.unhighlight(this._intersected)
       this._intersected = null
     }
-
-    this._renderer.render(this._scene, this._camera)
-    this._tooltipRenderer.render(this._scene, this._camera)
   }
 
   highlight (obj) {
@@ -353,22 +349,28 @@ export default class Output {
     for (let o = obj; o.parent; o = o.parent) {
       if (o.name) names.push(o.name)
     }
-    console.log(names.join('-of-'))
+    console.log(obj.uuid, names.join('-of-'))
     this._tooltipDiv.textContent = names.join('-of-')
 
-    // TODO: This positions the tooltip at the top left corner of the target object, which
-    // is bad if it's off screen. Even the center of the object could be offscreen if it's
-    // large, so this might have to take into account the mouse coordinates somehow.
-    this._cssObj.position.set(0, 0, 0)
-    obj.add(this._cssObj)
+    // position tooltip near mouse, offsetting based on which quadrant it's in
+    const xOffset = this._mouse.x < 0 ? 50 : -50
+    const yOffset = this._mouse.y < 0 ? -50 : 50
+    this._tooltipDiv.style.left = `${this._mouseClientX + xOffset}px`
+    this._tooltipDiv.style.top = `${this._mouseClientY + yOffset}px`
 
-    obj.currentHex = obj.material.color.getHex()
+    // make tooltip visible
+    this._tooltipDiv.style.opacity = 0.8
+
+    obj.currentMaterial = obj.material
+    obj.material = obj.material.clone()
     obj.material.color.setHex(0xff00ff)
   }
 
   unhighlight (obj) {
-    obj.material.color.setHex(obj.currentHex)
-    obj.remove(this._cssObj)
+    obj.material = obj.currentMaterial
+
+    // make tooltip invisible
+    this._tooltipDiv.style.opacity = 0
   }
 
   deleteAllObjects () {
