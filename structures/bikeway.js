@@ -8,6 +8,7 @@
 
 import { xyz, count, countTo, randomInt, hypotenuse } from '../city3d/util.js'
 import Bicycle from '../movers/bicycle.js'
+import Vehicle from '../movers/vehicle.js'
 import Place from '../city3d/place.js'
 import Facing from '../city3d/facing.js'
 import Structure from '../city3d/structure.js'
@@ -191,7 +192,8 @@ export default class Bikeway extends Structure {
       const path = this._plato.addPath(Place.BIKEPATH, [
         [LANE_WIDTH / 2, 0, 0],
         [LANE_WIDTH / 2, BLOCK_LENGTH, 0]])
-      this.bicycle.addBicycle(path, randomInt(1, 9) * 0.04)
+      this.bicycle.addBicycle(path, randomInt(3, 6) * 0.04)
+      this.vehicle.newVehicle(path, randomInt(7, 10) * 0.04)
     }
     delta += LANE_WIDTH
     const [dx, dy] = rotate(xy(delta, 0), facing)
@@ -211,7 +213,8 @@ export default class Bikeway extends Structure {
       xyz(45, 570, -14.9), xyz(60, 616, -14.9), xyz(100, 630, -14.9), // start, middle, end of RIGHT_TURN_TO_ENTER
       xyz(170, 637.5, -14.9) // end of ENTRANCE_FROM_ABOVE
     ])
-    this.bicycle.addBicycle(path, randomInt(6, 10) * 0.04)
+    // this.bicycle.addBicycle(path, randomInt(6, 10) * 0.04)
+    this.vehicle.newVehicle(path, randomInt(6, 10) * 0.04)
 
     this._plato.addPlace(Place.BARE, LANDING_PARKING, { z: -7.5 })
     this._plato.addPlace(Place.WALKWAY, LANDING_PLAZA, { z: -7.5 })
@@ -234,7 +237,8 @@ export default class Bikeway extends Structure {
       xyz(35, 390, -7.5),
       xyz(35, 570, 0.1), xyz(25, 660, 0.1) // start and end of ENTRANCE_FROM_BELOW
     ])
-    this.bicycle.addBicycle(path, randomInt(3, 6) * 0.04)
+    // this.bicycle.addBicycle(path, randomInt(3, 6) * 0.04)
+    this.vehicle.newVehicle(path, randomInt(3, 6) * 0.04)
     this._plato.addPlace(Place.BIKEPATH, RAMP_UP_TO_LANDING, { z: -15, incline: -RAMP_RISE_HEIGHT })
 
     this._plato.addPlace(Place.WALKWAY, LOWER_PLAZA, { z: -14.9 })
@@ -329,6 +333,7 @@ export default class Bikeway extends Structure {
 
   addBikeways (num_rows = 0, num_cols = 0, { buildings = true } = {}) {
     this.bicycle = new Bicycle(this._plato)
+    this.vehicle = new Vehicle(this._plato)
     for (const row of countTo(num_rows)) {
       for (const col of countTo(num_cols)) {
         this.addBlock(row, col, buildings)
