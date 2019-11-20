@@ -69,6 +69,22 @@ const VEHICLE_TYPES = {
     }]
   },
 
+  tandem: {
+    saddles: [
+      { forward: 0.8, up: 3 },
+      { forward: 2.8, up: 3 }
+    ],
+    handlebars: { forward: 4.8 },
+    wheels: [{
+      diameter: 2.25,
+      spokes: 11
+    }, {
+      forward: 5.6,
+      diameter: 2.25,
+      spokes: 11
+    }]
+  },
+
   kickscooter: {
     deck: { width: 0.5, length: 2 },
     handlebars: { forward: 1.6, width: 1 },
@@ -160,10 +176,174 @@ const VEHICLE_TYPES = {
       diameter: 0.7,
       tireWidth: 0.4
     }]
+  },
+
+  penny_farthing: {
+    saddles: [{ forward: 1.6, up: 5 }],
+    handlebars: { forward: 2.4, up: 2 },
+    wheels: [{
+      diameter: 1.4,
+      spokes: 11
+    }, {
+      forward: 2.7,
+      diameter: 4.6,
+      spokes: 21
+    }]
+  },
+
+  tricycle: {
+    color: 0xff2222,
+    saddles: [{ forward: 0.6, up: 1.4 }],
+    handlebars: { forward: 1, width: 1.4, up: -1.2 },
+    deck: { forward: -0.25, width: 1.3, length: 0.5, up: -0.2 },
+    wheels: [{
+      axleWidth: 1.5,
+      diameter: 0.5
+    }, {
+      forward: 1.5,
+      diameter: 1,
+      spokes: 7
+    }]
+  },
+
+  tadpole: {
+    color: 0xffff00,
+    seating: [{ forward: 1.6, up: 0.8 }],
+    handlebars: { forward: 2.5, width: 1.4, up: -2.8 },
+    wheels: [{
+      diameter: 2.166,
+      spokes: 9
+    }, {
+      forward: 3.65,
+      axleWidth: 2.7,
+      diameter: 1.666,
+      spokes: 9
+    }]
+  },
+
+  haluzak_horizon_recumbent: {
+    color: 0xffff00,
+    seating: [{ width: 1.4, forward: 1.6, up: 1.6 }],
+    handlebars: { forward: 2.5, width: 1.4, up: -2.0 },
+    wheels: [{
+      diameter: 2.166,
+      spokes: 15
+    }, {
+      forward: 4,
+      diameter: 1.666,
+      spokes: 11
+    }]
+  },
+
+  bakfiets_cargo_trike: {
+    color: 0x996600,
+    saddles: [{ forward: 0.8, up: 3 }],
+    handlebars: { forward: 2.8 },
+    deck: { width: 2.8, length: 3, height: 1.7, up: 0.0, forward: 3 },
+    wheels: [{
+      diameter: 2.166,
+      spokes: 15
+    }, {
+      forward: 4.8,
+      axleWidth: 3.1,
+      diameter: 1.666,
+      spokes: 11
+    }]
+  },
+
+  ups_etrike: {
+    color: 0x4d2600,
+    saddles: [{ forward: 3.2, up: 3 }],
+    handlebars: { forward: 5.2 },
+    deck: { forward: -1.5, width: 3, length: 4, height: 5.5 },
+    wheels: [{
+      axleWidth: 3.5,
+      diameter: 1.666,
+      spokes: 11
+    }, {
+      forward: 6,
+      diameter: 1.666,
+      spokes: 11
+    }]
+  },
+
+  fedex_delivery_bot: {
+    color: 0xffffff,
+    deck: { width: 1.1, length: 1.2, height: 1.7, up: 0.6, forward: -0.2 },
+    wheels: [{
+      axleWidth: 1.4,
+      diameter: 0.5,
+      tireWidth: 0.2
+    }, {
+      forward: 0.7,
+      axleWidth: 1.4,
+      diameter: 0.5,
+      tireWidth: 0.2
+    }]
+  },
+
+  brainos_delivery_bot: {
+    color: 0xffffff,
+    deck: { width: 1.8, length: 2.9, up: 0, forward: -0.3 },
+    handlebars: { forward: 2.5, width: 1.4, up: -0.1 },
+    wheels: [{
+      axleWidth: 2,
+      diameter: 0.5
+    }, {
+      forward: 3,
+      diameter: 0.5
+    }]
+  },
+
+  amazon_scout_delivery_bot: {
+    color: 0x2222ff,
+    deck: { width: 1.4, length: 1.8, height: 1.4, up: 0, forward: -0.2 },
+    wheels: [{
+      axleWidth: 1.5,
+      diameter: 0.5
+    }, {
+      forward: 0.7,
+      axleWidth: 1.5,
+      diameter: 0.5
+    }, {
+      forward: 1.4,
+      axleWidth: 1.5,
+      diameter: 0.5
+    }]
+  },
+
+  quadro_eqooder: {
+    color: 0x777777,
+    deck: { width: 1.2, length: 2, up: 0, forward: 2.7 },
+    handlebars: { forward: 4.5, width: 1.6, up: -0.1 },
+    seating: [
+      { forward: 0.3, up: 2.2 },
+      { forward: 1.7, up: 1.4 }
+    ],
+    wheels: [{
+      axleWidth: 1.48,
+      diameter: 1.5
+    }, {
+      forward: 5.2,
+      axleWidth: 1.8,
+      diameter: 1.5
+    }]
   }
-  // TODO: add bike trailer
-  // TODO: add front-box cargo trike
-  // TODO: add rear-box cargo trike
+
+  // TODO: add more vehicles:
+  // + "Burley Encore" stroller
+  // + "Burley Flatbed" bike cargo trailer
+  // + "Burley Coho XC" single-wheel cargo trailer
+  // + "Burley Travoy" trailer
+  // + "Burley Kazoo" trailercycle
+  // + "Toyota i-Real"
+  // + "YikeBike"
+  // + "KO1+ scooter"
+  // + "Jack-rabbit" bike
+  // + "halfbike"
+  // + "Gocycle"
+  // + "EAV model p1" (Electric Assisted Vehciles)
+  // + "Doohan gotcha"
 }
 const VEHICLE_NAMES = Object.keys(VEHICLE_TYPES)
 const TIRE_COLOR = 0x202020
@@ -178,7 +358,7 @@ const hubMaterial = new THREE.MeshStandardMaterial({ color: 0xeeeeee, side: THRE
 
 function _getRandomVehicleSpec () {
   const name = VEHICLE_NAMES[randomInt(0, VEHICLE_NAMES.length - 1)]
-  const vehicleSpec = VEHICLE_TYPES[name]
+  const vehicleSpec = VEHICLE_TYPES[name] // = VEHICLE_TYPES.ups_etrike
   vehicleSpec.name = name
   return vehicleSpec
 }
@@ -192,7 +372,7 @@ function _newLine (start, end, material) {
   return line
 }
 
-function _makeWheel (spec) {
+function _makeWheel (spec, vehicle) {
   const radius = spec.diameter / 2
   const wheel = new THREE.Group()
   wheel.position.z = spec.forward || 0
@@ -213,6 +393,7 @@ function _makeWheel (spec) {
       line.rotation.y = i * 2 * Math.PI / spec.spokes
       wheel.add(line)
     }
+    vehicle.userData.spinningWheels.push(wheel)
   } else {
     const circle = new THREE.CircleGeometry(radius, resolution)
     const hub = new THREE.Mesh(circle, hubMaterial)
@@ -232,9 +413,9 @@ function _makeModelFromSpec (vehicleSpec) {
 
   const vehicle = new THREE.Group()
   vehicle.name = vehicleSpec.name
+  vehicle.userData = { spinningWheels: [] }
 
   const wheels = new THREE.Group()
-  wheels.name = 'wheels'
   vehicle.add(wheels)
 
   for (const wheelSpec of vehicleSpec.wheels) {
@@ -250,9 +431,9 @@ function _makeModelFromSpec (vehicleSpec) {
 
       // draw the left and right wheels
       spec.y = halfWidth
-      const leftWheel = _makeWheel(spec)
+      const leftWheel = _makeWheel(spec, vehicle)
       spec.y = -halfWidth
-      const rightWheel = _makeWheel(spec)
+      const rightWheel = _makeWheel(spec, vehicle)
       wheels.add(leftWheel, rightWheel)
 
       // draw the axle
@@ -261,13 +442,13 @@ function _makeModelFromSpec (vehicleSpec) {
       vehicle.add(_newLine(left, right, axleMaterial))
     } else {
       // draw a single wheel
-      const wheel = _makeWheel(spec)
+      const wheel = _makeWheel(spec, vehicle)
       wheels.add(wheel)
     }
   }
 
   if (vehicleSpec.deck) {
-    let { forward = 0, width = 1, length = 1, up = 0 } = vehicleSpec.deck
+    let { forward = 0, width = 1, length = 1, up = 0, height = 0.1 } = vehicleSpec.deck
     width = width / 2
     const corners = [
       new THREE.Vector2(forward, width),
@@ -278,12 +459,13 @@ function _makeModelFromSpec (vehicleSpec) {
     const shape = new THREE.Shape(corners)
     shape.closePath()
     const geometry = new THREE.ExtrudeGeometry(shape, {
-      depth: 0.1,
+      depth: height,
       bevelEnabled: false
     })
     geometry.rotateY(-Math.PI / 2)
     geometry.translate(-axleHeight - up, 0, 0)
-    const deck = new THREE.Mesh(geometry, deckMaterial)
+    const material = height > 0.1 ? specMaterial : deckMaterial
+    const deck = new THREE.Mesh(geometry, material)
     vehicle.add(deck)
   }
 
@@ -307,13 +489,14 @@ function _makeModelFromSpec (vehicleSpec) {
     seat.position.y = 0
     seat.position.x = -seatSpec.up || 0
 
-    const w = (maxAxleWidth - 0.5) / 2
+    const seatWidth = seatSpec.width || maxAxleWidth - 0.5
+    const halfWidth = seatWidth / 2
     const dx = 1.25 // from front of seat to backrest
     const corners = [
-      new THREE.Vector2(0, w),
-      new THREE.Vector2(dx, w),
-      new THREE.Vector2(dx, -w),
-      new THREE.Vector2(0, -w)
+      new THREE.Vector2(0, halfWidth),
+      new THREE.Vector2(dx, halfWidth),
+      new THREE.Vector2(dx, -halfWidth),
+      new THREE.Vector2(0, -halfWidth)
     ]
     const cushionShape = new THREE.Shape(corners)
     cushionShape.closePath()
@@ -324,12 +507,12 @@ function _makeModelFromSpec (vehicleSpec) {
     cushionGeometry.rotateY(-Math.PI / 1.8)
     const cushion = new THREE.Mesh(cushionGeometry, specMaterial)
 
-    const dz = 1.75 // from cushion to top of backrest
+    const dz = 1.4 // from cushion to top of backrest
     const backrestCorners = [
-      new THREE.Vector2(0, w),
-      new THREE.Vector2(dz, w),
-      new THREE.Vector2(dz, -w),
-      new THREE.Vector2(0, -w)
+      new THREE.Vector2(0, halfWidth),
+      new THREE.Vector2(dz, halfWidth),
+      new THREE.Vector2(dz, -halfWidth),
+      new THREE.Vector2(0, -halfWidth)
     ]
     const backrestShape = new THREE.Shape(backrestCorners)
     backrestShape.closePath()
@@ -393,7 +576,8 @@ export default class Vehicle {
     vehicle.position.copy(path[0])
     lookAt(vehicle, path[1])
 
-    vehicle.userData = { path, pathIndex: 0, pathSegments: [], speed, delta: speed }
+    const userData = { path, pathIndex: 0, pathSegments: [], speed, delta: speed }
+    vehicle.userData = { ...vehicle.userData, ...userData }
     for (const i of countTo(path.length - 1)) {
       const v = path[i + 1].clone().sub(path[i])
       const len = v.length() // compute before normalizing
@@ -430,8 +614,7 @@ export default class Vehicle {
       this.position.addScaledVector(u.currSegment.vNorm, u.delta)
     }
 
-    // TODO: optimize this so that we only rotate the wheels that have spokes
-    for (const wheel of this.getObjectByName('wheels').children) {
+    for (const wheel of u.spinningWheels) {
       wheel.rotation.y += u.speed / Math.PI
     }
   }

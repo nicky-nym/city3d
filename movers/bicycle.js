@@ -133,7 +133,7 @@ export default class Bicycle {
       u.remainingDist += u.currSegment.len
       lookAt(this, u.path[u.pathIndex + 1])
       // make them go upside down
-      //lookAt(this, u.path[u.pathIndex + 1], new THREE.Vector3(0, 0, 1))
+      // lookAt(this, u.path[u.pathIndex + 1], new THREE.Vector3(0, 0, 1))
     } else {
       this.position.addScaledVector(u.currSegment.vNorm, u.delta)
     }
