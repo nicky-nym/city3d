@@ -48,18 +48,21 @@ const RAMP_UP_FROM_LANDING = [
   xy(40, 390 + HYPOTENUSE),
   xy(40, 390)
 ]
+RAMP_UP_FROM_LANDING.name = 'ramp up from landing'
 const RAMP_DOWN_FROM_LANDING = [
   xy(40, 390),
   xy(40, 390 + HYPOTENUSE),
   xy(50, 390 + HYPOTENUSE),
   xy(50, 390)
 ]
+RAMP_DOWN_FROM_LANDING.name = 'ramp down from landing'
 const RAMP_UP_TO_LANDING = [
   xy(40, 90),
   xy(40, 90 + HYPOTENUSE),
   xy(50, 90 + HYPOTENUSE),
   xy(50, 90)
 ]
+RAMP_UP_TO_LANDING.name = 'ramp up to landing'
 
 const LANDING = [
   xy(30, 270),
@@ -192,8 +195,8 @@ export default class Bikeway extends Structure {
       const path = this._plato.addPath(Place.BIKEPATH, [
         [LANE_WIDTH / 2, 0, 0],
         [LANE_WIDTH / 2, BLOCK_LENGTH, 0]])
-      this.bicycle.addBicycle(path, randomInt(3, 6) * 0.04)
       this.vehicle.newVehicle(path, randomInt(7, 10) * 0.04)
+      this._bicycles.push(new Bicycle(path, randomInt(1, 9) * 0.1))
     }
     delta += LANE_WIDTH
     const [dx, dy] = rotate(xy(delta, 0), facing)
@@ -213,8 +216,8 @@ export default class Bikeway extends Structure {
       xyz(45, 570, -14.9), xyz(60, 616, -14.9), xyz(100, 630, -14.9), // start, middle, end of RIGHT_TURN_TO_ENTER
       xyz(170, 637.5, -14.9) // end of ENTRANCE_FROM_ABOVE
     ])
-    // this.bicycle.addBicycle(path, randomInt(6, 10) * 0.04)
     this.vehicle.newVehicle(path, randomInt(6, 10) * 0.04)
+    this._bicycles.push(new Bicycle(path, randomInt(6, 10) * 0.1))
 
     this._plato.addPlace(Place.BARE, LANDING_PARKING, { z: -7.5 })
     this._plato.addPlace(Place.WALKWAY, LANDING_PLAZA, { z: -7.5 })
@@ -237,8 +240,8 @@ export default class Bikeway extends Structure {
       xyz(35, 390, -7.5),
       xyz(35, 570, 0.1), xyz(25, 660, 0.1) // start and end of ENTRANCE_FROM_BELOW
     ])
-    // this.bicycle.addBicycle(path, randomInt(3, 6) * 0.04)
     this.vehicle.newVehicle(path, randomInt(3, 6) * 0.04)
+    this._bicycles.push(new Bicycle(path, randomInt(3, 6) * 0.1))
     this._plato.addPlace(Place.BIKEPATH, RAMP_UP_TO_LANDING, { z: -15, incline: -RAMP_RISE_HEIGHT })
 
     this._plato.addPlace(Place.WALKWAY, LOWER_PLAZA, { z: -14.9 })
@@ -332,8 +335,10 @@ export default class Bikeway extends Structure {
   }
 
   addBikeways (num_rows = 0, num_cols = 0, { buildings = true } = {}) {
-    this.bicycle = new Bicycle(this._plato)
     this.vehicle = new Vehicle(this._plato)
+    const bicycleGroup = this._city.makeGroup('bikeway bicycles')
+    this._city.add(bicycleGroup)
+    this._bicycles = bicycleGroup.children
     for (const row of countTo(num_rows)) {
       for (const col of countTo(num_cols)) {
         this.addBlock(row, col, buildings)
