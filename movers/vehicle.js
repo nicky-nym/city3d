@@ -548,24 +548,9 @@ function _makeModelFromSpec (vehicleSpec) {
   return vehicle
 }
 
-export default class Vehicle {
-  constructor (plato) {
-    this._plato = plato
+class VehicleFactory {
+  constructor () {
     this._vehicles = []
-  }
-
-  newVehicles (n) {
-    for (const i of countTo(n)) {
-      const p1 = new THREE.Vector3(250 + -50 * i, randomInt(-50, 50), 40)
-      const p2 = new THREE.Vector3(p1.y, -p1.x, 40)
-      const p3 = new THREE.Vector3(0, 0, 40)
-      const speed = randomInt(1, 20) * 0.04
-      this._newVehicle([p1, p2, p3, p1], speed)
-    }
-  }
-
-  newVehicle (path, speed = 1) {
-    this._newVehicle(path.map(p => new THREE.Vector3(...p)), speed)
   }
 
   // for now, speed is in units of unit vectors per frame
@@ -586,17 +571,18 @@ export default class Vehicle {
     vehicle.userData.remainingDist = vehicle.userData.pathSegments[0].len
     vehicle.userData.currSegment = vehicle.userData.pathSegments[0]
 
-    const SHOW_PATH = true
-    if (SHOW_PATH) {
-      const material = new THREE.LineBasicMaterial({ color: 0xFF00FF })
-      const geometry = new THREE.Geometry()
-      geometry.vertices.push(...path)
-      const line = new THREE.Line(geometry, material)
-      this._plato.addLine(line)
-    }
+    // TODO: reimplement this functionality?
+    // const SHOW_PATH = true
+    // if (SHOW_PATH) {
+    //   const material = new THREE.LineBasicMaterial({ color: 0xFF00FF })
+    //   const geometry = new THREE.Geometry()
+    //   geometry.vertices.push(...path)
+    //   const line = new THREE.Line(geometry, material)
+    //   this._plato.addLine(line)
+    // }
 
     vehicle.update = this.updateVehicle.bind(vehicle)
-    this._plato.addMover(vehicle)
+    return vehicle
   }
 
   updateVehicle () {
@@ -617,5 +603,31 @@ export default class Vehicle {
     for (const wheel of u.spinningWheels) {
       wheel.rotation.y += u.speed / Math.PI
     }
+  }
+
+  makeVehicle (path, speed = 1) {
+    if (path) {
+      return this._newVehicle(path.map(p => new THREE.Vector3(...p)), speed)
+    } else {
+      const p1 = new THREE.Vector3(-randomInt(50, 250), -randomInt(50, 250), 0)
+      const p2 = new THREE.Vector3(-randomInt(50, 250), -randomInt(50, 250), 0)
+      const p3 = new THREE.Vector3(-randomInt(50, 500), -randomInt(50, 250), 0)
+      const speed = randomInt(5, 10) * 0.04
+      return this._newVehicle([p1, p2, p3, p1], speed)
+    }
+  }
+}
+
+const vehicleFactory = new VehicleFactory()
+
+export default class Vehicle {
+  // new Vehicle([[0, 0, 0], [0, 200, 10], [100, 200, 10], [0, 0, 0]], 0.8)
+  constructor (path, speed = 1) {
+    this.threeComponent = vehicleFactory.makeVehicle(path, speed)
+  }
+
+  // This makes Vehicle a ThreeOutput plugin.
+  threeComponent () {
+    return this.threeComponent
   }
 }

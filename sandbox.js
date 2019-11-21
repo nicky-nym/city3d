@@ -15,6 +15,7 @@ import Merlon from './structures/merlon.js'
 import Plato from './city3d/plato.js'
 import SummaryOutput from './outputs/summary_output.js'
 import ThreeOutput from './outputs/three_output.js'
+import Vehicle from '../movers/vehicle.js'
 import Wurster from './structures/wurster.js'
 
 function addBuildings () {
@@ -55,8 +56,15 @@ function addMovers () {
   const randomBikes = city.makeGroup('random bicycles')
   randomBikes.children.push(new Bicycle())
   randomBikes.children.push(new Bicycle())
-  randomBikes.children.push(new Bicycle())
   city.add(randomBikes)
+
+  const randomVehicles = city.makeGroup('random vehicles')
+  randomVehicles.children.push(new Vehicle())
+  randomVehicles.children.push(new Vehicle())
+  randomVehicles.children.push(new Vehicle())
+  randomVehicles.children.push(new Vehicle())
+  randomVehicles.children.push(new Vehicle())
+  city.add(randomVehicles)
 }
 
 const city = new City('Paracosm')

@@ -21,8 +21,7 @@ const INNERTUBE_RADIUS = 0.06
 const BICYCLE_SCALE_FACTOR = 2.5
 
 class BicycleFactory {
-  constructor (plato) {
-    this._plato = plato
+  constructor () {
     this.bicycles = []
 
     const wheelLODModel = new THREE.LOD()
