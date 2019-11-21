@@ -15,7 +15,7 @@ import Merlon from './structures/merlon.js'
 import Plato from './city3d/plato.js'
 import SummaryOutput from './outputs/summary_output.js'
 import ThreeOutput from './outputs/three_output.js'
-import Vehicle from '../movers/vehicle.js'
+import Vehicle from './movers/vehicle.js'
 import Wurster from './structures/wurster.js'
 
 function addBuildings () {
