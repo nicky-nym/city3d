@@ -9,25 +9,28 @@
 import * as THREE from '../three/build/three.module.js'
 import { countTo, randomInt, lookAt } from '../city3d/util.js'
 
-const VEHICLE_TYPES = {
+const VEHICLE_SPECS = {
 
   // "pedicab" becomes the tooltip display name of the vehicle
   pedicab: {
+
+    // optional display name to appear in tooltips
+    name: 'Pedicab (bicycle rickshaw)',
 
     // sets the color used for the frame, but not the tires, etc.
     color: 0x0066ff,
 
     // places a bicycle saddle, 2.8 feet above and 1.5 feet forward of the rear axle
-    saddles: [{ forward: 3.2, up: 3 }],
+    saddles: { forward: 3.2, up: 3 },
 
     // places bicycle handlebars 5 feet forward from rear axle
     handlebars: { forward: 5.2 },
 
-    // places a flat floor deck 1 foot in front of the rear axle
-    deck: { forward: 1, width: 3, length: 1.2 },
+    // places a flat floor body 1 foot in front of the rear axle
+    body: { forward: 1, width: 3, length: 1.2 },
 
     // places a chair-style seat, relative to the rear axle
-    seating: [{ forward: 0.2, up: 2 }],
+    seating: { forward: 0.2, up: 2 },
 
     wheels: [{
       // places a pair of rear wheel
@@ -44,20 +47,20 @@ const VEHICLE_TYPES = {
 
   unicycle: {
     color: 0xff6600,
-    saddles: [{ up: 2.8 }],
-    wheels: [{
+    saddles: { up: 2.8 },
+    wheels: {
       diameter: 2.25,
       spokes: 18
-    }]
+    }
   },
 
   ninebot: {
-    deck: { width: 1.4, length: 0.8, forward: -0.4 },
-    wheels: [{ diameter: 1.2 }]
+    body: { width: 1.4, length: 0.8, forward: -0.4 },
+    wheels: { diameter: 1.2 }
   },
 
   bicycle: {
-    saddles: [{ forward: 0.8, up: 3 }],
+    saddles: { forward: 0.8, up: 3 },
     handlebars: { forward: 2.8 },
     wheels: [{
       diameter: 2.25,
@@ -86,7 +89,7 @@ const VEHICLE_TYPES = {
   },
 
   kickscooter: {
-    deck: { width: 0.5, length: 2 },
+    body: { width: 0.5, length: 2 },
     handlebars: { forward: 1.6, width: 1 },
     wheels: [{
       diameter: 0.36
@@ -97,7 +100,7 @@ const VEHICLE_TYPES = {
   },
 
   skateboard: {
-    deck: { width: 0.65, length: 2.6, forward: -0.6, up: 0.2 },
+    body: { width: 0.65, length: 2.6, forward: -0.6, up: 0.2 },
     wheels: [{
       diameter: 0.2,
       axleWidth: 0.65
@@ -110,7 +113,7 @@ const VEHICLE_TYPES = {
 
   stroller: {
     color: 0xff66ff,
-    seating: [{ up: 1 }],
+    seating: { up: 1 },
     handlebars: { forward: -1 },
     wheels: [{
       axleWidth: 2,
@@ -125,7 +128,7 @@ const VEHICLE_TYPES = {
 
   jogger: {
     color: 0x00ff99,
-    seating: [{ up: 1 }],
+    seating: { up: 1 },
     handlebars: { forward: -1 },
     wheels: [{
       axleWidth: 2,
@@ -138,7 +141,7 @@ const VEHICLE_TYPES = {
   },
 
   segway: {
-    deck: { width: 1.8, length: 0.8, forward: -0.4 },
+    body: { width: 1.8, length: 0.8, forward: -0.4 },
     handlebars: { forward: 0 },
     wheels: [{
       axleWidth: 1.8,
@@ -149,7 +152,7 @@ const VEHICLE_TYPES = {
 
   wheelchair: {
     color: 0x66ccff,
-    seating: [{ up: 1.3, forward: -0.1 }],
+    seating: { up: 1.3, forward: -0.1 },
     wheels: [{
       axleWidth: 2.3,
       diameter: 1.8,
@@ -163,8 +166,8 @@ const VEHICLE_TYPES = {
 
   gokart: {
     color: 0xffff00,
-    deck: { width: 1.8, length: 3.2 },
-    seating: [{ forward: 0.8, up: 0.5 }],
+    body: { width: 1.8, length: 3.2 },
+    seating: { forward: 0.8, up: 0.5 },
     handlebars: { forward: 2.4, up: -1, width: 1.6 },
     wheels: [{
       axleWidth: 2.8,
@@ -179,7 +182,7 @@ const VEHICLE_TYPES = {
   },
 
   penny_farthing: {
-    saddles: [{ forward: 1.6, up: 5 }],
+    saddles: { forward: 1.6, up: 5 },
     handlebars: { forward: 2.4, up: 2 },
     wheels: [{
       diameter: 1.4,
@@ -193,9 +196,9 @@ const VEHICLE_TYPES = {
 
   tricycle: {
     color: 0xff2222,
-    saddles: [{ forward: 0.6, up: 1.4 }],
+    saddles: { forward: 0.6, up: 1.4 },
     handlebars: { forward: 1, width: 1.4, up: -1.2 },
-    deck: { forward: -0.25, width: 1.3, length: 0.5, up: -0.2 },
+    body: { forward: -0.25, width: 1.3, length: 0.5, up: -0.2 },
     wheels: [{
       axleWidth: 1.5,
       diameter: 0.5
@@ -208,7 +211,7 @@ const VEHICLE_TYPES = {
 
   tadpole: {
     color: 0xffff00,
-    seating: [{ forward: 1.6, up: 0.8 }],
+    seating: { forward: 1.6, up: 0.8 },
     handlebars: { forward: 2.5, width: 1.4, up: -2.8 },
     wheels: [{
       diameter: 2.166,
@@ -223,7 +226,7 @@ const VEHICLE_TYPES = {
 
   haluzak_horizon_recumbent: {
     color: 0xffff00,
-    seating: [{ width: 1.4, forward: 1.6, up: 1.6 }],
+    seating: { width: 1.4, forward: 1.6, up: 1.6 },
     handlebars: { forward: 2.5, width: 1.4, up: -2.0 },
     wheels: [{
       diameter: 2.166,
@@ -237,9 +240,9 @@ const VEHICLE_TYPES = {
 
   bakfiets_cargo_trike: {
     color: 0x996600,
-    saddles: [{ forward: 0.8, up: 3 }],
+    saddles: { forward: 0.8, up: 3 },
     handlebars: { forward: 2.8 },
-    deck: { width: 2.8, length: 3, height: 1.7, up: 0.0, forward: 3 },
+    body: { width: 2.8, length: 3, height: 1.7, up: 0.0, forward: 3 },
     wheels: [{
       diameter: 2.166,
       spokes: 15
@@ -253,9 +256,12 @@ const VEHICLE_TYPES = {
 
   ups_etrike: {
     color: 0x4d2600,
-    saddles: [{ forward: 3.2, up: 3 }],
+    saddles: { forward: 3.2, up: 3 },
     handlebars: { forward: 5.2 },
-    deck: { forward: -1.5, width: 3, length: 4, height: 5.5 },
+    body: [
+      { forward: -1.5, width: 3, length: 4, height: 5.5 },
+      { forward: 2.5, width: 1.5, length: 2.5 }
+    ],
     wheels: [{
       axleWidth: 3.5,
       diameter: 1.666,
@@ -269,7 +275,7 @@ const VEHICLE_TYPES = {
 
   fedex_delivery_bot: {
     color: 0xffffff,
-    deck: { width: 1.1, length: 1.2, height: 1.7, up: 0.6, forward: -0.2 },
+    body: { width: 1.1, length: 1.2, height: 1.7, up: 0.6, forward: -0.2 },
     wheels: [{
       axleWidth: 1.4,
       diameter: 0.5,
@@ -284,7 +290,7 @@ const VEHICLE_TYPES = {
 
   brainos_delivery_bot: {
     color: 0xffffff,
-    deck: { width: 1.8, length: 2.9, up: 0, forward: -0.3 },
+    body: { width: 1.8, length: 2.9, up: 0, forward: -0.3 },
     handlebars: { forward: 2.5, width: 1.4, up: -0.1 },
     wheels: [{
       axleWidth: 2,
@@ -297,7 +303,7 @@ const VEHICLE_TYPES = {
 
   amazon_scout_delivery_bot: {
     color: 0x2222ff,
-    deck: { width: 1.4, length: 1.8, height: 1.4, up: 0, forward: -0.2 },
+    body: { width: 1.4, length: 1.8, height: 1.4, up: 0, forward: -0.2 },
     wheels: [{
       axleWidth: 1.5,
       diameter: 0.5
@@ -314,7 +320,7 @@ const VEHICLE_TYPES = {
 
   quadro_eqooder: {
     color: 0x777777,
-    deck: { width: 1.2, length: 2, up: 0, forward: 2.7 },
+    body: { width: 1.2, length: 2, up: 0, forward: 2.7 },
     handlebars: { forward: 4.5, width: 1.6, up: -0.1 },
     seating: [
       { forward: 0.3, up: 2.2 },
@@ -330,7 +336,24 @@ const VEHICLE_TYPES = {
     }]
   }
 
-  // TODO: add more vehicles:
+  // TODO: add some emergency vehicles:
+  // + ambulance
+  // + gurney
+  // + hospital bed
+  // + fire truck
+  // + evacution bus
+
+  // TODO: add some hand-pushed vehicles:
+  // + grocery shopping cart
+  // + wheelbarrow
+  // + hand-truck
+  // + platform hand-truck
+  // + double-decker platform hand-truck
+
+  // TODO: add some speculative future vehicles:
+  // + push-me-pull-you (4 wheels & 2 seats facing each other)
+
+  // TODO: add some additional name-brand vehicles:
   // + "Burley Encore" stroller
   // + "Burley Flatbed" bike cargo trailer
   // + "Burley Coho XC" single-wheel cargo trailer
@@ -345,23 +368,16 @@ const VEHICLE_TYPES = {
   // + "EAV model p1" (Electric Assisted Vehciles)
   // + "Doohan gotcha"
 }
-const VEHICLE_NAMES = Object.keys(VEHICLE_TYPES)
+const VEHICLE_TYPE_NAMES = Object.keys(VEHICLE_SPECS)
 const TIRE_COLOR = 0x202020
 
 const material = new THREE.MeshLambertMaterial({ color: TIRE_COLOR })
 const tireMaterial = new THREE.MeshLambertMaterial({ color: TIRE_COLOR })
-const deckMaterial = new THREE.MeshLambertMaterial({ color: 0x666666 })
+const bodyMaterial = new THREE.MeshLambertMaterial({ color: 0x666666 })
 const saddleMaterial = new THREE.MeshLambertMaterial({ color: 0x666666 })
 const axleMaterial = new THREE.MeshLambertMaterial({ color: 0x333333 })
 const spokeMaterial = new THREE.MeshLambertMaterial({ color: 0x666666 })
 const hubMaterial = new THREE.MeshStandardMaterial({ color: 0xeeeeee, side: THREE.DoubleSide })
-
-function _getRandomVehicleSpec () {
-  const name = VEHICLE_NAMES[randomInt(0, VEHICLE_NAMES.length - 1)]
-  const vehicleSpec = VEHICLE_TYPES[name] // = VEHICLE_TYPES.ups_etrike
-  vehicleSpec.name = name
-  return vehicleSpec
-}
 
 function _newLine (start, end, material) {
   const geometry = new THREE.Geometry()
@@ -404,6 +420,18 @@ function _makeWheel (spec, vehicle) {
   return wheel
 }
 
+function _array (object) {
+  if (object) {
+    if (Array.isArray(object)) {
+      return object
+    } else {
+      return [object]
+    }
+  } else {
+    return []
+  }
+}
+
 function _makeModelFromSpec (vehicleSpec) {
   let maxAxleWidth = 0
   let axleHeight = 0
@@ -418,7 +446,7 @@ function _makeModelFromSpec (vehicleSpec) {
   const wheels = new THREE.Group()
   vehicle.add(wheels)
 
-  for (const wheelSpec of vehicleSpec.wheels) {
+  for (const wheelSpec of _array(vehicleSpec.wheels)) {
     const y = 0 // default is a single wheel, centered
     const { axleWidth, diameter, tireWidth, spokes, forward } = wheelSpec
     const spec = { diameter, tireWidth, spokes, forward, y }
@@ -447,8 +475,8 @@ function _makeModelFromSpec (vehicleSpec) {
     }
   }
 
-  if (vehicleSpec.deck) {
-    let { forward = 0, width = 1, length = 1, up = 0, height = 0.1 } = vehicleSpec.deck
+  for (const bodySpec of _array(vehicleSpec.body)) {
+    let { forward = 0, width = 1, length = 1, up = 0, height = 0.1 } = bodySpec
     width = width / 2
     const corners = [
       new THREE.Vector2(forward, width),
@@ -464,12 +492,12 @@ function _makeModelFromSpec (vehicleSpec) {
     })
     geometry.rotateY(-Math.PI / 2)
     geometry.translate(-axleHeight - up, 0, 0)
-    const material = height > 0.1 ? specMaterial : deckMaterial
-    const deck = new THREE.Mesh(geometry, material)
-    vehicle.add(deck)
+    const material = height > 0.1 ? specMaterial : bodyMaterial
+    const body = new THREE.Mesh(geometry, material)
+    vehicle.add(body)
   }
 
-  for (const saddleSpec of (vehicleSpec.saddles || [])) {
+  for (const saddleSpec of _array(vehicleSpec.saddles)) {
     const saddle = new THREE.Mesh(new THREE.SphereGeometry(), saddleMaterial)
     saddle.scale.set(0.1, 0.3, 0.65)
     saddle.position.z = saddleSpec.forward || 0
@@ -483,7 +511,7 @@ function _makeModelFromSpec (vehicleSpec) {
     vehicle.add(seatpost)
   }
 
-  for (const seatSpec of (vehicleSpec.seating || [])) {
+  for (const seatSpec of _array(vehicleSpec.seating)) {
     const seat = new THREE.Group()
     seat.position.z = seatSpec.forward || 0
     seat.position.y = 0
@@ -529,14 +557,14 @@ function _makeModelFromSpec (vehicleSpec) {
     vehicle.add(seat)
   }
 
-  if (vehicleSpec.handlebars) {
-    const width = vehicleSpec.handlebars.width || 2
+  for (const handlebarSpec of _array(vehicleSpec.handlebars)) {
+    const width = handlebarSpec.width || 2
     const handlebars = new THREE.Mesh(
       new THREE.CylinderGeometry(0.08, 0.08, width),
       material
     )
-    handlebars.position.z = vehicleSpec.handlebars.forward || 0
-    handlebars.position.x = -3.3 - (vehicleSpec.handlebars.up || 0)
+    handlebars.position.z = handlebarSpec.forward || 0
+    handlebars.position.x = -3.3 - (handlebarSpec.up || 0)
     vehicle.add(handlebars)
 
     const top = { x: handlebars.position.x, y: 0, z: handlebars.position.z }
@@ -548,15 +576,31 @@ function _makeModelFromSpec (vehicleSpec) {
   return vehicle
 }
 
+function _getRandomVehicleTypename () {
+  return VEHICLE_TYPE_NAMES[randomInt(0, VEHICLE_TYPE_NAMES.length - 1)]
+}
+
+function _getVehicleSpec (typename) {
+  typename = typename || _getRandomVehicleTypename()
+  const vehicleSpec = VEHICLE_SPECS[typename] // = VEHICLE_SPECS.ups_etrike
+  vehicleSpec.name = vehicleSpec.name || typename
+  return vehicleSpec
+}
+
 class VehicleFactory {
   constructor () {
     this._vehicles = []
   }
 
+  newVehicleOfType (typename) {
+    const vehicleSpec = _getVehicleSpec(typename)
+    const vehicle = _makeModelFromSpec(vehicleSpec)
+    return vehicle
+  }
+
   // for now, speed is in units of unit vectors per frame
   _newVehicle (path, speed = 1) {
-    const vehicleSpec = _getRandomVehicleSpec()
-    const vehicle = _makeModelFromSpec(vehicleSpec)
+    const vehicle = this.newVehicleOfType()
 
     vehicle.position.copy(path[0])
     lookAt(vehicle, path[1])
@@ -571,7 +615,7 @@ class VehicleFactory {
     vehicle.userData.remainingDist = vehicle.userData.pathSegments[0].len
     vehicle.userData.currSegment = vehicle.userData.pathSegments[0]
 
-    // TODO: reimplement this functionality?
+    // TODO: reimplement this functionality? (Yes Please!)
     // const SHOW_PATH = true
     // if (SHOW_PATH) {
     //   const material = new THREE.LineBasicMaterial({ color: 0xFF00FF })
