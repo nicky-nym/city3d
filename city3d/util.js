@@ -44,13 +44,13 @@ function xy2xyz (xyz, deltaZ = 0) {
   return [xyz[X], xyz[Y], z]
 }
 
-const UP = new THREE.Vector3(0, 0, -1)
+const UP = new THREE.Vector3(0, 0, 1)
 
 function lookAt (obj, focus, up = UP) {
   const f = focus.clone().sub(obj.position).normalize()
-  const s = new THREE.Vector3().crossVectors(f, up).normalize()
-  const v = new THREE.Vector3().crossVectors(s, f)
-  const m = new THREE.Matrix4().makeBasis(v, s, f)
+  const s = new THREE.Vector3().crossVectors(up, f).normalize()
+  const v = new THREE.Vector3().crossVectors(f, s)
+  const m = new THREE.Matrix4().makeBasis(f, s, v)
   obj.setRotationFromMatrix(m)
 }
 

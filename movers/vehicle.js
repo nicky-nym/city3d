@@ -33,7 +33,7 @@ const VEHICLE_SPECS = {
     seating: { forward: 0.2, up: 2 },
 
     wheels: [{
-      // places a pair of rear wheel
+      // places a pair of rear wheels
       axleWidth: 3.5, // vehicle is 3.5 feet wide between rear wheels
       diameter: 2.25, // rear wheels are 2.25 feet tall
       spokes: 18 // rear wheels have 36 spokes
@@ -391,8 +391,8 @@ function _newLine (start, end, material) {
 function _makeWheel (spec, vehicle) {
   const radius = spec.diameter / 2
   const wheel = new THREE.Group()
-  wheel.position.z = spec.forward || 0
-  wheel.position.x = -radius - spec.tireWidth / 2
+  wheel.position.x = spec.forward || 0
+  wheel.position.z = radius + spec.tireWidth / 2
   wheel.position.y = spec.y || 0
 
   const resolution = 16
@@ -465,8 +465,8 @@ function _makeModelFromSpec (vehicleSpec) {
       wheels.add(leftWheel, rightWheel)
 
       // draw the axle
-      const left = { x: -axleHeight, y: halfWidth, z: forward }
-      const right = { x: -axleHeight, y: -halfWidth, z: forward }
+      const left = { x: forward, y: halfWidth, z: axleHeight }
+      const right = { x: forward, y: -halfWidth, z: axleHeight }
       vehicle.add(_newLine(left, right, axleMaterial))
     } else {
       // draw a single wheel
@@ -490,8 +490,7 @@ function _makeModelFromSpec (vehicleSpec) {
       depth: height,
       bevelEnabled: false
     })
-    geometry.rotateY(-Math.PI / 2)
-    geometry.translate(-axleHeight - up, 0, 0)
+    geometry.translate(0, 0, axleHeight + up)
     const material = height > 0.1 ? specMaterial : bodyMaterial
     const body = new THREE.Mesh(geometry, material)
     vehicle.add(body)
@@ -499,23 +498,23 @@ function _makeModelFromSpec (vehicleSpec) {
 
   for (const saddleSpec of _array(vehicleSpec.saddles)) {
     const saddle = new THREE.Mesh(new THREE.SphereGeometry(), saddleMaterial)
-    saddle.scale.set(0.1, 0.3, 0.65)
-    saddle.position.z = saddleSpec.forward || 0
+    saddle.scale.set(0.65, 0.3, 0.1)
+    saddle.position.x = saddleSpec.forward || 0
     saddle.position.y = 0
-    saddle.position.x = -saddleSpec.up || 0
+    saddle.position.z = saddleSpec.up || 0
     vehicle.add(saddle)
 
-    const top = { x: -saddleSpec.up, y: 0, z: saddleSpec.forward }
-    const bottom = { x: -axleHeight, y: 0, z: saddleSpec.forward + 0.8 }
+    const top = { x: saddleSpec.forward, y: 0, z: saddleSpec.up }
+    const bottom = { x: saddleSpec.forward + 0.8, y: 0, z: axleHeight }
     const seatpost = _newLine(top, bottom, specMaterial)
     vehicle.add(seatpost)
   }
 
   for (const seatSpec of _array(vehicleSpec.seating)) {
     const seat = new THREE.Group()
-    seat.position.z = seatSpec.forward || 0
+    seat.position.x = seatSpec.forward || 0
     seat.position.y = 0
-    seat.position.x = -seatSpec.up || 0
+    seat.position.z = seatSpec.up || 0
 
     const seatWidth = seatSpec.width || maxAxleWidth - 0.5
     const halfWidth = seatWidth / 2
@@ -532,7 +531,7 @@ function _makeModelFromSpec (vehicleSpec) {
       depth: 0.1,
       bevelEnabled: false
     })
-    cushionGeometry.rotateY(-Math.PI / 1.8)
+    cushionGeometry.rotateY(-Math.PI / 12)
     const cushion = new THREE.Mesh(cushionGeometry, specMaterial)
 
     const dz = 1.4 // from cushion to top of backrest
@@ -548,10 +547,10 @@ function _makeModelFromSpec (vehicleSpec) {
       depth: 0.1,
       bevelEnabled: false
     })
-    backrestGeometry.rotateY(-Math.PI / 12)
+    backrestGeometry.rotateY(-Math.PI / 1.8)
     const backrest = new THREE.Mesh(backrestGeometry, specMaterial)
-    backrest.position.x = -dz
-    backrest.position.z = -0.5
+    backrest.position.x = -0.5
+    backrest.position.z = dz
     seat.add(cushion, backrest)
 
     vehicle.add(seat)
@@ -563,12 +562,12 @@ function _makeModelFromSpec (vehicleSpec) {
       new THREE.CylinderGeometry(0.08, 0.08, width),
       material
     )
-    handlebars.position.z = handlebarSpec.forward || 0
-    handlebars.position.x = -3.3 - (handlebarSpec.up || 0)
+    handlebars.position.x = handlebarSpec.forward || 0
+    handlebars.position.z = 3.3 + (handlebarSpec.up || 0)
     vehicle.add(handlebars)
 
     const top = { x: handlebars.position.x, y: 0, z: handlebars.position.z }
-    const bottom = { x: -axleHeight * 2, y: 0, z: handlebars.position.z + 0.4 }
+    const bottom = { x: handlebars.position.x + 0.4, y: 0, z: axleHeight * 2 }
     const post = _newLine(top, bottom, specMaterial)
     vehicle.add(post)
   }

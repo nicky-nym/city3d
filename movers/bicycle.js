@@ -132,7 +132,7 @@ class BicycleFactory {
       u.remainingDist += u.currSegment.len
       lookAt(this, u.path[u.pathIndex + 1])
       // make them go upside down
-      // lookAt(this, u.path[u.pathIndex + 1], new THREE.Vector3(0, 0, 1))
+      // lookAt(this, u.path[u.pathIndex + 1], new THREE.Vector3(0, 0, -1))
     } else {
       this.position.addScaledVector(u.currSegment.vNorm, u.delta)
     }
@@ -156,17 +156,11 @@ class BicycleFactory {
 
   // for now, speed is in units of unit vectors per frame
   _makeBicycle (path, speed = 1) {
-    const bike = new THREE.Group()
-    const innerbike = this.bicycleModel.clone()
-    bike.add(innerbike)
+    const bike = this.bicycleModel.clone()
     const wheels = new THREE.Group()
     wheels.name = 'wheels'
     wheels.add(this.frontWheel.clone(), this.backWheel.clone())
-    innerbike.add(wheels)
-
-    // Situate innerbike in bike so it faces in the +z direction
-    innerbike.rotation.y = -Math.PI / 2
-
+    bike.add(wheels)
     bike.position.copy(path[0])
     lookAt(bike, path[1])
 
