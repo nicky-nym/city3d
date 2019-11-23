@@ -7,8 +7,9 @@
 // For more information, please refer to <http://unlicense.org>
 
 import Sector from './sector.js'
+import Vehicle from '../movers/vehicle.js'
 
-export default class City {
+class City {
   // City is a class for representing a hierarchical collection of 3D places.
 
   constructor (name) {
@@ -21,8 +22,24 @@ export default class City {
   }
 
   makeGroup (name) {
-    const group = { name, children: [] }
-    return group
+    return new Group(name)
+  }
+
+  extractRoutes (thing, routes) {
+    // TODO: this should become Mover
+    if (thing instanceof Vehicle) {
+      routes.push(thing.getRoute())
+    } else if (thing.children) {
+      for (const child of thing.children) {
+        this.extractRoutes(child, routes)
+      }
+    }
+  }
+
+  getRoutes () {
+    const routes = []
+    this.extractRoutes(this, routes)
+    return routes
   }
 
   getSectors () {
@@ -33,3 +50,16 @@ export default class City {
     // TODO: Do we need this?
   }
 }
+
+class Group {
+  constructor (name) {
+    this.name = name
+    this.children = []
+  }
+
+  add (thing) {
+    this.children.push(thing)
+  }
+}
+
+export { City, Group }

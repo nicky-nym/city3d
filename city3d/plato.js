@@ -162,7 +162,7 @@ export default class Plato {
       const color = COLORS_OF_PLACES[place]
       const abstractThickPolygon = new Geometry.ThickPolygon(xyPolygon, { incline: incline, depth: depth })
       const concreteThickPolygon = new Geometry.Instance(abstractThickPolygon, z, color)
-      group.children.push(concreteThickPolygon)
+      group.add(concreteThickPolygon)
       const squareFeet = xyPolygon.area()
       this._squareFeet[place] = squareFeet + (this._squareFeet[place] || 0)
     }
@@ -186,7 +186,7 @@ export default class Plato {
         const abstractWall = new Geometry.Wall(near, far, height, { openings })
         const name = `wall from ${JSON.stringify(near)} to ${JSON.stringify(far)}`
         const concreteWall = new Geometry.Instance(abstractWall, z, ALMOST_WHITE, name)
-        group.children.push(concreteWall)
+        group.add(concreteWall)
       }
     }
   }

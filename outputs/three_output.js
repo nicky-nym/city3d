@@ -128,6 +128,7 @@ export default class ThreeOutput extends Output {
       switch (evt.code) {
         case 'KeyS': return this._onSaveOrbitControlsState()
         case 'KeyR': return this._onRestoreOrbitControlsState()
+        case 'Space': return this._onToggleAnimation()
       }
     }, false)
 
@@ -145,15 +146,42 @@ export default class ThreeOutput extends Output {
     }, false)
 
     this._animatedComponents = []
+    this._animationOn = true
 
     // add an origin marker for debugging purposes
     const ORIGIN_MARKER_HEIGHT = 100
+    const ORIGIN_SIGN_LENGTH = 30
     const geometry = new THREE.BoxGeometry(4, 4, ORIGIN_MARKER_HEIGHT)
     const material = this._materialByHexColor(BLUE)
     const mesh = new THREE.Mesh(geometry, material)
     mesh.name = 'origin marker'
     mesh.position.z = ORIGIN_MARKER_HEIGHT / 2
     this._scene.add(mesh)
+    const geometryX = new THREE.BoxGeometry(ORIGIN_SIGN_LENGTH, 1, 8)
+    const materialX = this._materialByHexColor(0xff0000)
+    const meshX = new THREE.Mesh(geometryX, materialX)
+    meshX.name = '+X axis'
+    meshX.position.x = ORIGIN_SIGN_LENGTH / 2
+    meshX.position.z = ORIGIN_MARKER_HEIGHT * 0.7
+    this._scene.add(meshX)
+    const geometryY = new THREE.BoxGeometry(1, ORIGIN_SIGN_LENGTH, 8)
+    const materialY = this._materialByHexColor(0x00ff00)
+    const meshY = new THREE.Mesh(geometryY, materialY)
+    meshY.name = '+Y axis'
+    meshY.position.y = ORIGIN_SIGN_LENGTH / 2
+    meshY.position.z = ORIGIN_MARKER_HEIGHT * 0.7
+    this._scene.add(meshY)
+
+    const SHOW_PATH = true
+    if (SHOW_PATH) {
+      for (const route of this._city.getRoutes()) {
+        const material = new THREE.LineBasicMaterial({ color: 0xFF00FF })
+        const geometry = new THREE.Geometry()
+        geometry.vertices.push(...route.map(p => new THREE.Vector3(...p)))
+        const line = new THREE.Line(geometry, material)
+        this._scene.add(line)
+      }
+    }
 
     this._traverse(this._city, this._scene)
   }
@@ -292,6 +320,10 @@ export default class ThreeOutput extends Output {
     this.controls.reset()
   }
 
+  _onToggleAnimation () {
+    this._animationOn = !this._animationOn
+  }
+
   _materialByHexColor (hexColor) {
     if (isNaN(hexColor)) {
       hexColor = FIXME_FUCHSIA
@@ -309,8 +341,10 @@ export default class ThreeOutput extends Output {
   animate () {
     window.requestAnimationFrame(() => this.animate())
     this.controls.update()
-    for (const component of this._animatedComponents) {
-      component.update()
+    if (this._animationOn) {
+      for (const component of this._animatedComponents) {
+        component.update()
+      }
     }
     this.render()
     stats.update()

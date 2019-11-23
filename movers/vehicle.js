@@ -613,17 +613,6 @@ class VehicleFactory {
     }
     vehicle.userData.remainingDist = vehicle.userData.pathSegments[0].len
     vehicle.userData.currSegment = vehicle.userData.pathSegments[0]
-
-    // TODO: reimplement this functionality? (Yes Please!)
-    // const SHOW_PATH = true
-    // if (SHOW_PATH) {
-    //   const material = new THREE.LineBasicMaterial({ color: 0xFF00FF })
-    //   const geometry = new THREE.Geometry()
-    //   geometry.vertices.push(...path)
-    //   const line = new THREE.Line(geometry, material)
-    //   this._plato.addLine(line)
-    // }
-
     vehicle.update = this.updateVehicle.bind(vehicle)
     return vehicle
   }
@@ -631,6 +620,7 @@ class VehicleFactory {
   updateVehicle () {
     // TODO: update speed based on slope of current segment
     const u = this.userData
+    if (u.speed === 0) return
     u.remainingDist -= u.delta
     if (u.remainingDist <= 0) {
       u.pathIndex = (u.pathIndex + 1) % (u.path.length - 1)
@@ -648,16 +638,15 @@ class VehicleFactory {
     }
   }
 
+  randomPath () {
+    const p1 = [-randomInt(50, 250), -randomInt(50, 250), 0]
+    const p2 = [-randomInt(50, 250), -randomInt(50, 250), 0]
+    const p3 = [-randomInt(50, 500), -randomInt(50, 250), 0]
+    return [p1, p2, p3, p1]
+  }
+
   makeVehicle (path, speed = 1) {
-    if (path) {
-      return this._newVehicle(path.map(p => new THREE.Vector3(...p)), speed)
-    } else {
-      const p1 = new THREE.Vector3(-randomInt(50, 250), -randomInt(50, 250), 0)
-      const p2 = new THREE.Vector3(-randomInt(50, 250), -randomInt(50, 250), 0)
-      const p3 = new THREE.Vector3(-randomInt(50, 500), -randomInt(50, 250), 0)
-      const speed = randomInt(5, 10) * 0.04
-      return this._newVehicle([p1, p2, p3, p1], speed)
-    }
+    return this._newVehicle(path.map(p => new THREE.Vector3(...p)), speed)
   }
 }
 
@@ -665,8 +654,15 @@ const vehicleFactory = new VehicleFactory()
 
 export default class Vehicle {
   // new Vehicle([[0, 0, 0], [0, 200, 10], [100, 200, 10], [0, 0, 0]], 0.8)
+  // For a parked vehicle, use speed = 0, and path[0] and path[1] to specify location and orientation.
   constructor (path, speed = 1) {
-    this.threeComponent = vehicleFactory.makeVehicle(path, speed)
+    this.speed = speed
+    this.path = path || vehicleFactory.randomPath()
+    this.threeComponent = vehicleFactory.makeVehicle(this.path, speed)
+  }
+
+  getRoute () {
+    return this.speed > 0 ? this.path : [this.path[0]]
   }
 
   // This makes Vehicle a ThreeOutput plugin.

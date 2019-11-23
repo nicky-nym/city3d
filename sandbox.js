@@ -6,73 +6,58 @@
 // This is free and unencumbered software released into the public domain.
 // For more information, please refer to <http://unlicense.org>
 
-import Bicycle from './movers/bicycle.js'
-import Bikeway from './structures/bikeway.js'
-import City from './city3d/city.js'
-import Cottage from './structures/cottage.js'
-import Manhattan from './structures/manhattan.js'
-import Merlon from './structures/merlon.js'
-import Plato from './city3d/plato.js'
-import SummaryOutput from './outputs/summary_output.js'
-import ThreeOutput from './outputs/three_output.js'
-import Vehicle from './movers/vehicle.js'
-import Wurster from './structures/wurster.js'
+import { CITY } from './citylib.js'
 
 function addBuildings () {
   plato.study('Cottage(s)', { x0: -100, y0: 100 })
-  const cottage = new Cottage(plato, city)
+  const cottage = new CITY.Cottage(plato, city)
   cottage.addStreet(1)
   plato.pontificate()
 
   const CITY_SIZE = 1
   plato.study('Manhattan New York', { x0: -800 * CITY_SIZE, y0: -600 * CITY_SIZE })
-  const nyc = new Manhattan(plato)
+  const nyc = new CITY.Manhattan(plato)
   nyc.addBlocks(CITY_SIZE, CITY_SIZE * 1)
   plato.pontificate()
 
   plato.study('Merlon Buildings', { x0: 238, y0: 238 })
-  const merlon = new Merlon(plato)
+  const merlon = new CITY.Merlon(plato)
   merlon.addBuildings(8, 8, { buildings: true })
   plato.pontificate()
 
   plato.study('Bikeways', { x0: 100, y0: 100 })
-  const bikeway = new Bikeway(plato, city)
+  const bikeway = new CITY.Bikeway(plato, city)
   bikeway.addBikeways(3, 3, { buildings: true })
   plato.pontificate()
 
   plato.study('Wurster Hall(s)', { x0: 100, y0: -600 })
-  const wurster = new Wurster(plato)
+  const wurster = new CITY.Wurster(plato)
   wurster.addBuildings(1)
   plato.pontificate()
 }
 
 function addMovers () {
-  // TODO: Would like to do this:
-  /*
-  const randomBikes = new city.Group('random bicycles')
-  randomBikes.add(new Bicycle())
-  */
-
-  const randomBikes = city.makeGroup('random bicycles')
-  randomBikes.children.push(new Bicycle())
-  randomBikes.children.push(new Bicycle())
+  const randomBikes = new CITY.Group('random bicycles')
+  randomBikes.add(new CITY.Bicycle())
+  randomBikes.add(new CITY.Bicycle())
   city.add(randomBikes)
 
-  const randomVehicles = city.makeGroup('random vehicles')
-  randomVehicles.children.push(new Vehicle())
-  randomVehicles.children.push(new Vehicle())
-  randomVehicles.children.push(new Vehicle())
-  randomVehicles.children.push(new Vehicle())
-  randomVehicles.children.push(new Vehicle())
+  const randomVehicles = new CITY.Group('random vehicles')
+  randomVehicles.add(new CITY.Vehicle())
+  randomVehicles.add(new CITY.Vehicle())
+  randomVehicles.add(new CITY.Vehicle())
+  randomVehicles.add(new CITY.Vehicle())
+  randomVehicles.add(new CITY.Vehicle())
+  randomVehicles.add(new CITY.Vehicle([[-80, -80, 0], [0, 0, 0]], 0))
   city.add(randomVehicles)
 }
 
-const city = new City('Paracosm')
-const plato = new Plato(city)
+const city = new CITY.City('Paracosm')
+const plato = new CITY.Plato(city)
 plato.deleteAllObjects()
 addBuildings()
 addMovers()
-const threeOutput = new ThreeOutput(city)
+const threeOutput = new CITY.ThreeOutput(city)
 threeOutput.envision()
-const summaryOutput = new SummaryOutput(city)
+const summaryOutput = new CITY.SummaryOutput(city)
 summaryOutput.envision()
