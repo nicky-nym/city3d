@@ -10,6 +10,8 @@ import Bicycle from './movers/bicycle.js'
 import Bikeway from './structures/bikeway.js'
 import { City, Group } from './city3d/city.js'
 import Cottage from './structures/cottage.js'
+import { Creek } from './land/creek.js'
+import Kayak from './movers/kayak.js'
 import Manhattan from './structures/manhattan.js'
 import Merlon from './structures/merlon.js'
 import Plato from './city3d/plato.js'
@@ -23,6 +25,8 @@ export const CITY = {
   Bikeway,
   City,
   Cottage,
+  Creek,
+  Kayak,
   Group,
   Manhattan,
   Merlon,

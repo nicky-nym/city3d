@@ -21,6 +21,18 @@ function randomInt (min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min
 }
 
+function randomPsuedoGaussian (median, standardDeviation) {
+  const N = 6
+  let total = 0
+  for (let i = 0; i < N; i++) {
+    total += Math.random()
+  }
+  const random0to1 = total / N
+  const MAGIC_ARRIVED_AT_BY_TRIAL_AND_ERROR = 9.54
+  const random = median + ((random0to1 - 0.5) * (standardDeviation * MAGIC_ARRIVED_AT_BY_TRIAL_AND_ERROR))
+  return random
+}
+
 function hypotenuse (run, rise) {
   return Math.sqrt(run ** 2 + rise ** 2)
 }
@@ -54,4 +66,4 @@ function lookAt (obj, focus, up = UP) {
   obj.setRotationFromMatrix(m)
 }
 
-export { xyz, count, countTo, randomInt, nudge, xy2xyz, lookAt, hypotenuse }
+export { xyz, count, countTo, randomInt, randomPsuedoGaussian, nudge, xy2xyz, lookAt, hypotenuse }

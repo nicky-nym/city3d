@@ -36,6 +36,16 @@ function addBuildings () {
   plato.pontificate()
 }
 
+function addCreek () {
+  const creek = new CITY.Creek()
+  const creekObject = creek.makeCreek()
+  city.add(creekObject)
+
+  const kayaks = new CITY.Group('kayaks')
+  kayaks.add(new CITY.Kayak(creek.creekPath()))
+  city.add(kayaks)
+}
+
 function addMovers () {
   const randomBikes = new CITY.Group('random bicycles')
   randomBikes.add(new CITY.Bicycle())
@@ -56,6 +66,7 @@ const city = new CITY.City('Paracosm')
 const plato = new CITY.Plato(city)
 plato.deleteAllObjects()
 addBuildings()
+addCreek()
 addMovers()
 const threeOutput = new CITY.ThreeOutput(city)
 threeOutput.envision()
