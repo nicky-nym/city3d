@@ -174,8 +174,8 @@ export default class ThreeOutput extends Output {
 
     const SHOW_PATH = true
     if (SHOW_PATH) {
+      const material = new THREE.LineBasicMaterial({ color: 0xFF00FF })
       for (const route of this._city.getRoutes()) {
-        const material = new THREE.LineBasicMaterial({ color: 0xFF00FF })
         const geometry = new THREE.Geometry()
         geometry.vertices.push(...route.map(p => new THREE.Vector3(...p)))
         const line = new THREE.Line(geometry, material)

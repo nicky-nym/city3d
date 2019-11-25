@@ -47,18 +47,16 @@ function addCreek () {
 }
 
 function addMovers () {
-  const randomBikes = new CITY.Group('random bicycles')
-  randomBikes.add(new CITY.Bicycle())
-  randomBikes.add(new CITY.Bicycle())
-  city.add(randomBikes)
-
   const randomVehicles = new CITY.Group('random vehicles')
   randomVehicles.add(new CITY.Vehicle())
   randomVehicles.add(new CITY.Vehicle())
   randomVehicles.add(new CITY.Vehicle())
   randomVehicles.add(new CITY.Vehicle())
   randomVehicles.add(new CITY.Vehicle())
-  randomVehicles.add(new CITY.Vehicle([[-80, -80, 0], [0, 0, 0]], 0))
+  for (let i = -50; i > -200; i -= 10) {
+    randomVehicles.add(new CITY.Vehicle([[-50, i, 0], [0, 0, 0]], 0))
+  }
+
   city.add(randomVehicles)
 }
 

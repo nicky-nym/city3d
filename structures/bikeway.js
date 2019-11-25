@@ -7,7 +7,6 @@
 // For more information, please refer to <http://unlicense.org>
 
 import { xyz, count, countTo, randomInt, hypotenuse } from '../city3d/util.js'
-import Bicycle from '../movers/bicycle.js'
 import Vehicle from '../movers/vehicle.js'
 import Place from '../city3d/place.js'
 import Facing from '../city3d/facing.js'
@@ -196,7 +195,6 @@ export default class Bikeway extends Structure {
         [LANE_WIDTH / 2, 0, 0],
         [LANE_WIDTH / 2, BLOCK_LENGTH, 0]])
       this._vehicles.push(new Vehicle(path, randomInt(7, 10) * 0.04))
-      this._bicycles.push(new Bicycle(path, randomInt(1, 9) * 0.1))
     }
     delta += LANE_WIDTH
     const [dx, dy] = rotate(xy(delta, 0), facing)
@@ -217,7 +215,6 @@ export default class Bikeway extends Structure {
       xyz(170, 637.5, -14.9) // end of ENTRANCE_FROM_ABOVE
     ])
     this._vehicles.push(new Vehicle(path, randomInt(6, 10) * 0.04))
-    this._bicycles.push(new Bicycle(path, randomInt(6, 10) * 0.1))
 
     this._plato.addPlace(Place.BARE, LANDING_PARKING, { z: -7.5 })
     this._plato.addPlace(Place.WALKWAY, LANDING_PLAZA, { z: -7.5 })
@@ -241,7 +238,6 @@ export default class Bikeway extends Structure {
       xyz(35, 570, 0.1), xyz(25, 660, 0.1) // start and end of ENTRANCE_FROM_BELOW
     ])
     this._vehicles.push(new Vehicle(path, randomInt(3, 6) * 0.04))
-    this._bicycles.push(new Bicycle(path, randomInt(3, 6) * 0.1))
     this._plato.addPlace(Place.BIKEPATH, RAMP_UP_TO_LANDING, { z: -15, incline: -RAMP_RISE_HEIGHT })
 
     this._plato.addPlace(Place.WALKWAY, LOWER_PLAZA, { z: -14.9 })

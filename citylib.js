@@ -6,7 +6,6 @@
 // This is free and unencumbered software released into the public domain.
 // For more information, please refer to <http://unlicense.org>
 
-import Bicycle from './movers/bicycle.js'
 import Bikeway from './structures/bikeway.js'
 import { City, Group } from './city3d/city.js'
 import Cottage from './structures/cottage.js'
@@ -21,7 +20,6 @@ import Vehicle from './movers/vehicle.js'
 import Wurster from './structures/wurster.js'
 
 export const CITY = {
-  Bicycle,
   Bikeway,
   City,
   Cottage,

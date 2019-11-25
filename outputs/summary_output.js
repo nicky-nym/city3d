@@ -6,7 +6,7 @@
 // This is free and unencumbered software released into the public domain.
 // For more information, please refer to <http://unlicense.org>
 
-import Bicycle from '../movers/bicycle.js'
+import Kayak from '../movers/kayak.js'
 import Output from './output.js'
 import Vehicle from '../movers/vehicle.js'
 
@@ -31,8 +31,8 @@ export default class SummaryOutput extends Output {
       this.print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
     }
 
-    this.print(`There are ${this.count(this._city, Bicycle)} bicycles in the city.`)
     this.print(`There are ${this.count(this._city, Vehicle)} vehicles in the city.`)
+    this.print(`There are ${this.count(this._city, Kayak)} kayaks in the city.`)
   }
 
   count (node, _class) {
