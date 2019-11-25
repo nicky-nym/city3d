@@ -16,13 +16,19 @@ const LENGTH = NUM_SECTIONS * SECTION_LENGTH
 const X_OFFSET = -LENGTH / 2
 
 class Creek {
-  creekPath () {
+  /**
+   * Returns a path that follows this Creek.
+   * @param {number} [lane=2] - Choose an integer between 1 and 5 for one of five equally spaced lanes. 0 or 6 will
+   * follow an edge, and values outside that range will follow alongside the creek.
+   */
+  creekPath (lane = 2) {
     const path = []
+    const offset = lane * CREEK_WIDTH / 6
     // TODO: refactor this so that it's not a copy of the code in makeCreek()
     for (const i of countTo(NUM_SECTIONS)) {
       const y = SECTION_LENGTH * Math.sin(i * 4 / SECTION_LENGTH)
       const x = X_OFFSET + i * SECTION_LENGTH
-      path.push([x, y + CREEK_WIDTH / 3, 0])
+      path.push([x, y + offset, 0])
     }
     return path.slice(NUM_SECTIONS / 2)
   }

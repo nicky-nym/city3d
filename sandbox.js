@@ -43,7 +43,10 @@ function addCreek () {
 
   const kayaks = new CITY.Group('kayaks')
   kayaks.add(new CITY.Kayak(creek.creekPath()))
+  kayaks.add(new CITY.Kayak(creek.creekPath(4), 0.13))
   city.add(kayaks)
+
+  city.add(new CITY.Vehicle(creek.creekPath(7), 0.18, 'bicycle'))
 }
 
 function addMovers () {

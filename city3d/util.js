@@ -6,8 +6,6 @@
 // This is free and unencumbered software released into the public domain.
 // For more information, please refer to <http://unlicense.org>
 
-import * as THREE from '../three/build/three.module.js'
-
 function count (from, to, by = 1) {
   const total = (to - from) / by
   return [...Array(total).keys()].map(i => from + i * by)
@@ -56,25 +54,4 @@ function xy2xyz (xyz, deltaZ = 0) {
   return [xyz[X], xyz[Y], z]
 }
 
-const UP = new THREE.Vector3(0, 0, 1)
-
-/*
- * To visualize this, pretend that obj is a unicycle. Initially, it's facing in the +X direction,
- * the line through the pedals is parallel to the Y-axis and the seatpost is parallel to the Z-axis.
- * We want the unicycle to be facing the focus, so we want the X-axis to move to vector f.
- * We want the line through the pedals to be perpendicular to f and also, by definition of up, to up.
- * Thus, the Y-axis should move to vector s. Finally, we want the seatpost perpendicular to both
- * the direction of travel, f, and s, which is parallel to the line through the pedals.
- * Thus, the Z-axis should move to vector v.
- * The matrix m maps the X-axis to f, the Y-axis to s and the Z-axis to v, so it performs the
- * desired rotation.
- */
-function lookAt (obj, focus, up = UP) {
-  const f = focus.clone().sub(obj.position).normalize()
-  const s = new THREE.Vector3().crossVectors(up, f).normalize()
-  const v = new THREE.Vector3().crossVectors(f, s)
-  const m = new THREE.Matrix4().makeBasis(f, s, v)
-  obj.setRotationFromMatrix(m)
-}
-
-export { xyz, count, countTo, randomInt, randomPsuedoGaussian, nudge, xy2xyz, lookAt, hypotenuse }
+export { xyz, count, countTo, randomInt, randomPsuedoGaussian, nudge, xy2xyz, hypotenuse }

@@ -7,7 +7,8 @@
 // For more information, please refer to <http://unlicense.org>
 
 import * as THREE from '../three/build/three.module.js'
-import { countTo, randomInt, lookAt } from '../city3d/util.js'
+import { randomInt } from '../city3d/util.js'
+import Mover from './mover.js'
 
 function _newLine (start, end, material) {
   const geometry = new THREE.Geometry()
@@ -19,10 +20,6 @@ function _newLine (start, end, material) {
 }
 
 class KayakFactory {
-  constructor () {
-    this._vehicles = []
-  }
-
   _newKayakObject () {
     const kayak = new THREE.Group()
     kayak.name = 'kayak'
@@ -71,47 +68,6 @@ class KayakFactory {
     return kayak
   }
 
-  // for now, speed is in units of unit vectors per frame
-  _newKayak (path, speed = 1) {
-    const kayak = this._newKayakObject()
-
-    kayak.position.copy(path[0])
-    lookAt(kayak, path[1])
-
-    const userData = { path, pathIndex: 0, pathSegments: [], speed, delta: speed }
-    kayak.userData = { ...kayak.userData, ...userData }
-    for (const i of countTo(path.length - 1)) {
-      const v = path[i + 1].clone().sub(path[i])
-      const len = v.length() // compute before normalizing
-      kayak.userData.pathSegments.push({ vNorm: v.normalize(), len })
-    }
-    kayak.userData.remainingDist = kayak.userData.pathSegments[0].len
-    kayak.userData.currSegment = kayak.userData.pathSegments[0]
-    kayak.update = this.updateVehicle.bind(kayak)
-    return kayak
-  }
-
-  updateVehicle () {
-    // TODO: update speed based on slope of current segment
-    const u = this.userData
-    if (u.speed === 0) return
-    u.remainingDist -= u.delta
-    if (u.remainingDist <= 0) {
-      u.pathIndex = (u.pathIndex + 1) % (u.path.length - 1)
-      u.currSegment = u.pathSegments[u.pathIndex]
-      this.position.copy(u.path[u.pathIndex])
-      this.position.addScaledVector(u.currSegment.vNorm, -u.remainingDist)
-      u.remainingDist += u.currSegment.len
-      lookAt(this, u.path[u.pathIndex + 1])
-    } else {
-      this.position.addScaledVector(u.currSegment.vNorm, u.delta)
-    }
-
-    for (const wheel of u.spinningWheels) {
-      wheel.rotation.y += u.speed / Math.PI
-    }
-  }
-
   randomPath () {
     const p1 = [-randomInt(50, 250), -randomInt(50, 250), 0]
     const p2 = [-randomInt(50, 250), -randomInt(50, 250), 0]
@@ -120,27 +76,18 @@ class KayakFactory {
   }
 
   makeKayak (path, speed = 1) {
-    return this._newKayak(path.map(p => new THREE.Vector3(...p)), speed)
+    return this._newKayakObject()
   }
 }
 
 const kayakFactory = new KayakFactory()
 
-export default class Kayak {
-  // new Vehicle([[0, 0, 0], [0, 200, 10], [100, 200, 10], [0, 0, 0]], 0.8)
-  // For a parked vehicle, use speed = 0, and path[0] and path[1] to specify location and orientation.
+export default class Kayak extends Mover {
+  // new Kayak([[0, 0, 0], [0, 200, 10], [100, 200, 10], [0, 0, 0]], 0.8)
+  // For a stationary kayak, use speed = 0, and path[0] and path[1] to specify location and orientation.
   constructor (path, speed = 0.1) {
-    this.speed = speed
-    this.path = path || kayakFactory.randomPath()
-    this.threeComponent = kayakFactory.makeKayak(this.path, speed)
-  }
-
-  getRoute () {
-    return this.speed > 0 ? this.path : [this.path[0]]
-  }
-
-  // This makes Vehicle a ThreeOutput plugin.
-  threeComponent () {
-    return this.threeComponent
+    path = path || kayakFactory.randomPath()
+    super(path, speed, kayakFactory.makeKayak(path, speed))
+    this.threeComponent.update = this.update.bind(this)
   }
 }

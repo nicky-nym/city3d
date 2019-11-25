@@ -7,7 +7,8 @@
 // For more information, please refer to <http://unlicense.org>
 
 import * as THREE from '../three/build/three.module.js'
-import { countTo, randomInt, lookAt } from '../city3d/util.js'
+import { countTo, randomInt } from '../city3d/util.js'
+import Mover from './mover.js'
 
 const VEHICLE_SPECS = {
 
@@ -743,87 +744,25 @@ function _getVehicleSpec (typename) {
   return vehicleSpec
 }
 
-class VehicleFactory {
-  constructor () {
-    this._vehicles = []
-  }
-
-  newVehicleOfType (typename) {
-    const vehicleSpec = _getVehicleSpec(typename)
-    const vehicle = _makeModelFromSpec(vehicleSpec)
-    return vehicle
-  }
-
-  // for now, speed is in units of unit vectors per frame
-  _newVehicle (path, speed = 1) {
-    const vehicle = this.newVehicleOfType()
-
-    vehicle.position.copy(path[0])
-    lookAt(vehicle, path[1])
-
-    const userData = { path, pathIndex: 0, pathSegments: [], speed, delta: speed }
-    vehicle.userData = { ...vehicle.userData, ...userData }
-    for (const i of countTo(path.length - 1)) {
-      const v = path[i + 1].clone().sub(path[i])
-      const len = v.length() // compute before normalizing
-      vehicle.userData.pathSegments.push({ vNorm: v.normalize(), len })
-    }
-    vehicle.userData.remainingDist = vehicle.userData.pathSegments[0].len
-    vehicle.userData.currSegment = vehicle.userData.pathSegments[0]
-    vehicle.update = this.updateVehicle.bind(vehicle)
-    return vehicle
-  }
-
-  updateVehicle () {
-    // TODO: update speed based on slope of current segment
-    const u = this.userData
-    if (u.speed === 0) return
-    u.remainingDist -= u.delta
-    if (u.remainingDist <= 0) {
-      u.pathIndex = (u.pathIndex + 1) % (u.path.length - 1)
-      u.currSegment = u.pathSegments[u.pathIndex]
-      this.position.copy(u.path[u.pathIndex])
-      this.position.addScaledVector(u.currSegment.vNorm, -u.remainingDist)
-      u.remainingDist += u.currSegment.len
-      lookAt(this, u.path[u.pathIndex + 1])
-    } else {
-      this.position.addScaledVector(u.currSegment.vNorm, u.delta)
-    }
-
-    for (const wheel of u.spinningWheels) {
-      wheel.rotation.y += u.speed / Math.PI
-    }
-  }
-
-  randomPath () {
-    const p1 = [-randomInt(50, 250), -randomInt(50, 250), 0]
-    const p2 = [-randomInt(50, 250), -randomInt(50, 250), 0]
-    const p3 = [-randomInt(50, 500), -randomInt(50, 250), 0]
-    return [p1, p2, p3, p1]
-  }
-
-  makeVehicle (path, speed = 1) {
-    return this._newVehicle(path.map(p => new THREE.Vector3(...p)), speed)
-  }
+function randomPath () {
+  const p1 = [-randomInt(50, 250), -randomInt(50, 250), 0]
+  const p2 = [-randomInt(50, 250), -randomInt(50, 250), 0]
+  const p3 = [-randomInt(50, 500), -randomInt(50, 250), 0]
+  return [p1, p2, p3, p1]
 }
 
-const vehicleFactory = new VehicleFactory()
+function makeVehicle (typename) {
+  const vehicleSpec = _getVehicleSpec(typename)
+  const vehicle = _makeModelFromSpec(vehicleSpec)
+  return vehicle
+}
 
-export default class Vehicle {
+export default class Vehicle extends Mover {
   // new Vehicle([[0, 0, 0], [0, 200, 10], [100, 200, 10], [0, 0, 0]], 0.8)
   // For a parked vehicle, use speed = 0, and path[0] and path[1] to specify location and orientation.
-  constructor (path, speed = 1) {
-    this.speed = speed
-    this.path = path || vehicleFactory.randomPath()
-    this.threeComponent = vehicleFactory.makeVehicle(this.path, speed)
-  }
-
-  getRoute () {
-    return this.speed > 0 ? this.path : [this.path[0]]
-  }
-
-  // This makes Vehicle a ThreeOutput plugin.
-  threeComponent () {
-    return this.threeComponent
+  constructor (path, speed = 0.5, typename) {
+    path = path || randomPath()
+    super(path, speed, makeVehicle(typename))
+    this.threeComponent.update = this.update.bind(this)
   }
 }
