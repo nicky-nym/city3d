@@ -49,6 +49,10 @@ function addCreek () {
   city.add(new CITY.Vehicle(creek.creekPath(7), 0.18, 'bicycle'))
 }
 
+function addKalpanaOrbital () {
+  city.add(new CITY.Kalpana())
+}
+
 function addMovers () {
   const randomVehicles = new CITY.Group('random vehicles')
   randomVehicles.add(new CITY.Vehicle())
@@ -68,6 +72,7 @@ const plato = new CITY.Plato(city)
 plato.deleteAllObjects()
 addBuildings()
 addCreek()
+addKalpanaOrbital()
 addMovers()
 const threeOutput = new CITY.ThreeOutput(city)
 threeOutput.envision()
