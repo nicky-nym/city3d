@@ -35,23 +35,39 @@ function hypotenuse (run, rise) {
   return Math.sqrt(run ** 2 + rise ** 2)
 }
 
-function xyz (x, y, z = 0) {
+function xyzArray (x, y, z = 0) {
   return [x, y, z]
 }
 
-function nudge (xyz, { dx = 0, dy = 0, dz = 0, dxyz = [0, 0, 0] } = {}) {
-  const [x, y, z] = xyz
+function xyz (x, y, z = 0) {
+  return { x, y, z }
+}
+
+function nudge (xyzArray, { dx = 0, dy = 0, dz = 0, dxyz = [0, 0, 0] } = {}) {
+  const [x, y, z] = xyzArray
   const [dX, dY, dZ] = dxyz
   return [x + dx + dX, y + dy + dY, z + dz + dZ]
 }
 
-function xy2xyz (xyz, deltaZ = 0) {
+function xy2xyz (xyzArray, deltaZ = 0) {
   const X = 0
   const Y = 1
   const Z = 2
-  // z = xyz[Z] + delta_z if len(xyz) > 2 else delta_z
-  const z = xyz.length > 2 ? xyz[Z] + deltaZ : deltaZ
-  return [xyz[X], xyz[Y], z]
+  // z = xyzArray[Z] + delta_z if len(xyzArray) > 2 else delta_z
+  const z = xyzArray.length > 2 ? xyzArray[Z] + deltaZ : deltaZ
+  return [xyzArray[X], xyzArray[Y], z]
 }
 
-export { xyz, count, countTo, randomInt, randomPsuedoGaussian, nudge, xy2xyz, hypotenuse }
+function array (object) {
+  if (object) {
+    if (Array.isArray(object)) {
+      return object
+    } else {
+      return [object]
+    }
+  } else {
+    return []
+  }
+}
+
+export { xyzArray, xyz, count, countTo, randomInt, randomPsuedoGaussian, nudge, xy2xyz, hypotenuse, array }

@@ -6,10 +6,10 @@
 // This is free and unencumbered software released into the public domain.
 // For more information, please refer to <http://unlicense.org>
 
-import { xyz, countTo, nudge, xy2xyz } from '../city3d/util.js'
+import { xyzArray, countTo, nudge, xy2xyz } from '../city3d/util.js'
 import Facing from '../city3d/facing.js'
 import Place from '../city3d/place.js'
-import { xy, xywh2rect, nudgeXY } from '../city3d/plato.js'
+import { xyArray, xywh2rect, nudgeXY } from '../city3d/plato.js'
 import Structure from '../city3d/structure.js'
 
 const X = 0
@@ -21,56 +21,56 @@ const PARCEL_DY = 50
 const PARCEL_X0_NORTH = -232.72
 const PARCEL_X0_SOUTH = -224.15
 const PARCEL = [
-  xy(PARCEL_X0_SOUTH, 0),
-  xy(PARCEL_X0_NORTH, PARCEL_DY),
-  xy(0, PARCEL_DY),
-  xy(0, 0)]
+  xyArray(PARCEL_X0_SOUTH, 0),
+  xyArray(PARCEL_X0_NORTH, PARCEL_DY),
+  xyArray(0, PARCEL_DY),
+  xyArray(0, 0)]
 
 const FENCE_HEIGHT = 6
 const FENCE_LINE = [
-  xy(-52, 0),
-  xy(PARCEL_X0_SOUTH, 0),
-  xy(PARCEL_X0_NORTH, PARCEL_DY),
-  xy(0, PARCEL_DY)]
+  xyArray(-52, 0),
+  xyArray(PARCEL_X0_SOUTH, 0),
+  xyArray(PARCEL_X0_NORTH, PARCEL_DY),
+  xyArray(0, PARCEL_DY)]
 
 const DRIVEWAY = [
-  xy(-194, 2),
-  xy(-194, 13),
-  xy(-181, 13),
-  xy(-181, 23),
-  xy(-165, 23),
-  xy(-165, 13),
-  xy(-0, 13),
-  xy(-0, 2)]
+  xyArray(-194, 2),
+  xyArray(-194, 13),
+  xyArray(-181, 13),
+  xyArray(-181, 23),
+  xyArray(-165, 23),
+  xyArray(-165, 13),
+  xyArray(-0, 13),
+  xyArray(-0, 2)]
 DRIVEWAY.name = 'driveway'
 
 const DOORPATH = [
-  xy(-15.5, 31.75),
-  xy(-0, 31.75),
-  xy(-0, 26.75),
-  xy(-15.5, 26.75)]
+  xyArray(-15.5, 31.75),
+  xyArray(-0, 31.75),
+  xyArray(-0, 26.75),
+  xyArray(-15.5, 26.75)]
 DOORPATH.name = 'door path'
 
 const GARAGE_HEIGHT = 8
 const GARAGE_SPEC = [
-  [xy(-185, 23), []],
-  [xy(-185, 44), []],
-  [xy(-161, 44), []],
-  [xy(-161, 23), []]]
+  [xyArray(-185, 23), []],
+  [xyArray(-185, 44), []],
+  [xyArray(-161, 44), []],
+  [xyArray(-161, 23), []]]
 const GARAGE = GARAGE_SPEC.map(([point, openings]) => point)
 
 const ADU_SPEC = [
-  [xy(-154, 23), []],
-  [xy(-154, 44), []],
-  [xy(-124, 44), []],
-  [xy(-124, 23), []]]
+  [xyArray(-154, 23), []],
+  [xyArray(-154, 44), []],
+  [xyArray(-124, 44), []],
+  [xyArray(-124, 23), []]]
 const ADU = ADU_SPEC.map(([point, openings]) => point)
 
 const ADU_DOORPATH = [
-  xy(-160, 13),
-  xy(-160, 36),
-  xy(-155, 36),
-  xy(-155, 13)]
+  xyArray(-160, 13),
+  xyArray(-160, 36),
+  xyArray(-155, 36),
+  xyArray(-155, 13)]
 
 // exterior walls (0.5 feet thick), clockwise from the back wall of the house
 const KITCHEN_WINDOWS = [xywh2rect(3.958, 2.583, 5.750, 4.083)]
@@ -89,18 +89,18 @@ const BED_AND_BATH_WINDOWS = [
   xywh2rect(3.875, 2.166, 3.666, 6.250), // bedroom
   xywh2rect(12.708, 4.166, 2.375, 3.083)] // bathroom
 const HOUSE_SPEC = [
-  [xy(-57.792, 44.542), KITCHEN_WINDOWS],
-  [xy(-44.333, 44.542), []],
-  [xy(-44.333, 47), DINING_ROOM_WINDOWS],
-  [xy(-19.375, 47), BAY_WINDOW_NORTHEAST],
-  [xy(-16, 43.65), BAY_WINDOW_EAST],
-  [xy(-16, 36.1), BAY_WINDOW_SOUTHEAST],
-  [xy(-19.375, 32.75), []],
-  [xy(-25.792, 32.75), PORCH_WINDOWS],
-  [xy(-25.792, 14.75), OFFICE_WINDOW],
-  [xy(-41.167, 14.75), []],
-  [xy(-41.167, 16.75), BED_AND_BATH_WINDOWS],
-  [xy(-57.792, 16.75), []]
+  [xyArray(-57.792, 44.542), KITCHEN_WINDOWS],
+  [xyArray(-44.333, 44.542), []],
+  [xyArray(-44.333, 47), DINING_ROOM_WINDOWS],
+  [xyArray(-19.375, 47), BAY_WINDOW_NORTHEAST],
+  [xyArray(-16, 43.65), BAY_WINDOW_EAST],
+  [xyArray(-16, 36.1), BAY_WINDOW_SOUTHEAST],
+  [xyArray(-19.375, 32.75), []],
+  [xyArray(-25.792, 32.75), PORCH_WINDOWS],
+  [xyArray(-25.792, 14.75), OFFICE_WINDOW],
+  [xyArray(-41.167, 14.75), []],
+  [xyArray(-41.167, 16.75), BED_AND_BATH_WINDOWS],
+  [xyArray(-57.792, 16.75), []]
 ]
 const HOUSE = HOUSE_SPEC.map(([point, openings]) => point)
 
@@ -119,10 +119,10 @@ const WEST_WINDOWS = [
   xywh2rect(11.354, 0, 2.666, 6.666), // door
   xywh2rect(18.875, 4.333, 3.750, 2.083)] // kitchen
 const ADDON_SPEC = [
-  [xy(-63.75, 43.625), []],
-  [xy(-57.792, 43.625), []],
-  [xy(-57.792, 17.833), []],
-  [xy(-63.75, 17.833), WEST_WINDOWS]
+  [xyArray(-63.75, 43.625), []],
+  [xyArray(-57.792, 43.625), []],
+  [xyArray(-57.792, 17.833), []],
+  [xyArray(-63.75, 17.833), WEST_WINDOWS]
 ]
 
 const ADDON = ADDON_SPEC.map(([point, openings]) => point)
@@ -139,47 +139,47 @@ const ATTIC = [
   nudgeXY(HOUSE[0], { dx: -1, dy: 1 }),
   nudgeXY(HOUSE[1], { dx: -1, dy: 1 }),
   nudgeXY(HOUSE[2], { dx: -1, dy: 1 }),
-  nudgeXY(xy(HOUSE[4][X], HOUSE[3][Y]), { dx: 1, dy: 1 }),
-  nudgeXY(xy(HOUSE[5][X], HOUSE[6][Y]), { dx: 1, dy: -1 }),
+  nudgeXY(xyArray(HOUSE[4][X], HOUSE[3][Y]), { dx: 1, dy: 1 }),
+  nudgeXY(xyArray(HOUSE[5][X], HOUSE[6][Y]), { dx: 1, dy: -1 }),
   nudgeXY(HOUSE[7], { dx: 1, dy: -1 }),
   nudgeXY(HOUSE[8], { dx: 1, dy: -1 }),
   nudgeXY(HOUSE[9], { dx: -1, dy: -1 }),
   nudgeXY(HOUSE[10], { dx: -1, dy: -1 }),
   nudgeXY(HOUSE[11], { dx: -1, dy: -1 })]
 const PORCH = [
-  xy(-25.792, 32.75),
-  xy(-25.792 + 5.333, 32.75),
-  xy(-25.792 + 5.333, 32.75 - 17.083),
-  xy(-25.792, 32.75 - 17.083)]
+  xyArray(-25.792, 32.75),
+  xyArray(-25.792 + 5.333, 32.75),
+  xyArray(-25.792 + 5.333, 32.75 - 17.083),
+  xyArray(-25.792, 32.75 - 17.083)]
 const NUM_STAIR_STEPS = 5
 const STAIR_X = -25.792 + 5.333 + NUM_STAIR_STEPS
 const STAIR = [
-  xy(STAIR_X, 31.75),
-  xy(STAIR_X + 1, 31.75),
-  xy(STAIR_X + 1, 26.75),
-  xy(STAIR_X, 26.75)]
+  xyArray(STAIR_X, 31.75),
+  xyArray(STAIR_X + 1, 31.75),
+  xyArray(STAIR_X + 1, 26.75),
+  xyArray(STAIR_X, 26.75)]
 
 const D1 = (ATTIC[0][Y] - ATTIC[9][Y]) / 2.0
-const PEAK_BACK = xyz(HOUSE[0][X] + D1, HOUSE[0][Y] - D1, D1)
-const PEAK_BACK_INSET = xyz(ATTIC[5][X] - D1, PEAK_BACK[Y], D1)
+const PEAK_BACK = xyzArray(HOUSE[0][X] + D1, HOUSE[0][Y] - D1, D1)
+const PEAK_BACK_INSET = xyzArray(ATTIC[5][X] - D1, PEAK_BACK[Y], D1)
 
 const D2 = (ATTIC[5][X] - ATTIC[1][X]) / 2.0
-const PEAK_NORTH = xyz(ATTIC[2][X] + D2, ATTIC[2][Y] - D2, D2)
-const PEAK_NORTH_INSET = xyz(PEAK_NORTH[X], PEAK_NORTH[Y] - (ATTIC[2][Y] - ATTIC[1][Y]), D2)
+const PEAK_NORTH = xyzArray(ATTIC[2][X] + D2, ATTIC[2][Y] - D2, D2)
+const PEAK_NORTH_INSET = xyzArray(PEAK_NORTH[X], PEAK_NORTH[Y] - (ATTIC[2][Y] - ATTIC[1][Y]), D2)
 
 const D3 = (ATTIC[6][X] - ATTIC[7][X]) / 2.0
-const PEAK_OFFICE = xyz(ATTIC[7][X] + D3, ATTIC[7][Y] + D3, D3)
-const PEAK_OFFICE_INSET = xyz(PEAK_OFFICE[X], PEAK_OFFICE[Y] + (ATTIC[8][Y] - ATTIC[7][Y]), D3)
+const PEAK_OFFICE = xyzArray(ATTIC[7][X] + D3, ATTIC[7][Y] + D3, D3)
+const PEAK_OFFICE_INSET = xyzArray(PEAK_OFFICE[X], PEAK_OFFICE[Y] + (ATTIC[8][Y] - ATTIC[7][Y]), D3)
 
 const D4 = (ATTIC[3][Y] - ATTIC[4][Y]) / 2.0
-const PEAK_FRONT = xyz(ATTIC[3][X], (ATTIC[3][Y] + ATTIC[4][Y]) / 2.0, D4)
-const PEAK_FRONT_INSET = xyz(ATTIC[5][X] - D4, PEAK_FRONT[Y], D4)
+const PEAK_FRONT = xyzArray(ATTIC[3][X], (ATTIC[3][Y] + ATTIC[4][Y]) / 2.0, D4)
+const PEAK_FRONT_INSET = xyzArray(ATTIC[5][X] - D4, PEAK_FRONT[Y], D4)
 
 // corners of porch roof
 const VERTICES_OF_PORCH_ROOF = []
 VERTICES_OF_PORCH_ROOF[0] = xy2xyz(PORCH[0], 2)
-VERTICES_OF_PORCH_ROOF[1] = xyz(...PORCH[1])
-VERTICES_OF_PORCH_ROOF[2] = xyz(...PORCH[2])
+VERTICES_OF_PORCH_ROOF[1] = xyzArray(...PORCH[1])
+VERTICES_OF_PORCH_ROOF[2] = xyzArray(...PORCH[2])
 VERTICES_OF_PORCH_ROOF[3] = xy2xyz(PORCH[3], 2)
 
 const INDICES_OF_PORCH_ROOF_FACES = [
@@ -189,10 +189,10 @@ const INDICES_OF_PORCH_ROOF_FACES = [
 
 // corners of back addition addon roof
 const VERTICES_OF_ADDON_ROOF = []
-VERTICES_OF_ADDON_ROOF[0] = xyz(...ADDON[0])
+VERTICES_OF_ADDON_ROOF[0] = xyzArray(...ADDON[0])
 VERTICES_OF_ADDON_ROOF[1] = xy2xyz(ADDON[1], 2)
 VERTICES_OF_ADDON_ROOF[2] = xy2xyz(ADDON[2], 2)
-VERTICES_OF_ADDON_ROOF[3] = xyz(...ADDON[3])
+VERTICES_OF_ADDON_ROOF[3] = xyzArray(...ADDON[3])
 
 const INDICES_OF_ADDON_ROOF_FACES = [
   face(0, 1, 2),
@@ -202,7 +202,7 @@ const INDICES_OF_ADDON_ROOF_FACES = [
 // corners of attic roof
 const VERTICES_OF_ROOF = []
 for (const i of countTo(ATTIC.length)) {
-  VERTICES_OF_ROOF[i] = xyz(...ATTIC[i])
+  VERTICES_OF_ROOF[i] = xyzArray(...ATTIC[i])
 }
 VERTICES_OF_ROOF[10] = PEAK_BACK
 VERTICES_OF_ROOF[11] = PEAK_BACK_INSET
@@ -240,12 +240,12 @@ const INDICES_OF_ROOF_FACES = [
 ]
 
 // TODO: determine accurate locations
-const PEAK_DORMER = xyz(ATTIC[5][X] - 1, PEAK_OFFICE_INSET[Y] + 1.5, PEAK_OFFICE_INSET[Z] - 1)
-const PEAK_DORMER_INSET = xyz(ATTIC[5][X] - 7, PEAK_DORMER[Y], PEAK_DORMER[Z])
+const PEAK_DORMER = xyzArray(ATTIC[5][X] - 1, PEAK_OFFICE_INSET[Y] + 1.5, PEAK_OFFICE_INSET[Z] - 1)
+const PEAK_DORMER_INSET = xyzArray(ATTIC[5][X] - 7, PEAK_DORMER[Y], PEAK_DORMER[Z])
 const DORMER_NW = nudge(PEAK_DORMER_INSET, { dx: 2.5, dy: 2.5, dz: -2.5 })
 const DORMER_SW = nudge(PEAK_DORMER_INSET, { dx: 2.5, dy: -2.5, dz: -2.5 })
-const DORMER_NE = xyz(PEAK_DORMER[X], DORMER_NW[Y], DORMER_NW[Z])
-const DORMER_SE = xyz(PEAK_DORMER[X], DORMER_SW[Y], DORMER_SW[Z])
+const DORMER_NE = xyzArray(PEAK_DORMER[X], DORMER_NW[Y], DORMER_NW[Z])
+const DORMER_SE = xyzArray(PEAK_DORMER[X], DORMER_SW[Y], DORMER_SW[Z])
 
 // corners of dormer roof
 const VERTICES_OF_DORMER_ROOF = []
@@ -293,17 +293,17 @@ export default class Cottage extends Structure {
 
     const SIDEWALK_WIDTH = 6
     const SIDEWALK = [
-      xy(0, 0),
-      xy(SIDEWALK_WIDTH, 0),
-      xy(SIDEWALK_WIDTH, STREET_DY),
-      xy(0, STREET_DY)]
+      xyArray(0, 0),
+      xyArray(SIDEWALK_WIDTH, 0),
+      xyArray(SIDEWALK_WIDTH, STREET_DY),
+      xyArray(0, STREET_DY)]
 
     const CURB_HEIGHT = 0.4
     const STREET = [
-      xyz(SIDEWALK_WIDTH, 0, -CURB_HEIGHT),
-      xyz(SIDEWALK_WIDTH, STREET_DY, -CURB_HEIGHT),
-      xyz(SIDEWALK_WIDTH + STREET_DX, STREET_DY, -CURB_HEIGHT),
-      xyz(SIDEWALK_WIDTH + STREET_DX, 0, -CURB_HEIGHT)]
+      xyzArray(SIDEWALK_WIDTH, 0, -CURB_HEIGHT),
+      xyzArray(SIDEWALK_WIDTH, STREET_DY, -CURB_HEIGHT),
+      xyzArray(SIDEWALK_WIDTH + STREET_DX, STREET_DY, -CURB_HEIGHT),
+      xyzArray(SIDEWALK_WIDTH + STREET_DX, 0, -CURB_HEIGHT)]
 
     this._plato.goto({ x: 0, y: 0 })
     this._plato.addPlace(Place.WALKWAY, SIDEWALK)

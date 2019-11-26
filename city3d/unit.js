@@ -7,6 +7,7 @@
 
 const FEET_PER_METER = 3.28084
 const FEET_PER_KILOMETER = 3280.84
+const FEET_PER_FOOT = 1
 
 /**
  * Returns a value in feet when given a value in meters.
@@ -26,7 +27,17 @@ function km (length) {
   return length * FEET_PER_KILOMETER
 }
 
+/**
+ * Returns a value in feet when given a value in feet.
+ * @param {number} length - a measurement in feet
+ * @returns {number} the measurement in feet
+ */
+function feet (length) {
+  return length * FEET_PER_FOOT
+}
+
 export const UNIT = {
   meters,
-  km
+  km,
+  feet
 }

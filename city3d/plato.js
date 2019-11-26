@@ -40,13 +40,13 @@ const COLORS_OF_PLACES = {
   DOOR: YELLOW
 }
 
-function xy (x, y) {
+function xyArray (x, y) {
   return [x, y]
 }
 
 function xywh2rect (y, z, width, height) {
   // [(3, 2), (8, 2), (8, 6), (3, 6)] == yzwh2rect(3, 2, 5, 4)
-  return [xy(y, z), xy(y + width, z), xy(y + width, z + height), xy(y, z + height)]
+  return [xyArray(y, z), xyArray(y + width, z), xyArray(y + width, z + height), xyArray(y, z + height)]
 }
 
 function rotate (xy, facing) {
@@ -86,7 +86,7 @@ function print (str) {
   console.log(str)
 }
 
-export { rotate, xy, nudgeXY, xywh2rect }
+export { rotate, xyArray, nudgeXY, xywh2rect }
 export default class Plato {
   // Plato can envision 3D architectural spaces, with walls, floors, etc.
 

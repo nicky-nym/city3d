@@ -9,7 +9,7 @@
 import { countTo, randomInt } from '../city3d/util.js'
 import Place from '../city3d/place.js'
 import Structure from '../city3d/structure.js'
-import { xy } from '../city3d/plato.js'
+import { xyArray } from '../city3d/plato.js'
 // import { print } from '../city3d/output.js'
 
 // in feet
@@ -30,35 +30,35 @@ const HALF_STREET = 32 / 2
 const HALF_AVENUE = 60 / 2
 
 const BUILDING = [
-  xy(0, 0),
-  xy(BUILDING_DX, 0),
-  xy(BUILDING_DX, BUILDING_DY),
-  xy(0, BUILDING_DY)]
+  xyArray(0, 0),
+  xyArray(BUILDING_DX, 0),
+  xyArray(BUILDING_DX, BUILDING_DY),
+  xyArray(0, BUILDING_DY)]
 const INTERSECTION = [
-  xy(0, 0),
-  xy(HALF_AVENUE, 0),
-  xy(HALF_AVENUE, HALF_STREET),
-  xy(0, HALF_STREET)]
+  xyArray(0, 0),
+  xyArray(HALF_AVENUE, 0),
+  xyArray(HALF_AVENUE, HALF_STREET),
+  xyArray(0, HALF_STREET)]
 const STREET = [
-  xy(0, 0),
-  xy(BLOCK_DX, 0),
-  xy(BLOCK_DX, HALF_STREET),
-  xy(0, HALF_STREET)]
+  xyArray(0, 0),
+  xyArray(BLOCK_DX, 0),
+  xyArray(BLOCK_DX, HALF_STREET),
+  xyArray(0, HALF_STREET)]
 const AVENUE = [
-  xy(0, 0),
-  xy(HALF_AVENUE, 0),
-  xy(HALF_AVENUE, BLOCK_DY),
-  xy(0, BLOCK_DY)]
+  xyArray(0, 0),
+  xyArray(HALF_AVENUE, 0),
+  xyArray(HALF_AVENUE, BLOCK_DY),
+  xyArray(0, BLOCK_DY)]
 const SIDEWALK_FOR_STREET = [
-  xy(0, 0),
-  xy(BLOCK_DX, 0),
-  xy(BLOCK_DX, SIDEWALK_WIDTH_STREETS),
-  xy(0, SIDEWALK_WIDTH_STREETS)]
+  xyArray(0, 0),
+  xyArray(BLOCK_DX, 0),
+  xyArray(BLOCK_DX, SIDEWALK_WIDTH_STREETS),
+  xyArray(0, SIDEWALK_WIDTH_STREETS)]
 const SIDEWALK_FOR_AVENUE = [
-  xy(0, 0),
-  xy(0, BLOCK_DY),
-  xy(SIDEWALK_WIDTH_AVENUES, BLOCK_DY),
-  xy(SIDEWALK_WIDTH_AVENUES, 0)]
+  xyArray(0, 0),
+  xyArray(0, BLOCK_DY),
+  xyArray(SIDEWALK_WIDTH_AVENUES, BLOCK_DY),
+  xyArray(SIDEWALK_WIDTH_AVENUES, 0)]
 const REPEAT_DX = BLOCK_DX + AVENUE_WIDTH + (SIDEWALK_WIDTH_AVENUES * 2)
 const REPEAT_DY = BLOCK_DY + STREET_WIDTH + (SIDEWALK_WIDTH_STREETS * 2)
 

@@ -32,7 +32,7 @@ function addBuildings () {
 
   plato.study('Wurster Hall(s)', { x0: 100, y0: -600 })
   const wurster = new CITY.Wurster(plato)
-  wurster.addBuildings(1)
+  wurster.makeBuilding()
   plato.pontificate()
 }
 
