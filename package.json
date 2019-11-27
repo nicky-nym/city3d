@@ -1,0 +1,26 @@
+{
+  "name": "city3d",
+  "version": "1.0.0",
+  "description": "Lorem Ipsum",
+  "main": "citylib.js",
+  "scripts": {
+    "test": "mocha -r esm"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nicky-nym/city3d.git"
+  },
+  "author": "",
+  "license": "Unlicense",
+  "bugs": {
+    "url": "https://github.com/nicky-nym/city3d/issues"
+  },
+  "homepage": "https://github.com/nicky-nym/city3d#readme",
+  "devDependencies": {
+    "esm": "^3.2.25",
+    "mocha": "^6.2.2"
+  },
+  "dependencies": {
+    "stats.js": "^0.17.0"
+  }
+}

@@ -10,11 +10,7 @@ import { Geometry } from '../city3d/geometry.js'
 import Output from './output.js'
 import * as THREE from '../three/build/three.module.js'
 import { OrbitControls } from '../three/examples/jsm/controls/OrbitControls.js'
-import Stats from 'http://mrdoob.github.io/stats.js/build/stats.module.js'
-
-const stats = new Stats()
-stats.showPanel(0) // 0: fps, 1: ms, 2: mb, 3+: custom
-document.body.appendChild(stats.dom)
+import Stats from '../node_modules/stats.js/src/Stats.js'
 
 function print (str) {
   console.log(str)
@@ -35,6 +31,10 @@ export default class ThreeOutput extends Output {
 
   constructor (city) {
     super(city)
+
+    this.stats = new Stats()
+    this.stats.showPanel(0) // 0: fps, 1: ms, 2: mb, 3+: custom
+    document.body.appendChild(this.stats.dom)
 
     const WIDTH = window.innerWidth
     const HEIGHT = window.innerHeight
@@ -347,7 +347,7 @@ export default class ThreeOutput extends Output {
       }
     }
     this.render()
-    stats.update()
+    this.stats.update()
   }
 
   render () {
