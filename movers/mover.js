@@ -6,7 +6,7 @@
 // This is free and unencumbered software released into the public domain.
 // For more information, please refer to <http://unlicense.org>
 
-import * as THREE from '../three/build/three.module.js'
+import * as THREE from '../node_modules/three/build/three.module.js'
 import { countTo } from '../city3d/util.js'
 
 const UP = new THREE.Vector3(0, 0, 1)
