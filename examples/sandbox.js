@@ -6,7 +6,7 @@
 // This is free and unencumbered software released into the public domain.
 // For more information, please refer to <http://unlicense.org>
 
-import { CITY } from './citylib.js'
+import { CITY } from '../src/citylib.js'
 
 function addBuildings () {
   plato.study('Cottage(s)', { x0: -100, y0: 100 })

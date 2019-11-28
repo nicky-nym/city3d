@@ -5,11 +5,11 @@
   * For more information, please refer to <http://unlicense.org>
   */
 
-import { xy, xyz, countTo, xyzSum } from '../city3d/util.js'
-import Facing from '../city3d/facing.js'
-import Place from '../city3d/place.js'
-import { xywh2rect } from '../city3d/plato.js'
-import Structure from '../city3d/structure.js'
+import { xy, xyz, countTo, xyzSum } from '../core/util.js'
+import Facing from '../core/facing.js'
+import Place from '../architecture/place.js'
+import { xywh2rect } from '../architecture/plato.js'
+import Structure from '../architecture/structure.js'
 
 // in feet
 const PARCEL_DY = 50

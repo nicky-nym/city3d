@@ -6,8 +6,8 @@
 // This is free and unencumbered software released into the public domain.
 // For more information, please refer to <http://unlicense.org>
 
-import { countTo } from '../city3d/util.js'
-import { Geometry } from '../city3d/geometry.js'
+import { countTo } from '../core/util.js'
+import { Geometry } from '../core/geometry.js'
 
 const NUM_SECTIONS = 270
 const SECTION_LENGTH = 20

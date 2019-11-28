@@ -1,5 +1,12 @@
-import { CITY } from '../citylib.js'
-import { Geometry } from '../city3d/geometry.js'
+/** @file test.js
+  * @author Authored in 2019 at <https://github.com/nicky-nym/city3d>
+  * @license UNLICENSE
+  * This is free and unencumbered software released into the public domain.
+  * For more information, please refer to <http://unlicense.org>
+  */
+
+import { CITY } from '../src/citylib.js'
+import { Geometry } from '../src/core/geometry.js'
 
 /* global describe, it */
 

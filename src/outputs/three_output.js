@@ -6,11 +6,11 @@
 // This is free and unencumbered software released into the public domain.
 // For more information, please refer to <http://unlicense.org>
 
-import { Geometry } from '../city3d/geometry.js'
+import { Geometry } from '../core/geometry.js'
 import Output from './output.js'
-import * as THREE from '../node_modules/three/build/three.module.js'
-import { OrbitControls } from '../node_modules/three/examples/jsm/controls/OrbitControls.js'
-import Stats from '../node_modules/stats.js/src/Stats.js'
+import * as THREE from '../../node_modules/three/build/three.module.js'
+import { OrbitControls } from '../../node_modules/three/examples/jsm/controls/OrbitControls.js'
+import Stats from '../../node_modules/stats.js/src/Stats.js'
 
 function print (str) {
   console.log(str)
@@ -89,7 +89,7 @@ export default class ThreeOutput extends Output {
 
     // ground
     const loader = new THREE.TextureLoader()
-    const texture = loader.load('./city3d/textures/metallic-green-glitter-texture.jpg')
+    const texture = loader.load('../src/outputs/textures/metallic-green-glitter-texture.jpg')
     texture.wrapS = texture.wrapT = THREE.RepeatWrapping
     texture.repeat.set(100, 100) // 25, 25)
     texture.anisotropy = 16
@@ -293,7 +293,7 @@ export default class ThreeOutput extends Output {
 
   /**
    * Returns a THREE.Mesh() with a geometry that matches the given spec
-   * @param {Object} triangularPolyhedron - an object like { vertices: [xyz, xyz...], indicesOfFaces: [3, 8, 2...] } 
+   * @param {Object} triangularPolyhedron - an object like { vertices: [xyz, xyz...], indicesOfFaces: [3, 8, 2...] }
    * @param {THREE.Material} material - the material for the new Mesh
    * @returns {THREE.Mesh} an array of integers
    */

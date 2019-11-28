@@ -5,9 +5,9 @@
   * For more information, please refer to <http://unlicense.org>
   */
 
-import { xyz, xyzSum, nudge } from './util.js'
-import Facing from './facing.js'
-import { Geometry } from './geometry.js'
+import { xyz, xyzSum, nudge } from '../core/util.js'
+import Facing from '../core/facing.js'
+import { Geometry } from '../core/geometry.js'
 import Place from './place.js'
 import Sector from './sector.js'
 

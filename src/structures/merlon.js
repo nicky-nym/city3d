@@ -5,11 +5,11 @@
   * For more information, please refer to <http://unlicense.org>
   */
 
-import { xy, xyz, count, countTo, randomInt, hypotenuse } from '../city3d/util.js'
-import Place from '../city3d/place.js'
-import Facing from '../city3d/facing.js'
-import Structure from '../city3d/structure.js'
-import { xywh2rect } from '../city3d/plato.js'
+import { xy, xyz, count, countTo, randomInt, hypotenuse } from '../core/util.js'
+import Place from '../architecture/place.js'
+import Facing from '../core/facing.js'
+import Structure from '../architecture/structure.js'
+import { xywh2rect } from '../architecture/plato.js'
 // import { print } from '../city3d/output.js'
 
 // in feet

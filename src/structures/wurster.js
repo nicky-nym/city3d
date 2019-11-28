@@ -5,10 +5,10 @@
   * For more information, please refer to <http://unlicense.org>
   */
 
-import { UNIT } from '../city3d/unit.js'
-import { countTo, xy, xyz, array } from '../city3d/util.js'
-import Place from '../city3d/place.js'
-import Structure from '../city3d/structure.js'
+import { UNIT } from '../core/unit.js'
+import { countTo, xy, xyz, array } from '../core/util.js'
+import Place from '../architecture/place.js'
+import Structure from '../architecture/structure.js'
 
 function rectangleOfSize (sizeXY) {
   return [

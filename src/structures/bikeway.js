@@ -5,12 +5,12 @@
   * For more information, please refer to <http://unlicense.org>
   */
 
-import { xy, xyzArray, count, countTo, randomInt, hypotenuse } from '../city3d/util.js'
+import { xy, xyzArray, count, countTo, randomInt, hypotenuse } from '../core/util.js'
 import Vehicle from '../movers/vehicle.js'
-import Place from '../city3d/place.js'
-import Facing from '../city3d/facing.js'
-import Structure from '../city3d/structure.js'
-import { xywh2rect, rotateXY } from '../city3d/plato.js'
+import Place from '../architecture/place.js'
+import Facing from '../core/facing.js'
+import Structure from '../architecture/structure.js'
+import { xywh2rect, rotateXY } from '../architecture/plato.js'
 
 // in feet
 const BLOCK_LENGTH = 660

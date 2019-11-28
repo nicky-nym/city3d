@@ -6,8 +6,8 @@
 // This is free and unencumbered software released into the public domain.
 // For more information, please refer to <http://unlicense.org>
 
-import * as THREE from '../node_modules/three/build/three.module.js'
-import { countTo, randomInt } from '../city3d/util.js'
+import * as THREE from '../../node_modules/three/build/three.module.js'
+import { countTo, randomInt } from '../core/util.js'
 import Mover from './mover.js'
 
 const VEHICLE_SPECS = {

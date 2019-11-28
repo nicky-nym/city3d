@@ -5,10 +5,9 @@
   * For more information, please refer to <http://unlicense.org>
   */
 
-import { xy, countTo, randomInt } from '../city3d/util.js'
-import Place from '../city3d/place.js'
-import Structure from '../city3d/structure.js'
-// import { print } from '../city3d/output.js'
+import { xy, countTo, randomInt } from '../core/util.js'
+import Place from '../architecture/place.js'
+import Structure from '../architecture/structure.js'
 
 // in feet
 const BLOCK_DX = 600

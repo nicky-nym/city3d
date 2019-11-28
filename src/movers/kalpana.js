@@ -5,9 +5,9 @@
   * For more information, please refer to <http://unlicense.org>
   */
 
-import * as THREE from '../node_modules/three/build/three.module.js'
+import * as THREE from '../../node_modules/three/build/three.module.js'
 import Mover from './mover.js'
-import { UNIT } from '../city3d/unit.js'
+import { UNIT } from '../core/unit.js'
 
 /**
  * Class representing a Kalpana One orbital station.
