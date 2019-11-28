@@ -5,7 +5,7 @@
   * For more information, please refer to <http://unlicense.org>
   */
 
-import { nudge } from './util.js'
+import { xyz, xyzSum, nudge } from './util.js'
 import Facing from './facing.js'
 import { Geometry } from './geometry.js'
 import Place from './place.js'
@@ -123,9 +123,7 @@ class Plato {
    * Sets plato's initial state.
    */
   constructor (city, hurry = false) {
-    this._x = 0
-    this._y = 0
-    this._z = 0
+    this._xyz = xyz(0, 0, 0)
     this._facing = Facing.NORTH
     this.hurry(hurry)
     this.study()
@@ -135,7 +133,8 @@ class Plato {
   }
 
   addPath (place, relPath) {
-    const dxyz = [this._x, this._y, this._z]
+    // const dxyz = [this._x, this._y, this._z]
+    const dxyz = [this._xyz.x, this._xyz.y, this._xyz.z]
     const path = []
     for (const segment of relPath) {
       const [x, y, z] = segment
@@ -166,9 +165,9 @@ class Plato {
   }
 
   goto ({ x = 0, y = 0, z = 0, facing = Facing.NORTH } = {}) {
-    this._x = this._x0 + x
-    this._y = this._y0 + y
-    this._z = z
+    this._xyz.x = this._x0 + x
+    this._xyz.y = this._y0 + y
+    this._xyz.z = z
     this._facing = facing
     return this
   }
@@ -179,14 +178,12 @@ class Plato {
   }
 
   makePlace (place, corners, { z = 0, incline = 0, depth = -0.5, nuance = false, flip = false, cap = true, wall = 0, openings = [] } = {}) {
-    z = z + this._z
+    z = z + this._xyz.z
     const group = this._city.makeGroup(`${Place[place]}${corners.name ? ` (${corners.name})` : ''}`)
     const xyPolygon = new Geometry.XYPolygon()
     for (let xy of corners) {
       xy = rotateXY(xy, this._facing)
-      // const dxy = [this._x, this._y]
-      // xy = nudgeXY(xy, { dxy: dxy })
-      xy = { x: xy.x + this._x, y: xy.y + this._y }
+      xy = { x: xy.x + this._xyz.x, y: xy.y + this._xyz.y }
       xyPolygon.push(xy)
     }
     if (cap) {
@@ -222,10 +219,9 @@ class Plato {
     }
   }
 
-  addRoof (place, verticesOfRoof, indicesOfFaces, name) {
+  makeRoof (place, verticesOfRoof, indicesOfFaces, name) {
     const color = COLORS_OF_PLACES[place]
-    const dxyz = [this._x, this._y, this._z]
-    const vertices = verticesOfRoof.map(xyz => nudge(xyz, { dxyz: dxyz }))
+    const vertices = verticesOfRoof.map(xyz => xyzSum(xyz, this._xyz))
     const abstractRoof = new Geometry.TriangularPolyhedron(vertices, indicesOfFaces)
     const concreteRoof = new Geometry.Instance(abstractRoof, 0, color, name || 'roof')
     this._sector.add(concreteRoof)

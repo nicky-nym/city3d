@@ -291,9 +291,15 @@ export default class ThreeOutput extends Output {
     return mesh
   }
 
+  /**
+   * Returns a THREE.Mesh() with a geometry that matches the given spec
+   * @param {Object} triangularPolyhedron - an object like { vertices: [xyz, xyz...], indicesOfFaces: [3, 8, 2...] } 
+   * @param {THREE.Material} material - the material for the new Mesh
+   * @returns {THREE.Mesh} an array of integers
+   */
   makeTriangularPolyhedronMesh (triangularPolyhedron, material) {
     const geometry = new THREE.Geometry()
-    geometry.vertices = triangularPolyhedron.vertices.map(xyz => new THREE.Vector3(...xyz))
+    geometry.vertices = triangularPolyhedron.vertices.map(xyz => new THREE.Vector3(xyz.x, xyz.y, xyz.z))
     geometry.faces = triangularPolyhedron.indicesOfFaces.map(abc => new THREE.Face3(...abc))
     geometry.computeBoundingSphere()
     geometry.computeFaceNormals()

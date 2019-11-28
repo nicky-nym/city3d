@@ -5,15 +5,11 @@
   * For more information, please refer to <http://unlicense.org>
   */
 
-import { xy, xyzArray, countTo, nudge } from '../city3d/util.js'
+import { xy, xyz, countTo, xyzSum } from '../city3d/util.js'
 import Facing from '../city3d/facing.js'
 import Place from '../city3d/place.js'
 import { xywh2rect } from '../city3d/plato.js'
 import Structure from '../city3d/structure.js'
-
-const X = 0
-const Y = 1
-const Z = 2
 
 // in feet
 const PARCEL_DY = 50
@@ -162,30 +158,30 @@ const STAIR = [
   xy(STAIR_X, 26.75)]
 
 const D1 = (ATTIC[0].y - ATTIC[9].y) / 2.0
-const PEAK_BACK = xyzArray(HOUSE[0].x + D1, HOUSE[0].y - D1, D1)
-const PEAK_BACK_INSET = xyzArray(ATTIC[5].x - D1, PEAK_BACK[Y], D1)
+const PEAK_BACK = xyz(HOUSE[0].x + D1, HOUSE[0].y - D1, D1)
+const PEAK_BACK_INSET = xyz(ATTIC[5].x - D1, PEAK_BACK.y, D1)
 
 const D2 = (ATTIC[5].x - ATTIC[1].x) / 2.0
-const PEAK_NORTH = xyzArray(ATTIC[2].x + D2, ATTIC[2].y - D2, D2)
-const PEAK_NORTH_INSET = xyzArray(PEAK_NORTH[X], PEAK_NORTH[Y] - (ATTIC[2].y - ATTIC[1].y), D2)
+const PEAK_NORTH = xyz(ATTIC[2].x + D2, ATTIC[2].y - D2, D2)
+const PEAK_NORTH_INSET = xyz(PEAK_NORTH.x, PEAK_NORTH.y - (ATTIC[2].y - ATTIC[1].y), D2)
 
 const D3 = (ATTIC[6].x - ATTIC[7].x) / 2.0
-const PEAK_OFFICE = xyzArray(ATTIC[7].x + D3, ATTIC[7].y + D3, D3)
-const PEAK_OFFICE_INSET = xyzArray(PEAK_OFFICE[X], PEAK_OFFICE[Y] + (ATTIC[8].y - ATTIC[7].y), D3)
+const PEAK_OFFICE = xyz(ATTIC[7].x + D3, ATTIC[7].y + D3, D3)
+const PEAK_OFFICE_INSET = xyz(PEAK_OFFICE.x, PEAK_OFFICE.y + (ATTIC[8].y - ATTIC[7].y), D3)
 
 const D4 = (ATTIC[3].y - ATTIC[4].y) / 2.0
-const PEAK_FRONT = xyzArray(ATTIC[3].x, (ATTIC[3].y + ATTIC[4].y) / 2.0, D4)
-const PEAK_FRONT_INSET = xyzArray(ATTIC[5].x - D4, PEAK_FRONT[Y], D4)
+const PEAK_FRONT = xyz(ATTIC[3].x, (ATTIC[3].y + ATTIC[4].y) / 2.0, D4)
+const PEAK_FRONT_INSET = xyz(ATTIC[5].x - D4, PEAK_FRONT.y, D4)
 
-function xy2xyzArray (xy, z) {
-  return [xy.x, xy.y, z]
+function xy2xyz (xy, z) {
+  return { x: xy.x, y: xy.y, z: z }
 }
 // corners of porch roof
 const VERTICES_OF_PORCH_ROOF = []
-VERTICES_OF_PORCH_ROOF[0] = xy2xyzArray(PORCH[0], 2)
-VERTICES_OF_PORCH_ROOF[1] = xyzArray(PORCH[1].x, PORCH[1].y)
-VERTICES_OF_PORCH_ROOF[2] = xyzArray(PORCH[2].x, PORCH[2].y)
-VERTICES_OF_PORCH_ROOF[3] = xy2xyzArray(PORCH[3], 2)
+VERTICES_OF_PORCH_ROOF[0] = xy2xyz(PORCH[0], 2)
+VERTICES_OF_PORCH_ROOF[1] = xy2xyz(PORCH[1], 0)
+VERTICES_OF_PORCH_ROOF[2] = xy2xyz(PORCH[2], 0)
+VERTICES_OF_PORCH_ROOF[3] = xy2xyz(PORCH[3], 2)
 
 const INDICES_OF_PORCH_ROOF_FACES = [
   face(0, 1, 2),
@@ -194,10 +190,10 @@ const INDICES_OF_PORCH_ROOF_FACES = [
 
 // corners of back addition addon roof
 const VERTICES_OF_ADDON_ROOF = []
-VERTICES_OF_ADDON_ROOF[0] = xyzArray(ADDON[0].x, ADDON[0].y)
-VERTICES_OF_ADDON_ROOF[1] = xy2xyzArray(ADDON[1], 2)
-VERTICES_OF_ADDON_ROOF[2] = xy2xyzArray(ADDON[2], 2)
-VERTICES_OF_ADDON_ROOF[3] = xyzArray(ADDON[3].x, ADDON[3].y)
+VERTICES_OF_ADDON_ROOF[0] = xy2xyz(ADDON[0], 0)
+VERTICES_OF_ADDON_ROOF[1] = xy2xyz(ADDON[1], 2)
+VERTICES_OF_ADDON_ROOF[2] = xy2xyz(ADDON[2], 2)
+VERTICES_OF_ADDON_ROOF[3] = xy2xyz(ADDON[3], 0)
 
 const INDICES_OF_ADDON_ROOF_FACES = [
   face(0, 1, 2),
@@ -207,7 +203,7 @@ const INDICES_OF_ADDON_ROOF_FACES = [
 // corners of attic roof
 const VERTICES_OF_ROOF = []
 for (const i of countTo(ATTIC.length)) {
-  VERTICES_OF_ROOF[i] = xyzArray(ATTIC[i].x, ATTIC[i].y)
+  VERTICES_OF_ROOF[i] = xy2xyz(ATTIC[i], 0)
 }
 VERTICES_OF_ROOF[10] = PEAK_BACK
 VERTICES_OF_ROOF[11] = PEAK_BACK_INSET
@@ -245,12 +241,12 @@ const INDICES_OF_ROOF_FACES = [
 ]
 
 // TODO: determine accurate locations
-const PEAK_DORMER = xyzArray(ATTIC[5].x - 1, PEAK_OFFICE_INSET[Y] + 1.5, PEAK_OFFICE_INSET[Z] - 1)
-const PEAK_DORMER_INSET = xyzArray(ATTIC[5].x - 7, PEAK_DORMER[Y], PEAK_DORMER[Z])
-const DORMER_NW = nudge(PEAK_DORMER_INSET, { dx: 2.5, dy: 2.5, dz: -2.5 })
-const DORMER_SW = nudge(PEAK_DORMER_INSET, { dx: 2.5, dy: -2.5, dz: -2.5 })
-const DORMER_NE = xyzArray(PEAK_DORMER[X], DORMER_NW[Y], DORMER_NW[Z])
-const DORMER_SE = xyzArray(PEAK_DORMER[X], DORMER_SW[Y], DORMER_SW[Z])
+const PEAK_DORMER = xyz(ATTIC[5].x - 1, PEAK_OFFICE_INSET.y + 1.5, PEAK_OFFICE_INSET.z - 1)
+const PEAK_DORMER_INSET = xyz(ATTIC[5].x - 7, PEAK_DORMER.y, PEAK_DORMER.z)
+const DORMER_NW = xyzSum(PEAK_DORMER_INSET, xyz(2.5, 2.5, -2.5))
+const DORMER_SW = xyzSum(PEAK_DORMER_INSET, xyz(2.5, -2.5, -2.5))
+const DORMER_NE = xyz(PEAK_DORMER.x, DORMER_NW.y, DORMER_NW.z)
+const DORMER_SE = xyz(PEAK_DORMER.x, DORMER_SW.y, DORMER_SW.z)
 
 // corners of dormer roof
 const VERTICES_OF_DORMER_ROOF = []
@@ -269,12 +265,12 @@ const INDICES_OF_DORMER_ROOF_FACES = [
 ]
 
 const CHIMNEY_HEIGHT = 16
-const CHIMNEY_XYZ = nudge(PEAK_BACK, { dx: -1.5, dy: 3, dz: -PEAK_BACK[Z] })
+const CHIMNEY_XYZ = xyzSum(PEAK_BACK, xyz(-1.5, 3, -PEAK_BACK.z))
 const CHIMNEY = [
   CHIMNEY_XYZ,
-  nudge(CHIMNEY_XYZ, { dx: 0.0, dy: 2.95 }),
-  nudge(CHIMNEY_XYZ, { dx: 2.1, dy: 2.95 }),
-  nudge(CHIMNEY_XYZ, { dx: 2.1, dy: 0.00 })
+  xyzSum(CHIMNEY_XYZ, xyz(0.0, 2.95, 0)),
+  xyzSum(CHIMNEY_XYZ, xyz(2.1, 2.95, 0)),
+  xyzSum(CHIMNEY_XYZ, xyz(2.1, 0.00, 0))
 ]
 
 const CRAWL_SPACE_HEIGHT = 4
@@ -374,14 +370,14 @@ export default class Cottage extends Structure {
     plato.goto({ x: x, y: y, z: ATTIC_ELEVATION, facing: facing })
     plato.makePlace(Place.BARE, CHIMNEY, { height: CHIMNEY_HEIGHT, nuance: true })
     plato.makePlace(Place.BARE, ATTIC)
-    plato.addRoof(Place.ROOF, VERTICES_OF_ROOF, INDICES_OF_ROOF_FACES)
-    plato.addRoof(Place.ROOF, VERTICES_OF_DORMER_ROOF, INDICES_OF_DORMER_ROOF_FACES)
+    plato.makeRoof(Place.ROOF, VERTICES_OF_ROOF, INDICES_OF_ROOF_FACES)
+    plato.makeRoof(Place.ROOF, VERTICES_OF_DORMER_ROOF, INDICES_OF_DORMER_ROOF_FACES)
 
     // Porch roofs
     const PORCH_TOP_ELEVATION = ADDON_HEIGHT + CRAWL_SPACE_HEIGHT
     plato.goto({ x: x, y: y, z: PORCH_TOP_ELEVATION, facing: facing })
-    plato.addRoof(Place.ROOF, VERTICES_OF_PORCH_ROOF, INDICES_OF_PORCH_ROOF_FACES)
-    plato.addRoof(Place.ROOF, VERTICES_OF_ADDON_ROOF, INDICES_OF_ADDON_ROOF_FACES)
+    plato.makeRoof(Place.ROOF, VERTICES_OF_PORCH_ROOF, INDICES_OF_PORCH_ROOF_FACES)
+    plato.makeRoof(Place.ROOF, VERTICES_OF_ADDON_ROOF, INDICES_OF_ADDON_ROOF_FACES)
 
     return this
   }

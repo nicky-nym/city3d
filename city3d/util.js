@@ -73,6 +73,10 @@ function xyz (x, y, z = 0) {
   return { x, y, z }
 }
 
+function xyzSum (xyz0, xyz1) {
+  return { x: xyz0.x + xyz1.x, y: xyz0.y + xyz1.y, z: xyz0.z + xyz1.z }
+}
+
 /**
  * @deprecated use ??? instead
  */
@@ -80,18 +84,6 @@ function nudge (xyzArray, { dx = 0, dy = 0, dz = 0, dxyz = [0, 0, 0] } = {}) {
   const [x, y, z] = xyzArray
   const [dX, dY, dZ] = dxyz
   return [x + dx + dX, y + dy + dY, z + dz + dZ]
-}
-
-/**
- * @deprecated use ??? instead
- */
-function xy2xyz (xyzArray, deltaZ = 0) {
-  const X = 0
-  const Y = 1
-  const Z = 2
-  // z = xyzArray[Z] + delta_z if len(xyzArray) > 2 else delta_z
-  const z = xyzArray.length > 2 ? xyzArray[Z] + deltaZ : deltaZ
-  return [xyzArray[X], xyzArray[Y], z]
 }
 
 /**
@@ -111,4 +103,4 @@ function array (object) {
   }
 }
 
-export { xy, xyz, xyzArray, count, countTo, randomInt, randomPsuedoGaussian, nudge, xy2xyz, hypotenuse, array }
+export { xy, xyz, xyzSum, xyzArray, count, countTo, randomInt, randomPsuedoGaussian, nudge, hypotenuse, array }

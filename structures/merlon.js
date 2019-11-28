@@ -5,7 +5,7 @@
   * For more information, please refer to <http://unlicense.org>
   */
 
-import { xy, xyzArray, count, countTo, randomInt, hypotenuse } from '../city3d/util.js'
+import { xy, xyz, count, countTo, randomInt, hypotenuse } from '../city3d/util.js'
 import Place from '../city3d/place.js'
 import Facing from '../city3d/facing.js'
 import Structure from '../city3d/structure.js'
@@ -272,12 +272,12 @@ function _addRoofAroundFloor (plato, shape, peakXyz) {
       const next = i + 1 < shape.length ? i + 1 : 0
       i++
       const vertices = [
-        [corner.x, corner.y, 0],
-        [shape[next].x, shape[next].y, 0],
+        xyz(corner.x, corner.y, 0),
+        xyz(shape[next].x, shape[next].y, 0),
         peakXyz
       ]
       const indices = [[0, 1, 2]]
-      plato.addRoof(Place.ROOF, vertices, indices)
+      plato.makeRoof(Place.ROOF, vertices, indices)
     }
   }
 }
@@ -320,7 +320,7 @@ function _addFeaturesAtLanding (plato, rampBearings, at, buildings = true) {
 
       // roof
       const midpoint = (APARTMENT_WIDTH + D2) / 2
-      const peak = xyzArray(midpoint, midpoint, randomInt(0, 4) * 7)
+      const peak = xyz(midpoint, midpoint, randomInt(0, 4) * 7)
       plato.goto({ x: x, y: y, z: ROOFLINE, facing: bearing })
       _addRoofAroundFloor(plato, ATTIC, peak)
     }
