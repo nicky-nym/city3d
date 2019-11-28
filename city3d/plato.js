@@ -292,4 +292,4 @@ class Plato {
   }
 }
 
-export { Plato, xyArray, rotate, nudgeXY, xywh2rect }
+export { Plato, xyArray, rotate, rotateXY, nudgeXY, xywh2rect }
