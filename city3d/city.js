@@ -1,17 +1,17 @@
-// city.js
-//
-// Authored in 2019 at <https://github.com/nicky-nym/city3d>
-
-// UNLICENSE
-// This is free and unencumbered software released into the public domain.
-// For more information, please refer to <http://unlicense.org>
+/** @file city.js
+  * @author Authored in 2019 at <https://github.com/nicky-nym/city3d>
+  * @license UNLICENSE
+  * This is free and unencumbered software released into the public domain.
+  * For more information, please refer to <http://unlicense.org>
+  */
 
 import Sector from './sector.js'
 import Vehicle from '../movers/vehicle.js'
 
+/**
+ * City is a class for representing a hierarchical collection of 3D places.
+ */
 class City {
-  // City is a class for representing a hierarchical collection of 3D places.
-
   constructor (name) {
     this.name = name
     this.children = []

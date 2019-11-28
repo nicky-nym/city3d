@@ -1,10 +1,9 @@
-// plato.js
-//
-// Authored in 2019 at <https://github.com/nicky-nym/city3d>
-
-// UNLICENSE
-// This is free and unencumbered software released into the public domain.
-// For more information, please refer to <http://unlicense.org>
+/** @file plato.js
+  * @author Authored in 2019 at <https://github.com/nicky-nym/city3d>
+  * @license UNLICENSE
+  * This is free and unencumbered software released into the public domain.
+  * For more information, please refer to <http://unlicense.org>
+  */
 
 import { nudge } from './util.js'
 import Facing from './facing.js'
@@ -40,15 +39,24 @@ const COLORS_OF_PLACES = {
   DOOR: YELLOW
 }
 
+/**
+ * @deprecated use util.js xy() instead
+ */
 function xyArray (x, y) {
   return [x, y]
 }
 
+/**
+ * @deprecated use ??? instead
+ */
 function xywh2rect (y, z, width, height) {
   // [(3, 2), (8, 2), (8, 6), (3, 6)] == yzwh2rect(3, 2, 5, 4)
   return [xyArray(y, z), xyArray(y + width, z), xyArray(y + width, z + height), xyArray(y, z + height)]
 }
 
+/**
+ * @deprecated use ??? instead
+ */
 function rotate (xy, facing) {
   const [x, y] = xy
   switch (facing) {
@@ -76,6 +84,9 @@ function rotate (xy, facing) {
   throw new Error('bad compass facing in plato.rotate(): ' + facing.value.toString())
 }
 
+/**
+ * @deprecated use ??? instead
+ */
 function nudgeXY (xy, { dx = 0, dy = 0, dxy = [0, 0] } = {}) {
   const [x, y] = xy
   const [dX, dY] = dxy
@@ -86,12 +97,14 @@ function print (str) {
   console.log(str)
 }
 
-export { rotate, xyArray, nudgeXY, xywh2rect }
-export default class Plato {
-  // Plato can envision 3D architectural spaces, with walls, floors, etc.
-
+/**
+ * Plato can envision 3D architectural spaces, with walls, floors, etc.
+ */
+class Plato {
+  /**
+   * Sets plato's initial state.
+   */
   constructor (city, hurry = false) {
-    // Sets plato's initial mental state.
     this._x = 0
     this._y = 0
     this._z = 0
@@ -222,3 +235,5 @@ export default class Plato {
     return this
   }
 }
+
+export { Plato, xyArray, rotate, nudgeXY, xywh2rect }
