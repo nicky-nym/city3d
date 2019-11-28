@@ -8,8 +8,8 @@
 
 import { Geometry } from '../city3d/geometry.js'
 import Output from './output.js'
-import * as THREE from '../three/build/three.module.js'
-import { OrbitControls } from '../three/examples/jsm/controls/OrbitControls.js'
+import * as THREE from '../node_modules/three/build/three.module.js'
+import { OrbitControls } from '../node_modules/three/examples/jsm/controls/OrbitControls.js'
 import Stats from '../node_modules/stats.js/src/Stats.js'
 
 function print (str) {
