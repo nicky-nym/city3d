@@ -216,7 +216,7 @@ class Plato {
   /**
    * @deprecated use makePlace() instead
    */
-  addPlace (place, area, { z = 0, incline = 0, depth = -0.5, nuance = false, flip = false, cap = true, wall = 0, openings = [] } = {}) {
+  addPlace (place, area, { name = '', z = 0, incline = 0, depth = -0.5, nuance = false, flip = false, cap = true, wall = 0, openings = [] } = {}) {
     // print(`plato: adding ${place} with cap = ${cap}, wall = ${wall}`)
     z = z + this._z
     const group = this._city.makeGroup(`${Place[place]}${area.name ? ` (${area.name})` : ''}`)
