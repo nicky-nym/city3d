@@ -54,8 +54,35 @@ function xywh2rect (y, z, width, height) {
   return [xyArray(y, z), xyArray(y + width, z), xyArray(y + width, z + height), xyArray(y, z + height)]
 }
 
+function rotateXY (xy, facing) {
+  const { x, y } = xy
+  switch (facing) {
+    case Facing.NORTH:
+      return { x, y }
+    case Facing.SOUTH:
+      return { x: -x, y: -y }
+    case Facing.EAST:
+      return { x: y, y: -x }
+    case Facing.WEST:
+      return { x: -y, y: x }
+  }
+  const SIN45 = 0.707
+  const COS45 = 0.707
+  switch (facing) {
+    case Facing.NORTHEAST:
+      return { x: x * COS45 - y * SIN45, y: x * COS45 + y * SIN45 }
+    case Facing.SOUTHEAST:
+      throw new Error('not implemented')
+    case Facing.SOUTHWEST:
+      throw new Error('not implemented')
+    case Facing.NORTHWEST:
+      throw new Error('not implemented')
+  }
+  throw new Error('bad compass facing in plato.rotate(): ' + facing.value.toString())
+}
+
 /**
- * @deprecated use ??? instead
+ * @deprecated use rotateXY instead
  */
 function rotate (xy, facing) {
   const [x, y] = xy
@@ -160,6 +187,35 @@ class Plato {
     this._city.deleteAllObjects()
   }
 
+  makePlace (place, corners, { z = 0, incline = 0, depth = -0.5, nuance = false, flip = false, cap = true, wall = 0, openings = [] } = {}) {
+    z = z + this._z
+    const group = this._city.makeGroup(`${Place[place]}${corners.name ? ` (${corners.name})` : ''}`)
+    const xyPolygon = new Geometry.XYPolygon()
+    for (let xy of corners) {
+      xy = rotateXY(xy, this._facing)
+      // const dxy = [this._x, this._y]
+      // xy = nudgeXY(xy, { dxy: dxy })
+      xy = { x: xy.x + this._x, y: xy.y + this._y }
+      xyPolygon.push(xy)
+    }
+    if (cap) {
+      const color = COLORS_OF_PLACES[place]
+      const abstractThickPolygon = new Geometry.ThickPolygon(xyPolygon, { incline: incline, depth: depth })
+      const concreteThickPolygon = new Geometry.Instance(abstractThickPolygon, z, color)
+      group.add(concreteThickPolygon)
+      const squareFeet = xyPolygon.area()
+      this._squareFeet[place] = squareFeet + (this._squareFeet[place] || 0)
+    }
+    if (wall !== 0) {
+      this.addWalls(group, xyPolygon, wall, z, openings, cap)
+    }
+    this._sector.add(group)
+    return this
+  }
+
+  /**
+   * @deprecated use makePlace() instead
+   */
   addPlace (place, area, { z = 0, incline = 0, depth = -0.5, nuance = false, flip = false, cap = true, wall = 0, openings = [] } = {}) {
     // print(`plato: adding ${place} with cap = ${cap}, wall = ${wall}`)
     z = z + this._z

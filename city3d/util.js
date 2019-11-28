@@ -18,7 +18,7 @@ function count (from, to, by = 1) {
 }
 
 /**
- * Returns an array of integers, from 0 up to the given value 
+ * Returns an array of integers, from 0 up to the given value
  * @param {number} to - the last number in the array
  * @returns {number[]} an array of integers
  */
@@ -27,7 +27,7 @@ function countTo (to) {
 }
 
 /**
- * Returns a random integer between min and max, inclusive 
+ * Returns a random integer between min and max, inclusive
  * @returns {number} a random integer
  */
 function randomInt (min, max) {

@@ -6,201 +6,159 @@
   */
 
 import { UNIT } from '../city3d/unit.js'
-import { countTo, xyz, array } from '../city3d/util.js'
+import { countTo, xy, xyz, array } from '../city3d/util.js'
 import Place from '../city3d/place.js'
-import { xyArray } from '../city3d/plato.js'
 import Structure from '../city3d/structure.js'
 
-const NUM_TOWER_CRENELS_X = 12 // eslint-disable-line no-unused-vars
-const CRENEL_SPACING = UNIT.feet(9.333) // eslint-disable-line no-unused-vars
+function rectangleOfSize (sizeXY) {
+  return [
+    xy(0, 0),
+    xy(sizeXY.x, 0),
+    xy(sizeXY.x, sizeXY.y),
+    xy(0, sizeXY.y)
+  ]
+}
 
-const AWNING_SEPERATOR_DEPTH = UNIT.feet(2.5) // eslint-disable-line no-unused-vars
-const AWNING_DEPTH = UNIT.feet(5) // eslint-disable-line no-unused-vars
-const AWNING_LENGTH = UNIT.feet(9) // eslint-disable-line no-unused-vars
+const STORY_HEIGHT = UNIT.feet(13)
 
-const SOUTH_WING_DX = 170
-const SOUTH_WING_DY = 85
-const SOUTH_WING_X0 = 100
-const SOUTH_WING_Y0 = 140
+const SOUTH_WING = {
+  AT: xy(100, 140),
+  SIZE: xy(170, 85)
+}
 
-const SOUTH_WING = [
-  xyArray(0, 0),
-  xyArray(SOUTH_WING_DX, 0),
-  xyArray(SOUTH_WING_DX, SOUTH_WING_DY),
-  xyArray(0, SOUTH_WING_DY)
-]
+const CENTER_WING = {
+  AT: xy(SOUTH_WING.AT.x, SOUTH_WING.AT.y + SOUTH_WING.SIZE.y),
+  SIZE: xy(53, 116)
+}
 
-const CENTER_WING_DX = 53
-const CENTER_WING_DY = 116
-const CENTER_WING_X0 = SOUTH_WING_X0
-const CENTER_WING_Y0 = SOUTH_WING_Y0 + SOUTH_WING_DY
+const TOWER = {
+  AT: xy(CENTER_WING.AT.x + CENTER_WING.SIZE.x, CENTER_WING.AT.y + CENTER_WING.SIZE.y),
+  SIZE: xy(110, 70)
+}
 
-const CENTER_WING = [
-  xyArray(0, 0),
-  xyArray(CENTER_WING_DX, 0),
-  xyArray(CENTER_WING_DX, CENTER_WING_DY),
-  xyArray(0, CENTER_WING_DY)
-]
+const TOWER_EAST = {
+  AT: xy(TOWER.AT.x + TOWER.SIZE.x, TOWER.AT.y + 5),
+  SIZE: xy(29, 56)
+}
 
-const NUM_SOUTH_WING_CRENELS_X = 18 // eslint-disable-line no-unused-vars
-const NUM_SOUTH_WING_CRENELS_Y = 9 // eslint-disable-line no-unused-vars
-
-const TOWER_DX = 110
-const TOWER_DY = 70
-const TOWER_X0 = CENTER_WING_X0 + CENTER_WING_DX
-const TOWER_Y0 = CENTER_WING_Y0 + CENTER_WING_DY
-
-const TOWER = [
-  xyArray(0, 0),
-  xyArray(TOWER_DX, 0),
-  xyArray(TOWER_DX, TOWER_DY),
-  xyArray(0, TOWER_DY)
-]
-
-const TOWER_EAST_DX = 29
-const TOWER_EAST_DY = 56
-const TOWER_EAST_X0 = TOWER_X0 + TOWER_DX
-const TOWER_EAST_Y0 = TOWER_Y0 + 5
-
-const TOWER_EAST = [
-  xyArray(0, 0),
-  xyArray(TOWER_EAST_DX, 0),
-  xyArray(TOWER_EAST_DX, TOWER_EAST_DY),
-  xyArray(0, TOWER_EAST_DY)
-]
-
-const TOWER_WEST_DX = 29
-const TOWER_WEST_DY = 44
 const TOWER_WEST_OFFSET_Y = 17
-const TOWER_WEST_X0 = TOWER_X0 - TOWER_EAST_DX
-const TOWER_WEST_Y0 = TOWER_Y0 + TOWER_WEST_OFFSET_Y
+const TOWER_WEST = {
+  AT: xy(TOWER.AT.x - TOWER_EAST.SIZE.x, TOWER.AT.y + TOWER_WEST_OFFSET_Y),
+  SIZE: xy(29, 44)
+}
 
-const TOWER_WEST = [
-  xyArray(0, 0),
-  xyArray(TOWER_WEST_DX, 0),
-  xyArray(TOWER_WEST_DX, TOWER_WEST_DY),
-  xyArray(0, TOWER_WEST_DY)
-]
+const FLOOR_TEN_BALCONY = {
+  AT: xyz(TOWER_WEST.AT.x - 10, TOWER_WEST.AT.y, 10 * STORY_HEIGHT),
+  SIZE: xy(10, 23)
+}
 
-const ATRIUM_DX = 22
-const ATRIUM_DY = 46
 const ATRIUM_OFFSET_Y = -7
-// const ATRIUM_X0 = TOWER_WEST_X0 - ATRIUM_DX
-// const ATRIUM_Y0 = TOWER_WEST_Y0 + ATRIUM_OFFSET_Y
-
-const NORTH_WING_DX = 227
-const NORTH_WING_DY = 113
-const NORTH_WING_X0 = SOUTH_WING_X0 - (NORTH_WING_DX - TOWER_DX - CENTER_WING_DX)
-const NORTH_WING_Y0 = TOWER_Y0
-
-const NORTH_WING = [
-  xyArray(0, 0),
-  xyArray(NORTH_WING_DX - TOWER_DX, 0),
-  xyArray(NORTH_WING_DX - TOWER_DX, TOWER_WEST_OFFSET_Y),
-  xyArray(NORTH_WING_DX - TOWER_DX - TOWER_WEST_DX, TOWER_WEST_OFFSET_Y),
-  xyArray(NORTH_WING_DX - TOWER_DX - TOWER_WEST_DX, TOWER_WEST_OFFSET_Y + ATRIUM_OFFSET_Y),
-  xyArray(NORTH_WING_DX - TOWER_DX - TOWER_WEST_DX - ATRIUM_DX, TOWER_WEST_OFFSET_Y + ATRIUM_OFFSET_Y),
-  xyArray(NORTH_WING_DX - TOWER_DX - TOWER_WEST_DX - ATRIUM_DX, TOWER_WEST_OFFSET_Y + ATRIUM_OFFSET_Y + ATRIUM_DY),
-  xyArray(NORTH_WING_DX - TOWER_DX - TOWER_WEST_DX, TOWER_WEST_OFFSET_Y + ATRIUM_OFFSET_Y + ATRIUM_DY),
-  xyArray(NORTH_WING_DX - TOWER_DX - TOWER_WEST_DX, TOWER_WEST_OFFSET_Y + TOWER_WEST_DY),
-  xyArray(NORTH_WING_DX - TOWER_DX, TOWER_WEST_OFFSET_Y + TOWER_WEST_DY),
-  xyArray(NORTH_WING_DX - TOWER_DX, TOWER_DY),
-  xyArray(NORTH_WING_DX, TOWER_DY),
-  xyArray(NORTH_WING_DX, NORTH_WING_DY),
-  xyArray(0, NORTH_WING_DY)
-]
-
-const NUM_NORTH_WING_CRENELS_Y = 12 // eslint-disable-line no-unused-vars
-const NUM_CENTER_WING_CRENELS_Y = 12 // eslint-disable-line no-unused-vars
-
-const FLOOR_TEN_BALCONY_DX = 10
-const FLOOR_TEN_BALCONY_DY = 23
-const FLOOR_TEN_BALCONY_X0 = TOWER_WEST_X0 - FLOOR_TEN_BALCONY_DX
-const FLOOR_TEN_BALCONY_Y0 = TOWER_WEST_Y0
-
-const FLOOR_TEN_BALCONY = [
-  xyArray(0, 0),
-  xyArray(FLOOR_TEN_BALCONY_DX, 0),
-  xyArray(FLOOR_TEN_BALCONY_DX, FLOOR_TEN_BALCONY_DY),
-  xyArray(0, FLOOR_TEN_BALCONY_DY)
+const ATRIUM = {
+  AT: xy(TOWER_WEST.AT.x - 22, TOWER_WEST.AT.y + ATRIUM_OFFSET_Y),
+  SIZE: xy(22, 46)
+}
+const NORTH_WING = {
+  AT: xy(SOUTH_WING.AT.x - (227 - TOWER.SIZE.x - CENTER_WING.SIZE.x), TOWER.AT.y),
+  SIZE: xy(227, 113)
+}
+NORTH_WING.CORNERS = [
+  xy(0, 0),
+  xy(NORTH_WING.SIZE.x - TOWER.SIZE.x, 0),
+  xy(NORTH_WING.SIZE.x - TOWER.SIZE.x, TOWER_WEST_OFFSET_Y),
+  xy(NORTH_WING.SIZE.x - TOWER.SIZE.x - TOWER_WEST.SIZE.x, TOWER_WEST_OFFSET_Y),
+  xy(NORTH_WING.SIZE.x - TOWER.SIZE.x - TOWER_WEST.SIZE.x, TOWER_WEST_OFFSET_Y + ATRIUM_OFFSET_Y),
+  xy(NORTH_WING.SIZE.x - TOWER.SIZE.x - TOWER_WEST.SIZE.x - ATRIUM.SIZE.x, TOWER_WEST_OFFSET_Y + ATRIUM_OFFSET_Y),
+  xy(NORTH_WING.SIZE.x - TOWER.SIZE.x - TOWER_WEST.SIZE.x - ATRIUM.SIZE.x, TOWER_WEST_OFFSET_Y + ATRIUM_OFFSET_Y + ATRIUM.SIZE.y),
+  xy(NORTH_WING.SIZE.x - TOWER.SIZE.x - TOWER_WEST.SIZE.x, TOWER_WEST_OFFSET_Y + ATRIUM_OFFSET_Y + ATRIUM.SIZE.y),
+  xy(NORTH_WING.SIZE.x - TOWER.SIZE.x - TOWER_WEST.SIZE.x, TOWER_WEST_OFFSET_Y + TOWER_WEST.SIZE.y),
+  xy(NORTH_WING.SIZE.x - TOWER.SIZE.x, TOWER_WEST_OFFSET_Y + TOWER_WEST.SIZE.y),
+  xy(NORTH_WING.SIZE.x - TOWER.SIZE.x, TOWER.SIZE.y),
+  xy(NORTH_WING.SIZE.x, TOWER.SIZE.y),
+  xy(NORTH_WING.SIZE.x, NORTH_WING.SIZE.y),
+  xy(0, NORTH_WING.SIZE.y)
 ]
 
 const BUILDING_SPEC = Object.freeze({
   name: 'Wurster Hall',
-  storyHeight: UNIT.feet(13),
+  storyHeight: STORY_HEIGHT,
   roof: {
     parapetHeight: UNIT.feet(4)
   },
   children: [{
     name: 'South wing',
-    offset: xyz(100, SOUTH_WING_Y0),
+    offset: SOUTH_WING.AT,
     numStories: 4,
-    shape: SOUTH_WING
+    corners: rectangleOfSize(SOUTH_WING.SIZE)
   }, {
     name: 'Center wing',
-    offset: xyz(100, SOUTH_WING_Y0 + SOUTH_WING_DY),
+    offset: CENTER_WING.AT,
     numStories: 3,
-    shape: CENTER_WING
+    corners: rectangleOfSize(CENTER_WING.SIZE)
   }, {
     name: 'North wing',
-    offset: xyz(NORTH_WING_X0, NORTH_WING_Y0),
+    offset: NORTH_WING.AT,
     numStories: 3,
-    shape: NORTH_WING
+    corners: NORTH_WING.CORNERS
   }, {
     name: 'Tower',
-    offset: xyz(TOWER_X0, TOWER_Y0),
+    offset: TOWER.AT,
     numStories: 10,
-    shape: TOWER
+    corners: rectangleOfSize(TOWER.SIZE)
   }, {
     name: 'Tower east',
-    offset: xyz(TOWER_EAST_X0, TOWER_EAST_Y0),
+    offset: TOWER_EAST.AT,
     numStories: 10,
-    shape: TOWER_EAST
+    corners: rectangleOfSize(TOWER_EAST.SIZE)
   }, {
     name: 'Tower west',
-    offset: xyz(TOWER_WEST_X0, TOWER_WEST_Y0),
+    offset: TOWER_WEST.AT,
     numStories: 11,
-    shape: TOWER_WEST
+    corners: rectangleOfSize(TOWER_WEST.SIZE)
   }, {
-    // TODO: figure out why this isn't showing up in the rendering
     name: 'Tower west balcony',
-    offset: xyz(FLOOR_TEN_BALCONY_X0, FLOOR_TEN_BALCONY_Y0, 11 * 13),
+    offset: FLOOR_TEN_BALCONY.AT,
     numStories: 0,
-    shape: FLOOR_TEN_BALCONY
+    corners: rectangleOfSize(FLOOR_TEN_BALCONY.SIZE)
   }]
 })
 
+const CRENEL_SPACING = UNIT.feet(9.333) // eslint-disable-line no-unused-vars
+const NUM_NORTH_WING_CRENELS_Y = 12 // eslint-disable-line no-unused-vars
+const NUM_CENTER_WING_CRENELS_Y = 12 // eslint-disable-line no-unused-vars
+const NUM_TOWER_CRENELS_X = 12 // eslint-disable-line no-unused-vars
+const AWNING_SEPERATOR_DEPTH = UNIT.feet(2.5) // eslint-disable-line no-unused-vars
+const AWNING_DEPTH = UNIT.feet(5) // eslint-disable-line no-unused-vars
+const AWNING_LENGTH = UNIT.feet(9) // eslint-disable-line no-unused-vars
+const NUM_SOUTH_WING_CRENELS_X = 18 // eslint-disable-line no-unused-vars
+const NUM_SOUTH_WING_CRENELS_Y = 9 // eslint-disable-line no-unused-vars
+
 // TODO: place the building on a parcel of land
-const PARCEL_DX = 360
-const PARCEL_DY = 540
-const PARCEL = [ // eslint-disable-line no-unused-vars
-  xyArray(0, 0),
-  xyArray(PARCEL_DX, 0),
-  xyArray(PARCEL_DX, PARCEL_DY),
-  xyArray(0, PARCEL_DY)
-]
+const PARCEL = {
+  SIZE: xy(360, 540)
+}
+PARCEL.CORNERS = rectangleOfSize(PARCEL.SIZE) // eslint-disable-line no-unused-vars
 
 /**
-* Class representing UC Berkeley's Wurster Hall.
-* @see [Wikipedia photo]{@link https://en.wikipedia.org/wiki/UC_Berkeley_College_of_Environmental_Design#/media/File:UC_Berkeley_Wurster_Hall.jpg}
-*/
+ * Class representing UC Berkeley's Wurster Hall.
+ * @see [Wikipedia photo]{@link https://en.wikipedia.org/wiki/UC_Berkeley_College_of_Environmental_Design#/media/File:UC_Berkeley_Wurster_Hall.jpg}
+ */
 class Wurster extends Structure {
   static makeBuildingFromSpec (plato, spec, defaults) {
-    let { storyHeight, roof, children, numStories, shape, offset } = spec
+    let { storyHeight, roof, children, numStories, corners, offset } = spec
     storyHeight = storyHeight || defaults.storyHeight
     roof = roof || defaults.roof
     const point = { ...offset }
-    if (shape) {
-      let z = 0
-      for (const i in countTo(numStories)) {
-        z = i * storyHeight
+    if (corners) {
+      let z = point.z || 0
+      for (const i in countTo(numStories)) { // eslint-disable-line no-unused-vars
         point.z = z
         plato.goto(point)
-        plato.addPlace(Place.ROOM, shape, { wall: storyHeight })
+        plato.makePlace(Place.ROOM, corners, { wall: storyHeight })
+        z = z + storyHeight
       }
-      point.z = z + storyHeight
+      point.z = z
       plato.goto(point)
-      plato.addPlace(Place.ROOF, shape, { wall: roof.parapetHeight })
+      plato.makePlace(Place.ROOF, corners, { wall: roof.parapetHeight })
     }
     const defaultsForChildren = { storyHeight, roof }
     for (const childSpec of array(children)) {
