@@ -111,15 +111,6 @@ function rotate (xy, facing) {
   throw new Error('bad compass facing in plato.rotate(): ' + facing.value.toString())
 }
 
-/**
- * @deprecated use ??? instead
- */
-function nudgeXY (xy, { dx = 0, dy = 0, dxy = [0, 0] } = {}) {
-  const [x, y] = xy
-  const [dX, dY] = dxy
-  return [x + dx + dX, y + dy + dY]
-}
-
 function print (str) {
   console.log(str)
 }
@@ -213,35 +204,6 @@ class Plato {
     return this
   }
 
-  /**
-   * @deprecated use makePlace() instead
-   */
-  addPlace (place, area, { name = '', z = 0, incline = 0, depth = -0.5, nuance = false, flip = false, cap = true, wall = 0, openings = [] } = {}) {
-    // print(`plato: adding ${place} with cap = ${cap}, wall = ${wall}`)
-    z = z + this._z
-    const group = this._city.makeGroup(`${Place[place]}${area.name ? ` (${area.name})` : ''}`)
-    const xyPolygon = new Geometry.XYPolygon()
-    for (let xy of area) {
-      xy = rotate(xy, this._facing)
-      const dxy = [this._x, this._y]
-      xy = nudgeXY(xy, { dxy: dxy })
-      xyPolygon.push({ x: xy[0], y: xy[1] })
-    }
-    if (cap) {
-      const color = COLORS_OF_PLACES[place]
-      const abstractThickPolygon = new Geometry.ThickPolygon(xyPolygon, { incline: incline, depth: depth })
-      const concreteThickPolygon = new Geometry.Instance(abstractThickPolygon, z, color)
-      group.add(concreteThickPolygon)
-      const squareFeet = xyPolygon.area()
-      this._squareFeet[place] = squareFeet + (this._squareFeet[place] || 0)
-    }
-    if (wall !== 0) {
-      this.addWalls(group, xyPolygon, wall, z, openings, cap)
-    }
-    this._sector.add(group)
-    return this
-  }
-
   addWalls (group, xyPolygon, height, z, openingsByWall, cap) {
     let i = 0
     for (const v of xyPolygon) {
@@ -292,4 +254,4 @@ class Plato {
   }
 }
 
-export { Plato, xyArray, rotate, rotateXY, nudgeXY, xywh2rect }
+export { Plato, rotate, rotateXY, xywh2rect }
