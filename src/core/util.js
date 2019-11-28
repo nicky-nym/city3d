@@ -51,18 +51,11 @@ function randomPsuedoGaussian (median, standardDeviation) {
 }
 
 /**
- * Returns the length of the hypotenuse of a right triangle
+ * Returns the length of the hypotenuse of a right triangle in 2D or 3D
  * @returns {number} the length of the hypotenuse
  */
-function hypotenuse (run, rise) {
-  return Math.sqrt(run ** 2 + rise ** 2)
-}
-
-/**
- * @deprecated use util.js xyz() instead
- */
-function xyzArray (x, y, z = 0) {
-  return [x, y, z]
+function hypotenuse (x, y, z = 0) {
+  return Math.sqrt(x ** 2 + y ** 2 + z ** 2)
 }
 
 function xy (x, y) {
@@ -73,17 +66,12 @@ function xyz (x, y, z = 0) {
   return { x, y, z }
 }
 
-function xyzSum (xyz0, xyz1) {
+function xyzAdd (xyz0, xyz1) {
   return { x: xyz0.x + xyz1.x, y: xyz0.y + xyz1.y, z: xyz0.z + xyz1.z }
 }
 
-/**
- * @deprecated use ??? instead
- */
-function nudge (xyzArray, { dx = 0, dy = 0, dz = 0, dxyz = [0, 0, 0] } = {}) {
-  const [x, y, z] = xyzArray
-  const [dX, dY, dZ] = dxyz
-  return [x + dx + dX, y + dy + dY, z + dz + dZ]
+function xyzSubtract (xyz0, xyz1) {
+  return { x: xyz0.x - xyz1.x, y: xyz0.y - xyz1.y, z: xyz0.z - xyz1.z }
 }
 
 /**
@@ -103,4 +91,4 @@ function array (object) {
   }
 }
 
-export { xy, xyz, xyzSum, xyzArray, count, countTo, randomInt, randomPsuedoGaussian, nudge, hypotenuse, array }
+export { xy, xyz, xyzAdd, xyzSubtract, count, countTo, randomInt, randomPsuedoGaussian, hypotenuse, array }

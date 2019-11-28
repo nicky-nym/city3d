@@ -1,13 +1,12 @@
-// mover.js
-//
-// Authored in 2019 at <https://github.com/nicky-nym/city3d>
-
-// UNLICENSE
-// This is free and unencumbered software released into the public domain.
-// For more information, please refer to <http://unlicense.org>
+/** @file mover.js
+  * @author Authored in 2019 at <https://github.com/nicky-nym/city3d>
+  * @license UNLICENSE
+  * This is free and unencumbered software released into the public domain.
+  * For more information, please refer to <http://unlicense.org>
+  */
 
 import * as THREE from '../../node_modules/three/build/three.module.js'
-import { countTo } from '../core/util.js'
+import { xyzAdd, xyzSubtract, hypotenuse, countTo } from '../core/util.js'
 
 const UP = new THREE.Vector3(0, 0, 1)
 
@@ -27,7 +26,7 @@ const UP = new THREE.Vector3(0, 0, 1)
  * @param {THREE.Vector3} up - which way is up
  */
 function lookAt (obj, focus, up = UP) {
-  focus = new THREE.Vector3(...focus)
+  focus = new THREE.Vector3(focus.x, focus.y, focus.z)
   const f = focus.sub(obj.position).normalize()
   const s = new THREE.Vector3().crossVectors(up, f).normalize()
   const v = new THREE.Vector3().crossVectors(f, s)
@@ -36,43 +35,41 @@ function lookAt (obj, focus, up = UP) {
 }
 
 /**
- * Mover is an abstract superclass for objects that follow a path.
+ * Mover is an abstract superclass for objects that follow a route.
  */
 export default class Mover {
   /**
-   * @param {Array[]} path - points specifiying a path
-   * @param {number} path[][0] - x-coordinate
-   * @param {number} path[][1] - y-coordinate
-   * @param {number} path[][2] - z-coordinate
+   * @param {xyz[]} route - array of xyz coordinates specifiying a route
    * @param {number} speed - for now, speed is in units of unit vectors per frame
    * @param {THREE.Object3D} [threeComponent] - three.js representation of the Mover
    */
-  constructor (path, speed, threeComponent) {
-    this.path = path
+  constructor (route, speed, threeComponent) {
+    this.route = route
     this.speed = speed
     this.threeComponent = threeComponent
-    this.position = path[0]
-    this.pathIndex = 0
-    this.pathSegments = []
+    this.position = route[0]
+    this.routeIndex = 0
+    this.routeSegments = []
     this.delta = speed
 
-    for (const i of countTo(path.length - 1)) {
-      const v = [0, 1, 2].map(j => path[i + 1][j] - path[i][j])
-      const len = Math.sqrt(v.reduce((a, v) => a + v * v, 0))
-      const vNorm = v.map(coord => coord / len)
-      this.pathSegments.push({ vNorm, len })
+    for (const i of countTo(route.length - 1)) {
+      const vector = xyzSubtract(route[i + 1], route[i])
+      const len = hypotenuse(vector.x, vector.y, vector.z)
+      const vNorm = { x: vector.x / len, y: vector.y / len, z: vector.z / len }
+      this.routeSegments.push({ vNorm, len })
     }
-    this.remainingDist = this.pathSegments[0].len
-    this.currSegment = this.pathSegments[0]
+    this.remainingDist = this.routeSegments[0].len
+    this.currSegment = this.routeSegments[0]
 
     if (this.threeComponent) {
-      this.threeComponent.position.set(...path[0])
-      lookAt(this.threeComponent, path[1])
+      this.threeComponent.position.set(route[0].x, route[0].y, route[0].z)
+      lookAt(this.threeComponent, route[1])
     }
   }
 
-  addScaledVectorToPosition (v, c) {
-    this.position = this.position.map((coord, i) => coord + c * v[i])
+  addScaledVectorToPosition (vector, c) {
+    const scaledVector = { x: vector.x * c, y: vector.y * c, z: vector.z * c }
+    this.position = xyzAdd(this.position, scaledVector)
   }
 
   update () {
@@ -80,19 +77,19 @@ export default class Mover {
     let newTarget = null
     this.remainingDist -= this.delta
     if (this.remainingDist <= 0) {
-      this.pathIndex = (this.pathIndex + 1) % (this.path.length - 1)
-      this.currSegment = this.pathSegments[this.pathIndex]
+      this.routeIndex = (this.routeIndex + 1) % (this.route.length - 1)
+      this.currSegment = this.routeSegments[this.routeIndex]
       // TODO: update speed based on slope of current segment
-      this.position = this.path[this.pathIndex]
+      this.position = this.route[this.routeIndex]
       this.addScaledVectorToPosition(this.currSegment.vNorm, -this.remainingDist)
       this.remainingDist += this.currSegment.len
-      newTarget = this.path[this.pathIndex + 1]
+      newTarget = this.route[this.routeIndex + 1]
     } else {
       this.addScaledVectorToPosition(this.currSegment.vNorm, this.delta)
     }
 
     if (this.threeComponent) {
-      this.threeComponent.position.set(...this.position)
+      this.threeComponent.position.set(this.position.x, this.position.y, this.position.z)
       if (newTarget) {
         lookAt(this.threeComponent, newTarget)
       }
@@ -103,7 +100,7 @@ export default class Mover {
   }
 
   getRoute () {
-    return this.speed > 0 ? this.path : [this.path[0]]
+    return this.speed > 0 ? this.route : [this.route[0]]
   }
 
   // This makes Mover a ThreeOutput plugin.

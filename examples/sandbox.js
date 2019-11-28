@@ -1,12 +1,12 @@
-// sandbox.js
-//
-// Authored in 2019 at <https://github.com/nicky-nym/city3d>
-
-// UNLICENSE
-// This is free and unencumbered software released into the public domain.
-// For more information, please refer to <http://unlicense.org>
+/** @file sandbox.js
+  * @author Authored in 2019 at <https://github.com/nicky-nym/city3d>
+  * @license UNLICENSE
+  * This is free and unencumbered software released into the public domain.
+  * For more information, please refer to <http://unlicense.org>
+  */
 
 import { CITY } from '../src/citylib.js'
+import { xyz } from '../src/core/util.js'
 
 function addBuildings () {
   plato.study('Cottage(s)', { x0: -100, y0: 100 })
@@ -42,11 +42,11 @@ function addCreek () {
   city.add(creekObject)
 
   const kayaks = new CITY.Group('kayaks')
-  kayaks.add(new CITY.Kayak(creek.creekPath()))
-  kayaks.add(new CITY.Kayak(creek.creekPath(4), 0.13))
+  kayaks.add(new CITY.Kayak(creek.creekRoute()))
+  kayaks.add(new CITY.Kayak(creek.creekRoute(4), 0.13))
   city.add(kayaks)
 
-  city.add(new CITY.Vehicle(creek.creekPath(7), 0.18, 'bicycle'))
+  city.add(new CITY.Vehicle(creek.creekRoute(7), 0.18, 'bicycle'))
 }
 
 function addKalpanaOrbital () {
@@ -61,7 +61,7 @@ function addMovers () {
   randomVehicles.add(new CITY.Vehicle())
   randomVehicles.add(new CITY.Vehicle())
   for (let i = -50; i > -200; i -= 10) {
-    randomVehicles.add(new CITY.Vehicle([[-50, i, 0], [0, 0, 0]], 0))
+    randomVehicles.add(new CITY.Vehicle([xyz(-50, i, 0), xyz(0, 0, 0)], 0))
   }
 
   city.add(randomVehicles)

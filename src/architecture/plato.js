@@ -5,7 +5,7 @@
   * For more information, please refer to <http://unlicense.org>
   */
 
-import { xyz, xyzSum, nudge } from '../core/util.js'
+import { xyz, xyzAdd } from '../core/util.js'
 import Facing from '../core/facing.js'
 import { Geometry } from '../core/geometry.js'
 import Place from './place.js'
@@ -132,15 +132,12 @@ class Plato {
     print('plato: "Hello world!"')
   }
 
-  addPath (place, relPath) {
-    // const dxyz = [this._x, this._y, this._z]
-    const dxyz = [this._xyz.x, this._xyz.y, this._xyz.z]
+  makeRoute (place, listOfWaypoints) {
     const path = []
-    for (const segment of relPath) {
-      const [x, y, z] = segment
-      const xy = rotate([x, y], this._facing)
-      const xyz = [...xy, z]
-      path.push(nudge(xyz, { dxyz }))
+    for (const waypoint of listOfWaypoints) {
+      const rotated = rotateXY(waypoint, this._facing)
+      rotated.z = waypoint.z
+      path.push(xyzAdd(rotated, this._xyz))
     }
     this._paths.push(path)
     return path
@@ -221,7 +218,7 @@ class Plato {
 
   makeRoof (place, verticesOfRoof, indicesOfFaces, name) {
     const color = COLORS_OF_PLACES[place]
-    const vertices = verticesOfRoof.map(xyz => xyzSum(xyz, this._xyz))
+    const vertices = verticesOfRoof.map(xyz => xyzAdd(xyz, this._xyz))
     const abstractRoof = new Geometry.TriangularPolyhedron(vertices, indicesOfFaces)
     const concreteRoof = new Geometry.Instance(abstractRoof, 0, color, name || 'roof')
     this._sector.add(concreteRoof)

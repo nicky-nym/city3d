@@ -8,34 +8,35 @@
 import * as THREE from '../../node_modules/three/build/three.module.js'
 import Mover from './mover.js'
 import { UNIT } from '../core/unit.js'
+import { xyz } from '../core/util.js'
 
 /**
  * Class representing a Kalpana One orbital station.
  * @see [2007 white paper]{@link http://alglobus.net/NASAwork/papers/2007KalpanaOne.pdf}
  */
 class Kalpana extends Mover {
-  constructor (path, speed = 100) {
-    path = path || Kalpana.leoPath()
-    super(path, speed, Kalpana.makeStation(path, speed))
+  constructor (route, speed = 100) {
+    route = route || Kalpana.leoRoute()
+    super(route, speed, Kalpana.makeStation(route, speed))
     this.threeComponent.update = this.update.bind(this)
   }
 
   /**
    * Return the flight path of the space station.
    */
-  static leoPath () {
+  static leoRoute () {
     const LOW_EARTH_ORBIT_ALTITUDE = UNIT.km(600)
     const EQUATOR = 0
     const HORIZON = UNIT.km(6000)
-    const EAST_XYZ = [+HORIZON, EQUATOR, LOW_EARTH_ORBIT_ALTITUDE]
-    const WEST_XYZ = [-HORIZON, EQUATOR, LOW_EARTH_ORBIT_ALTITUDE]
+    const EAST_XYZ = xyz(+HORIZON, EQUATOR, LOW_EARTH_ORBIT_ALTITUDE)
+    const WEST_XYZ = xyz(-HORIZON, EQUATOR, LOW_EARTH_ORBIT_ALTITUDE)
     return [EAST_XYZ, WEST_XYZ]
   }
 
   /**
    * Return a THREE.Group object model of the station.
    */
-  static makeStation (path, speed = 1) {
+  static makeStation (route, speed = 1) {
     const kalpana = new THREE.Group()
     kalpana.name = 'Kalpana One Orbital'
 

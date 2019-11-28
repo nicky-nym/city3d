@@ -5,7 +5,7 @@
   * For more information, please refer to <http://unlicense.org>
   */
 
-import { xy, xyzArray, count, countTo, randomInt, hypotenuse } from '../core/util.js'
+import { xy, xyz, count, countTo, randomInt, hypotenuse } from '../core/util.js'
 import Vehicle from '../movers/vehicle.js'
 import Place from '../architecture/place.js'
 import Facing from '../core/facing.js'
@@ -190,10 +190,11 @@ export default class Bikeway extends Structure {
       const dxy = rotateXY(xy(delta, 0), facing)
       this._plato.goto({ x: x + dxy.x, y: y + dxy.y, z: z, facing: facing })
       this._plato.makePlace(Place.BIKEPATH, LANE)
-      const path = this._plato.addPath(Place.BIKEPATH, [
-        [LANE_WIDTH / 2, 0, 0],
-        [LANE_WIDTH / 2, BLOCK_LENGTH, 0]])
-      this._vehicles.push(new Vehicle(path, randomInt(7, 10) * 0.04))
+      const route = this._plato.makeRoute(Place.BIKEPATH, [
+        xyz(LANE_WIDTH / 2, 0, 0),
+        xyz(LANE_WIDTH / 2, BLOCK_LENGTH, 0)
+      ])
+      this._vehicles.push(new Vehicle(route, randomInt(7, 10) * 0.04))
     }
     delta += LANE_WIDTH
     const dxy = rotateXY(xy(delta, 0), facing)
@@ -206,14 +207,14 @@ export default class Bikeway extends Structure {
     this._plato.makePlace(Place.BIKEPATH, EXIT_DOWN, { z: 0.1 })
     this._plato.makePlace(Place.BIKEPATH, RAMP_DOWN_TO_LANDING, { incline: RAMP_RISE_HEIGHT })
     this._plato.makePlace(Place.BIKEPATH, LANDING, { z: -7.5 })
-    let path = this._plato.addPath(Place.BIKEPATH, [
-      xyzArray(25, 0, 0.1), xyzArray(35, 90, 0.1), // start and end of EXIT_DOWN
-      xyzArray(35, 270, -7.5), // landing
-      xyzArray(45, 390, -7.5),
-      xyzArray(45, 570, -14.9), xyzArray(60, 616, -14.9), xyzArray(100, 630, -14.9), // start, middle, end of RIGHT_TURN_TO_ENTER
-      xyzArray(170, 637.5, -14.9) // end of ENTRANCE_FROM_ABOVE
+    let route = this._plato.makeRoute(Place.BIKEPATH, [
+      xyz(25, 0, 0.1), xyz(35, 90, 0.1), // start and end of EXIT_DOWN
+      xyz(35, 270, -7.5), // landing
+      xyz(45, 390, -7.5),
+      xyz(45, 570, -14.9), xyz(60, 616, -14.9), xyz(100, 630, -14.9), // start, middle, end of RIGHT_TURN_TO_ENTER
+      xyz(170, 637.5, -14.9) // end of ENTRANCE_FROM_ABOVE
     ])
-    this._vehicles.push(new Vehicle(path, randomInt(6, 10) * 0.04))
+    this._vehicles.push(new Vehicle(route, randomInt(6, 10) * 0.04))
 
     this._plato.makePlace(Place.BARE, LANDING_PARKING, { z: -7.5 })
     this._plato.makePlace(Place.WALKWAY, LANDING_PLAZA, { z: -7.5 })
@@ -229,14 +230,14 @@ export default class Bikeway extends Structure {
 
     this._plato.makePlace(Place.BIKEPATH, EXIT_UP, { z: -14.9 })
     this._plato.makePlace(Place.BIKEPATH, RIGHT_TURN_FROM_EXIT, { z: -14.9 })
-    path = this._plato.addPath(Place.BIKEPATH, [
-      xyzArray(170, 22.5, -14.9), // start of EXIT_UP
-      xyzArray(100, 30, -14.9), xyzArray(60, 44, -14.9), xyzArray(45, 90, -14.9), // start, middle, end of RIGHT_TURN_FROM_EXIT
-      xyzArray(45, 270, -7.5), // landing
-      xyzArray(35, 390, -7.5),
-      xyzArray(35, 570, 0.1), xyzArray(25, 660, 0.1) // start and end of ENTRANCE_FROM_BELOW
+    route = this._plato.makeRoute(Place.BIKEPATH, [
+      xyz(170, 22.5, -14.9), // start of EXIT_UP
+      xyz(100, 30, -14.9), xyz(60, 44, -14.9), xyz(45, 90, -14.9), // start, middle, end of RIGHT_TURN_FROM_EXIT
+      xyz(45, 270, -7.5), // landing
+      xyz(35, 390, -7.5),
+      xyz(35, 570, 0.1), xyz(25, 660, 0.1) // start and end of ENTRANCE_FROM_BELOW
     ])
-    this._vehicles.push(new Vehicle(path, randomInt(3, 6) * 0.04))
+    this._vehicles.push(new Vehicle(route, randomInt(3, 6) * 0.04))
     this._plato.makePlace(Place.BIKEPATH, RAMP_UP_TO_LANDING, { z: -15, incline: -RAMP_RISE_HEIGHT })
 
     this._plato.makePlace(Place.WALKWAY, LOWER_PLAZA, { z: -14.9 })

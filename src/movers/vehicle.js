@@ -1,13 +1,12 @@
-// vehicle.js
-//
-// Authored in 2019 at <https://github.com/nicky-nym/city3d>
-
-// UNLICENSE
-// This is free and unencumbered software released into the public domain.
-// For more information, please refer to <http://unlicense.org>
+/** @file vehicle.js
+  * @author Authored in 2019 at <https://github.com/nicky-nym/city3d>
+  * @license UNLICENSE
+  * This is free and unencumbered software released into the public domain.
+  * For more information, please refer to <http://unlicense.org>
+  */
 
 import * as THREE from '../../node_modules/three/build/three.module.js'
-import { countTo, randomInt } from '../core/util.js'
+import { xyz, countTo, randomInt } from '../core/util.js'
 import Mover from './mover.js'
 
 const VEHICLE_SPECS = {
@@ -744,10 +743,10 @@ function _getVehicleSpec (typename) {
   return vehicleSpec
 }
 
-function randomPath () {
-  const p1 = [-randomInt(50, 250), -randomInt(50, 250), 0]
-  const p2 = [-randomInt(50, 250), -randomInt(50, 250), 0]
-  const p3 = [-randomInt(50, 500), -randomInt(50, 250), 0]
+function randomRoute () {
+  const p1 = xyz(-randomInt(50, 250), -randomInt(50, 250), 0)
+  const p2 = xyz(-randomInt(50, 250), -randomInt(50, 250), 0)
+  const p3 = xyz(-randomInt(50, 500), -randomInt(50, 250), 0)
   return [p1, p2, p3, p1]
 }
 
@@ -760,9 +759,9 @@ function makeVehicle (typename) {
 export default class Vehicle extends Mover {
   // new Vehicle([[0, 0, 0], [0, 200, 10], [100, 200, 10], [0, 0, 0]], 0.8)
   // For a parked vehicle, use speed = 0, and path[0] and path[1] to specify location and orientation.
-  constructor (path, speed = 0.5, typename) {
-    path = path || randomPath()
-    super(path, speed, makeVehicle(typename))
+  constructor (route, speed = 0.5, typename) {
+    route = route || randomRoute()
+    super(route, speed, makeVehicle(typename))
     this.threeComponent.update = this.update.bind(this)
   }
 }

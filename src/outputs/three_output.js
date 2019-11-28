@@ -1,10 +1,9 @@
-// three_output.js
-//
-// Authored in 2019 at <https://github.com/nicky-nym/city3d>
-
-// UNLICENSE
-// This is free and unencumbered software released into the public domain.
-// For more information, please refer to <http://unlicense.org>
+/** @file three_output.js
+  * @author Authored in 2019 at <https://github.com/nicky-nym/city3d>
+  * @license UNLICENSE
+  * This is free and unencumbered software released into the public domain.
+  * For more information, please refer to <http://unlicense.org>
+  */
 
 import { Geometry } from '../core/geometry.js'
 import Output from './output.js'
@@ -177,7 +176,7 @@ export default class ThreeOutput extends Output {
       const material = new THREE.LineBasicMaterial({ color: 0xFF00FF })
       for (const route of this._city.getRoutes()) {
         const geometry = new THREE.Geometry()
-        geometry.vertices.push(...route.map(p => new THREE.Vector3(...p)))
+        geometry.vertices.push(...route.map(p => new THREE.Vector3(p.x, p.y, p.z)))
         const line = new THREE.Line(geometry, material)
         this._scene.add(line)
       }

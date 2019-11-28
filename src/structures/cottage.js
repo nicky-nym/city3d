@@ -5,7 +5,7 @@
   * For more information, please refer to <http://unlicense.org>
   */
 
-import { xy, xyz, countTo, xyzSum } from '../core/util.js'
+import { xy, xyz, countTo, xyzAdd } from '../core/util.js'
 import Facing from '../core/facing.js'
 import Place from '../architecture/place.js'
 import { xywh2rect } from '../architecture/plato.js'
@@ -243,8 +243,8 @@ const INDICES_OF_ROOF_FACES = [
 // TODO: determine accurate locations
 const PEAK_DORMER = xyz(ATTIC[5].x - 1, PEAK_OFFICE_INSET.y + 1.5, PEAK_OFFICE_INSET.z - 1)
 const PEAK_DORMER_INSET = xyz(ATTIC[5].x - 7, PEAK_DORMER.y, PEAK_DORMER.z)
-const DORMER_NW = xyzSum(PEAK_DORMER_INSET, xyz(2.5, 2.5, -2.5))
-const DORMER_SW = xyzSum(PEAK_DORMER_INSET, xyz(2.5, -2.5, -2.5))
+const DORMER_NW = xyzAdd(PEAK_DORMER_INSET, xyz(2.5, 2.5, -2.5))
+const DORMER_SW = xyzAdd(PEAK_DORMER_INSET, xyz(2.5, -2.5, -2.5))
 const DORMER_NE = xyz(PEAK_DORMER.x, DORMER_NW.y, DORMER_NW.z)
 const DORMER_SE = xyz(PEAK_DORMER.x, DORMER_SW.y, DORMER_SW.z)
 
@@ -265,12 +265,12 @@ const INDICES_OF_DORMER_ROOF_FACES = [
 ]
 
 const CHIMNEY_HEIGHT = 16
-const CHIMNEY_XYZ = xyzSum(PEAK_BACK, xyz(-1.5, 3, -PEAK_BACK.z))
+const CHIMNEY_XYZ = xyzAdd(PEAK_BACK, xyz(-1.5, 3, -PEAK_BACK.z))
 const CHIMNEY = [
   CHIMNEY_XYZ,
-  xyzSum(CHIMNEY_XYZ, xyz(0.0, 2.95, 0)),
-  xyzSum(CHIMNEY_XYZ, xyz(2.1, 2.95, 0)),
-  xyzSum(CHIMNEY_XYZ, xyz(2.1, 0.00, 0))
+  xyzAdd(CHIMNEY_XYZ, xyz(0.0, 2.95, 0)),
+  xyzAdd(CHIMNEY_XYZ, xyz(2.1, 2.95, 0)),
+  xyzAdd(CHIMNEY_XYZ, xyz(2.1, 0.00, 0))
 ]
 
 const CRAWL_SPACE_HEIGHT = 4
