@@ -1,16 +1,15 @@
-// merlon.js
-//
-// Authored in 2019 at <https://github.com/nicky-nym/city3d>
+/** @file merlon.js
+  * @author Authored in 2019 at <https://github.com/nicky-nym/city3d>
+  * @license UNLICENSE
+  * This is free and unencumbered software released into the public domain.
+  * For more information, please refer to <http://unlicense.org>
+  */
 
-// UNLICENSE
-// This is free and unencumbered software released into the public domain.
-// For more information, please refer to <http://unlicense.org>
-
-import { xyzArray, count, countTo, randomInt, hypotenuse } from '../city3d/util.js'
+import { xy, xyzArray, count, countTo, randomInt, hypotenuse } from '../city3d/util.js'
 import Place from '../city3d/place.js'
 import Facing from '../city3d/facing.js'
 import Structure from '../city3d/structure.js'
-import { xyArray, xywh2rect, nudgeXY } from '../city3d/plato.js'
+import { xywh2rect } from '../city3d/plato.js'
 // import { print } from '../city3d/output.js'
 
 // in feet
@@ -27,35 +26,35 @@ const D1 = LANDING_WIDTH / 2.0
 const D2 = RAMP_WIDTH / 2.0
 const RAMP_HYPOTENUSE = hypotenuse(RAMP_RUN_LENGTH, RAMP_RISE_HEIGHT)
 const RAMP_CORNERS = [
-  xyArray(+D2, D1),
-  xyArray(+D2, D1 + RAMP_HYPOTENUSE),
-  xyArray(-D2, D1 + RAMP_HYPOTENUSE),
-  xyArray(-D2, D1)
+  xy(+D2, D1),
+  xy(+D2, D1 + RAMP_HYPOTENUSE),
+  xy(-D2, D1 + RAMP_HYPOTENUSE),
+  xy(-D2, D1)
 ]
 const OCTAGONAL_LANDING = [
-  xyArray(-D1, -D2),
-  xyArray(-D2, -D1),
-  xyArray(+D2, -D1),
-  xyArray(+D1, -D2),
-  xyArray(+D1, +D2),
-  xyArray(+D2, +D1),
-  xyArray(-D2, +D1),
-  xyArray(-D1, +D2)
+  xy(-D1, -D2),
+  xy(-D2, -D1),
+  xy(+D2, -D1),
+  xy(+D1, -D2),
+  xy(+D1, +D2),
+  xy(+D2, +D1),
+  xy(-D2, +D1),
+  xy(-D1, +D2)
 ]
 const DIAMOND_CENTER = [
-  xyArray(-3, 0),
-  xyArray(0, +3),
-  xyArray(+3, 0),
-  xyArray(0, -3)
+  xy(-3, 0),
+  xy(0, +3),
+  xy(+3, 0),
+  xy(0, -3)
 ]
 const BASEMENT = [
-  xyArray(D1, 0),
-  xyArray(D1, D2),
-  xyArray(D2, D1),
-  xyArray(0, D1),
-  xyArray(0, 2 * D1 + RAMP_RUN_LENGTH),
-  xyArray(2 * D1 + RAMP_RUN_LENGTH, 2 * D1 + RAMP_RUN_LENGTH),
-  xyArray(2 * D1 + RAMP_RUN_LENGTH, 0)
+  xy(D1, 0),
+  xy(D1, D2),
+  xy(D2, D1),
+  xy(0, D1),
+  xy(0, 2 * D1 + RAMP_RUN_LENGTH),
+  xy(2 * D1 + RAMP_RUN_LENGTH, 2 * D1 + RAMP_RUN_LENGTH),
+  xy(2 * D1 + RAMP_RUN_LENGTH, 0)
 ]
 const APARTMENT_WIDTH = D1 + RAMP_RUN_LENGTH + (D1 + D2) / 2
 
@@ -79,14 +78,14 @@ const WINDOWS = [
 ]
 const SPAN = RAMP_RUN_LENGTH + (D1 + D2) / 2
 const APARTMENT_SPEC = [
-  [xyArray(D1, D2), DOORS],
-  [xyArray(D2, D1), WINDOWS],
-  [xyArray(D2, D1 + RAMP_RUN_LENGTH), []],
-  [xyArray(D1, D1 + SPAN), WINDOWS],
-  [xyArray(D1 + RAMP_RUN_LENGTH, D1 + SPAN), []],
-  [xyArray(D1 + SPAN, D1 + RAMP_RUN_LENGTH), WINDOWS],
-  [xyArray(D1 + SPAN, D1), []],
-  [xyArray(D1 + RAMP_RUN_LENGTH, D2), WINDOWS]
+  [xy(D1, D2), DOORS],
+  [xy(D2, D1), WINDOWS],
+  [xy(D2, D1 + RAMP_RUN_LENGTH), []],
+  [xy(D1, D1 + SPAN), WINDOWS],
+  [xy(D1 + RAMP_RUN_LENGTH, D1 + SPAN), []],
+  [xy(D1 + SPAN, D1 + RAMP_RUN_LENGTH), WINDOWS],
+  [xy(D1 + SPAN, D1), []],
+  [xy(D1 + RAMP_RUN_LENGTH, D2), WINDOWS]
 ]
 const APARTMENT = APARTMENT_SPEC.map(([point, openings]) => point)
 
@@ -98,15 +97,19 @@ for (const [point, windows] of APARTMENT_SPEC) { // eslint-disable-line no-unuse
   i++
 }
 
+function nudgeXY (xy, delta) {
+  return { x: xy.x + delta.x, y: xy.y + delta.y }
+}
+
 const ATTIC = [
-  nudgeXY(APARTMENT[0], { dx: -1.2, dy: -2 }),
-  nudgeXY(APARTMENT[1], { dx: -2, dy: -1.2 }),
-  nudgeXY(APARTMENT[2], { dx: -2, dy: 1.2 }),
-  nudgeXY(APARTMENT[3], { dx: -1.2, dy: 2 }),
-  nudgeXY(APARTMENT[4], { dx: 1.2, dy: 2 }),
-  nudgeXY(APARTMENT[5], { dx: 2, dy: 1.2 }),
-  nudgeXY(APARTMENT[6], { dx: 2, dy: -1.2 }),
-  nudgeXY(APARTMENT[7], { dx: 1.2, dy: -2 })
+  nudgeXY(APARTMENT[0], xy(-1.2, -2)),
+  nudgeXY(APARTMENT[1], xy(-2, -1.2)),
+  nudgeXY(APARTMENT[2], xy(-2, 1.2)),
+  nudgeXY(APARTMENT[3], xy(-1.2, 2)),
+  nudgeXY(APARTMENT[4], xy(1.2, 2)),
+  nudgeXY(APARTMENT[5], xy(2, 1.2)),
+  nudgeXY(APARTMENT[6], xy(2, -1.2)),
+  nudgeXY(APARTMENT[7], xy(1.2, -2))
 ]
 
 function _getCloverleafLandingPattern () {
@@ -261,16 +264,16 @@ function _getLandingPattern (numRows, numCols) {
 function _addRoofAroundFloor (plato, shape, peakXyz) {
   const Z = 2
   if (peakXyz[Z] === 0) {
-    plato.addPlace(Place.ROOF, shape)
+    plato.makePlace(Place.ROOF, shape)
   } else {
-    plato.addPlace(Place.BARE, shape)
+    plato.makePlace(Place.BARE, shape)
     let i = 0
     for (const corner of shape) {
       const next = i + 1 < shape.length ? i + 1 : 0
       i++
       const vertices = [
-        xyzArray(...corner),
-        xyzArray(...shape[next]),
+        [corner.x, corner.y, 0],
+        [shape[next].x, shape[next].y, 0],
         peakXyz
       ]
       const indices = [[0, 1, 2]]
@@ -285,15 +288,15 @@ function _addFeaturesAtLanding (plato, rampBearings, at, buildings = true) {
 
   // Landing
   plato.goto({ x: x, y: y, z: z, facing: Facing.NORTH })
-  plato.addPlace(Place.WALKWAY, OCTAGONAL_LANDING)
+  plato.makePlace(Place.WALKWAY, OCTAGONAL_LANDING)
   if (!buildings && z % 10 === 0) {
-    plato.addPlace(Place.BARE, DIAMOND_CENTER, { wall: 3 })
+    plato.makePlace(Place.BARE, DIAMOND_CENTER, { wall: 3 })
   }
 
   // Ramps
   for (const bearing of rampBearings) {
     plato.goto({ x: x, y: y, z: z, facing: bearing })
-    plato.addPlace(Place.WALKWAY, RAMP_CORNERS, { incline: RAMP_RISE_HEIGHT })
+    plato.makePlace(Place.WALKWAY, RAMP_CORNERS, { incline: RAMP_RISE_HEIGHT })
   }
 
   // Floors, Walls, and Roof
@@ -301,18 +304,18 @@ function _addFeaturesAtLanding (plato, rampBearings, at, buildings = true) {
     for (const bearing of rampBearings) {
       // parcel
       plato.goto({ x: x, y: y, z: 0, facing: bearing })
-      plato.addPlace(Place.PARCEL, BASEMENT)
+      plato.makePlace(Place.PARCEL, BASEMENT)
 
       // lower floors
       for (const altitude of count(0, z, STORY_HEIGHT)) {
         plato.goto({ x: x, y: y, z: altitude, facing: bearing })
-        plato.addPlace(Place.ROOM, BASEMENT)
+        plato.makePlace(Place.ROOM, BASEMENT)
       }
 
       // upper floors
       for (const altitude of count(z, ROOFLINE, STORY_HEIGHT)) {
         plato.goto({ x: x, y: y, z: altitude, facing: bearing })
-        plato.addPlace(Place.ROOM, APARTMENT, { wall: STORY_HEIGHT, openings: APARTMENT_WINDOWS })
+        plato.makePlace(Place.ROOM, APARTMENT, { wall: STORY_HEIGHT, openings: APARTMENT_WINDOWS })
       }
 
       // roof
