@@ -5,10 +5,9 @@
   * For more information, please refer to <http://unlicense.org>
   */
 
-import { xy, xyz, countTo, xyzAdd } from '../core/util.js'
+import { xy, xyz, xyzAdd, xywh2rect, countTo } from '../core/util.js'
 import { Facing } from '../core/facing.js'
 import { Use } from '../architecture/use.js'
-import { xywh2rect } from '../architecture/plato.js'
 import { Structure } from '../architecture/structure.js'
 
 // in feet

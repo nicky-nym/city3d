@@ -5,11 +5,10 @@
   * For more information, please refer to <http://unlicense.org>
   */
 
-import { xy, xyz, count, countTo, randomInt, hypotenuse } from '../core/util.js'
+import { xy, xyz, xywh2rect, count, countTo, randomInt, hypotenuse } from '../core/util.js'
 import { Use } from '../architecture/use.js'
 import { Facing } from '../core/facing.js'
 import { Structure } from '../architecture/structure.js'
-import { xywh2rect } from '../architecture/plato.js'
 
 // in feet
 const STORY_HEIGHT = 10

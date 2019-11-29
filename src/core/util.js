@@ -5,6 +5,8 @@
   * For more information, please refer to <http://unlicense.org>
   */
 
+import { Facing } from './facing.js'
+
 /**
  * Returns an array of integers.
  * @param {number} from - the first number in the array
@@ -74,6 +76,37 @@ function xyzSubtract (xyz0, xyz1) {
   return { x: xyz0.x - xyz1.x, y: xyz0.y - xyz1.y, z: xyz0.z - xyz1.z }
 }
 
+function xyRotate (xy, facing) {
+  const { x, y } = xy
+  switch (facing) {
+    case Facing.NORTH:
+      return { x, y }
+    case Facing.SOUTH:
+      return { x: -x, y: -y }
+    case Facing.EAST:
+      return { x: y, y: -x }
+    case Facing.WEST:
+      return { x: -y, y: x }
+  }
+  const SIN45 = 0.707
+  const COS45 = 0.707
+  switch (facing) {
+    case Facing.NORTHEAST:
+      return { x: x * COS45 - y * SIN45, y: x * COS45 + y * SIN45 }
+    case Facing.SOUTHEAST:
+      throw new Error('not implemented')
+    case Facing.SOUTHWEST:
+      throw new Error('not implemented')
+    case Facing.NORTHWEST:
+      throw new Error('not implemented')
+  }
+  throw new Error('bad compass facing in util xyRotate(): ' + facing.value.toString())
+}
+
+function xywh2rect (y, z, width, height) {
+  return [xy(y, z), xy(y + width, z), xy(y + width, z + height), xy(y, z + height)]
+}
+
 /**
  * Given either a value or an array, returns an array
  * @param {*} object - an array, or a single value
@@ -91,4 +124,4 @@ function array (object) {
   }
 }
 
-export { xy, xyz, xyzAdd, xyzSubtract, count, countTo, randomInt, randomPsuedoGaussian, hypotenuse, array }
+export { xy, xyz, xyzAdd, xyzSubtract, xyRotate, xywh2rect, count, countTo, randomInt, randomPsuedoGaussian, hypotenuse, array }

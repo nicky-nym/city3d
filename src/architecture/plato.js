@@ -5,7 +5,7 @@
   * For more information, please refer to <http://unlicense.org>
   */
 
-import { xy, xyz, xyzAdd } from '../core/util.js'
+import { xyz, xyzAdd, xyRotate } from '../core/util.js'
 import { Facing } from '../core/facing.js'
 import { Geometry } from '../core/geometry.js'
 import { Use } from './use.js'
@@ -39,37 +39,6 @@ const COLORS_OF_PLACES = {
   DOOR: YELLOW
 }
 
-function xywh2rect (y, z, width, height) {
-  return [xy(y, z), xy(y + width, z), xy(y + width, z + height), xy(y, z + height)]
-}
-
-function rotateXY (xy, facing) {
-  const { x, y } = xy
-  switch (facing) {
-    case Facing.NORTH:
-      return { x, y }
-    case Facing.SOUTH:
-      return { x: -x, y: -y }
-    case Facing.EAST:
-      return { x: y, y: -x }
-    case Facing.WEST:
-      return { x: -y, y: x }
-  }
-  const SIN45 = 0.707
-  const COS45 = 0.707
-  switch (facing) {
-    case Facing.NORTHEAST:
-      return { x: x * COS45 - y * SIN45, y: x * COS45 + y * SIN45 }
-    case Facing.SOUTHEAST:
-      throw new Error('not implemented')
-    case Facing.SOUTHWEST:
-      throw new Error('not implemented')
-    case Facing.NORTHWEST:
-      throw new Error('not implemented')
-  }
-  throw new Error('bad compass facing in plato.rotateXY(): ' + facing.value.toString())
-}
-
 function print (str) {
   console.log(str)
 }
@@ -94,7 +63,7 @@ class Plato {
   makeRoute (place, listOfWaypoints) {
     const route = []
     for (const waypoint of listOfWaypoints) {
-      const rotated = rotateXY(waypoint, this._facing)
+      const rotated = xyRotate(waypoint, this._facing)
       rotated.z = waypoint.z
       route.push(xyzAdd(rotated, this._xyz))
     }
@@ -133,7 +102,7 @@ class Plato {
     const group = this._city.makeGroup(`${Use[place]}${corners.name ? ` (${corners.name})` : ''}`)
     const xyPolygon = new Geometry.XYPolygon()
     for (let xy of corners) {
-      xy = rotateXY(xy, this._facing)
+      xy = xyRotate(xy, this._facing)
       xy = { x: xy.x + this._xyz.x, y: xy.y + this._xyz.y }
       xyPolygon.push(xy)
     }
@@ -201,4 +170,4 @@ class Plato {
   }
 }
 
-export { Plato, rotateXY, xywh2rect }
+export { Plato }

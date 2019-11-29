@@ -5,12 +5,11 @@
   * For more information, please refer to <http://unlicense.org>
   */
 
-import { xy, xyz, count, countTo, randomInt, hypotenuse } from '../core/util.js'
+import { xy, xyz, xyRotate, xywh2rect, count, countTo, randomInt, hypotenuse } from '../core/util.js'
 import { Vehicle } from '../movers/vehicle.js'
 import { Use } from '../architecture/use.js'
 import { Facing } from '../core/facing.js'
 import { Structure } from '../architecture/structure.js'
-import { xywh2rect, rotateXY } from '../architecture/plato.js'
 
 // in feet
 const BLOCK_LENGTH = 660
@@ -188,7 +187,7 @@ class Bikeway extends Structure {
     let delta = 0
     for (const i of countTo(NUM_LANES)) { // eslint-disable-line no-unused-vars
       delta += LANE_WIDTH
-      const dxy = rotateXY(xy(delta, 0), facing)
+      const dxy = xyRotate(xy(delta, 0), facing)
       this._plato.goto({ x: x + dxy.x, y: y + dxy.y, z: z, facing: facing })
       this._plato.makePlace(Use.BIKEPATH, LANE)
       const route = this._plato.makeRoute(Use.BIKEPATH, [
@@ -198,7 +197,7 @@ class Bikeway extends Structure {
       this._vehicles.push(new Vehicle(route, randomInt(7, 10) * 0.04))
     }
     delta += LANE_WIDTH
-    const dxy = rotateXY(xy(delta, 0), facing)
+    const dxy = xyRotate(xy(delta, 0), facing)
     this._plato.goto({ x: x + dxy.x, y: y + dxy.y, z: z, facing: facing })
     this._plato.makePlace(Use.BARE, LANE) // shoulder
     return this
