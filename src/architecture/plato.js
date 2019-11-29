@@ -6,10 +6,10 @@
   */
 
 import { xy, xyz, xyzAdd } from '../core/util.js'
-import Facing from '../core/facing.js'
+import { Facing } from '../core/facing.js'
 import { Geometry } from '../core/geometry.js'
-import Place from './place.js'
-import Sector from './sector.js'
+import { Use } from './use.js'
+import { Sector } from './sector.js'
 
 const WHITE = 0xffffff // eslint-disable-line no-unused-vars
 const RED = 0xcc0000 // eslint-disable-line no-unused-vars
@@ -39,11 +39,7 @@ const COLORS_OF_PLACES = {
   DOOR: YELLOW
 }
 
-/**
- * @deprecated use ??? instead
- */
 function xywh2rect (y, z, width, height) {
-  // [(3, 2), (8, 2), (8, 6), (3, 6)] == yzwh2rect(3, 2, 5, 4)
   return [xy(y, z), xy(y + width, z), xy(y + width, z + height), xy(y, z + height)]
 }
 
@@ -139,7 +135,7 @@ class Plato {
 
   makePlace (place, corners, { z = 0, incline = 0, depth = -0.5, nuance = false, flip = false, cap = true, wall = 0, openings = [] } = {}) {
     z = z + this._xyz.z
-    const group = this._city.makeGroup(`${Place[place]}${corners.name ? ` (${corners.name})` : ''}`)
+    const group = this._city.makeGroup(`${Use[place]}${corners.name ? ` (${corners.name})` : ''}`)
     const xyPolygon = new Geometry.XYPolygon()
     for (let xy of corners) {
       xy = rotateXY(xy, this._facing)
@@ -192,9 +188,9 @@ class Plato {
     const milliseconds = Date.now() - this._t0
     print(`plato: construction time was ${milliseconds} milliseconds`)
     this._sector.addMetric('Floor area', this._squareFeet, 'square feet')
-    const floor = this._squareFeet[Place.ROOM] || 0
-    const parcel = this._squareFeet[Place.PARCEL] || 10
-    const street = this._squareFeet[Place.STREET] || 0
+    const floor = this._squareFeet[Use.ROOM] || 0
+    const parcel = this._squareFeet[Use.PARCEL] || 10
+    const street = this._squareFeet[Use.STREET] || 0
     if (parcel) {
       const parcelFar = floor / parcel
       const urbanFar = floor / (parcel + street)

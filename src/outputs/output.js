@@ -1,14 +1,14 @@
-// output.js
-//
-// Authored in 2019 at <https://github.com/nicky-nym/city3d>
+/** @file output.js
+  * @author Authored in 2019 at <https://github.com/nicky-nym/city3d>
+  * @license UNLICENSE
+  * This is free and unencumbered software released into the public domain.
+  * For more information, please refer to <http://unlicense.org>
+  */
 
-// UNLICENSE
-// This is free and unencumbered software released into the public domain.
-// For more information, please refer to <http://unlicense.org>
-
-export default class Output {
-  // Output is an abstract superclass for visualizing cities.
-
+/**
+ * Output is an abstract superclass for visualizing cities.
+ */
+class Output {
   constructor (city) {
     this._city = city
   }
@@ -34,3 +34,5 @@ export default class Output {
     this.print(`rendering time time was ${Date.now() - t0} milliseconds`)
   }
 }
+
+export { Output }

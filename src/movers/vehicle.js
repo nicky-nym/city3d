@@ -7,7 +7,7 @@
 
 import * as THREE from '../../node_modules/three/build/three.module.js'
 import { xyz, countTo, randomInt } from '../core/util.js'
-import Mover from './mover.js'
+import { Mover } from './mover.js'
 
 const VEHICLE_SPECS = {
 
@@ -756,7 +756,10 @@ function makeVehicle (typename) {
   return vehicle
 }
 
-export default class Vehicle extends Mover {
+/**
+ * The Vehicle class knows how to make a variety of declaratively pre-defined vehicles.
+ */
+class Vehicle extends Mover {
   // new Vehicle([[0, 0, 0], [0, 200, 10], [100, 200, 10], [0, 0, 0]], 0.8)
   // For a parked vehicle, use speed = 0, and path[0] and path[1] to specify location and orientation.
   constructor (route, speed = 0.5, typename) {
@@ -765,3 +768,5 @@ export default class Vehicle extends Mover {
     this.threeComponent.update = this.update.bind(this)
   }
 }
+
+export { Vehicle }

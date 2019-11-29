@@ -37,7 +37,7 @@ function lookAt (obj, focus, up = UP) {
 /**
  * Mover is an abstract superclass for objects that follow a route.
  */
-export default class Mover {
+class Mover {
   /**
    * @param {xyz[]} route - array of xyz coordinates specifiying a route
    * @param {number} speed - for now, speed is in units of unit vectors per frame
@@ -108,3 +108,5 @@ export default class Mover {
     return this.threeComponent
   }
 }
+
+export { Mover }

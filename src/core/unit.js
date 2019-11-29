@@ -36,8 +36,5 @@ function feet (length) {
   return length * FEET_PER_FOOT
 }
 
-export const UNIT = {
-  meters,
-  km,
-  feet
-}
+const UNIT = { meters, km, feet }
+export { UNIT }

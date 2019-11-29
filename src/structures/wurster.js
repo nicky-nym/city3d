@@ -7,8 +7,8 @@
 
 import { UNIT } from '../core/unit.js'
 import { countTo, xy, xyz, array } from '../core/util.js'
-import Place from '../architecture/place.js'
-import Structure from '../architecture/structure.js'
+import { Use } from '../architecture/use.js'
+import { Structure } from '../architecture/structure.js'
 
 function rectangleOfSize (sizeXY) {
   return [
@@ -147,12 +147,12 @@ class Wurster extends Structure {
         point.z = z
         const floorName = 'Floor ' + i + 'of ' + name
         plato.goto(point)
-        plato.makePlace(Place.ROOM, corners, { name: floorName, wall: storyHeight })
+        plato.makePlace(Use.ROOM, corners, { name: floorName, wall: storyHeight })
         z = z + storyHeight
       }
       point.z = z
       plato.goto(point)
-      plato.makePlace(Place.ROOF, corners, { wall: roof.parapetHeight })
+      plato.makePlace(Use.ROOF, corners, { wall: roof.parapetHeight })
     }
     const defaultsForChildren = { storyHeight, roof }
     for (const childSpec of array(children)) {

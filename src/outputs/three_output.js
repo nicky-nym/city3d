@@ -5,11 +5,12 @@
   * For more information, please refer to <http://unlicense.org>
   */
 
-import { Geometry } from '../core/geometry.js'
-import Output from './output.js'
 import * as THREE from '../../node_modules/three/build/three.module.js'
-import { OrbitControls } from '../../node_modules/three/examples/jsm/controls/OrbitControls.js'
 import Stats from '../../node_modules/stats.js/src/Stats.js'
+
+import { Geometry } from '../core/geometry.js'
+import { Output } from './output.js'
+import { OrbitControls } from '../../node_modules/three/examples/jsm/controls/OrbitControls.js'
 
 function print (str) {
   console.log(str)
@@ -24,10 +25,10 @@ const ALMOST_WHITE = 0x999999 // eslint-disable-line no-unused-vars
 const COLOR_BRIGHT_SKY = 0xddeeff // eslint-disable-line no-unused-vars
 const COLOR_DIM_GROUND = 0x202020 // eslint-disable-line no-unused-vars
 
-export { print }
-export default class ThreeOutput extends Output {
-  // ThreeOutput can render faces in three.js.
-
+/**
+ * ThreeOutput can render faces in three.js.
+ */
+class ThreeOutput extends Output {
   constructor (city) {
     super(city)
 
@@ -437,3 +438,5 @@ export default class ThreeOutput extends Output {
     }
   }
 }
+
+export { ThreeOutput, print }

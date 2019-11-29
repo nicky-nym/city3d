@@ -6,7 +6,7 @@
   */
 
 import * as THREE from '../../node_modules/three/build/three.module.js'
-import Mover from './mover.js'
+import { Mover } from './mover.js'
 import { UNIT } from '../core/unit.js'
 import { xyz } from '../core/util.js'
 

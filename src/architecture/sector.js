@@ -1,14 +1,14 @@
-// sector.js
-//
-// Authored in 2019 at <https://github.com/nicky-nym/city3d>
+/** @file sector.js
+  * @author Authored in 2019 at <https://github.com/nicky-nym/city3d>
+  * @license UNLICENSE
+  * This is free and unencumbered software released into the public domain.
+  * For more information, please refer to <http://unlicense.org>
+  */
 
-// UNLICENSE
-// This is free and unencumbered software released into the public domain.
-// For more information, please refer to <http://unlicense.org>
-
-export default class Sector {
-  // Sector is a class for representing structure and metrics for a sector of a city.
-
+/**
+ * Sector is a class for representing structure and metrics for a sector of a city.
+ */
+class Sector {
   constructor (name) {
     this.name = name
     this.metrics = new Map()
@@ -23,3 +23,5 @@ export default class Sector {
     this.children.push(thing)
   }
 }
+
+export { Sector }

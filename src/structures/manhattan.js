@@ -6,8 +6,8 @@
   */
 
 import { xy, countTo, randomInt } from '../core/util.js'
-import Place from '../architecture/place.js'
-import Structure from '../architecture/structure.js'
+import { Use } from '../architecture/use.js'
+import { Structure } from '../architecture/structure.js'
 
 // in feet
 const BLOCK_DX = 600
@@ -59,9 +59,10 @@ const SIDEWALK_FOR_AVENUE = [
 const REPEAT_DX = BLOCK_DX + AVENUE_WIDTH + (SIDEWALK_WIDTH_AVENUES * 2)
 const REPEAT_DY = BLOCK_DY + STREET_WIDTH + (SIDEWALK_WIDTH_STREETS * 2)
 
-export default class Manhattan extends Structure {
-  // Manhattan objects know how to describe the city blocks in New York.
-
+/**
+ * Manhattan objects know how to describe the city blocks in New York.
+ */
+class Manhattan extends Structure {
   makePlace (place, area,
     {
       x = 0,
@@ -79,14 +80,14 @@ export default class Manhattan extends Structure {
   addBuildingAt (x = 0, y = 0) {
     // print(`NYC: addBuildingAt(${x}, ${y})`)
     let z = 0
-    this.makePlace(Place.PARCEL, BUILDING, { x: x, y: y, z: z })
+    this.makePlace(Use.PARCEL, BUILDING, { x: x, y: y, z: z })
     const numFloors = randomInt(4, 60)
     const storyHeight = randomInt(9, 12)
     for (const i of countTo(numFloors)) {
       z = i * storyHeight
-      this.makePlace(Place.ROOM, BUILDING, { x: x, y: y, z: z, wall: storyHeight, openings: [] })
+      this.makePlace(Use.ROOM, BUILDING, { x: x, y: y, z: z, wall: storyHeight, openings: [] })
     }
-    this.makePlace(Place.ROOF, BUILDING, { x: x, y: y, z: z + storyHeight })
+    this.makePlace(Use.ROOF, BUILDING, { x: x, y: y, z: z + storyHeight })
   }
 
   addBlock (row = 0, col = 0) {
@@ -104,20 +105,20 @@ export default class Manhattan extends Structure {
       }
     }
 
-    this.makePlace(Place.STREET, STREET, { x: x, y: y, dx: HALF_AVENUE + SIDEWALK_WIDTH_AVENUES })
-    this.makePlace(Place.STREET, STREET, { x: x, y: y, dx: HALF_AVENUE + SIDEWALK_WIDTH_AVENUES, dy: HALF_STREET + (SIDEWALK_WIDTH_STREETS * 2) + BLOCK_DY })
-    this.makePlace(Place.STREET, AVENUE, { x: x, y: y, dy: HALF_STREET + SIDEWALK_WIDTH_STREETS })
-    this.makePlace(Place.STREET, AVENUE, { x: x, y: y, dx: HALF_AVENUE + (SIDEWALK_WIDTH_AVENUES * 2) + BLOCK_DX, dy: HALF_STREET + SIDEWALK_WIDTH_STREETS })
+    this.makePlace(Use.STREET, STREET, { x: x, y: y, dx: HALF_AVENUE + SIDEWALK_WIDTH_AVENUES })
+    this.makePlace(Use.STREET, STREET, { x: x, y: y, dx: HALF_AVENUE + SIDEWALK_WIDTH_AVENUES, dy: HALF_STREET + (SIDEWALK_WIDTH_STREETS * 2) + BLOCK_DY })
+    this.makePlace(Use.STREET, AVENUE, { x: x, y: y, dy: HALF_STREET + SIDEWALK_WIDTH_STREETS })
+    this.makePlace(Use.STREET, AVENUE, { x: x, y: y, dx: HALF_AVENUE + (SIDEWALK_WIDTH_AVENUES * 2) + BLOCK_DX, dy: HALF_STREET + SIDEWALK_WIDTH_STREETS })
 
-    this.makePlace(Place.STREET, INTERSECTION, { x: x, y: y })
-    this.makePlace(Place.STREET, INTERSECTION, { x: x, y: y, dx: HALF_AVENUE + (SIDEWALK_WIDTH_AVENUES * 2) + BLOCK_DX })
-    this.makePlace(Place.STREET, INTERSECTION, { x: x, y: y, dy: HALF_STREET + (SIDEWALK_WIDTH_STREETS * 2) + BLOCK_DY })
-    this.makePlace(Place.STREET, INTERSECTION, { x: x, y: y, dx: HALF_AVENUE + (SIDEWALK_WIDTH_AVENUES * 2) + BLOCK_DX, dy: HALF_STREET + (SIDEWALK_WIDTH_STREETS * 2) + BLOCK_DY })
+    this.makePlace(Use.STREET, INTERSECTION, { x: x, y: y })
+    this.makePlace(Use.STREET, INTERSECTION, { x: x, y: y, dx: HALF_AVENUE + (SIDEWALK_WIDTH_AVENUES * 2) + BLOCK_DX })
+    this.makePlace(Use.STREET, INTERSECTION, { x: x, y: y, dy: HALF_STREET + (SIDEWALK_WIDTH_STREETS * 2) + BLOCK_DY })
+    this.makePlace(Use.STREET, INTERSECTION, { x: x, y: y, dx: HALF_AVENUE + (SIDEWALK_WIDTH_AVENUES * 2) + BLOCK_DX, dy: HALF_STREET + (SIDEWALK_WIDTH_STREETS * 2) + BLOCK_DY })
 
-    this.makePlace(Place.WALKWAY, SIDEWALK_FOR_STREET, { x: x, y: y, dx: HALF_AVENUE + SIDEWALK_WIDTH_AVENUES, dy: HALF_STREET })
-    this.makePlace(Place.WALKWAY, SIDEWALK_FOR_STREET, { x: x, y: y, dx: HALF_AVENUE + SIDEWALK_WIDTH_AVENUES, dy: HALF_STREET + SIDEWALK_WIDTH_STREETS + BLOCK_DY })
-    this.makePlace(Place.WALKWAY, SIDEWALK_FOR_AVENUE, { x: x, y: y, dx: HALF_AVENUE, dy: HALF_STREET + SIDEWALK_WIDTH_STREETS })
-    this.makePlace(Place.WALKWAY, SIDEWALK_FOR_AVENUE, { x: x, y: y, dx: HALF_AVENUE + SIDEWALK_WIDTH_AVENUES + BLOCK_DX, dy: HALF_STREET + SIDEWALK_WIDTH_STREETS })
+    this.makePlace(Use.WALKWAY, SIDEWALK_FOR_STREET, { x: x, y: y, dx: HALF_AVENUE + SIDEWALK_WIDTH_AVENUES, dy: HALF_STREET })
+    this.makePlace(Use.WALKWAY, SIDEWALK_FOR_STREET, { x: x, y: y, dx: HALF_AVENUE + SIDEWALK_WIDTH_AVENUES, dy: HALF_STREET + SIDEWALK_WIDTH_STREETS + BLOCK_DY })
+    this.makePlace(Use.WALKWAY, SIDEWALK_FOR_AVENUE, { x: x, y: y, dx: HALF_AVENUE, dy: HALF_STREET + SIDEWALK_WIDTH_STREETS })
+    this.makePlace(Use.WALKWAY, SIDEWALK_FOR_AVENUE, { x: x, y: y, dx: HALF_AVENUE + SIDEWALK_WIDTH_AVENUES + BLOCK_DX, dy: HALF_STREET + SIDEWALK_WIDTH_STREETS })
 
     return this
   }
@@ -132,3 +133,5 @@ export default class Manhattan extends Structure {
     return this
   }
 }
+
+export { Manhattan }

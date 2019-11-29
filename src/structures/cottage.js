@@ -6,10 +6,10 @@
   */
 
 import { xy, xyz, countTo, xyzAdd } from '../core/util.js'
-import Facing from '../core/facing.js'
-import Place from '../architecture/place.js'
+import { Facing } from '../core/facing.js'
+import { Use } from '../architecture/use.js'
 import { xywh2rect } from '../architecture/plato.js'
-import Structure from '../architecture/structure.js'
+import { Structure } from '../architecture/structure.js'
 
 // in feet
 const PARCEL_DY = 50
@@ -281,9 +281,10 @@ function face (a, b, c) {
   return [a, b, c]
 }
 
-export default class Cottage extends Structure {
-  // Cottage objects know how to describe a Queen Anne cottage.
-
+/**
+ * Cottage objects know how to describe a Queen Anne cottage.
+ */
+class Cottage extends Structure {
   addStreet (numStreets = 5) {
     // Tell plato about the street the cottages are on.
 
@@ -306,8 +307,8 @@ export default class Cottage extends Structure {
       xy(SIDEWALK_WIDTH + STREET_DX, 0)]
 
     this._plato.goto({ x: 0, y: 0 })
-    this._plato.makePlace(Place.WALKWAY, SIDEWALK)
-    this._plato.makePlace(Place.STREET, STREET)
+    this._plato.makePlace(Use.WALKWAY, SIDEWALK)
+    this._plato.makePlace(Use.STREET, STREET)
     this._plato.goto({ x: STREET_DX + SIDEWALK_WIDTH })
 
     for (const i of countTo(numStreets)) {
@@ -325,27 +326,27 @@ export default class Cottage extends Structure {
       const z = CRAWL_SPACE_HEIGHT / NUM_STAIR_STEPS * i
       x -= 1
       this._plato.goto({ x: x, y: y, z: z, facing: facing })
-      this._plato.makePlace(Place.WALKWAY, STAIR, { nuance: true })
+      this._plato.makePlace(Use.WALKWAY, STAIR, { nuance: true })
     }
   }
 
   addParcel (x = 0, y = 0, facing = Facing.NORTH) {
     // Tell plato about the yard, fence, sidewalk, etc.
     this._plato.goto({ x: x, y: y, z: -0.01, facing: facing })
-    this._plato.makePlace(Place.PARCEL, PARCEL)
+    this._plato.makePlace(Use.PARCEL, PARCEL)
     this._plato.goto({ x: x, y: y, z: 0, facing: facing })
-    this._plato.makePlace(Place.BARE, FENCE_LINE, { wall: FENCE_HEIGHT, cap: false })
-    this._plato.makePlace(Place.WALKWAY, DOORPATH, { nuance: true })
-    this._plato.makePlace(Place.STREET, DRIVEWAY, { nuance: true })
+    this._plato.makePlace(Use.BARE, FENCE_LINE, { wall: FENCE_HEIGHT, cap: false })
+    this._plato.makePlace(Use.WALKWAY, DOORPATH, { nuance: true })
+    this._plato.makePlace(Use.STREET, DRIVEWAY, { nuance: true })
     this.addStairs(x, y, facing)
     return this
   }
 
   addGarageAndAdu (x = 0, y = 0, facing = Facing.NORTH) {
     this._plato.goto({ x: x, y: y, z: 0, facing: facing })
-    this._plato.makePlace(Place.BARE, GARAGE, { wall: GARAGE_HEIGHT, nuance: true })
-    this._plato.makePlace(Place.ROOM, ADU, { wall: GARAGE_HEIGHT, nuance: true })
-    this._plato.makePlace(Place.WALKWAY, ADU_DOORPATH, { nuance: true })
+    this._plato.makePlace(Use.BARE, GARAGE, { wall: GARAGE_HEIGHT, nuance: true })
+    this._plato.makePlace(Use.ROOM, ADU, { wall: GARAGE_HEIGHT, nuance: true })
+    this._plato.makePlace(Use.WALKWAY, ADU_DOORPATH, { nuance: true })
     return this
   }
 
@@ -355,30 +356,32 @@ export default class Cottage extends Structure {
 
     // Crawl space
     plato.goto({ x: x, y: y, z: 0, facing: facing })
-    plato.makePlace(Place.BARE, HOUSE, { wall: CRAWL_SPACE_HEIGHT })
-    plato.makePlace(Place.BARE, ADDON, { wall: CRAWL_SPACE_HEIGHT })
-    plato.makePlace(Place.BARE, PORCH, { wall: CRAWL_SPACE_HEIGHT })
+    plato.makePlace(Use.BARE, HOUSE, { wall: CRAWL_SPACE_HEIGHT })
+    plato.makePlace(Use.BARE, ADDON, { wall: CRAWL_SPACE_HEIGHT })
+    plato.makePlace(Use.BARE, PORCH, { wall: CRAWL_SPACE_HEIGHT })
 
     // Main floor
     plato.goto({ x: x, y: y, z: CRAWL_SPACE_HEIGHT, facing: facing })
-    plato.makePlace(Place.ROOM, HOUSE, { wall: GROUND_FLOOR_HEIGHT, openings: HOUSE_WINDOWS })
-    plato.makePlace(Place.BARE, PORCH)
-    plato.makePlace(Place.ROOM, ADDON, { wall: ADDON_HEIGHT, openings: ADDON_WINDOWS })
+    plato.makePlace(Use.ROOM, HOUSE, { wall: GROUND_FLOOR_HEIGHT, openings: HOUSE_WINDOWS })
+    plato.makePlace(Use.BARE, PORCH)
+    plato.makePlace(Use.ROOM, ADDON, { wall: ADDON_HEIGHT, openings: ADDON_WINDOWS })
 
     // Attic
     const ATTIC_ELEVATION = GROUND_FLOOR_HEIGHT + CRAWL_SPACE_HEIGHT
     plato.goto({ x: x, y: y, z: ATTIC_ELEVATION, facing: facing })
-    plato.makePlace(Place.BARE, CHIMNEY, { height: CHIMNEY_HEIGHT, nuance: true })
-    plato.makePlace(Place.BARE, ATTIC)
-    plato.makeRoof(Place.ROOF, VERTICES_OF_ROOF, INDICES_OF_ROOF_FACES)
-    plato.makeRoof(Place.ROOF, VERTICES_OF_DORMER_ROOF, INDICES_OF_DORMER_ROOF_FACES)
+    plato.makePlace(Use.BARE, CHIMNEY, { height: CHIMNEY_HEIGHT, nuance: true })
+    plato.makePlace(Use.BARE, ATTIC)
+    plato.makeRoof(Use.ROOF, VERTICES_OF_ROOF, INDICES_OF_ROOF_FACES)
+    plato.makeRoof(Use.ROOF, VERTICES_OF_DORMER_ROOF, INDICES_OF_DORMER_ROOF_FACES)
 
     // Porch roofs
     const PORCH_TOP_ELEVATION = ADDON_HEIGHT + CRAWL_SPACE_HEIGHT
     plato.goto({ x: x, y: y, z: PORCH_TOP_ELEVATION, facing: facing })
-    plato.makeRoof(Place.ROOF, VERTICES_OF_PORCH_ROOF, INDICES_OF_PORCH_ROOF_FACES)
-    plato.makeRoof(Place.ROOF, VERTICES_OF_ADDON_ROOF, INDICES_OF_ADDON_ROOF_FACES)
+    plato.makeRoof(Use.ROOF, VERTICES_OF_PORCH_ROOF, INDICES_OF_PORCH_ROOF_FACES)
+    plato.makeRoof(Use.ROOF, VERTICES_OF_ADDON_ROOF, INDICES_OF_ADDON_ROOF_FACES)
 
     return this
   }
 }
+
+export { Cottage }

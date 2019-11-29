@@ -5,8 +5,8 @@
   * For more information, please refer to <http://unlicense.org>
   */
 
-import Sector from './sector.js'
-import Vehicle from '../movers/vehicle.js'
+import { Sector } from './sector.js'
+import { Vehicle } from '../movers/vehicle.js'
 
 /**
  * City is a class for representing a hierarchical collection of 3D places.

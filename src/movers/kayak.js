@@ -7,7 +7,7 @@
 
 import * as THREE from '../../node_modules/three/build/three.module.js'
 import { xyz, randomInt } from '../core/util.js'
-import Mover from './mover.js'
+import { Mover } from './mover.js'
 
 function _newLine (start, end, material) {
   const geometry = new THREE.Geometry()
@@ -81,7 +81,7 @@ class KayakFactory {
 
 const kayakFactory = new KayakFactory()
 
-export default class Kayak extends Mover {
+class Kayak extends Mover {
   // new Kayak([[0, 0, 0], [0, 200, 10], [100, 200, 10], [0, 0, 0]], 0.8)
   // For a stationary kayak, use speed = 0, and path[0] and path[1] to specify location and orientation.
   constructor (route, speed = 0.1) {
@@ -90,3 +90,5 @@ export default class Kayak extends Mover {
     this.threeComponent.update = this.update.bind(this)
   }
 }
+
+export { Kayak }

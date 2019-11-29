@@ -6,10 +6,10 @@
   */
 
 import { xy, xyz, count, countTo, randomInt, hypotenuse } from '../core/util.js'
-import Vehicle from '../movers/vehicle.js'
-import Place from '../architecture/place.js'
-import Facing from '../core/facing.js'
-import Structure from '../architecture/structure.js'
+import { Vehicle } from '../movers/vehicle.js'
+import { Use } from '../architecture/use.js'
+import { Facing } from '../core/facing.js'
+import { Structure } from '../architecture/structure.js'
 import { xywh2rect, rotateXY } from '../architecture/plato.js'
 
 // in feet
@@ -171,9 +171,10 @@ const LOWER_PLAZA_WALKWAY_D = [
   xy(WALKWAY_XD + WALKWAY_WIDTH, 45)
 ]
 
-export default class Bikeway extends Structure {
-  // Bikeway objects know how to describe the Kinematic city bikeways.
-
+/**
+ * Bikeway objects know how to describe the Kinematic city bikeways.
+ */
+class Bikeway extends Structure {
   addBoulevard ({ x = 0, y = 0, z = 0, facing = Facing.NORTH } = {}) {
     const NUM_LANES = 4
     const LANE_WIDTH = 5
@@ -183,14 +184,14 @@ export default class Bikeway extends Structure {
       xy(LANE_WIDTH, BLOCK_LENGTH),
       xy(0, BLOCK_LENGTH)]
     this._plato.goto({ x: x, y: y, z: z, facing: facing })
-    this._plato.makePlace(Place.BARE, LANE) // median strip
+    this._plato.makePlace(Use.BARE, LANE) // median strip
     let delta = 0
     for (const i of countTo(NUM_LANES)) { // eslint-disable-line no-unused-vars
       delta += LANE_WIDTH
       const dxy = rotateXY(xy(delta, 0), facing)
       this._plato.goto({ x: x + dxy.x, y: y + dxy.y, z: z, facing: facing })
-      this._plato.makePlace(Place.BIKEPATH, LANE)
-      const route = this._plato.makeRoute(Place.BIKEPATH, [
+      this._plato.makePlace(Use.BIKEPATH, LANE)
+      const route = this._plato.makeRoute(Use.BIKEPATH, [
         xyz(LANE_WIDTH / 2, 0, 0),
         xyz(LANE_WIDTH / 2, BLOCK_LENGTH, 0)
       ])
@@ -199,15 +200,15 @@ export default class Bikeway extends Structure {
     delta += LANE_WIDTH
     const dxy = rotateXY(xy(delta, 0), facing)
     this._plato.goto({ x: x + dxy.x, y: y + dxy.y, z: z, facing: facing })
-    this._plato.makePlace(Place.BARE, LANE) // shoulder
+    this._plato.makePlace(Use.BARE, LANE) // shoulder
     return this
   }
 
   addRamps (self) {
-    this._plato.makePlace(Place.BIKEPATH, EXIT_DOWN, { z: 0.1 })
-    this._plato.makePlace(Place.BIKEPATH, RAMP_DOWN_TO_LANDING, { incline: RAMP_RISE_HEIGHT })
-    this._plato.makePlace(Place.BIKEPATH, LANDING, { z: -7.5 })
-    let route = this._plato.makeRoute(Place.BIKEPATH, [
+    this._plato.makePlace(Use.BIKEPATH, EXIT_DOWN, { z: 0.1 })
+    this._plato.makePlace(Use.BIKEPATH, RAMP_DOWN_TO_LANDING, { incline: RAMP_RISE_HEIGHT })
+    this._plato.makePlace(Use.BIKEPATH, LANDING, { z: -7.5 })
+    let route = this._plato.makeRoute(Use.BIKEPATH, [
       xyz(25, 0, 0.1), xyz(35, 90, 0.1), // start and end of EXIT_DOWN
       xyz(35, 270, -7.5), // landing
       xyz(45, 390, -7.5),
@@ -216,21 +217,21 @@ export default class Bikeway extends Structure {
     ])
     this._vehicles.push(new Vehicle(route, randomInt(6, 10) * 0.04))
 
-    this._plato.makePlace(Place.BARE, LANDING_PARKING, { z: -7.5 })
-    this._plato.makePlace(Place.WALKWAY, LANDING_PLAZA, { z: -7.5 })
-    this._plato.makePlace(Place.WALKWAY, LANDING_NORTH_WALKWAY, { z: -7.5, incline: -RISE_HEIGHT })
-    this._plato.makePlace(Place.WALKWAY, LANDING_SOUTH_WALKWAY, { z: -7.5, incline: -RISE_HEIGHT })
+    this._plato.makePlace(Use.BARE, LANDING_PARKING, { z: -7.5 })
+    this._plato.makePlace(Use.WALKWAY, LANDING_PLAZA, { z: -7.5 })
+    this._plato.makePlace(Use.WALKWAY, LANDING_NORTH_WALKWAY, { z: -7.5, incline: -RISE_HEIGHT })
+    this._plato.makePlace(Use.WALKWAY, LANDING_SOUTH_WALKWAY, { z: -7.5, incline: -RISE_HEIGHT })
 
-    this._plato.makePlace(Place.BIKEPATH, RAMP_UP_FROM_LANDING, { z: -7.5, incline: -RAMP_RISE_HEIGHT })
-    this._plato.makePlace(Place.BIKEPATH, ENTRANCE_FROM_BELOW, { z: 0.1 })
+    this._plato.makePlace(Use.BIKEPATH, RAMP_UP_FROM_LANDING, { z: -7.5, incline: -RAMP_RISE_HEIGHT })
+    this._plato.makePlace(Use.BIKEPATH, ENTRANCE_FROM_BELOW, { z: 0.1 })
 
-    this._plato.makePlace(Place.BIKEPATH, RAMP_DOWN_FROM_LANDING, { z: -7.5, incline: RAMP_RISE_HEIGHT })
-    this._plato.makePlace(Place.BIKEPATH, RIGHT_TURN_TO_ENTER, { z: -14.9 })
-    this._plato.makePlace(Place.BIKEPATH, ENTRANCE_FROM_ABOVE, { z: -14.9 })
+    this._plato.makePlace(Use.BIKEPATH, RAMP_DOWN_FROM_LANDING, { z: -7.5, incline: RAMP_RISE_HEIGHT })
+    this._plato.makePlace(Use.BIKEPATH, RIGHT_TURN_TO_ENTER, { z: -14.9 })
+    this._plato.makePlace(Use.BIKEPATH, ENTRANCE_FROM_ABOVE, { z: -14.9 })
 
-    this._plato.makePlace(Place.BIKEPATH, EXIT_UP, { z: -14.9 })
-    this._plato.makePlace(Place.BIKEPATH, RIGHT_TURN_FROM_EXIT, { z: -14.9 })
-    route = this._plato.makeRoute(Place.BIKEPATH, [
+    this._plato.makePlace(Use.BIKEPATH, EXIT_UP, { z: -14.9 })
+    this._plato.makePlace(Use.BIKEPATH, RIGHT_TURN_FROM_EXIT, { z: -14.9 })
+    route = this._plato.makeRoute(Use.BIKEPATH, [
       xyz(170, 22.5, -14.9), // start of EXIT_UP
       xyz(100, 30, -14.9), xyz(60, 44, -14.9), xyz(45, 90, -14.9), // start, middle, end of RIGHT_TURN_FROM_EXIT
       xyz(45, 270, -7.5), // landing
@@ -238,13 +239,13 @@ export default class Bikeway extends Structure {
       xyz(35, 570, 0.1), xyz(25, 660, 0.1) // start and end of ENTRANCE_FROM_BELOW
     ])
     this._vehicles.push(new Vehicle(route, randomInt(3, 6) * 0.04))
-    this._plato.makePlace(Place.BIKEPATH, RAMP_UP_TO_LANDING, { z: -15, incline: -RAMP_RISE_HEIGHT })
+    this._plato.makePlace(Use.BIKEPATH, RAMP_UP_TO_LANDING, { z: -15, incline: -RAMP_RISE_HEIGHT })
 
-    this._plato.makePlace(Place.WALKWAY, LOWER_PLAZA, { z: -14.9 })
-    this._plato.makePlace(Place.WALKWAY, LOWER_PLAZA_WALKWAY_A, { z: -15 })
-    this._plato.makePlace(Place.WALKWAY, LOWER_PLAZA_WALKWAY_B, { z: -15 })
-    this._plato.makePlace(Place.WALKWAY, LOWER_PLAZA_WALKWAY_C, { z: -15 })
-    this._plato.makePlace(Place.WALKWAY, LOWER_PLAZA_WALKWAY_D, { z: -15 })
+    this._plato.makePlace(Use.WALKWAY, LOWER_PLAZA, { z: -14.9 })
+    this._plato.makePlace(Use.WALKWAY, LOWER_PLAZA_WALKWAY_A, { z: -15 })
+    this._plato.makePlace(Use.WALKWAY, LOWER_PLAZA_WALKWAY_B, { z: -15 })
+    this._plato.makePlace(Use.WALKWAY, LOWER_PLAZA_WALKWAY_C, { z: -15 })
+    this._plato.makePlace(Use.WALKWAY, LOWER_PLAZA_WALKWAY_D, { z: -15 })
     return this
   }
 
@@ -262,8 +263,8 @@ export default class Bikeway extends Structure {
     const HIGHLINE_SOIL_THICKNESS = 4
     const HIGHLINE_WALL_HEIGHT = 3 + HIGHLINE_SOIL_THICKNESS
     this._plato.goto({ x: x, y: y, z: z, facing: facing })
-    this._plato.makePlace(Place.BARE, RETAINING_WALL, { wall: HIGHLINE_WALL_HEIGHT, cap: false })
-    this._plato.makePlace(Place.PARCEL, HIGHLINE_SOIL, { depth: HIGHLINE_SOIL_THICKNESS })
+    this._plato.makePlace(Use.BARE, RETAINING_WALL, { wall: HIGHLINE_WALL_HEIGHT, cap: false })
+    this._plato.makePlace(Use.PARCEL, HIGHLINE_SOIL, { depth: HIGHLINE_SOIL_THICKNESS })
     return this
   }
 
@@ -279,7 +280,7 @@ export default class Bikeway extends Structure {
     const WINDOWS = [[2, WINDOW_RECTS]]
 
     this._plato.goto({ x: x, y: y, z: z, facing: facing })
-    this._plato.makePlace(Place.ROOM, LONGHOUSE, { wall: height, openings: WINDOWS })
+    this._plato.makePlace(Use.ROOM, LONGHOUSE, { wall: height, openings: WINDOWS })
     return this
   }
 
@@ -291,7 +292,7 @@ export default class Bikeway extends Structure {
     const HIGHLINE_ALTITUDE = 37.5
 
     this._plato.goto({ x: x, y: y, z: -0.1, facing: Facing.NORTH })
-    this._plato.makePlace(Place.PARCEL, PARCEL)
+    this._plato.makePlace(Use.PARCEL, PARCEL)
 
     this.addBoulevard({ x: x, y: y, z: NORTH_SOUTH_ALTITUDE, facing: Facing.NORTH })
     if (buildings) {
@@ -345,3 +346,5 @@ export default class Bikeway extends Structure {
     return this
   }
 }
+
+export { Bikeway }

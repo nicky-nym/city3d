@@ -1,18 +1,18 @@
-// summary_output.js
-//
-// Authored in 2019 at <https://github.com/nicky-nym/city3d>
+/** @file summary_output.js
+  * @author Authored in 2019 at <https://github.com/nicky-nym/city3d>
+  * @license UNLICENSE
+  * This is free and unencumbered software released into the public domain.
+  * For more information, please refer to <http://unlicense.org>
+  */
 
-// UNLICENSE
-// This is free and unencumbered software released into the public domain.
-// For more information, please refer to <http://unlicense.org>
+import { Kayak } from '../movers/kayak.js'
+import { Output } from './output.js'
+import { Vehicle } from '../movers/vehicle.js'
 
-import Kayak from '../movers/kayak.js'
-import Output from './output.js'
-import Vehicle from '../movers/vehicle.js'
-
-export default class SummaryOutput extends Output {
-  // SummaryOutput can render a summary of city metrics.
-
+/**
+ * SummaryOutput can render a summary of city metrics.
+ */
+class SummaryOutput extends Output {
   render () {
     const sectors = this._city.getSectors()
     for (const sector of sectors) {
@@ -49,3 +49,5 @@ export default class SummaryOutput extends Output {
     }
   }
 }
+
+export { SummaryOutput }

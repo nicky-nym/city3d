@@ -1,23 +1,22 @@
-// citylib.js
-//
-// Authored in 2019 at <https://github.com/nicky-nym/city3d>
+/** @file citylib.js
+  * @author Authored in 2019 at <https://github.com/nicky-nym/city3d>
+  * @license UNLICENSE
+  * This is free and unencumbered software released into the public domain.
+  * For more information, please refer to <http://unlicense.org>
+  */
 
-// UNLICENSE
-// This is free and unencumbered software released into the public domain.
-// For more information, please refer to <http://unlicense.org>
-
-import Bikeway from './structures/bikeway.js'
+import { Bikeway } from './structures/bikeway.js'
 import { City, Group } from './architecture/city.js'
-import Cottage from './structures/cottage.js'
+import { Cottage } from './structures/cottage.js'
 import { Creek } from './land/creek.js'
 import { Kalpana } from './movers/kalpana.js'
-import Kayak from './movers/kayak.js'
-import Manhattan from './structures/manhattan.js'
-import Merlon from './structures/merlon.js'
+import { Kayak } from './movers/kayak.js'
+import { Manhattan } from './structures/manhattan.js'
+import { Merlon } from './structures/merlon.js'
 import { Plato } from './architecture/plato.js'
-import SummaryOutput from './outputs/summary_output.js'
-import ThreeOutput from './outputs/three_output.js'
-import Vehicle from './movers/vehicle.js'
+import { SummaryOutput } from './outputs/summary_output.js'
+import { ThreeOutput } from './outputs/three_output.js'
+import { Vehicle } from './movers/vehicle.js'
 import { Wurster } from './structures/wurster.js'
 
 export const CITY = {

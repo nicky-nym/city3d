@@ -6,11 +6,10 @@
   */
 
 import { xy, xyz, count, countTo, randomInt, hypotenuse } from '../core/util.js'
-import Place from '../architecture/place.js'
-import Facing from '../core/facing.js'
-import Structure from '../architecture/structure.js'
+import { Use } from '../architecture/use.js'
+import { Facing } from '../core/facing.js'
+import { Structure } from '../architecture/structure.js'
 import { xywh2rect } from '../architecture/plato.js'
-// import { print } from '../city3d/output.js'
 
 // in feet
 const STORY_HEIGHT = 10
@@ -264,9 +263,9 @@ function _getLandingPattern (numRows, numCols) {
 function _addRoofAroundFloor (plato, shape, peakXyz) {
   const Z = 2
   if (peakXyz[Z] === 0) {
-    plato.makePlace(Place.ROOF, shape)
+    plato.makePlace(Use.ROOF, shape)
   } else {
-    plato.makePlace(Place.BARE, shape)
+    plato.makePlace(Use.BARE, shape)
     let i = 0
     for (const corner of shape) {
       const next = i + 1 < shape.length ? i + 1 : 0
@@ -277,7 +276,7 @@ function _addRoofAroundFloor (plato, shape, peakXyz) {
         peakXyz
       ]
       const indices = [[0, 1, 2]]
-      plato.makeRoof(Place.ROOF, vertices, indices)
+      plato.makeRoof(Use.ROOF, vertices, indices)
     }
   }
 }
@@ -288,15 +287,15 @@ function _addFeaturesAtLanding (plato, rampBearings, at, buildings = true) {
 
   // Landing
   plato.goto({ x: x, y: y, z: z, facing: Facing.NORTH })
-  plato.makePlace(Place.WALKWAY, OCTAGONAL_LANDING)
+  plato.makePlace(Use.WALKWAY, OCTAGONAL_LANDING)
   if (!buildings && z % 10 === 0) {
-    plato.makePlace(Place.BARE, DIAMOND_CENTER, { wall: 3 })
+    plato.makePlace(Use.BARE, DIAMOND_CENTER, { wall: 3 })
   }
 
   // Ramps
   for (const bearing of rampBearings) {
     plato.goto({ x: x, y: y, z: z, facing: bearing })
-    plato.makePlace(Place.WALKWAY, RAMP_CORNERS, { incline: RAMP_RISE_HEIGHT })
+    plato.makePlace(Use.WALKWAY, RAMP_CORNERS, { incline: RAMP_RISE_HEIGHT })
   }
 
   // Floors, Walls, and Roof
@@ -304,18 +303,18 @@ function _addFeaturesAtLanding (plato, rampBearings, at, buildings = true) {
     for (const bearing of rampBearings) {
       // parcel
       plato.goto({ x: x, y: y, z: 0, facing: bearing })
-      plato.makePlace(Place.PARCEL, BASEMENT)
+      plato.makePlace(Use.PARCEL, BASEMENT)
 
       // lower floors
       for (const altitude of count(0, z, STORY_HEIGHT)) {
         plato.goto({ x: x, y: y, z: altitude, facing: bearing })
-        plato.makePlace(Place.ROOM, BASEMENT)
+        plato.makePlace(Use.ROOM, BASEMENT)
       }
 
       // upper floors
       for (const altitude of count(z, ROOFLINE, STORY_HEIGHT)) {
         plato.goto({ x: x, y: y, z: altitude, facing: bearing })
-        plato.makePlace(Place.ROOM, APARTMENT, { wall: STORY_HEIGHT, openings: APARTMENT_WINDOWS })
+        plato.makePlace(Use.ROOM, APARTMENT, { wall: STORY_HEIGHT, openings: APARTMENT_WINDOWS })
       }
 
       // roof
@@ -327,7 +326,7 @@ function _addFeaturesAtLanding (plato, rampBearings, at, buildings = true) {
   }
 }
 
-export default class Merlon extends Structure {
+class Merlon extends Structure {
   addBuildings (numRows = 2, numCols = 2, buildings = true) {
     // Tell plato about all of our landings, ramps, rooms, and roofs.
     let i = 0
@@ -348,3 +347,5 @@ export default class Merlon extends Structure {
     return this
   }
 }
+
+export { Merlon }

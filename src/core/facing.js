@@ -1,10 +1,9 @@
-// facing.js
-//
-// Authored in 2019 at <https://github.com/nicky-nym/city3d>
-
-// UNLICENSE
-// This is free and unencumbered software released into the public domain.
-// For more information, please refer to <http://unlicense.org>
+/** @file facing.js
+  * @author Authored in 2019 at <https://github.com/nicky-nym/city3d>
+  * @license UNLICENSE
+  * This is free and unencumbered software released into the public domain.
+  * For more information, please refer to <http://unlicense.org>
+  */
 
 const Facing = {
   // Compass bearings: North, South, East, and West.
@@ -26,4 +25,4 @@ function opposite (facing) { // eslint-disable-line no-unused-vars
   return 360 - facing
 }
 
-export default Facing
+export { Facing }
