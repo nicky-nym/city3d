@@ -5,23 +5,13 @@
   * For more information, please refer to <http://unlicense.org>
   */
 
+import { Group } from './group.js'
+
 /**
  * Sector is a class for representing structure and metrics for a sector of a city.
  */
-class Sector {
-  constructor (name) {
-    this.name = name
-    this.metrics = new Map()
-    this.children = []
-  }
+class Sector extends Group {
 
-  addMetric (name, value, units) {
-    this.metrics.set(name, { value, units })
-  }
-
-  add (thing) {
-    this.children.push(thing)
-  }
 }
 
 export { Sector }

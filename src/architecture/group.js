@@ -9,10 +9,15 @@ class Group {
   constructor (name) {
     this.name = name
     this.children = []
+    this.metrics = new Map()
   }
 
   add (thing) {
     this.children.push(thing)
+  }
+
+  addMetric (name, value, units) {
+    this.metrics.set(name, { value, units })
   }
 }
 

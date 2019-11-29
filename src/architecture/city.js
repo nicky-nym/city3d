@@ -5,22 +5,14 @@
   * For more information, please refer to <http://unlicense.org>
   */
 
+import { Group } from './group.js'
 import { Sector } from './sector.js'
 import { Vehicle } from '../movers/vehicle.js'
 
 /**
  * City is a class for representing a hierarchical collection of 3D places.
  */
-class City {
-  constructor (name) {
-    this.name = name
-    this.children = []
-  }
-
-  add (thing) {
-    this.children.push(thing)
-  }
-
+class City extends Group {
   extractRoutes (thing, routes) {
     // TODO: this should become Mover
     if (thing instanceof Vehicle) {
