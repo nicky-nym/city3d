@@ -8,10 +8,10 @@
 import { CITY } from '../src/citylib.js'
 import { Geometry } from '../src/core/geometry.js'
 import { xy, xyz, xyzAdd, xyzSubtract, count, countTo, randomInt, randomPseudoGaussian, hypotenuse, array } from '../src/core/util.js'
+import 'chai/register-should'
 
 /* global describe, it */
-
-var assert = require('assert')
+/* eslint-disable no-unused-expressions */
 
 describe('Geometry', function () {
   describe('XYPolygon', function () {
@@ -22,26 +22,26 @@ describe('Geometry', function () {
         xyPolygon.push({ x: 0, y: 3 })
         xyPolygon.push({ x: 2, y: 3 })
         xyPolygon.push({ x: 2, y: 0 })
-        assert.strictEqual(xyPolygon.area(), 6)
+        xyPolygon.area().should.equal(6)
       })
       it('should return the correct area for a triangle', function () {
         const xyPolygon = new Geometry.XYPolygon()
         xyPolygon.push({ x: 0, y: 0 })
         xyPolygon.push({ x: 0, y: 3 })
         xyPolygon.push({ x: 4, y: 3 })
-        assert.strictEqual(xyPolygon.area(), 6)
+        xyPolygon.area().should.equal(6)
       })
       it('should return zero for a line', function () {
         const xyPolygon = new Geometry.XYPolygon()
         xyPolygon.push({ x: 0, y: 0 })
         xyPolygon.push({ x: 0, y: 1 })
         xyPolygon.push({ x: 0, y: 4 })
-        assert.strictEqual(xyPolygon.area(), 0)
+        xyPolygon.area().should.equal(0)
       })
       it('should return zero for a point', function () {
         const xyPolygon = new Geometry.XYPolygon()
         xyPolygon.push({ x: 1, y: 2 })
-        assert.strictEqual(xyPolygon.area(), 0)
+        xyPolygon.area().should.equal(0)
       })
       it('should return the correct area for a closed rectangle', function () {
         const xyPolygon = new Geometry.XYPolygon()
@@ -50,8 +50,57 @@ describe('Geometry', function () {
         xyPolygon.push({ x: 2, y: 3 })
         xyPolygon.push({ x: 2, y: 0 })
         xyPolygon.push({ x: 0, y: 0 })
-        assert.strictEqual(xyPolygon.area(), 6)
+        xyPolygon.area().should.equal(6)
       })
+    })
+  })
+})
+
+describe('City', function () {
+  describe('#constructor', function () {
+    it('should create a City with the specified name', function () {
+      const city = new CITY.City('Testopia')
+      city.name.should.equal('Testopia')
+    })
+  })
+  describe('#getRoutes()', function () {
+    it('should return the routes of Movers added directly to it', function () {
+      const city = new CITY.City('Testopia')
+      const vehicleRoute = [[100, 0, 5], [100, 200, 10], [200, 200, 10]]
+      const kayakRoute = [[0, 0, 0], [100, 200, 0]]
+      city.add(new CITY.Vehicle(vehicleRoute))
+      city.add(new CITY.Kayak(kayakRoute))
+      city.getRoutes().should.have.length(2)
+      city.getRoutes().should.include(vehicleRoute)
+      city.getRoutes().should.include(kayakRoute)
+    })
+  })
+  describe('#getRoutes()', function () {
+    it('should return the routes of Movers added indirectly to it', function () {
+      const city = new CITY.City('Testopia')
+      const movers = new CITY.Group()
+      city.add(movers)
+      const watercraft = new CITY.Group()
+      movers.add(watercraft)
+      const vehicles = new CITY.Group()
+      movers.add(vehicles)
+      const bicycles = new CITY.Group()
+      vehicles.add(bicycles)
+
+      const kayakRoute = [[0, 0, 0], [100, 200, 0]]
+      watercraft.add(new CITY.Kayak(kayakRoute))
+      const vehicleRoute = [[100, 200, 0], [100, 500, 20], [100, 700, 20]]
+      vehicles.add(new CITY.Vehicle(vehicleRoute))
+      const bikeRoute1 = [[0, 0, 0], [500, 500, 0]]
+      bicycles.add(new CITY.Vehicle(bikeRoute1, 0.5, 'bicycle'))
+      const bikeRoute2 = [[0, 0, 0], [500, -500, 0]]
+      bicycles.add(new CITY.Vehicle(bikeRoute2, 0.5, 'bicycle'))
+
+      city.getRoutes().should.have.length(4)
+      city.getRoutes().should.include(kayakRoute)
+      city.getRoutes().should.include(vehicleRoute)
+      city.getRoutes().should.include(bikeRoute1)
+      city.getRoutes().should.include(bikeRoute2)
     })
   })
 })
@@ -60,26 +109,33 @@ describe('Vehicle', function () {
   describe('#constructor', function () {
     it('should create a Vehicle of the specified type', function () {
       const v = new CITY.Vehicle([[0, 0, 0], [500, 0, 0]], 0.5, 'unicycle')
-      assert.strictEqual(v.threeComponent.name, 'unicycle')
-      assert.strictEqual(v.threeComponent.userData.spinningWheels.length, 1)
+      v.threeComponent.name.should.equal('unicycle')
+      v.threeComponent.userData.spinningWheels.should.have.length(1)
     })
   })
   describe('#getRoute()', function () {
     it('should return the route it was constructed with', function () {
       const v = new CITY.Vehicle([[0, 0, 0], [100, 0, 0], [100, 100, 0]], 0.5)
-      assert.deepStrictEqual(v.getRoute(), [[0, 0, 0], [100, 0, 0], [100, 100, 0]])
+      v.getRoute().should.eql([[0, 0, 0], [100, 0, 0], [100, 100, 0]])
     })
   })
   describe('#update()', function () {
     it('should not change the position if speed = 0', function () {
       const v = new CITY.Vehicle([[100, 0, 0], [100, 100, 0]], 0)
       v.update()
-      assert.deepStrictEqual(v.position, [100, 0, 0])
+      v.position.should.eql([100, 0, 0])
+
+      // TODO: see following comment.
+      v.update.bind(v).should.not.change(v, 'position')
     })
     it('should change the position if speed > 0', function () {
       const v = new CITY.Vehicle([[100, 0, 0], [100, 100, 0]], 0.5)
       v.update()
-      assert.notDeepStrictEqual(v.position, [100, 0, 0])
+      v.position.should.not.eql([100, 0, 0])
+
+      // TODO: This actually expresses the intent better, and in only one line.
+      // Is it easier or harder to understand?
+      v.update.bind(v).should.change(v, 'position')
     })
   })
 })
@@ -88,84 +144,81 @@ describe('util', function () {
   describe('#xy()', function () {
     it('should return an object with .x and .y properties', function () {
       const obj = xy(3.4, 4.5)
-      assert.strictEqual(obj.x, 3.4)
-      assert.strictEqual(obj.y, 4.5)
+      obj.should.have.property('x', 3.4)
+      obj.should.have.property('y', 4.5)
     })
   })
   describe('#xyx()', function () {
     it('should return an object with .x, .y and .z properties', function () {
       const obj = xyz(3.4, 4.5, 6.7)
-      assert.strictEqual(obj.x, 3.4)
-      assert.strictEqual(obj.y, 4.5)
-      assert.strictEqual(obj.z, 6.7)
+      obj.should.have.property('x', 3.4)
+      obj.should.have.property('y', 4.5)
+      obj.should.have.property('z', 6.7)
     })
   })
   describe('#xyzAdd()', function () {
     it('should return an object with the sums of the .x .y .z values', function () {
       const sum = xyzAdd(xyz(1, 2, 3), xyz(10, 20, 30))
-      assert.strictEqual(sum.x, 11)
-      assert.strictEqual(sum.y, 22)
-      assert.strictEqual(sum.z, 33)
+      sum.should.eql({ x: 11, y: 22, z: 33 })
     })
   })
   describe('#xyzSubtract()', function () {
     it('should return an object with the differences of the .x .y .z values', function () {
       const difference = xyzSubtract(xyz(10, 20, 30), xyz(1, 2, 3))
-      assert.strictEqual(difference.x, 9)
-      assert.strictEqual(difference.y, 18)
-      assert.strictEqual(difference.z, 27)
+      difference.should.eql({ x: 9, y: 18, z: 27 })
     })
   })
   describe('#count()', function () {
     it('should return an array with the requested number of integers', function () {
       const array = count(6, 15, 3)
-      assert.strictEqual(array.length, (15 - 6) / 3)
+      array.should.have.length((15 - 6) / 3)
+      array.should.eql([6, 9, 12])
     })
   })
   describe('#countTo()', function () {
     it('should return an array with the requested number of integers', function () {
       const array = countTo(8)
-      assert.strictEqual(array.length, 8)
+      array.should.have.length(8)
+      array.should.eql([0, 1, 2, 3, 4, 5, 6, 7])
     })
   })
   describe('#randomInt()', function () {
     it('should return a number within the requested range', function () {
       const random = randomInt(12, 24)
-      assert(random >= 12)
-      assert(random <= 24)
+      random.should.be.within(12, 24)
     })
   })
   describe('#randomPseudoGaussian()', function () {
     it('should return a number', function () {
       const random = randomPseudoGaussian(100, 10)
-      assert(!isNaN(random))
+      random.should.be.finite
     })
   })
   describe('#hypotenuse()', function () {
     it('should work for 2D right triangles', function () {
       const result = hypotenuse(3, 4)
-      assert.strictEqual(result, 5)
+      result.should.equal(5)
     })
     it('should work for 3D vectors', function () {
       const result = hypotenuse(2, 8, 16)
-      assert.strictEqual(result, 18)
+      result.should.equal(18)
     })
   })
   describe('#array()', function () {
     it('should wrap single objects in arrays', function () {
       const result = array('foo')
-      assert.strictEqual(result.length, 1)
-      assert.strictEqual(result[0], 'foo')
+      result.should.have.length(1)
+      result[0].should.equal('foo')
     })
     it('should return empty arrays for non-objects', function () {
       let x
       const result = array(x)
-      assert.strictEqual(result.length, 0)
+      result.should.be.an('array').that.is.empty
     })
     it('should return any array it is given', function () {
       const input = ['foo', 'bar']
       const output = array(input)
-      assert.deepStrictEqual(input, output)
+      output.should.eql(input)
     })
   })
 })
