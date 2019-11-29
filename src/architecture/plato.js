@@ -78,37 +78,7 @@ function rotateXY (xy, facing) {
     case Facing.NORTHWEST:
       throw new Error('not implemented')
   }
-  throw new Error('bad compass facing in plato.rotate(): ' + facing.value.toString())
-}
-
-/**
- * @deprecated use rotateXY instead
- */
-function rotate (xy, facing) {
-  const [x, y] = xy
-  switch (facing) {
-    case Facing.NORTH:
-      return [x, y]
-    case Facing.SOUTH:
-      return [-x, -y]
-    case Facing.EAST:
-      return [y, -x]
-    case Facing.WEST:
-      return [-y, x]
-  }
-  const SIN45 = 0.707
-  const COS45 = 0.707
-  switch (facing) {
-    case Facing.NORTHEAST:
-      return [x * COS45 - y * SIN45, x * COS45 + y * SIN45]
-    case Facing.SOUTHEAST:
-      throw new Error('not implemented')
-    case Facing.SOUTHWEST:
-      throw new Error('not implemented')
-    case Facing.NORTHWEST:
-      throw new Error('not implemented')
-  }
-  throw new Error('bad compass facing in plato.rotate(): ' + facing.value.toString())
+  throw new Error('bad compass facing in plato.rotateXY(): ' + facing.value.toString())
 }
 
 function print (str) {
@@ -247,4 +217,4 @@ class Plato {
   }
 }
 
-export { Plato, rotate, rotateXY, xywh2rect }
+export { Plato, rotateXY, xywh2rect }
