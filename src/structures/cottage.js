@@ -284,11 +284,10 @@ function face (a, b, c) {
  * Cottage objects know how to describe a Queen Anne cottage.
  */
 class Cottage extends Structure {
+  /**
+   * Tell plato about the street the cottages are on.
+   */
   addStreet (numStreets = 5) {
-    // Tell plato about the street the cottages are on.
-
-    // this._plato.hurry(numStreets > 1)
-
     const STREET_DX = 15
     const STREET_DY = numStreets * PARCEL_DY
 

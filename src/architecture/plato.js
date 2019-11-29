@@ -50,10 +50,9 @@ class Plato {
   /**
    * Sets plato's initial state.
    */
-  constructor (city, hurry = false) {
+  constructor (city) {
     this._xyz = xyz(0, 0, 0)
     this._facing = Facing.NORTH
-    this.hurry(hurry)
     this.study()
     this._city = city
     this._routes = []
@@ -69,11 +68,6 @@ class Plato {
     }
     this._routes.push(route)
     return route
-  }
-
-  hurry (hurry = false) {
-    this._hurry = hurry
-    return this
   }
 
   study (topic = '', { x0 = 0, y0 = 0 } = {}) {
