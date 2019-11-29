@@ -5,7 +5,7 @@
   * For more information, please refer to <http://unlicense.org>
   */
 
-import { xyz, xyzAdd } from '../core/util.js'
+import { xy, xyz, xyzAdd } from '../core/util.js'
 import Facing from '../core/facing.js'
 import { Geometry } from '../core/geometry.js'
 import Place from './place.js'
@@ -40,18 +40,11 @@ const COLORS_OF_PLACES = {
 }
 
 /**
- * @deprecated use util.js xy() instead
- */
-function xyArray (x, y) {
-  return [x, y]
-}
-
-/**
  * @deprecated use ??? instead
  */
 function xywh2rect (y, z, width, height) {
   // [(3, 2), (8, 2), (8, 6), (3, 6)] == yzwh2rect(3, 2, 5, 4)
-  return [xyArray(y, z), xyArray(y + width, z), xyArray(y + width, z + height), xyArray(y, z + height)]
+  return [xy(y, z), xy(y + width, z), xy(y + width, z + height), xy(y, z + height)]
 }
 
 function rotateXY (xy, facing) {
@@ -98,19 +91,19 @@ class Plato {
     this.hurry(hurry)
     this.study()
     this._city = city
-    this._paths = []
+    this._routes = []
     print('plato: "Hello world!"')
   }
 
   makeRoute (place, listOfWaypoints) {
-    const path = []
+    const route = []
     for (const waypoint of listOfWaypoints) {
       const rotated = rotateXY(waypoint, this._facing)
       rotated.z = waypoint.z
-      path.push(xyzAdd(rotated, this._xyz))
+      route.push(xyzAdd(rotated, this._xyz))
     }
-    this._paths.push(path)
-    return path
+    this._routes.push(route)
+    return route
   }
 
   hurry (hurry = false) {

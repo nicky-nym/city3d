@@ -269,7 +269,7 @@ export default class ThreeOutput extends Output {
     const shape = new THREE.Shape(rectangle)
     shape.closePath()
     for (const opening of wall.openings) {
-      const points = opening.map(xy => new THREE.Vector2(...xy))
+      const points = opening.map(xy => new THREE.Vector2(xy.x, xy.y))
       const path = new THREE.Path(points)
       shape.holes.push(path)
     }
