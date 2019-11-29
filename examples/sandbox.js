@@ -69,7 +69,6 @@ function addMovers () {
 
 const city = new CITY.City('Paracosm')
 const plato = new CITY.Plato(city)
-plato.deleteAllObjects()
 addBuildings()
 addCreek()
 addKalpanaOrbital()

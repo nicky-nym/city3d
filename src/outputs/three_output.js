@@ -412,31 +412,6 @@ class ThreeOutput extends Output {
     // make tooltip invisible
     this._tooltipDiv.style.opacity = 0
   }
-
-  deleteAllObjects () {
-    // Try to delete everything in the scene.
-
-    // TODO: fix me!
-    const oldPythonCode = false
-    if (oldPythonCode) {
-      const bpy = null
-      if (bpy.context.active_object) {
-        let mode = bpy.context.active_object.mode
-        if (mode === 'EDIT') {
-          bpy.ops.object.mode_set('OBJECT')
-          mode = bpy.context.active_object.mode
-          print('new mode: ' + mode)
-        }
-        if (mode === 'OBJECT') {
-          bpy.ops.object.select_all('SELECT')
-          bpy.ops.object.delete(false)
-        }
-      } else {
-        print('mode: There is no active_object')
-      }
-      return this
-    }
-  }
 }
 
 export { ThreeOutput, print }

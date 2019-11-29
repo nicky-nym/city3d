@@ -128,11 +128,6 @@ class Plato {
     return this
   }
 
-  deleteAllObjects () {
-    print('plato: deleteAllObjects ')
-    this._city.deleteAllObjects()
-  }
-
   makePlace (place, corners, { z = 0, incline = 0, depth = -0.5, nuance = false, flip = false, cap = true, wall = 0, openings = [] } = {}) {
     z = z + this._xyz.z
     const group = this._city.makeGroup(`${Use[place]}${corners.name ? ` (${corners.name})` : ''}`)

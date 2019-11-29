@@ -45,10 +45,6 @@ class City {
   getSectors () {
     return this.children.filter(c => c instanceof Sector)
   }
-
-  deleteAllObjects () {
-    // TODO: Do we need this?
-  }
 }
 
 class Group {
