@@ -27,7 +27,7 @@ const BLUE_GLASS = 0x9a9aff // eslint-disable-line no-unused-vars
 const MARTIAN_ORANGE = 0xdf4911
 const ALMOST_WHITE = 0x999999
 
-const COLORS_OF_PLACES = {
+const COLORS_BY_USE = {
   STREET: BLACKTOP,
   BIKEPATH: MARTIAN_ORANGE,
   WALKWAY: YELLOW,
@@ -45,6 +45,8 @@ function print (str) {
 }
 
 function _addWalls (group, xyPolygon, height, z, openingsByWall, cap) {
+  let wallArea = 0
+  let openingArea = 0
   let i = 0
   for (const v of xyPolygon) {
     const entryForThisWall = openingsByWall.find(item => item[0] === i)
@@ -57,9 +59,13 @@ function _addWalls (group, xyPolygon, height, z, openingsByWall, cap) {
       const abstractWall = new Geometry.Wall(near, far, height, { openings })
       const name = `wall from ${JSON.stringify(near)} to ${JSON.stringify(far)}`
       const concreteWall = new Geometry.Instance(abstractWall, z, ALMOST_WHITE, name)
+      wallArea += abstractWall.area()
+      openingArea += abstractWall.areaOfOpenings()
       group.add(concreteWall)
     }
   }
+  group.addMetric('Wall area', wallArea, 'square feet')
+  group.addMetric('Wall opening area', openingArea, 'square feet')
 }
 
 /**
@@ -78,7 +84,7 @@ class Plato {
     print('plato: "Hello world!"')
   }
 
-  makeRoute (place, listOfWaypoints) {
+  makeRoute (use, listOfWaypoints) {
     const route = []
     for (const waypoint of listOfWaypoints) {
       const rotated = xyRotate(waypoint, this._facing)
@@ -110,9 +116,9 @@ class Plato {
     return this
   }
 
-  makePlace (place, corners, { z = 0, incline = 0, depth = -0.5, nuance = false, flip = false, cap = true, wall = 0, openings = [] } = {}) {
+  makePlace (use, corners, { z = 0, incline = 0, depth = -0.5, nuance = false, flip = false, cap = true, wall = 0, openings = [] } = {}) {
     z = z + this._xyz.z
-    const group = new Group(`${Use[place]}${corners.name ? ` (${corners.name})` : ''}`)
+    const group = new Group(`${Use[use]}${corners.name ? ` (${corners.name})` : ''}`)
     const xyPolygon = new Geometry.XYPolygon()
     for (let xy of corners) {
       xy = xyRotate(xy, this._facing)
@@ -120,12 +126,13 @@ class Plato {
       xyPolygon.push(xy)
     }
     if (cap) {
-      const color = COLORS_OF_PLACES[place]
+      const color = COLORS_BY_USE[use]
       const abstractThickPolygon = new Geometry.ThickPolygon(xyPolygon, { incline: incline, depth: depth })
       const concreteThickPolygon = new Geometry.Instance(abstractThickPolygon, z, color)
       group.add(concreteThickPolygon)
       const squareFeet = xyPolygon.area()
-      this._squareFeet[place] = squareFeet + (this._squareFeet[place] || 0)
+      // this._squareFeet[use] = squareFeet + (this._squareFeet[use] || 0)
+      group.addMetric('Floor area', squareFeet, 'square feet')
     }
     if (wall !== 0) {
       _addWalls(group, xyPolygon, wall, z, openings, cap)
@@ -134,8 +141,8 @@ class Plato {
     return this
   }
 
-  makeRoof (place, verticesOfRoof, indicesOfFaces, name) {
-    const color = COLORS_OF_PLACES[place]
+  makeRoof (use, verticesOfRoof, indicesOfFaces, name) {
+    const color = COLORS_BY_USE[use]
     const vertices = verticesOfRoof.map(xyz => xyzAdd(xyz, this._xyz))
     const abstractRoof = new Geometry.TriangularPolyhedron(vertices, indicesOfFaces)
     const concreteRoof = new Geometry.Instance(abstractRoof, 0, color, name || 'roof')
@@ -156,11 +163,6 @@ class Plato {
       this._sector.addMetric('Parcel FAR', parcelFar.toFixed(1), 'floor area ratio')
       this._sector.addMetric('Overall FAR', urbanFar.toFixed(1), 'floor area ratio')
     }
-    // const proximity = 0
-    // const megastokes = 0
-    // this._sector.addMetric('Proximity', proximity, 'square-meters per meter')
-    // this._sector.addMetric('Kinematic Fluidity', megastokes, 'megaStokes (MSt)')
-
     return this
   }
 }
