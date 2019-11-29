@@ -7,7 +7,7 @@
 
 import { CITY } from '../src/citylib.js'
 import { Geometry } from '../src/core/geometry.js'
-import { xy, xyz, xyzAdd, xyzSubtract, count, countTo, randomInt, randomPsuedoGaussian, hypotenuse, array } from '../src/core/util.js'
+import { xy, xyz, xyzAdd, xyzSubtract, count, countTo, randomInt, randomPseudoGaussian, hypotenuse, array } from '../src/core/util.js'
 
 /* global describe, it */
 
@@ -135,9 +135,9 @@ describe('util', function () {
       assert(random <= 24)
     })
   })
-  describe('#randomPsuedoGaussian()', function () {
+  describe('#randomPseudoGaussian()', function () {
     it('should return a number', function () {
-      const random = randomPsuedoGaussian(100, 10)
+      const random = randomPseudoGaussian(100, 10)
       assert(!isNaN(random))
     })
   })
