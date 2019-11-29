@@ -8,8 +8,9 @@
 import { xyz, xyzAdd, xyRotate } from '../core/util.js'
 import { Facing } from '../core/facing.js'
 import { Geometry } from '../core/geometry.js'
-import { Use } from './use.js'
+import { Group } from '../architecture/group.js'
 import { Sector } from './sector.js'
+import { Use } from './use.js'
 
 const WHITE = 0xffffff // eslint-disable-line no-unused-vars
 const RED = 0xcc0000 // eslint-disable-line no-unused-vars
@@ -41,6 +42,24 @@ const COLORS_OF_PLACES = {
 
 function print (str) {
   console.log(str)
+}
+
+function _addWalls (group, xyPolygon, height, z, openingsByWall, cap) {
+  let i = 0
+  for (const v of xyPolygon) {
+    const entryForThisWall = openingsByWall.find(item => item[0] === i)
+    const openings = entryForThisWall ? entryForThisWall[1] : []
+    i++
+    if (cap || i < xyPolygon.length) {
+      const next = i % xyPolygon.length
+      const near = v
+      const far = xyPolygon[next]
+      const abstractWall = new Geometry.Wall(near, far, height, { openings })
+      const name = `wall from ${JSON.stringify(near)} to ${JSON.stringify(far)}`
+      const concreteWall = new Geometry.Instance(abstractWall, z, ALMOST_WHITE, name)
+      group.add(concreteWall)
+    }
+  }
 }
 
 /**
@@ -93,7 +112,7 @@ class Plato {
 
   makePlace (place, corners, { z = 0, incline = 0, depth = -0.5, nuance = false, flip = false, cap = true, wall = 0, openings = [] } = {}) {
     z = z + this._xyz.z
-    const group = this._city.makeGroup(`${Use[place]}${corners.name ? ` (${corners.name})` : ''}`)
+    const group = new Group(`${Use[place]}${corners.name ? ` (${corners.name})` : ''}`)
     const xyPolygon = new Geometry.XYPolygon()
     for (let xy of corners) {
       xy = xyRotate(xy, this._facing)
@@ -109,28 +128,10 @@ class Plato {
       this._squareFeet[place] = squareFeet + (this._squareFeet[place] || 0)
     }
     if (wall !== 0) {
-      this.addWalls(group, xyPolygon, wall, z, openings, cap)
+      _addWalls(group, xyPolygon, wall, z, openings, cap)
     }
     this._sector.add(group)
     return this
-  }
-
-  addWalls (group, xyPolygon, height, z, openingsByWall, cap) {
-    let i = 0
-    for (const v of xyPolygon) {
-      const entryForThisWall = openingsByWall.find(item => item[0] === i)
-      const openings = entryForThisWall ? entryForThisWall[1] : []
-      i++
-      if (cap || i < xyPolygon.length) {
-        const next = i % xyPolygon.length
-        const near = v
-        const far = xyPolygon[next]
-        const abstractWall = new Geometry.Wall(near, far, height, { openings })
-        const name = `wall from ${JSON.stringify(near)} to ${JSON.stringify(far)}`
-        const concreteWall = new Geometry.Instance(abstractWall, z, ALMOST_WHITE, name)
-        group.add(concreteWall)
-      }
-    }
   }
 
   makeRoof (place, verticesOfRoof, indicesOfFaces, name) {

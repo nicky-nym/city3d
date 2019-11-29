@@ -6,10 +6,11 @@
   */
 
 import { xy, xyz, xyRotate, xywh2rect, count, countTo, randomInt, hypotenuse } from '../core/util.js'
-import { Vehicle } from '../movers/vehicle.js'
-import { Use } from '../architecture/use.js'
 import { Facing } from '../core/facing.js'
+import { Group } from '../architecture/group.js'
 import { Structure } from '../architecture/structure.js'
+import { Use } from '../architecture/use.js'
+import { Vehicle } from '../movers/vehicle.js'
 
 // in feet
 const BLOCK_LENGTH = 660
@@ -331,10 +332,10 @@ class Bikeway extends Structure {
   }
 
   addBikeways (num_rows = 0, num_cols = 0, { buildings = true } = {}) {
-    const vehicleGroup = this._city.makeGroup('bikeway vehicles')
+    const vehicleGroup = new Group('bikeway vehicles')
     this._city.add(vehicleGroup)
     this._vehicles = vehicleGroup.children
-    const bicycleGroup = this._city.makeGroup('bikeway bicycles')
+    const bicycleGroup = new Group('bikeway bicycles')
     this._city.add(bicycleGroup)
     this._bicycles = bicycleGroup.children
     for (const row of countTo(num_rows)) {

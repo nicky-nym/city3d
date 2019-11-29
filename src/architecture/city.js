@@ -21,10 +21,6 @@ class City {
     this.children.push(thing)
   }
 
-  makeGroup (name) {
-    return new Group(name)
-  }
-
   extractRoutes (thing, routes) {
     // TODO: this should become Mover
     if (thing instanceof Vehicle) {
@@ -47,15 +43,4 @@ class City {
   }
 }
 
-class Group {
-  constructor (name) {
-    this.name = name
-    this.children = []
-  }
-
-  add (thing) {
-    this.children.push(thing)
-  }
-}
-
-export { City, Group }
+export { City }

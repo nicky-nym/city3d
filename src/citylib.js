@@ -6,9 +6,10 @@
   */
 
 import { Bikeway } from './structures/bikeway.js'
-import { City, Group } from './architecture/city.js'
+import { City } from './architecture/city.js'
 import { Cottage } from './structures/cottage.js'
 import { Creek } from './land/creek.js'
+import { Group } from './architecture/group.js'
 import { Kalpana } from './movers/kalpana.js'
 import { Kayak } from './movers/kayak.js'
 import { Manhattan } from './structures/manhattan.js'
