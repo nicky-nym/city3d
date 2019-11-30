@@ -4,7 +4,7 @@
   "description": "Lorem Ipsum",
   "main": "citylib.js",
   "scripts": {
-    "test": "mocha -r esm && standard"
+    "test": "mocha -r esm --recursive && standard"
   },
   "repository": {
     "type": "git",
