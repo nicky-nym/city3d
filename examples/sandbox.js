@@ -49,6 +49,14 @@ function addCreek () {
   city.add(new CITY.Vehicle(creek.creekRoute(7), 0.18, 'bicycle'))
 }
 
+function addTree () {
+  const tree = new CITY.Tree()
+  const trunkObject = tree.makeTrunk({ x: 28, y: 52, z: 0 })
+  const crownObject = tree.makeCrown({ x: 28, y: 52, z: 8 })
+  city.add(trunkObject)
+  city.add(crownObject)
+}
+
 function addKalpanaOrbital () {
   city.add(new CITY.Kalpana())
 }
@@ -71,6 +79,7 @@ const city = new CITY.City('Paracosm')
 const plato = new CITY.Plato(city)
 addBuildings()
 addCreek()
+addTree()
 addKalpanaOrbital()
 addMovers()
 const threeOutput = new CITY.ThreeOutput(city)

@@ -7,10 +7,11 @@
 
 import { xyz, countTo } from '../core/util.js'
 import { Geometry } from '../core/geometry.js'
+import { UNIT } from '../core/unit.js'
 
 const NUM_SECTIONS = 270
-const SECTION_LENGTH = 20
-const CREEK_WIDTH = 20
+const SECTION_LENGTH = UNIT.feet(20)
+const CREEK_WIDTH = UNIT.feet(20)
 const LENGTH = NUM_SECTIONS * SECTION_LENGTH
 const X_OFFSET = -LENGTH / 2
 
