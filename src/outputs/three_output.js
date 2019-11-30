@@ -208,6 +208,8 @@ class ThreeOutput extends Output {
         mesh = this.makeWallMesh(thing.geometry, thing.zOffset, material)
       } else if (thing.geometry instanceof Geometry.TriangularPolyhedron) {
         mesh = this.makeTriangularPolyhedronMesh(thing.geometry, material)
+      } else if (thing.geometry instanceof Geometry.OutlinePolygon) {
+        mesh = this.makeOutlinePolygonLines(thing.geometry, thing.hexColor)
       } else {
         console.error('unknown geometry')
         return
@@ -217,6 +219,19 @@ class ThreeOutput extends Output {
     } else {
       // TODO
     }
+  }
+
+  makeOutlinePolygonLines (outlinePolygon, hexColor) {
+    const material = new THREE.LineBasicMaterial({ color: hexColor })
+    const geometry = new THREE.Geometry()
+    const corners = outlinePolygon.xyPolygon
+    const vectors = []
+    for (const corner of corners) {
+      vectors.push(new THREE.Vector3(corner.x, corner.y, 0))
+    }
+    geometry.vertices.push(...vectors)
+    const line = new THREE.Line(geometry, material)
+    return line
   }
 
   makeThickPolygonMesh (thickPolygon, zOffset, material) {

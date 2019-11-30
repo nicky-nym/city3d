@@ -14,6 +14,7 @@ import { Kalpana } from './movers/kalpana.js'
 import { Kayak } from './movers/kayak.js'
 import { Manhattan } from './structures/manhattan.js'
 import { Merlon } from './structures/merlon.js'
+import { Parcel } from './architecture/parcel.js'
 import { Plato } from './architecture/plato.js'
 import { SummaryOutput } from './outputs/summary_output.js'
 import { ThreeOutput } from './outputs/three_output.js'
@@ -31,6 +32,7 @@ export const CITY = {
   Group,
   Manhattan,
   Merlon,
+  Parcel,
   Plato,
   SummaryOutput,
   ThreeOutput,

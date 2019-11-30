@@ -14,6 +14,12 @@ class Instance {
   }
 }
 
+class OutlinePolygon {
+  constructor (xyPolygon) {
+    this.xyPolygon = xyPolygon
+  }
+}
+
 class ThickPolygon {
   constructor (xyPolygon, { incline = 0, depth = -0.5 } = {}) {
     this.xyPolygon = xyPolygon
@@ -77,4 +83,4 @@ class XYPolygon extends Array {
   }
 }
 
-export const Geometry = { Instance, ThickPolygon, TriangularPolyhedron, Wall, XYPolygon }
+export const Geometry = { Instance, OutlinePolygon, ThickPolygon, TriangularPolyhedron, Wall, XYPolygon }

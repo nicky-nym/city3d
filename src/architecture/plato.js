@@ -84,13 +84,18 @@ class Plato {
     print('plato: "Hello world!"')
   }
 
-  makeRoute (use, listOfWaypoints) {
-    const route = []
-    for (const waypoint of listOfWaypoints) {
-      const rotated = xyRotate(waypoint, this._facing)
-      rotated.z = waypoint.z
-      route.push(xyzAdd(rotated, this._xyz))
+  applyGotoInto (xyzList) {
+    const transformed = []
+    for (const xyzPoint of xyzList) {
+      const rotated = xyRotate(xyzPoint, this._facing)
+      rotated.z = xyzPoint.z
+      transformed.push(xyzAdd(rotated, this._xyz))
     }
+    return transformed
+  }
+
+  makeRoute (use, listOfWaypoints) {
+    const route = this.applyGotoInto(listOfWaypoints)
     this._routes.push(route)
     return route
   }
@@ -116,15 +121,21 @@ class Plato {
     return this
   }
 
+  makeParcel (corners) {
+    // TODO: new Parcel() instances and add them to the city/sector/group
+    const adjustedCorners = this.applyGotoInto(corners)
+    adjustedCorners.push(adjustedCorners[0])
+    const xyPolygon = new Geometry.XYPolygon(adjustedCorners)
+    const abstractOutlinePolygon = new Geometry.OutlinePolygon(xyPolygon)
+    const concreteOutlinePolygon = new Geometry.Instance(abstractOutlinePolygon, this._xyz.z, MARTIAN_ORANGE)
+    this._sector.add(concreteOutlinePolygon)
+  }
+
   makePlace (use, corners, { z = 0, incline = 0, depth = -0.5, nuance = false, flip = false, cap = true, wall = 0, openings = [] } = {}) {
     z = z + this._xyz.z
     const group = new Group(`${Use[use]}${corners.name ? ` (${corners.name})` : ''}`)
-    const xyPolygon = new Geometry.XYPolygon()
-    for (let xy of corners) {
-      xy = xyRotate(xy, this._facing)
-      xy = { x: xy.x + this._xyz.x, y: xy.y + this._xyz.y }
-      xyPolygon.push(xy)
-    }
+    const adjustedCorners = this.applyGotoInto(corners)
+    const xyPolygon = new Geometry.XYPolygon(adjustedCorners)
     if (cap) {
       const color = COLORS_BY_USE[use]
       const abstractThickPolygon = new Geometry.ThickPolygon(xyPolygon, { incline: incline, depth: depth })

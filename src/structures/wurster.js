@@ -127,6 +127,7 @@ const NUM_SOUTH_WING_CRENELS_Y = 9 // eslint-disable-line no-unused-vars
 
 // TODO: place the building on a parcel of land
 const PARCEL = {
+  offset: xy(0, 0),
   size: xy(360, 540)
 }
 PARCEL.corners = rectangleOfSize(PARCEL.size)
@@ -161,6 +162,8 @@ class Wurster extends Structure {
   }
 
   makeBuilding () {
+    this._plato.goto(PARCEL.offset)
+    this._plato.makeParcel(PARCEL.corners)
     return Wurster.makeBuildingFromSpec(this._plato, BUILDING_SPEC)
   }
 }
