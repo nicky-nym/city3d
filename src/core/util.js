@@ -40,7 +40,7 @@ function randomInt (min, max) {
  * Returns a random number within a roughly gaussian distribution
  * @returns {number} a random number
  */
-function randomPsuedoGaussian (median, standardDeviation) {
+function randomPseudoGaussian (median, standardDeviation) {
   const N = 6
   let total = 0
   for (let i = 0; i < N; i++) {
@@ -124,4 +124,4 @@ function array (object) {
   }
 }
 
-export { xy, xyz, xyzAdd, xyzSubtract, xyRotate, xywh2rect, count, countTo, randomInt, randomPsuedoGaussian, hypotenuse, array }
+export { xy, xyz, xyzAdd, xyzSubtract, xyRotate, xywh2rect, count, countTo, randomInt, randomPseudoGaussian, hypotenuse, array }

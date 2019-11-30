@@ -6,27 +6,26 @@
   */
 
 import { Group } from './group.js'
+import { Mover } from '../movers/mover.js'
 import { Sector } from './sector.js'
-import { Vehicle } from '../movers/vehicle.js'
+
+function extractRoutes (group, routes) {
+  if (group instanceof Mover) {
+    routes.push(group.getRoute())
+  } else if (group.children) {
+    for (const child of group.children) {
+      extractRoutes(child, routes)
+    }
+  }
+}
 
 /**
  * City is a class for representing a hierarchical collection of 3D places.
  */
 class City extends Group {
-  extractRoutes (thing, routes) {
-    // TODO: this should become Mover
-    if (thing instanceof Vehicle) {
-      routes.push(thing.getRoute())
-    } else if (thing.children) {
-      for (const child of thing.children) {
-        this.extractRoutes(child, routes)
-      }
-    }
-  }
-
   getRoutes () {
     const routes = []
-    this.extractRoutes(this, routes)
+    extractRoutes(this, routes)
     return routes
   }
 
