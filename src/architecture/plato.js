@@ -131,7 +131,30 @@ class Plato {
     this._sector.add(concreteOutlinePolygon)
   }
 
-  makePlace (use, corners, { z = 0, incline = 0, depth = -0.5, nuance = false, flip = false, cap = true, wall = 0, openings = [] } = {}) {
+  appendToSector (group) {
+    this._sector.add(group)
+    return group
+  }
+
+  makePlaceholder (use, corners, depth, { z = 0, name } = {}) {
+    z = z + this._xyz.z
+    const group = new Group(name)
+    const adjustedCorners = this.applyGotoInto(corners)
+    const xyPolygon = new Geometry.XYPolygon(adjustedCorners)
+    const color = COLORS_BY_USE[use]
+    const abstractThickPolygon = new Geometry.ThickPolygon(xyPolygon, { depth })
+    const concreteThickPolygon = new Geometry.Instance(abstractThickPolygon, z, color)
+    group.add(concreteThickPolygon)
+    return group
+  }
+
+  makePlace (...args) {
+    const group = this.makePlace2(...args)
+    this._sector.add(group)
+    return this
+  }
+
+  makePlace2 (use, corners, { z = 0, incline = 0, depth = -0.5, nuance = false, flip = false, cap = true, wall = 0, openings = [] } = {}) {
     z = z + this._xyz.z
     const group = new Group(`${Use[use]}${corners.name ? ` (${corners.name})` : ''}`)
     const adjustedCorners = this.applyGotoInto(corners)
@@ -148,8 +171,7 @@ class Plato {
     if (wall !== 0) {
       _addWalls(group, xyPolygon, wall, z, openings, cap)
     }
-    this._sector.add(group)
-    return this
+    return group
   }
 
   makeRoof (use, verticesOfRoof, indicesOfFaces, name) {

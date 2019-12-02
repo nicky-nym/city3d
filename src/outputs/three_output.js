@@ -9,6 +9,7 @@ import * as THREE from '../../node_modules/three/build/three.module.js'
 import Stats from '../../node_modules/stats.js/src/Stats.js'
 
 import { Geometry } from '../core/geometry.js'
+import { Group, LODGroup } from '../architecture/group.js'
 import { Output } from './output.js'
 import { OrbitControls } from '../../node_modules/three/examples/jsm/controls/OrbitControls.js'
 
@@ -41,7 +42,12 @@ class ThreeOutput extends Output {
     const NEAR_CAMERA_LIMIT = 1
     const FAR_CAMERA_LIMIT = ONE_MILE * 2
 
-    this._materialsByHexColor = {}
+    this._materials = {
+      lowest: { [THREE.FrontSide]: {}, [THREE.DoubleSide]: {} },
+      medium: { [THREE.FrontSide]: {}, [THREE.DoubleSide]: {} },
+      high: { [THREE.FrontSide]: {}, [THREE.DoubleSide]: {} }
+    }
+
     this._shape = null
 
     // scene
@@ -152,20 +158,20 @@ class ThreeOutput extends Output {
     const ORIGIN_MARKER_HEIGHT = 100
     const ORIGIN_SIGN_LENGTH = 30
     const geometry = new THREE.BoxGeometry(4, 4, ORIGIN_MARKER_HEIGHT)
-    const material = this._materialByHexColor(BLUE)
+    const material = this._material('high', BLUE, false)
     const mesh = new THREE.Mesh(geometry, material)
     mesh.name = 'origin marker'
     mesh.position.z = ORIGIN_MARKER_HEIGHT / 2
     this._scene.add(mesh)
     const geometryX = new THREE.BoxGeometry(ORIGIN_SIGN_LENGTH, 1, 8)
-    const materialX = this._materialByHexColor(0xff0000)
+    const materialX = this._material('high', 0xff0000, false)
     const meshX = new THREE.Mesh(geometryX, materialX)
     meshX.name = '+X axis'
     meshX.position.x = ORIGIN_SIGN_LENGTH / 2
     meshX.position.z = ORIGIN_MARKER_HEIGHT * 0.7
     this._scene.add(meshX)
     const geometryY = new THREE.BoxGeometry(1, ORIGIN_SIGN_LENGTH, 8)
-    const materialY = this._materialByHexColor(0x00ff00)
+    const materialY = this._material('high', 0x00ff00, false)
     const meshY = new THREE.Mesh(geometryY, materialY)
     meshY.name = '+Y axis'
     meshY.position.y = ORIGIN_SIGN_LENGTH / 2
@@ -187,12 +193,17 @@ class ThreeOutput extends Output {
   }
 
   _traverse (thing, threeObject) {
-    if (thing.children) {
-      const group = new THREE.Group()
-      group.name = thing.name
-      threeObject.add(group)
-      for (const child of thing.children) {
-        this._traverse(child, group)
+    if (thing instanceof Group) {
+      if (thing instanceof LODGroup) {
+        const lod = this.makeLODFromLODGroup(thing)
+        threeObject.add(lod)
+      } else {
+        const group = new THREE.Group()
+        group.name = thing.name
+        threeObject.add(group)
+        for (const child of thing.children) {
+          this._traverse(child, group)
+        }
       }
     } else if (thing.threeComponent) {
       threeObject.add(thing.threeComponent)
@@ -200,25 +211,69 @@ class ThreeOutput extends Output {
         this._animatedComponents.push(thing.threeComponent)
       }
     } else if (thing instanceof Geometry.Instance) {
-      const material = this._materialByHexColor(thing.hexColor)
-      let mesh
-      if (thing.geometry instanceof Geometry.ThickPolygon) {
-        mesh = this.makeThickPolygonMesh(thing.geometry, thing.zOffset, material)
-      } else if (thing.geometry instanceof Geometry.Wall) {
-        mesh = this.makeWallMesh(thing.geometry, thing.zOffset, material)
-      } else if (thing.geometry instanceof Geometry.TriangularPolyhedron) {
-        mesh = this.makeTriangularPolyhedronMesh(thing.geometry, material)
-      } else if (thing.geometry instanceof Geometry.OutlinePolygon) {
-        mesh = this.makeOutlinePolygonLines(thing.geometry, thing.hexColor)
-      } else {
-        console.error('unknown geometry')
-        return
-      }
+      const material = this._material('high', thing.hexColor, true)
+      const mesh = this.makeMeshFromInstanceGeometry(thing.geometry, material, thing.hexColor, thing.zOffset)
       mesh.name = thing.name
       threeObject.add(mesh)
     } else {
       // TODO
     }
+  }
+
+  makeLODFromLODGroup (lodGroup) {
+    const lod = new THREE.LOD()
+    const group = new THREE.Group()
+    for (const child of lodGroup.children) {
+      this._traverse(child, group)
+    }
+    lod.addLevel(group, 0)
+
+    const levels = lodGroup.getLevelsOfDetail()
+
+    // Sort so highest threshold (= lowest resolution) is first.
+    levels.sort(level => -level.distanceThreshold)
+
+    let materialCost = 'lowest'
+    for (const level of levels) {
+      const object = this.makeLowResObject(level.instance, materialCost)
+      lod.addLevel(object, level.distanceThreshold)
+      materialCost = 'medium'
+    }
+    return lod
+  }
+
+  makeLowResObject (instance, materialCost) {
+    if (instance instanceof Group) {
+      const group = new THREE.Group()
+      group.name = instance.name
+      for (const child of instance.children) {
+        group.add(this.makeLowResObject(child, materialCost))
+      }
+      return group
+    }
+    if (!instance.geometry) {
+      console.error('Error: instance must either be an instance of Group or have a property "geometry"')
+      return
+    }
+
+    const material = this._material(materialCost, instance.hexColor, true)
+    return this.makeMeshFromInstanceGeometry(instance.geometry, material, instance.hexColor, instance.zOffset)
+  }
+
+  makeMeshFromInstanceGeometry (instanceGeometry, material, color, zOffset) {
+    if (instanceGeometry instanceof Geometry.ThickPolygon) {
+      return this.makeThickPolygonMesh(instanceGeometry, zOffset, material, color)
+    }
+    if (instanceGeometry instanceof Geometry.Wall) {
+      return this.makeWallMesh(instanceGeometry, zOffset, material, color)
+    }
+    if (instanceGeometry instanceof Geometry.TriangularPolyhedron) {
+      return this.makeTriangularPolyhedronMesh(instanceGeometry, material, color)
+    }
+    if (instanceGeometry instanceof Geometry.OutlinePolygon) {
+      return this.makeOutlinePolygonLines(instanceGeometry, color)
+    }
+    console.error('unknown geometry')
   }
 
   makeOutlinePolygonLines (outlinePolygon, hexColor) {
@@ -345,18 +400,23 @@ class ThreeOutput extends Output {
     this._animationOn = !this._animationOn
   }
 
-  _materialByHexColor (hexColor) {
-    if (isNaN(hexColor)) {
-      hexColor = FIXME_FUCHSIA
+  _material (materialCost, color, twoSided = false) {
+    if (isNaN(color)) {
+      color = FIXME_FUCHSIA
     }
-    if (!(hexColor in this._materialsByHexColor)) {
-      const material = new THREE.MeshStandardMaterial({
-        color: hexColor,
-        side: THREE.DoubleSide
-      })
-      this._materialsByHexColor[hexColor] = material
+    const side = twoSided ? THREE.DoubleSide : THREE.FrontSide
+    if (!(color in this._materials[materialCost][side])) {
+      if (materialCost === 'lowest') {
+        this._materials[materialCost][side][color] = new THREE.MeshBasicMaterial({ color, side })
+      } else if (materialCost === 'medium') {
+        this._materials[materialCost][side][color] = new THREE.MeshLambertMaterial({ color, side })
+      } else if (materialCost === 'high') {
+        this._materials[materialCost][side][color] = new THREE.MeshPhongMaterial({ color, side })
+      } else {
+        console.error('unknown materialCost', materialCost)
+      }
     }
-    return this._materialsByHexColor[hexColor]
+    return this._materials[materialCost][side][color]
   }
 
   animate () {

@@ -12,8 +12,9 @@ class Group {
     this.metrics = new Map()
   }
 
-  add (thing) {
-    this.children.push(thing)
+  add (...things) {
+    this.children.push(...things)
+    return this
   }
 
   addMetric (name, value, units) {
@@ -21,4 +22,38 @@ class Group {
   }
 }
 
-export { Group }
+/**
+ * A LODGroup extends a Group with lower resolution alternatives to be used at specified
+ * distance thresholds.
+ */
+class LODGroup extends Group {
+  /**
+   * Creates a LODGroup.
+   * @param {string} [name]
+   */
+  constructor (name) {
+    super(name)
+    this._levels = []
+  }
+
+  /**
+   * Adds an instance to be used in place of this.children when the current distance is greater
+   * than a threshold. If multiple low resolution instances with thresholds smaller than the
+   * current distance exist, the one with the highest threshold should be used.
+   * @param {Group|Geometry.Instance} instance - a simpler representation of this.children
+   * @param {number} distanceThreshold - when to switch to this instance
+   */
+  addLevelOfDetail (instance, distanceThreshold) {
+    this._levels.push({ instance, distanceThreshold })
+  }
+
+  /**
+   * Returns an array of objects specifying low resolution alternate instances along with their thresholds.
+   * @returns {Object[]} array of objects with properties 'instance' and 'distanceThreshold'
+   */
+  getLevelsOfDetail () {
+    return this._levels.map(level => ({ ...level }))
+  }
+}
+
+export { Group, LODGroup }

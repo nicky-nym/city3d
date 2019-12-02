@@ -9,6 +9,7 @@ import { UNIT } from '../core/unit.js'
 import { countTo, xy, xyz, array } from '../core/util.js'
 import { Use } from '../architecture/use.js'
 import { Structure } from '../architecture/structure.js'
+import { Group, LODGroup } from '../architecture/group.js'
 
 function rectangleOfSize (sizeXY) {
   return [
@@ -137,7 +138,7 @@ PARCEL.corners = rectangleOfSize(PARCEL.size)
  * @see [Wikipedia photo]{@link https://en.wikipedia.org/wiki/UC_Berkeley_College_of_Environmental_Design#/media/File:UC_Berkeley_Wurster_Hall.jpg}
  */
 class Wurster extends Structure {
-  static makeBuildingFromSpec (plato, spec, defaults) {
+  static makeBuildingFromSpec (plato, spec, mainGroup, defaults) {
     let { name, storyHeight, roof, children, numStories, corners, offset } = spec
     storyHeight = storyHeight || defaults.storyHeight
     roof = roof || defaults.roof
@@ -148,23 +149,48 @@ class Wurster extends Structure {
         point.z = z
         const floorName = 'Floor ' + i + 'of ' + name
         plato.goto(point)
-        plato.makePlace(Use.ROOM, corners, { name: floorName, wall: storyHeight })
+        const story = plato.makePlace2(Use.ROOM, corners, { name: floorName, wall: storyHeight })
+        mainGroup.add(story)
         z = z + storyHeight
       }
       point.z = z
       plato.goto(point)
-      plato.makePlace(Use.ROOF, corners, { wall: roof.parapetHeight })
+      const roofPlace = plato.makePlace2(Use.ROOF, corners, { wall: roof.parapetHeight })
+      mainGroup.add(roofPlace)
     }
     const defaultsForChildren = { storyHeight, roof }
     for (const childSpec of array(children)) {
-      Wurster.makeBuildingFromSpec(plato, childSpec, defaultsForChildren)
+      Wurster.makeBuildingFromSpec(plato, childSpec, mainGroup, defaultsForChildren)
     }
+  }
+
+  static makeLowResGroupFromSpec (plato, spec, defaults) {
+    const group = new Group()
+    const { storyHeight, children } = spec
+    for (const childSpec of array(children)) {
+      const { name, numStories, corners, offset } = childSpec
+      const point = { z: 0, ...offset }
+      plato.goto(point)
+      const depth = storyHeight * numStories
+      const box = plato.makePlaceholder(Use.WALL, corners, depth, { name })
+      group.add(box)
+    }
+    return group
   }
 
   makeBuilding () {
     this._plato.goto(PARCEL.offset)
     this._plato.makeParcel(PARCEL.corners)
-    return Wurster.makeBuildingFromSpec(this._plato, BUILDING_SPEC)
+    const mainGroup = new LODGroup(BUILDING_SPEC.name)
+    this._plato.appendToSector(mainGroup)
+    Wurster.makeBuildingFromSpec(this._plato, BUILDING_SPEC, mainGroup)
+
+    // TODO: The medium and low resolution instances constructed here are currently
+    // identical, so the only difference will be in the material.
+    const medResInstance = Wurster.makeLowResGroupFromSpec(this._plato, BUILDING_SPEC)
+    mainGroup.addLevelOfDetail(medResInstance, 1000)
+    const lowResInstance = Wurster.makeLowResGroupFromSpec(this._plato, BUILDING_SPEC)
+    mainGroup.addLevelOfDetail(lowResInstance, 2000)
   }
 }
 
