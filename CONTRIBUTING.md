@@ -11,6 +11,7 @@ Thanks for considering contributing to City3d.
 -->
 
 [Styleguides](#styleguides)
+  * [Unit test Styleguide](#unit-test-styleguide)
   * [JavaScript Styleguide](#javascript-styleguide)
   * [Documentation Styleguide](#documentation-styleguide)
 
@@ -35,12 +36,35 @@ Send us mail and we can offer a few suggestions.
 
 ### Git Commits and Pull Requests
 
-Someday we will have unit tests, and then we'll require that all new code passes the unit tests. 
-For now, we welcome any code that works.
+Before submitting a pull request or doing a git commit, always make sure the code passes all the unit tests. You can run all the test by doing:
+
+  ```shell
+  $ npm test
+  ```
+Ideally, any new code for a 
+
 
 ## Styleguides
 
-### JavaScript Styleguide
+
+### Unit test styleguide
+
+We strive to have unit tests that follow the advice in Yoni Goldberg's [JavaScript Testing Best Practices](https://github.com/goldbergyoni/javascript-testing-best-practices#readme).
+
+To run all the unit tests:
+
+  ```shell
+  $ npm test
+  ```
+
+To run just the tests with, say, "Vehicle" in the name:
+
+  ```shell
+  $ npm mocha -r esm --recursive -f Vehicle
+  ```
+
+
+### JavaScript styleguide
 
 All JavaScript must adhere to [JavaScript Standard Style](https://standardjs.com/).
 
@@ -69,7 +93,7 @@ All JavaScript must adhere to [JavaScript Standard Style](https://standardjs.com
   ```
 * TODO: add more standards!
 
-### Documentation Styleguide
+### Documentation styleguide
 
 * Use [Markdown](https://daringfireball.net/projects/markdown).
 * Reference methods and classes in markdown with the custom `{}` notation:
