@@ -36,9 +36,9 @@ Send us mail and we can offer a few suggestions.
 
 ### Git Commits and Pull Requests
 
-Before submitting a pull request or doing a git commit, always make sure the code passes all the unit tests. You can run all the test by doing:
-
+Before submitting a pull request or doing a git commit, always make sure the code passes all the unit tests. You can run all the tests, and run standard (see below), by doing:
   ```shell
+  $ npm install
   $ npm test
   ```
 Ideally, any new code for a 
@@ -54,13 +54,14 @@ We strive to have unit tests that follow the advice in Yoni Goldberg's [JavaScri
 To run all the unit tests:
 
   ```shell
+  $ npm install
   $ npm test
   ```
 
 To run just the tests with, say, "Vehicle" in the name:
 
   ```shell
-  $ npm mocha -r esm --recursive -f Vehicle
+  $ npx mocha -r esm --recursive -f Vehicle
   ```
 
 
