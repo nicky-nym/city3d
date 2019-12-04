@@ -11,65 +11,74 @@ import { Use } from '../architecture/use.js'
 import { Structure } from '../architecture/structure.js'
 import { Group, LODGroup } from '../architecture/group.js'
 
-function rectangleOfSize (sizeXY) {
-  return [
-    xy(0, 0),
-    xy(sizeXY.x, 0),
-    xy(sizeXY.x, sizeXY.y),
-    xy(0, sizeXY.y)
-  ]
-}
-
 const STORY_HEIGHT = UNIT.feet(13)
 
 const SOUTH_WING = {
   name: 'South wing',
   numStories: 4,
   offset: xy(100, 140),
-  size: xy(170, 85)
+  size: xy(170, 85), // TODO: refactor & remove
+  shape: {
+    type: 'rectangle',
+    data: xy(170, 85)
+  }
 }
-SOUTH_WING.corners = rectangleOfSize(SOUTH_WING.size)
 
 const CENTER_WING = {
   name: 'Center wing',
   numStories: 3,
   offset: xy(SOUTH_WING.offset.x, SOUTH_WING.offset.y + SOUTH_WING.size.y),
-  size: xy(53, 116)
+  size: xy(53, 116), // TODO: refactor & remove
+  shape: {
+    type: 'rectangle',
+    data: xy(53, 116)
+  }
 }
-CENTER_WING.corners = rectangleOfSize(CENTER_WING.size)
 
 const TOWER = {
   name: 'Tower',
   numStories: 10,
   offset: xy(CENTER_WING.offset.x + CENTER_WING.size.x, CENTER_WING.offset.y + CENTER_WING.size.y),
-  size: xy(110, 70)
+  size: xy(110, 70), // TODO: refactor & remove
+  shape: {
+    type: 'rectangle',
+    data: xy(110, 70)
+  }
 }
-TOWER.corners = rectangleOfSize(TOWER.size)
 
 const TOWER_EAST = {
   name: 'Tower east',
   numStories: 10,
   offset: xy(TOWER.offset.x + TOWER.size.x, TOWER.offset.y + 5),
-  size: xy(29, 56)
+  size: xy(29, 56), // TODO: refactor & remove
+  shape: {
+    type: 'rectangle',
+    data: xy(29, 56)
+  }
 }
-TOWER_EAST.corners = rectangleOfSize(TOWER_EAST.size)
 
 const TOWER_WEST_OFFSET_Y = 17
 const TOWER_WEST = {
   name: 'Tower west',
   numStories: 11,
   offset: xy(TOWER.offset.x - TOWER_EAST.size.x, TOWER.offset.y + TOWER_WEST_OFFSET_Y),
-  size: xy(29, 44)
+  size: xy(29, 44), // TODO: refactor & remove
+  shape: {
+    type: 'rectangle',
+    data: xy(29, 44)
+  }
 }
-TOWER_WEST.corners = rectangleOfSize(TOWER_WEST.size)
 
 const FLOOR_TEN_BALCONY = {
   name: 'Tower west balcony',
   numStories: 0,
   offset: xyz(TOWER_WEST.offset.x - 10, TOWER_WEST.offset.y, 10 * STORY_HEIGHT),
-  size: xy(10, 23)
+  size: xy(10, 23), // TODO: refactor & remove
+  shape: {
+    type: 'rectangle',
+    data: xy(10, 23)
+  }
 }
-FLOOR_TEN_BALCONY.corners = rectangleOfSize(FLOOR_TEN_BALCONY.size)
 
 const ATRIUM_OFFSET_Y = -7
 const ATRIUM = {
@@ -80,24 +89,27 @@ const NORTH_WING = {
   name: 'North wing',
   numStories: 3,
   offset: xy(SOUTH_WING.offset.x - (227 - TOWER.size.x - CENTER_WING.size.x), TOWER.offset.y),
-  size: xy(227, 113)
+  size: xy(227, 113), // TODO: refactor & remove
+  shape: {
+    type: 'xyPolygon',
+    data: [
+      xy(0, 0),
+      xy(227 - TOWER.size.x, 0),
+      xy(227 - TOWER.size.x, TOWER_WEST_OFFSET_Y),
+      xy(227 - TOWER.size.x - TOWER_WEST.size.x, TOWER_WEST_OFFSET_Y),
+      xy(227 - TOWER.size.x - TOWER_WEST.size.x, TOWER_WEST_OFFSET_Y + ATRIUM_OFFSET_Y),
+      xy(227 - TOWER.size.x - TOWER_WEST.size.x - ATRIUM.size.x, TOWER_WEST_OFFSET_Y + ATRIUM_OFFSET_Y),
+      xy(227 - TOWER.size.x - TOWER_WEST.size.x - ATRIUM.size.x, TOWER_WEST_OFFSET_Y + ATRIUM_OFFSET_Y + ATRIUM.size.y),
+      xy(227 - TOWER.size.x - TOWER_WEST.size.x, TOWER_WEST_OFFSET_Y + ATRIUM_OFFSET_Y + ATRIUM.size.y),
+      xy(227 - TOWER.size.x - TOWER_WEST.size.x, TOWER_WEST_OFFSET_Y + TOWER_WEST.size.y),
+      xy(227 - TOWER.size.x, TOWER_WEST_OFFSET_Y + TOWER_WEST.size.y),
+      xy(227 - TOWER.size.x, TOWER.size.y),
+      xy(227, TOWER.size.y),
+      xy(227, 113),
+      xy(0, 113)
+    ]
+  }
 }
-NORTH_WING.corners = [
-  xy(0, 0),
-  xy(NORTH_WING.size.x - TOWER.size.x, 0),
-  xy(NORTH_WING.size.x - TOWER.size.x, TOWER_WEST_OFFSET_Y),
-  xy(NORTH_WING.size.x - TOWER.size.x - TOWER_WEST.size.x, TOWER_WEST_OFFSET_Y),
-  xy(NORTH_WING.size.x - TOWER.size.x - TOWER_WEST.size.x, TOWER_WEST_OFFSET_Y + ATRIUM_OFFSET_Y),
-  xy(NORTH_WING.size.x - TOWER.size.x - TOWER_WEST.size.x - ATRIUM.size.x, TOWER_WEST_OFFSET_Y + ATRIUM_OFFSET_Y),
-  xy(NORTH_WING.size.x - TOWER.size.x - TOWER_WEST.size.x - ATRIUM.size.x, TOWER_WEST_OFFSET_Y + ATRIUM_OFFSET_Y + ATRIUM.size.y),
-  xy(NORTH_WING.size.x - TOWER.size.x - TOWER_WEST.size.x, TOWER_WEST_OFFSET_Y + ATRIUM_OFFSET_Y + ATRIUM.size.y),
-  xy(NORTH_WING.size.x - TOWER.size.x - TOWER_WEST.size.x, TOWER_WEST_OFFSET_Y + TOWER_WEST.size.y),
-  xy(NORTH_WING.size.x - TOWER.size.x, TOWER_WEST_OFFSET_Y + TOWER_WEST.size.y),
-  xy(NORTH_WING.size.x - TOWER.size.x, TOWER.size.y),
-  xy(NORTH_WING.size.x, TOWER.size.y),
-  xy(NORTH_WING.size.x, NORTH_WING.size.y),
-  xy(0, NORTH_WING.size.y)
-]
 
 const BUILDING_SPEC = Object.freeze({
   name: 'Wurster Hall',
@@ -129,9 +141,32 @@ const NUM_SOUTH_WING_CRENELS_Y = 9 // eslint-disable-line no-unused-vars
 // TODO: place the building on a parcel of land
 const PARCEL = {
   offset: xy(0, 0),
-  size: xy(360, 540)
+  size: xy(360, 540), // TODO: refactor & remove
+  shape: {
+    type: 'rectangle',
+    data: xy(360, 540)
+  }
 }
-PARCEL.corners = rectangleOfSize(PARCEL.size)
+
+function rectangleOfSize (sizeXY) {
+  return [
+    xy(0, 0),
+    xy(sizeXY.x, 0),
+    xy(sizeXY.x, sizeXY.y),
+    xy(0, sizeXY.y)
+  ]
+}
+
+function cornersFromShape (shape) {
+  let corners
+  const shapeType = shape.type
+  if (shapeType === 'rectangle') {
+    corners = rectangleOfSize(shape.data)
+  } else if (shapeType === 'xyPolygon') {
+    corners = shape.data
+  }
+  return corners
+}
 
 /**
  * Class representing UC Berkeley's Wurster Hall.
@@ -139,11 +174,12 @@ PARCEL.corners = rectangleOfSize(PARCEL.size)
  */
 class Wurster extends Structure {
   static makeBuildingFromSpec (plato, spec, mainGroup, defaults) {
-    let { name, storyHeight, roof, children, numStories, corners, offset } = spec
+    let { name, storyHeight, roof, children, numStories, shape, offset } = spec
     storyHeight = storyHeight || defaults.storyHeight
     roof = roof || defaults.roof
     const point = { ...offset }
-    if (corners) {
+    if (shape) {
+      const corners = cornersFromShape(shape)
       let z = point.z || 0
       for (const i in countTo(numStories)) {
         point.z = z
@@ -168,10 +204,11 @@ class Wurster extends Structure {
     const group = new Group()
     const { storyHeight, children } = spec
     for (const childSpec of array(children)) {
-      const { name, numStories, corners, offset } = childSpec
+      const { name, numStories, shape, offset } = childSpec
       const point = { z: 0, ...offset }
       plato.goto(point)
       const depth = storyHeight * numStories
+      const corners = cornersFromShape(shape)
       const box = plato.makePlaceholder(Use.WALL, corners, depth, { name })
       group.add(box)
     }
@@ -180,7 +217,7 @@ class Wurster extends Structure {
 
   makeBuilding () {
     this._plato.goto(PARCEL.offset)
-    this._plato.makeParcel(PARCEL.corners)
+    this._plato.makeParcel(cornersFromShape(PARCEL.shape))
     const mainGroup = new LODGroup(BUILDING_SPEC.name)
     this._plato.appendToSector(mainGroup)
     Wurster.makeBuildingFromSpec(this._plato, BUILDING_SPEC, mainGroup)
