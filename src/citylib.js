@@ -6,6 +6,7 @@
   */
 
 import { Bikeway } from './structures/bikeway.js'
+import { Building } from './architecture/building.js'
 import { City } from './architecture/city.js'
 import { Cottage } from './structures/cottage.js'
 import { Creek } from './landscape/creek.js'
@@ -24,6 +25,7 @@ import { Wurster } from './structures/wurster.js'
 
 export const CITY = {
   Bikeway,
+  Building,
   City,
   Cottage,
   Creek,

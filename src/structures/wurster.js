@@ -6,10 +6,8 @@
   */
 
 import { UNIT } from '../core/unit.js'
-import { countTo, xy, xyz, xyzAdd, array } from '../core/util.js'
-import { Use } from '../architecture/use.js'
-import { Structure } from '../architecture/structure.js'
-import { Group, LODGroup } from '../architecture/group.js'
+import { xy, xyz } from '../core/util.js'
+import { Building } from '../architecture/building.js'
 
 const STORY_HEIGHT = UNIT.feet(13)
 
@@ -116,89 +114,15 @@ const PARCEL = {
   }
 }
 
-function rectangleOfSize (sizeXY) {
-  return [
-    xy(0, 0),
-    xy(sizeXY.x, 0),
-    xy(sizeXY.x, sizeXY.y),
-    xy(0, sizeXY.y)
-  ]
-}
-
-function cornersFromShape (shape) {
-  let corners
-  const shapeType = shape.type
-  if (shapeType === 'rectangle') {
-    corners = rectangleOfSize(shape.data)
-  } else if (shapeType === 'xyPolygon') {
-    corners = shape.data
-  }
-  return corners
-}
-
 /**
  * Class representing UC Berkeley's Wurster Hall.
  * @see [Wikipedia photo]{@link https://en.wikipedia.org/wiki/UC_Berkeley_College_of_Environmental_Design#/media/File:UC_Berkeley_Wurster_Hall.jpg}
  */
-class Wurster extends Structure {
-  static makeBuildingFromSpec (plato, spec, mainGroup, defaults, parentOffset = { x: 0, y: 0, z: 0 }) {
-    let { name, storyHeight, roof, children, numStories, shape, offset } = spec
-    storyHeight = storyHeight || defaults.storyHeight
-    roof = roof || defaults.roof
-    parentOffset = xyzAdd(parentOffset, offset)
-    const point = { ...parentOffset }
-    if (shape) {
-      const corners = cornersFromShape(shape)
-      let z = point.z || 0
-      for (const i in countTo(numStories)) {
-        point.z = z
-        const floorName = 'Floor ' + i + 'of ' + name
-        plato.goto(point)
-        const story = plato.makePlace2(Use.ROOM, corners, { name: floorName, wall: storyHeight })
-        mainGroup.add(story)
-        z = z + storyHeight
-      }
-      point.z = z
-      plato.goto(point)
-      const roofPlace = plato.makePlace2(Use.ROOF, corners, { wall: roof.parapetHeight })
-      mainGroup.add(roofPlace)
-    }
-    const defaultsForChildren = { storyHeight, roof }
-    for (const childSpec of array(children)) {
-      Wurster.makeBuildingFromSpec(plato, childSpec, mainGroup, defaultsForChildren, parentOffset)
-    }
-  }
-
-  static makeLowResGroupFromSpec (plato, spec, defaults) {
-    const group = new Group()
-    const { storyHeight, children, offset } = spec
-    const parentOffset = offset
-    for (const childSpec of array(children)) {
-      const { name, numStories, shape, offset } = childSpec
-      const point = xyzAdd(parentOffset, offset)
-      point.z = offset.z || 0
-      plato.goto(point)
-      const depth = storyHeight * numStories
-      const corners = cornersFromShape(shape)
-      const box = plato.makePlaceholder(Use.WALL, corners, depth, { name })
-      group.add(box)
-    }
-    return group
-  }
-
+class Wurster extends Building {
   makeBuilding () {
     this._plato.goto(PARCEL.offset)
-    this._plato.makeParcel(cornersFromShape(PARCEL.shape))
-    const mainGroup = new LODGroup(BUILDING_SPEC.name)
-    this._plato.appendToSector(mainGroup)
-    Wurster.makeBuildingFromSpec(this._plato, BUILDING_SPEC, mainGroup, {})
-
-    // TODO: The medium and low resolution instances constructed here are currently
-    // identical, so the only difference will be in the material.
-    const medResInstance = Wurster.makeLowResGroupFromSpec(this._plato, BUILDING_SPEC)
-    mainGroup.addLevelOfDetail(medResInstance, 1000)
-    const lowResInstance = Wurster.makeLowResGroupFromSpec(this._plato, BUILDING_SPEC)
-    mainGroup.addLevelOfDetail(lowResInstance, 2000)
+    this._plato.makeParcel(Building.cornersFromShape(PARCEL.shape))
+    super.makeBuildingFromSpec(BUILDING_SPEC)
   }
 }
 
