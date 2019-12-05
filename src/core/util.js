@@ -69,7 +69,7 @@ function xyz (x, y, z = 0) {
 }
 
 function xyzAdd (xyz0, xyz1) {
-  return { x: xyz0.x + xyz1.x, y: xyz0.y + xyz1.y, z: xyz0.z + xyz1.z }
+  return { x: xyz0.x + xyz1.x, y: xyz0.y + xyz1.y, z: (xyz0.z || 0) + (xyz1.z || 0) }
 }
 
 function xyzSubtract (xyz0, xyz1) {
