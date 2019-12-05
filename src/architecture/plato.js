@@ -41,10 +41,6 @@ const COLORS_BY_USE = {
   DOOR: YELLOW
 }
 
-// function print (str) {
-//   console.log(str)
-// }
-
 function _addWalls (group, xyPolygon, height, z, openingsByWall, cap) {
   let wallArea = 0
   let openingArea = 0
@@ -82,7 +78,6 @@ class Plato {
     this.study()
     this._city = city
     this._routes = []
-    // print('plato: "Hello world!"')
   }
 
   _applyGotoInto (xyzList) {
@@ -103,7 +98,6 @@ class Plato {
 
   study (topic = '', { x0 = 0, y0 = 0 } = {}) {
     if (topic) {
-      // print('plato: studying ' + topic)
       this._sector = new Sector(topic)
       this._city.add(this._sector)
     }
@@ -192,8 +186,6 @@ class Plato {
 
   pontificate () {
     // Print a report of square footage of rooms, walkways, etc.
-    // const milliseconds = Date.now() - this._t0
-    // print(`plato: construction time was ${milliseconds} milliseconds`)
     const floorArea = {}
     for (const use of Object.keys(Use)) {
       const sum = Plato.aggregateMetric(this._sector, `Floor area: ${use}`)

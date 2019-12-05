@@ -78,7 +78,6 @@ class Manhattan extends Structure {
   }
 
   addBuildingAt (x = 0, y = 0) {
-    // print(`NYC: addBuildingAt(${x}, ${y})`)
     let z = 0
     this.makePlace(Use.PARCEL, BUILDING, { x: x, y: y, z: z })
     const numFloors = randomInt(4, 60)
@@ -91,7 +90,6 @@ class Manhattan extends Structure {
   }
 
   addBlock (row = 0, col = 0) {
-    // print(`NYC: addBlock(${row}, ${col})`)
     const x = row * REPEAT_DX
     const y = col * REPEAT_DY
 
@@ -124,7 +122,6 @@ class Manhattan extends Structure {
   }
 
   addBlocks (numRows = 2, numCols = 2) {
-    // print(`NYC: addBlocks(${numRows} by ${numCols})`)
     for (const row of countTo(numRows)) {
       for (const col of countTo(numCols)) {
         this.addBlock(row, col)

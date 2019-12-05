@@ -59,9 +59,6 @@ class KayakFactory {
     kayak.userData = { spinningWheels: [] }
     kayak.userData.spinningWheels.push(paddle)
 
-    // kayak.position.z = 20
-    // kayak.position.y = 0
-    // kayak.position.x = 20
     kayak.add(shell, cockpit, paddle)
 
     return kayak
