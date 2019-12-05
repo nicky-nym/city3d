@@ -41,7 +41,7 @@ Before submitting a pull request or doing a git commit, always make sure the cod
   $ npm install
   $ npm test
   ```
-Ideally, any new code should also have corresponding new unit tests.
+Ideally, any new code should you contribute should also have corresponding new unit tests that you've written.
 
 
 ## Styleguides
