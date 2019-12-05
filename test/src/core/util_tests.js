@@ -6,7 +6,6 @@
   */
 
 import { xy, xyz, xyzAdd, xyzSubtract, count, countTo, randomInt, randomPseudoGaussian, hypotenuse, array } from '../../../src/core/util.js'
-import 'chai/register-should'
 
 /* global describe, it */
 /* eslint-disable no-unused-expressions */

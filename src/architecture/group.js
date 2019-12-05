@@ -17,6 +17,17 @@ class Group {
     return this
   }
 
+  accept (visitor) {
+    for (const child of this.children) {
+      if (child.accept) {
+        child.accept(visitor)
+      } else {
+        visitor(child)
+      }
+    }
+    visitor(this)
+  }
+
   addMetric (name, value, units) {
     this.metrics.set(name, { value, units })
   }

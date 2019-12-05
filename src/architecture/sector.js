@@ -9,6 +9,8 @@ import { Group } from './group.js'
 
 /**
  * Sector is a class for representing structure and metrics for a sector of a city.
+ * It is a thing that Plato can "study" and "pontificate".
+ * (Yes, we will probably get rid of this, but this is its current function.)
  */
 class Sector extends Group {
 

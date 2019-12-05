@@ -6,7 +6,6 @@
   */
 
 import { Geometry } from '../../../src/core/geometry.js'
-import 'chai/register-should'
 
 /* global describe, it */
 /* eslint-disable no-unused-expressions */

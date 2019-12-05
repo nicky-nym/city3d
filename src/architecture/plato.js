@@ -9,6 +9,7 @@ import { xyz, xyzAdd, xyRotate } from '../core/util.js'
 import { Facing } from '../core/facing.js'
 import { Geometry } from '../core/geometry.js'
 import { Group } from '../architecture/group.js'
+import { Parcel } from '../architecture/parcel.js'
 import { Sector } from './sector.js'
 import { Use } from './use.js'
 
@@ -40,9 +41,9 @@ const COLORS_BY_USE = {
   DOOR: YELLOW
 }
 
-function print (str) {
-  console.log(str)
-}
+// function print (str) {
+//   console.log(str)
+// }
 
 function _addWalls (group, xyPolygon, height, z, openingsByWall, cap) {
   let wallArea = 0
@@ -81,10 +82,10 @@ class Plato {
     this.study()
     this._city = city
     this._routes = []
-    print('plato: "Hello world!"')
+    // print('plato: "Hello world!"')
   }
 
-  applyGotoInto (xyzList) {
+  _applyGotoInto (xyzList) {
     const transformed = []
     for (const xyzPoint of xyzList) {
       const rotated = xyRotate(xyzPoint, this._facing)
@@ -95,19 +96,18 @@ class Plato {
   }
 
   makeRoute (use, listOfWaypoints) {
-    const route = this.applyGotoInto(listOfWaypoints)
+    const route = this._applyGotoInto(listOfWaypoints)
     this._routes.push(route)
     return route
   }
 
   study (topic = '', { x0 = 0, y0 = 0 } = {}) {
     if (topic) {
-      print('plato: studying ' + topic)
+      // print('plato: studying ' + topic)
       this._sector = new Sector(topic)
       this._city.add(this._sector)
     }
     this._topic = topic
-    this._squareFeet = {}
     this._x0 = x0
     this._y0 = y0
     this._t0 = Date.now()
@@ -122,13 +122,15 @@ class Plato {
   }
 
   makeParcel (corners) {
-    // TODO: new Parcel() instances and add them to the city/sector/group
-    const adjustedCorners = this.applyGotoInto(corners)
+    const parcel = new Parcel()
+    const adjustedCorners = this._applyGotoInto(corners)
     adjustedCorners.push(adjustedCorners[0])
     const xyPolygon = new Geometry.XYPolygon(adjustedCorners)
     const abstractOutlinePolygon = new Geometry.OutlinePolygon(xyPolygon)
     const concreteOutlinePolygon = new Geometry.Instance(abstractOutlinePolygon, this._xyz.z, MARTIAN_ORANGE)
-    this._sector.add(concreteOutlinePolygon)
+    parcel.add(concreteOutlinePolygon)
+    parcel.addMetric(`Floor area: ${Use.PARCEL}`, xyPolygon.area(), 'square feet')
+    this._sector.add(parcel)
   }
 
   appendToSector (group) {
@@ -139,7 +141,7 @@ class Plato {
   makePlaceholder (use, corners, depth, { z = 0, name } = {}) {
     z = z + this._xyz.z
     const group = new Group(name)
-    const adjustedCorners = this.applyGotoInto(corners)
+    const adjustedCorners = this._applyGotoInto(corners)
     const xyPolygon = new Geometry.XYPolygon(adjustedCorners)
     const color = COLORS_BY_USE[use]
     const abstractThickPolygon = new Geometry.ThickPolygon(xyPolygon, { depth })
@@ -154,10 +156,11 @@ class Plato {
     return this
   }
 
-  makePlace2 (use, corners, { z = 0, incline = 0, depth = -0.5, nuance = false, flip = false, cap = true, wall = 0, openings = [] } = {}) {
+  makePlace2 (use, corners, { z = 0, incline = 0, depth = -0.5, nuance = false, flip = false, cap = true, wall = 0, openings = [], name } = {}) {
     z = z + this._xyz.z
-    const group = new Group(`${Use[use]}${corners.name ? ` (${corners.name})` : ''}`)
-    const adjustedCorners = this.applyGotoInto(corners)
+    name = name || `${Use[use]}${corners.name ? ` (${corners.name})` : ''}`
+    const group = new Group(name)
+    const adjustedCorners = this._applyGotoInto(corners)
     const xyPolygon = new Geometry.XYPolygon(adjustedCorners)
     if (cap) {
       const color = COLORS_BY_USE[use]
@@ -165,8 +168,7 @@ class Plato {
       const concreteThickPolygon = new Geometry.Instance(abstractThickPolygon, z, color)
       group.add(concreteThickPolygon)
       const squareFeet = xyPolygon.area()
-      // this._squareFeet[use] = squareFeet + (this._squareFeet[use] || 0)
-      group.addMetric('Floor area', squareFeet, 'square feet')
+      group.addMetric(`Floor area: ${use}`, squareFeet, 'square feet')
     }
     if (wall !== 0) {
       _addWalls(group, xyPolygon, wall, z, openings, cap)
@@ -182,19 +184,33 @@ class Plato {
     this._sector.add(concreteRoof)
   }
 
+  static aggregateMetric (group, metricName) {
+    let sum = 0
+    group.accept(node => { const m = node.metrics && node.metrics.get(metricName); if (m) sum += m.value })
+    return sum
+  }
+
   pontificate () {
     // Print a report of square footage of rooms, walkways, etc.
-    const milliseconds = Date.now() - this._t0
-    print(`plato: construction time was ${milliseconds} milliseconds`)
-    this._sector.addMetric('Floor area', this._squareFeet, 'square feet')
-    const floor = this._squareFeet[Use.ROOM] || 0
-    const parcel = this._squareFeet[Use.PARCEL] || 10
-    const street = this._squareFeet[Use.STREET] || 0
-    if (parcel) {
-      const parcelFar = floor / parcel
-      const urbanFar = floor / (parcel + street)
+    // const milliseconds = Date.now() - this._t0
+    // print(`plato: construction time was ${milliseconds} milliseconds`)
+    const floorArea = {}
+    for (const use of Object.keys(Use)) {
+      const sum = Plato.aggregateMetric(this._sector, `Floor area: ${use}`)
+      if (sum > 0) {
+        floorArea[use] = sum
+      }
+    }
+    this._sector.addMetric('Floor area', floorArea, 'square feet')
+    if (floorArea[Use.PARCEL]) {
+      const parcelFar = floorArea[Use.ROOM] / floorArea[Use.PARCEL]
+      const urbanFar = floorArea[Use.ROOM] / (floorArea[Use.PARCEL] + (floorArea[Use.STREET] || 0))
       this._sector.addMetric('Parcel FAR', parcelFar.toFixed(1), 'floor area ratio')
       this._sector.addMetric('Overall FAR', urbanFar.toFixed(1), 'floor area ratio')
+    }
+    for (const metric of ['Wall area', 'Wall opening area']) {
+      const sum = Plato.aggregateMetric(this._sector, metric)
+      this._sector.addMetric(metric, sum, 'square feet')
     }
     return this
   }
