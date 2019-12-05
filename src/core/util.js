@@ -8,6 +8,23 @@
 import { Facing } from './facing.js'
 
 /**
+ * Given either a value or an array, returns an array
+ * @param {*} object - an array, or a single value
+ * @returns {array} an array, possibly of length 0
+ */
+function array (object) {
+  if (object) {
+    if (Array.isArray(object)) {
+      return object
+    } else {
+      return [object]
+    }
+  } else {
+    return []
+  }
+}
+
+/**
  * Returns an array of integers.
  * @param {number} from - the first number in the array
  * @param {number} to - the last number in the array
@@ -26,6 +43,14 @@ function count (from, to, by = 1) {
  */
 function countTo (to) {
   return [...Array(to).keys()]
+}
+
+/**
+ * Returns the length of the hypotenuse of a right triangle in 2D or 3D
+ * @returns {number} the length of the hypotenuse
+ */
+function hypotenuse (x, y, z = 0) {
+  return Math.sqrt(x ** 2 + y ** 2 + z ** 2)
 }
 
 /**
@@ -50,14 +75,6 @@ function randomPseudoGaussian (median, standardDeviation) {
   const MAGIC_ARRIVED_AT_BY_TRIAL_AND_ERROR = 9.54
   const random = median + ((random0to1 - 0.5) * (standardDeviation * MAGIC_ARRIVED_AT_BY_TRIAL_AND_ERROR))
   return random
-}
-
-/**
- * Returns the length of the hypotenuse of a right triangle in 2D or 3D
- * @returns {number} the length of the hypotenuse
- */
-function hypotenuse (x, y, z = 0) {
-  return Math.sqrt(x ** 2 + y ** 2 + z ** 2)
 }
 
 function xy (x, y) {
@@ -108,20 +125,17 @@ function xywh2rect (y, z, width, height) {
 }
 
 /**
- * Given either a value or an array, returns an array
- * @param {*} object - an array, or a single value
- * @returns {array} an array, possibly of length 0
+ * Returns an array with the {x, y} corners of a rectangle.
+ * @returns {Object} a object with {x, y} values for width and height
+ * @returns {array} an array with four corner {x, y} objects
  */
-function array (object) {
-  if (object) {
-    if (Array.isArray(object)) {
-      return object
-    } else {
-      return [object]
-    }
-  } else {
-    return []
-  }
+function rectangleOfSize (sizeXY) {
+  return [
+    xy(0, 0),
+    xy(sizeXY.x, 0),
+    xy(sizeXY.x, sizeXY.y),
+    xy(0, sizeXY.y)
+  ]
 }
 
-export { xy, xyz, xyzAdd, xyzSubtract, xyRotate, xywh2rect, count, countTo, randomInt, randomPseudoGaussian, hypotenuse, array }
+export { array, count, countTo, hypotenuse, randomInt, randomPseudoGaussian, xy, xyz, xyzAdd, xyzSubtract, xyRotate, xywh2rect, rectangleOfSize }
