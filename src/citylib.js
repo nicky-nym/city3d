@@ -7,6 +7,7 @@
 
 import { Bikeway } from './structures/bikeway.js'
 import { Building } from './architecture/building.js'
+import { Campus } from './places/campus.js'
 import { City } from './architecture/city.js'
 import { Cottage } from './structures/cottage.js'
 import { Creek } from './landscape/creek.js'
@@ -16,6 +17,7 @@ import { Kayak } from './movers/kayak.js'
 import { Manhattan } from './structures/manhattan.js'
 import { Merlon } from './structures/merlon.js'
 import { Parcel } from './architecture/parcel.js'
+import { Place } from './architecture/place.js'
 import { Plato } from './architecture/plato.js'
 import { SummaryOutput } from './outputs/summary_output.js'
 import { ThreeOutput } from './outputs/three_output.js'
@@ -26,6 +28,7 @@ import { Wurster } from './structures/wurster.js'
 export const CITY = {
   Bikeway,
   Building,
+  Campus,
   City,
   Cottage,
   Creek,
@@ -35,6 +38,7 @@ export const CITY = {
   Manhattan,
   Merlon,
   Parcel,
+  Place,
   Plato,
   SummaryOutput,
   ThreeOutput,

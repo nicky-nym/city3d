@@ -25,6 +25,28 @@ function array (object) {
 }
 
 /**
+ * Given an object that specifies a shape, returns an array of {x, y} corners
+ * @example:
+ * Building.cornersFromShape({ type: 'rectangle', data: xy(10, 20) })
+ * @example:
+ * Building.cornersFromShape({ type: 'xyPolygon', data: [xy(0, 0), xy(5, 10), xy(-5, 10) })
+ * @param {Object} shape - shape specification object
+ * @returns {array} an array of {x, y} corners
+ */
+function cornersFromShape (shape) {
+  let corners
+  const shapeType = shape.type
+  if (shapeType === 'rectangle') {
+    corners = rectangleOfSize(shape.data)
+  } else if (shapeType === 'xyPolygon') {
+    corners = shape.data
+  } else {
+    throw new Error('bad shape.type in util cornersFromShape(): ' + shapeType)
+  }
+  return corners
+}
+
+/**
  * Returns an array of integers.
  * @param {number} from - the first number in the array
  * @param {number} to - the last number in the array
@@ -138,4 +160,4 @@ function rectangleOfSize (sizeXY) {
   ]
 }
 
-export { array, count, countTo, hypotenuse, randomInt, randomPseudoGaussian, xy, xyz, xyzAdd, xyzSubtract, xyRotate, xywh2rect, rectangleOfSize }
+export { array, cornersFromShape, count, countTo, hypotenuse, randomInt, randomPseudoGaussian, xy, xyz, xyzAdd, xyzSubtract, xyRotate, xywh2rect, rectangleOfSize }

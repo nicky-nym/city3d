@@ -30,9 +30,9 @@ function addBuildings () {
   bikeway.addBikeways(3, 3, { buildings: true })
   plato.pontificate()
 
-  plato.study('Wurster Hall(s)', { x0: 100, y0: -600 })
-  const wurster = new CITY.Wurster(plato)
-  wurster.makeBuilding()
+  plato.study('Campus', { x0: 100, y0: -600 })
+  const campus = new CITY.Campus(plato)
+  campus.makeCampus(3)
   plato.pontificate()
 }
 

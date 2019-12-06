@@ -21,8 +21,8 @@ const SIZE = {
   north: xy(227, 113),
   atrium: xy(22, 46)
 }
-const WEST_DELTA_Y = 17
-const ATRIUM_DELTA_Y = -7
+const WEST_DELTA_Y = UNIT.feet(17)
+const ATRIUM_DELTA_Y = UNIT.feet(-7)
 const ORIGIN = {
   south: xy(0, 0),
   center: xy(0, SIZE.south.y),
@@ -33,7 +33,7 @@ const ORIGIN = {
   north: xy(SIZE.center.x + SIZE.tower.x - SIZE.north.x, SIZE.south.y + SIZE.center.y)
 }
 
-const BUILDING_SPEC = Object.freeze({
+const WURSTER_BUILDING_SPEC = Object.freeze({
   name: 'Wurster Hall',
   storyHeight: STORY_HEIGHT,
   offset: xyz(120, 140, 0),
@@ -96,6 +96,7 @@ const BUILDING_SPEC = Object.freeze({
   }]
 })
 
+// TODO: use all this information to add surface details to the building:
 const CRENEL_SPACING = UNIT.feet(9.333) // eslint-disable-line no-unused-vars
 const NUM_NORTH_WING_CRENELS_Y = 12 // eslint-disable-line no-unused-vars
 const NUM_CENTER_WING_CRENELS_Y = 12 // eslint-disable-line no-unused-vars
@@ -106,23 +107,13 @@ const AWNING_LENGTH = UNIT.feet(9) // eslint-disable-line no-unused-vars
 const NUM_SOUTH_WING_CRENELS_X = 18 // eslint-disable-line no-unused-vars
 const NUM_SOUTH_WING_CRENELS_Y = 9 // eslint-disable-line no-unused-vars
 
-const PARCEL = {
-  offset: xy(0, 0),
-  shape: {
-    type: 'rectangle',
-    data: xy(360, 540)
-  }
-}
-
 /**
  * Class representing UC Berkeley's Wurster Hall.
  * @see [Wikipedia photo]{@link https://en.wikipedia.org/wiki/UC_Berkeley_College_of_Environmental_Design#/media/File:UC_Berkeley_Wurster_Hall.jpg}
  */
 class Wurster extends Building {
-  makeBuilding () {
-    this._plato.goto(PARCEL.offset)
-    this._plato.makeParcel(Building.cornersFromShape(PARCEL.shape))
-    super.makeBuildingFromSpec(BUILDING_SPEC)
+  makeBuilding (at = { x: 0, y: 0 }) {
+    return super.makeBuildingFromSpec(WURSTER_BUILDING_SPEC, at)
   }
 }
 

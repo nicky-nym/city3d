@@ -5,7 +5,7 @@
   * For more information, please refer to <http://unlicense.org>
   */
 
-import { countTo, xyzAdd, rectangleOfSize, array } from '../core/util.js'
+import { array, cornersFromShape, countTo, xyzAdd } from '../core/util.js'
 import { Group, LODGroup } from './group.js'
 import { Structure } from './structure.js'
 import { Use } from '../architecture/use.js'
@@ -17,36 +17,14 @@ import { Use } from '../architecture/use.js'
  * Buildings can be made from declarative specifications in JSON format.
  */
 class Building extends Structure {
-  /**
-   * Given an object that specifies a shape, returns an array of {x, y} corners
-   * @example:
-   * Building.cornersFromShape({ type: 'rectangle', data: xy(10, 20) })
-   * @example:
-   * Building.cornersFromShape({ type: 'xyPolygon', data: [xy(0, 0), xy(5, 10), xy(-5, 10) })
-   * @param {Object} shape - shape specification object
-   * @returns {array} an array of {x, y} corners
-   */
-  static cornersFromShape (shape) {
-    let corners
-    const shapeType = shape.type
-    if (shapeType === 'rectangle') {
-      corners = rectangleOfSize(shape.data)
-    } else if (shapeType === 'xyPolygon') {
-      corners = shape.data
-    } else {
-      throw new Error('bad shape.type in Building.cornersFromShape(): ' + shapeType)
-    }
-    return corners
-  }
-
-  static makeBuildingFromSpec (plato, spec, mainGroup, defaults, parentOffset = { x: 0, y: 0, z: 0 }) {
+  static makeHighResBuildingFromSpec (plato, spec, mainGroup, defaults, parentOffset = { x: 0, y: 0, z: 0 }) {
     let { name, storyHeight, roof, children, numStories, shape, offset } = spec
     storyHeight = storyHeight || defaults.storyHeight
     roof = roof || defaults.roof
     parentOffset = xyzAdd(parentOffset, offset)
     const point = { ...parentOffset }
     if (shape) {
-      const corners = Building.cornersFromShape(shape)
+      const corners = cornersFromShape(shape)
       let z = point.z || 0
       for (const i in countTo(numStories)) {
         point.z = z
@@ -63,38 +41,38 @@ class Building extends Structure {
     }
     const defaultsForChildren = { storyHeight, roof }
     for (const childSpec of array(children)) {
-      Building.makeBuildingFromSpec(plato, childSpec, mainGroup, defaultsForChildren, parentOffset)
+      Building.makeHighResBuildingFromSpec(plato, childSpec, mainGroup, defaultsForChildren, parentOffset)
     }
   }
 
-  static makeLowResGroupFromSpec (plato, spec, defaults) {
+  static makeLowResGroupFromSpec (plato, spec, defaults, parentOffset = { x: 0, y: 0, z: 0 }) {
     const group = new Group()
     const { storyHeight, children, offset } = spec
-    const parentOffset = offset
+    parentOffset = xyzAdd(parentOffset, offset)
     for (const childSpec of array(children)) {
       const { name, numStories, shape, offset } = childSpec
       const point = xyzAdd(parentOffset, offset)
       point.z = offset.z || 0
       plato.goto(point)
       const depth = storyHeight * numStories
-      const corners = Building.cornersFromShape(shape)
+      const corners = cornersFromShape(shape)
       const box = plato.makePlaceholder(Use.WALL, corners, depth, { name })
       group.add(box)
     }
     return group
   }
 
-  makeBuildingFromSpec (buildingSpec) {
+  makeBuildingFromSpec (buildingSpec, at = { x: 0, y: 0, z: 0 }) {
     const mainGroup = new LODGroup(buildingSpec.name)
-    this._plato.appendToSector(mainGroup)
-    Building.makeBuildingFromSpec(this._plato, buildingSpec, mainGroup, {})
+    Building.makeHighResBuildingFromSpec(this._plato, buildingSpec, mainGroup, {}, at)
 
     // TODO: The medium and low resolution instances constructed here are currently
     // identical, so the only difference will be in the material.
-    const medResInstance = Building.makeLowResGroupFromSpec(this._plato, buildingSpec)
+    const medResInstance = Building.makeLowResGroupFromSpec(this._plato, buildingSpec, {}, at)
     mainGroup.addLevelOfDetail(medResInstance, 1000)
-    const lowResInstance = Building.makeLowResGroupFromSpec(this._plato, buildingSpec)
+    const lowResInstance = Building.makeLowResGroupFromSpec(this._plato, buildingSpec, {}, at)
     mainGroup.addLevelOfDetail(lowResInstance, 2000)
+    return mainGroup
   }
 }
 

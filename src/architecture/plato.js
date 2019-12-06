@@ -125,6 +125,7 @@ class Plato {
     parcel.add(concreteOutlinePolygon)
     parcel.addMetric(`Floor area: ${Use.PARCEL}`, xyPolygon.area(), 'square feet')
     this._sector.add(parcel)
+    return parcel
   }
 
   appendToSector (group) {
