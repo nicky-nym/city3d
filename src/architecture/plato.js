@@ -5,7 +5,7 @@
   * For more information, please refer to <http://unlicense.org>
   */
 
-import { xyz, xyzAdd, xyRotate } from '../core/util.js'
+import { xyz } from '../core/util.js'
 import { Facing } from '../core/facing.js'
 import { Geometry } from '../core/geometry.js'
 import { Group } from '../architecture/group.js'
@@ -80,18 +80,8 @@ class Plato {
     this._routes = []
   }
 
-  _applyGotoInto (xyzList) {
-    const transformed = []
-    for (const xyzPoint of xyzList) {
-      const rotated = xyRotate(xyzPoint, this._ray.az)
-      rotated.z = xyzPoint.z
-      transformed.push(xyzAdd(rotated, this._ray.xyz))
-    }
-    return transformed
-  }
-
   makeRoute (use, listOfWaypoints) {
-    const route = this._applyGotoInto(listOfWaypoints)
+    const route = this._ray.applyRay(listOfWaypoints)
     this._routes.push(route)
     return route
   }
@@ -108,16 +98,13 @@ class Plato {
   }
 
   goto ({ x = 0, y = 0, z = 0, facing = Facing.NORTH } = {}) {
-    this._ray.xyz.x = this._x0 + x
-    this._ray.xyz.y = this._y0 + y
-    this._ray.xyz.z = z
-    this._ray.az = facing
+    this._ray.goto(facing, xyz(this._x0 + x, this._y0 + y, z))
     return this
   }
 
   makeParcel (corners) {
     const parcel = new Parcel()
-    const adjustedCorners = this._applyGotoInto(corners)
+    const adjustedCorners = this._ray.applyRay(corners)
     adjustedCorners.push(adjustedCorners[0])
     const xyPolygon = new Geometry.XYPolygon(adjustedCorners)
     const abstractOutlinePolygon = new Geometry.OutlinePolygon(xyPolygon)
@@ -136,7 +123,7 @@ class Plato {
   makePlaceholder (use, corners, depth, { z = 0, name } = {}) {
     z = z + this._ray.xyz.z
     const group = new Group(name)
-    const adjustedCorners = this._applyGotoInto(corners)
+    const adjustedCorners = this._ray.applyRay(corners)
     const xyPolygon = new Geometry.XYPolygon(adjustedCorners)
     const color = COLORS_BY_USE[use]
     const abstractThickPolygon = new Geometry.ThickPolygon(xyPolygon, { depth })
@@ -155,7 +142,7 @@ class Plato {
     z = z + this._ray.xyz.z
     name = name || `${Use[use]}${corners.name ? ` (${corners.name})` : ''}`
     const group = new Group(name)
-    const adjustedCorners = this._applyGotoInto(corners)
+    const adjustedCorners = this._ray.applyRay(corners)
     const xyPolygon = new Geometry.XYPolygon(adjustedCorners)
     if (cap) {
       const color = COLORS_BY_USE[use]
@@ -173,7 +160,7 @@ class Plato {
 
   makeRoof (use, verticesOfRoof, indicesOfFaces, name) {
     const color = COLORS_BY_USE[use]
-    const vertices = verticesOfRoof.map(xyz => xyzAdd(xyz, this._ray.xyz))
+    const vertices = this._ray.applyRay(verticesOfRoof)
     const abstractRoof = new Geometry.TriangularPolyhedron(vertices, indicesOfFaces)
     const concreteRoof = new Geometry.Instance(abstractRoof, 0, color, name || 'roof')
     this._sector.add(concreteRoof)

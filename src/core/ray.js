@@ -5,6 +5,7 @@
   * For more information, please refer to <http://unlicense.org>
   */
 
+import { xyzAdd, xyRotate } from '../core/util.js'
 import { Facing } from './facing.js'
 
 /**
@@ -14,6 +15,21 @@ class Ray {
   constructor (azimuth = Facing.NORTH, xyz = { x: 0, y: 0, z: 0 }) {
     this.az = azimuth
     this.xyz = xyz
+  }
+
+  goto (azimuth, xyz) {
+    this.az = azimuth
+    this.xyz = xyz
+  }
+
+  applyRay (xyzList) {
+    const transformed = []
+    for (const xyzPoint of xyzList) {
+      const rotated = xyRotate(xyzPoint, this.az)
+      rotated.z = xyzPoint.z
+      transformed.push(xyzAdd(rotated, this.xyz))
+    }
+    return transformed
   }
 }
 
