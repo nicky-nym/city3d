@@ -1,15 +1,16 @@
 /** @file suburbiajs
-  * @author Authored in 2019 at <https://github.com/nicky-nym/city3d>
-  * @license UNLICENSE
-  * This is free and unencumbered software released into the public domain.
-  * For more information, please refer to <http://unlicense.org>
-  */
+ * @author Authored in 2019 at <https://github.com/nicky-nym/city3d>
+ * @license UNLICENSE
+ * This is free and unencumbered software released into the public domain.
+ * For more information, please refer to <http://unlicense.org>
+ */
 
 import { cornersFromShape, countTo, xy, xyz, xyzAdd } from '../core/util.js'
-import { Place } from '../architecture/place.js'
 import { Cottage } from '../structures/cottage.js'
 import { Garage } from '../structures/garage.js'
 import { House } from '../structures/house.js'
+import { Parcel } from '../architecture/parcel.js'
+import { Place } from '../architecture/place.js'
 
 const PARCEL_DY = 50
 const PARCEL_X0_NORTH = -232.72
@@ -33,8 +34,10 @@ class Suburbia extends Place {
   addStreet (numParcels = 1) {
     const offset = { ...PARCEL.offset }
     for (const i in countTo(numParcels)) { // eslint-disable-line no-unused-vars
-      this._plato.goto(offset)
-      const parcel = this._plato.makeParcel(cornersFromShape(PARCEL.shape))
+      const ray = this._plato.goto(offset)
+      const corners = cornersFromShape(PARCEL.shape)
+      const parcel = new Parcel(corners, ray)
+      this._plato.appendToSector(parcel)
 
       let at
 

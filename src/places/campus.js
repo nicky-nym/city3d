@@ -1,11 +1,12 @@
 /** @file campus.js
-  * @author Authored in 2019 at <https://github.com/nicky-nym/city3d>
-  * @license UNLICENSE
-  * This is free and unencumbered software released into the public domain.
-  * For more information, please refer to <http://unlicense.org>
-  */
+ * @author Authored in 2019 at <https://github.com/nicky-nym/city3d>
+ * @license UNLICENSE
+ * This is free and unencumbered software released into the public domain.
+ * For more information, please refer to <http://unlicense.org>
+ */
 
 import { cornersFromShape, countTo, xy, xyz } from '../core/util.js'
+import { Parcel } from '../architecture/parcel.js'
 import { Place } from '../architecture/place.js'
 import { Wurster } from '../structures/wurster.js'
 
@@ -26,12 +27,14 @@ class Campus extends Place {
     const offset = { ...PARCEL.offset }
     for (const i in countTo(numBuildings)) {
       offset.x = i * PARCEL.shape.data.x
-      this._plato.goto(offset)
-      const parcel = this._plato.makeParcel(cornersFromShape(PARCEL.shape))
+      const ray = this._plato.goto(offset)
+      const corners = cornersFromShape(PARCEL.shape)
+      const parcel = new Parcel(corners, ray)
+      this._plato.appendToSector(parcel)
+
       const wurster = new Wurster(this._plato)
       const groupForBuilding = wurster.makeBuilding(offset)
       parcel.add(groupForBuilding)
-      // this._plato.appendToSector(groupForBuilding)
     }
   }
 }
