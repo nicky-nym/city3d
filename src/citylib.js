@@ -11,8 +11,10 @@ import { Campus } from './places/campus.js'
 import { City } from './architecture/city.js'
 import { Cottage } from './structures/cottage.js'
 import { Creek } from './landscape/creek.js'
+import { Garage } from './structures/garage.js'
 import { Group } from './architecture/group.js'
 import { Highrise } from './structures/highrise.js'
+import { House } from './structures/house.js'
 import { Kalpana } from './movers/kalpana.js'
 import { Kayak } from './movers/kayak.js'
 import { Manhattan } from './places/manhattan.js'
@@ -20,6 +22,7 @@ import { Merlon } from './structures/merlon.js'
 import { Parcel } from './architecture/parcel.js'
 import { Place } from './architecture/place.js'
 import { Plato } from './architecture/plato.js'
+import { Suburbia } from './places/suburbia.js'
 import { SummaryOutput } from './outputs/summary_output.js'
 import { ThreeOutput } from './outputs/three_output.js'
 import { Tree } from './landscape/tree.js'
@@ -35,13 +38,16 @@ export const CITY = {
   Creek,
   Kalpana,
   Kayak,
+  Garage,
   Group,
   Highrise,
+  House,
   Manhattan,
   Merlon,
   Parcel,
   Place,
   Plato,
+  Suburbia,
   SummaryOutput,
   ThreeOutput,
   Tree,

@@ -8,7 +8,7 @@
 import { UNIT } from '../core/unit.js'
 import { xy, countTo } from '../core/util.js'
 import { Highrise } from '../structures/highrise.js'
-import { Structure } from '../architecture/structure.js'
+import { Place } from '../architecture/place.js'
 import { Use } from '../architecture/use.js'
 
 const BLOCK_DX = UNIT.feet(600)
@@ -27,11 +27,6 @@ const AVENUE_WIDTH = UNIT.feet(60)
 const HALF_STREET = STREET_WIDTH / 2
 const HALF_AVENUE = AVENUE_WIDTH / 2
 
-// const BUILDING = [
-//   xy(0, 0),
-//   xy(BUILDING_DX, 0),
-//   xy(BUILDING_DX, BUILDING_DY),
-//   xy(0, BUILDING_DY)]
 const INTERSECTION = [
   xy(0, 0),
   xy(HALF_AVENUE, 0),
@@ -63,7 +58,7 @@ const REPEAT_DY = BLOCK_DY + STREET_WIDTH + (SIDEWALK_WIDTH_STREETS * 2)
 /**
  * Manhattan objects know how to describe the city blocks in New York.
  */
-class Manhattan extends Structure {
+class Manhattan extends Place {
   makePlace (place, area,
     {
       x = 0,

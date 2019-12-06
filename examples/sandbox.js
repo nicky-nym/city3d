@@ -9,9 +9,9 @@ import { CITY } from '../src/citylib.js'
 import { xyz } from '../src/core/util.js'
 
 function addBuildings () {
-  plato.study('Cottage(s)', { x0: -100, y0: 100 })
-  const cottage = new CITY.Cottage(plato, city)
-  cottage.addStreet(1)
+  plato.study('Suburbia', { x0: -100, y0: 100 })
+  const suburbia = new CITY.Suburbia(plato)
+  suburbia.addStreet(2)
   plato.pontificate()
 
   const CITY_SIZE = 1
