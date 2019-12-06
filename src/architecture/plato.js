@@ -9,7 +9,6 @@ import { xyz } from '../core/util.js'
 import { Facing } from '../core/facing.js'
 import { Geometry } from '../core/geometry.js'
 import { Group } from '../architecture/group.js'
-import { Parcel } from '../architecture/parcel.js'
 import { Ray } from '../core/ray.js'
 import { Sector } from './sector.js'
 import { Use } from './use.js'
@@ -100,12 +99,6 @@ class Plato {
   goto ({ x = 0, y = 0, z = 0, facing = Facing.NORTH } = {}) {
     this._ray.goto(facing, xyz(this._x0 + x, this._y0 + y, z))
     return this._ray
-  }
-
-  makeParcel (corners) {
-    const parcel = new Parcel(corners, this._ray)
-    this.appendToSector(parcel)
-    return parcel
   }
 
   appendToSector (group) {

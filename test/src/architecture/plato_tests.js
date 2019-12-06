@@ -9,6 +9,7 @@ import { City } from '../../../src/architecture/city.js'
 import { Geometry } from '../../../src/core/geometry.js'
 import { Group } from '../../../src/architecture/group.js'
 import { Facing } from '../../../src/core/facing.js'
+import { Parcel } from '../../../src/architecture/parcel.js'
 import { Plato } from '../../../src/architecture/plato.js'
 import { Use } from '../../../src/architecture/use.js'
 import { xy, xyz } from '../../../src/core/util.js'
@@ -128,6 +129,7 @@ describe('Plato', function () {
   describe('#pontificate()', function () {
     let city
     let plato
+    let ray
     let sector
     const parcelRect = [xy(0, 0), xy(50, 0), xy(50, 20), xy(0, 20)]
     const roomRect = [xyz(5, 5, 0), xyz(45, 5, 0), xyz(45, 15, 0), xyz(5, 15, 0)]
@@ -135,12 +137,13 @@ describe('Plato', function () {
     beforeEach(function () {
       city = new City('Testopia')
       plato = new Plato(city)
+      ray = plato.goto()
       plato.study('test sector')
       sector = city.getSectors()[0]
     })
 
     it('should add the expected metrics when a Parcel and a room are created', function () {
-      plato.makeParcel(parcelRect)
+      plato.appendToSector(new Parcel(parcelRect, ray))
       plato.makePlace(Use.ROOM, roomRect)
       plato.pontificate()
 
@@ -162,7 +165,7 @@ describe('Plato', function () {
       floorAreaMetric.units.should.equal('square feet')
     })
     it('should compute the correct values and units for FAR metrics for a rectangular Parcel and room', function () {
-      plato.makeParcel(parcelRect)
+      plato.appendToSector(new Parcel(parcelRect, ray))
       plato.makePlace(Use.ROOM, roomRect)
       plato.pontificate()
 
@@ -188,9 +191,10 @@ describe('Plato', function () {
       beforeEach(function () {
         city = new City('Testopia')
         plato = new Plato(city)
+        ray = plato.goto()
         plato.study('test sector')
         sector = city.getSectors()[0]
-        plato.makeParcel(parcelRect)
+        plato.appendToSector(new Parcel(parcelRect, ray))
         plato.goto(xyz(5, 5, 0))
         plato.makePlace(Use.ROOM, storyRect, { wall: 10 })
         plato.goto(xyz(5, 5, 10))
