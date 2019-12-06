@@ -81,6 +81,7 @@ describe('Vehicle', function () {
       v.position.should.eql([100, 0, 0])
 
       // TODO: see following comment.
+      //   (+1 for this version)
       v.update.bind(v).should.not.change(v, 'position')
     })
     it('should change the position if speed > 0', function () {
@@ -90,6 +91,7 @@ describe('Vehicle', function () {
 
       // TODO: This actually expresses the intent better, and in only one line.
       // Is it easier or harder to understand?
+      //   (+1 for this version)
       v.update.bind(v).should.change(v, 'position')
     })
   })
