@@ -5,13 +5,14 @@
   * For more information, please refer to <http://unlicense.org>
   */
 
-import { xy, countTo, randomInt } from '../core/util.js'
-import { Use } from '../architecture/use.js'
+import { UNIT } from '../core/unit.js'
+import { xy, countTo } from '../core/util.js'
+import { Highrise } from '../structures/highrise.js'
 import { Structure } from '../architecture/structure.js'
+import { Use } from '../architecture/use.js'
 
-// in feet
-const BLOCK_DX = 600
-const BLOCK_DY = 200
+const BLOCK_DX = UNIT.feet(600)
+const BLOCK_DY = UNIT.feet(200)
 
 const BUILDINGS_PER_STREET = 2
 const BUILDINGS_PER_AVENUE = 6
@@ -19,18 +20,18 @@ const BUILDINGS_PER_AVENUE = 6
 const BUILDING_DX = BLOCK_DX / BUILDINGS_PER_AVENUE
 const BUILDING_DY = BLOCK_DY / BUILDINGS_PER_STREET
 
-const SIDEWALK_WIDTH_STREETS = 16
-const SIDEWALK_WIDTH_AVENUES = 20
-const STREET_WIDTH = 32
-const AVENUE_WIDTH = 60
-const HALF_STREET = 32 / 2
-const HALF_AVENUE = 60 / 2
+const SIDEWALK_WIDTH_STREETS = UNIT.feet(16)
+const SIDEWALK_WIDTH_AVENUES = UNIT.feet(20)
+const STREET_WIDTH = UNIT.feet(32)
+const AVENUE_WIDTH = UNIT.feet(60)
+const HALF_STREET = STREET_WIDTH / 2
+const HALF_AVENUE = AVENUE_WIDTH / 2
 
-const BUILDING = [
-  xy(0, 0),
-  xy(BUILDING_DX, 0),
-  xy(BUILDING_DX, BUILDING_DY),
-  xy(0, BUILDING_DY)]
+// const BUILDING = [
+//   xy(0, 0),
+//   xy(BUILDING_DX, 0),
+//   xy(BUILDING_DX, BUILDING_DY),
+//   xy(0, BUILDING_DY)]
 const INTERSECTION = [
   xy(0, 0),
   xy(HALF_AVENUE, 0),
@@ -78,15 +79,13 @@ class Manhattan extends Structure {
   }
 
   addBuildingAt (x = 0, y = 0) {
-    let z = 0
-    this.makePlace(Use.PARCEL, BUILDING, { x: x, y: y, z: z })
-    const numFloors = randomInt(4, 60)
-    const storyHeight = randomInt(9, 12)
-    for (const i of countTo(numFloors)) {
-      z = i * storyHeight
-      this.makePlace(Use.ROOM, BUILDING, { x: x, y: y, z: z, wall: storyHeight, openings: [] })
-    }
-    this.makePlace(Use.ROOF, BUILDING, { x: x, y: y, z: z + storyHeight })
+    const z = 0
+    const offset = { x, y, z }
+    const size = { x: BUILDING_DX, y: BUILDING_DY }
+    const highrise = new Highrise(this._plato)
+    const groupForBuilding = highrise.makeBuilding(size, offset)
+    this._plato.goto({ x, y, z })
+    this._plato.appendToSector(groupForBuilding)
   }
 
   addBlock (row = 0, col = 0) {

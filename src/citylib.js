@@ -12,9 +12,10 @@ import { City } from './architecture/city.js'
 import { Cottage } from './structures/cottage.js'
 import { Creek } from './landscape/creek.js'
 import { Group } from './architecture/group.js'
+import { Highrise } from './structures/highrise.js'
 import { Kalpana } from './movers/kalpana.js'
 import { Kayak } from './movers/kayak.js'
-import { Manhattan } from './structures/manhattan.js'
+import { Manhattan } from './places/manhattan.js'
 import { Merlon } from './structures/merlon.js'
 import { Parcel } from './architecture/parcel.js'
 import { Place } from './architecture/place.js'
@@ -35,6 +36,7 @@ export const CITY = {
   Kalpana,
   Kayak,
   Group,
+  Highrise,
   Manhattan,
   Merlon,
   Parcel,

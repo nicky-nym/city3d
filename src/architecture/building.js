@@ -5,10 +5,22 @@
   * For more information, please refer to <http://unlicense.org>
   */
 
-import { array, cornersFromShape, countTo, xyzAdd } from '../core/util.js'
+import { array, cornersFromShape, countTo, randomInt, xyzAdd } from '../core/util.js'
 import { Group, LODGroup } from './group.js'
 import { Structure } from './structure.js'
 import { Use } from '../architecture/use.js'
+
+function _intFromSpec (specValue) {
+  if (isNaN(specValue)) {
+    if (specValue.type === 'randomInt') {
+      return randomInt(specValue.min, specValue.max)
+    } else {
+      throw new Error('bad integer specification in Building: ' + specValue)
+    }
+  } else {
+    return specValue
+  }
+}
 
 /**
  * Building is a class for representing buildings in a city.
@@ -26,13 +38,15 @@ class Building extends Structure {
     if (shape) {
       const corners = cornersFromShape(shape)
       let z = point.z || 0
-      for (const i in countTo(numStories)) {
+      const height = _intFromSpec(storyHeight)
+      const stories = _intFromSpec(numStories)
+      for (const i in countTo(stories)) {
         point.z = z
         const floorName = 'Floor ' + i + 'of ' + name
         plato.goto(point)
-        const story = plato.makePlace2(Use.ROOM, corners, { name: floorName, wall: storyHeight })
+        const story = plato.makePlace2(Use.ROOM, corners, { name: floorName, wall: height })
         mainGroup.add(story)
-        z = z + storyHeight
+        z = z + height
       }
       point.z = z
       plato.goto(point)
@@ -45,21 +59,24 @@ class Building extends Structure {
     }
   }
 
-  static makeLowResGroupFromSpec (plato, spec, defaults, parentOffset = { x: 0, y: 0, z: 0 }) {
-    const group = new Group()
-    const { storyHeight, children, offset } = spec
+  static makeLowResGroupFromSpec (plato, spec, group, defaults, parentOffset = { x: 0, y: 0, z: 0 }) {
+    let { name, storyHeight, children, numStories, shape, offset } = spec
+    storyHeight = storyHeight || defaults.storyHeight
     parentOffset = xyzAdd(parentOffset, offset)
-    for (const childSpec of array(children)) {
-      const { name, numStories, shape, offset } = childSpec
-      const point = xyzAdd(parentOffset, offset)
-      point.z = offset.z || 0
-      plato.goto(point)
-      const depth = storyHeight * numStories
+    const point = { ...parentOffset }
+    if (shape) {
       const corners = cornersFromShape(shape)
+      plato.goto(point)
+      const height = _intFromSpec(storyHeight)
+      const stories = _intFromSpec(numStories)
+      const depth = height * stories
       const box = plato.makePlaceholder(Use.WALL, corners, depth, { name })
       group.add(box)
     }
-    return group
+    const defaultsForChildren = { storyHeight }
+    for (const childSpec of array(children)) {
+      Building.makeLowResGroupFromSpec(plato, childSpec, group, defaultsForChildren, parentOffset)
+    }
   }
 
   makeBuildingFromSpec (buildingSpec, at = { x: 0, y: 0, z: 0 }) {
@@ -68,10 +85,13 @@ class Building extends Structure {
 
     // TODO: The medium and low resolution instances constructed here are currently
     // identical, so the only difference will be in the material.
-    const medResInstance = Building.makeLowResGroupFromSpec(this._plato, buildingSpec, {}, at)
-    mainGroup.addLevelOfDetail(medResInstance, 1000)
-    const lowResInstance = Building.makeLowResGroupFromSpec(this._plato, buildingSpec, {}, at)
-    mainGroup.addLevelOfDetail(lowResInstance, 2000)
+    const mediumGroup = new Group()
+    Building.makeLowResGroupFromSpec(this._plato, buildingSpec, mediumGroup, {}, at)
+    mainGroup.addLevelOfDetail(mediumGroup, 1000)
+
+    const lowGroup = new Group()
+    Building.makeLowResGroupFromSpec(this._plato, buildingSpec, lowGroup, {}, at)
+    mainGroup.addLevelOfDetail(lowGroup, 2000)
     return mainGroup
   }
 }

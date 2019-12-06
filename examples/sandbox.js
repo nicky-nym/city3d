@@ -17,7 +17,7 @@ function addBuildings () {
   const CITY_SIZE = 1
   plato.study('Manhattan New York', { x0: -800 * CITY_SIZE, y0: -600 * CITY_SIZE })
   const nyc = new CITY.Manhattan(plato)
-  nyc.addBlocks(CITY_SIZE, CITY_SIZE * 1)
+  nyc.addBlocks(CITY_SIZE, CITY_SIZE * 2)
   plato.pontificate()
 
   plato.study('Merlon Buildings', { x0: 238, y0: 238 })
