@@ -151,14 +151,6 @@ class Plato {
     return group
   }
 
-  makeRoof (use, verticesOfRoof, indicesOfFaces, name) {
-    const color = COLORS_BY_USE[use]
-    const vertices = this._ray.applyRay(verticesOfRoof)
-    const abstractRoof = new Geometry.TriangularPolyhedron(vertices, indicesOfFaces)
-    const concreteRoof = new Geometry.Instance(abstractRoof, 0, color, name || 'roof')
-    this._sector.add(concreteRoof)
-  }
-
   static aggregateMetric (group, metricName) {
     let sum = 0
     group.accept(node => { const m = node.metrics && node.metrics.get(metricName); if (m) sum += m.value })

@@ -22,6 +22,7 @@ import { Merlon } from './structures/merlon.js'
 import { Parcel } from './architecture/parcel.js'
 import { Place } from './architecture/place.js'
 import { Plato } from './architecture/plato.js'
+import { Roof } from './architecture/roof.js'
 import { Suburbia } from './places/suburbia.js'
 import { SummaryOutput } from './outputs/summary_output.js'
 import { ThreeOutput } from './outputs/three_output.js'
@@ -47,6 +48,7 @@ export const CITY = {
   Parcel,
   Place,
   Plato,
+  Roof,
   Suburbia,
   SummaryOutput,
   ThreeOutput,

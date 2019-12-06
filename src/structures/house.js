@@ -9,6 +9,7 @@ import { UNIT } from '../core/unit.js'
 import { xy, xyz, xyzAdd, xywh2rect, countTo } from '../core/util.js'
 
 import { Facing } from '../core/facing.js'
+import { Roof } from '../architecture/roof.js'
 import { Structure } from '../architecture/structure.js'
 import { Use } from '../architecture/use.js'
 
@@ -324,6 +325,14 @@ class House extends Structure {
     return this
   }
 
+  addRoof (vertices, indices) {
+    const roofSpec = {
+      custom: { vertices, indices }
+    }
+    const roof = new Roof(roofSpec, this._plato._ray)
+    this._plato.appendToSector(roof)
+  }
+
   addHouse (x = 0, y = 0, facing = Facing.NORTH) {
     // Tell plato about the floors, walls, roof, etc.
     const plato = this._plato
@@ -345,14 +354,14 @@ class House extends Structure {
     plato.goto({ x: x, y: y, z: ATTIC_ELEVATION, facing: facing })
     plato.makePlace(Use.BARE, CHIMNEY, { height: CHIMNEY_HEIGHT, nuance: true })
     plato.makePlace(Use.BARE, ATTIC)
-    plato.makeRoof(Use.ROOF, VERTICES_OF_ROOF, INDICES_OF_ROOF_FACES)
-    plato.makeRoof(Use.ROOF, VERTICES_OF_DORMER_ROOF, INDICES_OF_DORMER_ROOF_FACES)
+    this.addRoof(VERTICES_OF_ROOF, INDICES_OF_ROOF_FACES)
+    this.addRoof(VERTICES_OF_DORMER_ROOF, INDICES_OF_DORMER_ROOF_FACES)
 
     // Porch roofs
     const PORCH_TOP_ELEVATION = ADDON_HEIGHT + CRAWL_SPACE_HEIGHT
     plato.goto({ x: x, y: y, z: PORCH_TOP_ELEVATION, facing: facing })
-    plato.makeRoof(Use.ROOF, VERTICES_OF_PORCH_ROOF, INDICES_OF_PORCH_ROOF_FACES)
-    plato.makeRoof(Use.ROOF, VERTICES_OF_ADDON_ROOF, INDICES_OF_ADDON_ROOF_FACES)
+    this.addRoof(VERTICES_OF_PORCH_ROOF, INDICES_OF_PORCH_ROOF_FACES)
+    this.addRoof(VERTICES_OF_ADDON_ROOF, INDICES_OF_ADDON_ROOF_FACES)
 
     return this
   }

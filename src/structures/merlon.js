@@ -6,16 +6,17 @@
   */
 
 import { xy, xyz, xywh2rect, count, countTo, randomInt, hypotenuse } from '../core/util.js'
-import { Use } from '../architecture/use.js'
 import { Facing } from '../core/facing.js'
+import { Roof } from '../architecture/roof.js'
 import { Structure } from '../architecture/structure.js'
+import { UNIT } from '../core/unit.js'
+import { Use } from '../architecture/use.js'
 
-// in feet
-const STORY_HEIGHT = 10
+const STORY_HEIGHT = UNIT.feet(10)
 const ROOFLINE = STORY_HEIGHT * 5
-const RAMP_WIDTH = 6
-const RAMP_RUN_LENGTH = 30
-const RAMP_RISE_HEIGHT = 2.5
+const RAMP_WIDTH = UNIT.feet(6)
+const RAMP_RUN_LENGTH = UNIT.feet(30)
+const RAMP_RISE_HEIGHT = UNIT.feet(2.5)
 const TOWER_WIDTH = RAMP_RUN_LENGTH + 12
 const LANDING_WIDTH = RAMP_WIDTH + TOWER_WIDTH - RAMP_RUN_LENGTH
 const TOWER_SPACING = TOWER_WIDTH + RAMP_WIDTH
@@ -87,7 +88,7 @@ const APARTMENT_SPEC = [
 ]
 const APARTMENT = APARTMENT_SPEC.map(([point, openings]) => point)
 
-// TODO: refactor this code with code in cottage.js for HOUSE_WINDOWS and ADDON_WINDOWS
+// TODO: refactor this code with code in house.js for HOUSE_WINDOWS and ADDON_WINDOWS
 const APARTMENT_WINDOWS = []
 let i = 0
 for (const [point, windows] of APARTMENT_SPEC) { // eslint-disable-line no-unused-vars
@@ -260,9 +261,14 @@ function _getLandingPattern (numRows, numCols) {
 }
 
 function _addRoofAroundFloor (plato, shape, peakXyz) {
-  const Z = 2
-  if (peakXyz[Z] === 0) {
-    plato.makePlace(Use.ROOF, shape)
+  let roofSpec = {}
+  const ray = plato._ray
+  if (peakXyz.z === 0) {
+    roofSpec = {
+      flat: shape
+    }
+    const roof = new Roof(roofSpec, ray)
+    plato.appendToSector(roof)
   } else {
     plato.makePlace(Use.BARE, shape)
     let i = 0
@@ -275,7 +281,11 @@ function _addRoofAroundFloor (plato, shape, peakXyz) {
         peakXyz
       ]
       const indices = [[0, 1, 2]]
-      plato.makeRoof(Use.ROOF, vertices, indices)
+      roofSpec = {
+        custom: { vertices, indices }
+      }
+      const roof = new Roof(roofSpec, ray)
+      plato.appendToSector(roof)
     }
   }
 }
