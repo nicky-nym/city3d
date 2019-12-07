@@ -1,19 +1,21 @@
 /** @file bikeway.js
-  * @author Authored in 2019 at <https://github.com/nicky-nym/city3d>
-  * @license UNLICENSE
-  * This is free and unencumbered software released into the public domain.
-  * For more information, please refer to <http://unlicense.org>
-  */
+ * @author Authored in 2019 at <https://github.com/nicky-nym/city3d>
+ * @license UNLICENSE
+ * This is free and unencumbered software released into the public domain.
+ * For more information, please refer to <http://unlicense.org>
+ */
 
+import { UNIT } from '../core/unit.js'
 import { xy, xyz, xyRotate, xywh2rect, count, countTo, randomInt, hypotenuse } from '../core/util.js'
+import { Byway } from '../architecture/byway.js'
 import { Facing } from '../core/facing.js'
 import { Group } from '../architecture/group.js'
+import { Storey } from '../architecture/storey.js'
 import { Structure } from '../architecture/structure.js'
 import { Use } from '../architecture/use.js'
 import { Vehicle } from '../movers/vehicle.js'
 
-// in feet
-const BLOCK_LENGTH = 660
+const BLOCK_LENGTH = UNIT.feet(660)
 
 const PARCEL = [
   xy(0, 0),
@@ -30,8 +32,8 @@ const EXIT_DOWN = [
 ]
 EXIT_DOWN.name = 'exit down'
 
-const RAMP_RUN_LENGTH = 180
-const RAMP_RISE_HEIGHT = 7.5
+const RAMP_RUN_LENGTH = UNIT.feet(180)
+const RAMP_RISE_HEIGHT = UNIT.feet(7.5)
 const HYPOTENUSE = hypotenuse(RAMP_RUN_LENGTH, RAMP_RISE_HEIGHT)
 const RAMP_DOWN_TO_LANDING = [
   xy(30, 90),
@@ -82,8 +84,8 @@ const LANDING_PLAZA = [
   xy(70, 270)
 ]
 
-const RUN_LENGTH = 59
-const RISE_HEIGHT = 2.5
+const RUN_LENGTH = UNIT.feet(59)
+const RISE_HEIGHT = UNIT.feet(2.5)
 const WALKWAY_HYPOTENUSE = hypotenuse(RUN_LENGTH, RISE_HEIGHT)
 const LANDING_NORTH_WALKWAY = [
   xy(70, 381),
@@ -140,9 +142,9 @@ const LOWER_PLAZA = [
   xy(490, 30)
 ]
 
-const WALKWAY_SPACING = 96
-const WALKWAY_WIDTH = 6
-const WALKWAY_XA = 183
+const WALKWAY_SPACING = UNIT.feet(96)
+const WALKWAY_WIDTH = UNIT.feet(6)
+const WALKWAY_XA = UNIT.feet(183)
 const LOWER_PLAZA_WALKWAY_A = [
   xy(WALKWAY_XA, 45),
   xy(WALKWAY_XA, 129),
@@ -183,14 +185,15 @@ class Bikeway extends Structure {
       xy(LANE_WIDTH, 0),
       xy(LANE_WIDTH, BLOCK_LENGTH),
       xy(0, BLOCK_LENGTH)]
-    this._plato.goto({ x: x, y: y, z: z, facing: facing })
-    this._plato.makePlace(Use.BARE, LANE) // median strip
+    let ray
+    ray = this._plato.goto({ x: x, y: y, z: z, facing: facing })
+    this._plato.appendToSector(new Byway(ray, Use.BARE, LANE)) // median strip
     let delta = 0
     for (const i of countTo(NUM_LANES)) { // eslint-disable-line no-unused-vars
       delta += LANE_WIDTH
       const dxy = xyRotate(xy(delta, 0), facing)
-      this._plato.goto({ x: x + dxy.x, y: y + dxy.y, z: z, facing: facing })
-      this._plato.makePlace(Use.BIKEPATH, LANE)
+      ray = this._plato.goto({ x: x + dxy.x, y: y + dxy.y, z: z, facing: facing })
+      this._plato.appendToSector(new Byway(ray, Use.BIKEPATH, LANE))
       const route = this._plato.makeRoute(Use.BIKEPATH, [
         xyz(LANE_WIDTH / 2, 0, 0),
         xyz(LANE_WIDTH / 2, BLOCK_LENGTH, 0)
@@ -199,15 +202,16 @@ class Bikeway extends Structure {
     }
     delta += LANE_WIDTH
     const dxy = xyRotate(xy(delta, 0), facing)
-    this._plato.goto({ x: x + dxy.x, y: y + dxy.y, z: z, facing: facing })
-    this._plato.makePlace(Use.BARE, LANE) // shoulder
+    ray = this._plato.goto({ x: x + dxy.x, y: y + dxy.y, z: z, facing: facing })
+    this._plato.appendToSector(new Byway(ray, Use.BARE, LANE)) // shoulder
     return this
   }
 
   addRamps (self) {
-    this._plato.makePlace(Use.BIKEPATH, EXIT_DOWN, { z: 0.1 })
-    this._plato.makePlace(Use.BIKEPATH, RAMP_DOWN_TO_LANDING, { incline: RAMP_RISE_HEIGHT })
-    this._plato.makePlace(Use.BIKEPATH, LANDING, { z: -7.5 })
+    const ray = this._plato._ray
+    this._plato.appendToSector(new Byway(ray, Use.BIKEPATH, EXIT_DOWN, { z: 0.1 }))
+    this._plato.appendToSector(new Byway(ray, Use.BIKEPATH, RAMP_DOWN_TO_LANDING, { incline: RAMP_RISE_HEIGHT }))
+    this._plato.appendToSector(new Byway(ray, Use.BIKEPATH, LANDING, { z: -7.5 }))
     let route = this._plato.makeRoute(Use.BIKEPATH, [
       xyz(25, 0, 0.1), xyz(35, 90, 0.1), // start and end of EXIT_DOWN
       xyz(35, 270, -7.5), // landing
@@ -217,20 +221,21 @@ class Bikeway extends Structure {
     ])
     this._vehicles.push(new Vehicle(route, randomInt(6, 10) * 0.04))
 
-    this._plato.makePlace(Use.BARE, LANDING_PARKING, { z: -7.5 })
-    this._plato.makePlace(Use.WALKWAY, LANDING_PLAZA, { z: -7.5 })
-    this._plato.makePlace(Use.WALKWAY, LANDING_NORTH_WALKWAY, { z: -7.5, incline: -RISE_HEIGHT })
-    this._plato.makePlace(Use.WALKWAY, LANDING_SOUTH_WALKWAY, { z: -7.5, incline: -RISE_HEIGHT })
+    this._plato.appendToSector(new Byway(ray, Use.BARE, LANDING_PARKING, { z: -7.5 }))
+    this._plato.appendToSector(new Byway(ray, Use.WALKWAY, LANDING_PLAZA, { z: -7.5 }))
+    this._plato.appendToSector(new Byway(ray, Use.WALKWAY, LANDING_NORTH_WALKWAY, { z: -7.5, incline: -RISE_HEIGHT }))
+    this._plato.appendToSector(new Byway(ray, Use.WALKWAY, LANDING_SOUTH_WALKWAY, { z: -7.5, incline: -RISE_HEIGHT }))
 
-    this._plato.makePlace(Use.BIKEPATH, RAMP_UP_FROM_LANDING, { z: -7.5, incline: -RAMP_RISE_HEIGHT })
-    this._plato.makePlace(Use.BIKEPATH, ENTRANCE_FROM_BELOW, { z: 0.1 })
+    this._plato.appendToSector(new Byway(ray, Use.BIKEPATH, RAMP_UP_FROM_LANDING, { z: -7.5, incline: -RAMP_RISE_HEIGHT }))
+    this._plato.appendToSector(new Byway(ray, Use.BIKEPATH, ENTRANCE_FROM_BELOW, { z: 0.1 }))
 
-    this._plato.makePlace(Use.BIKEPATH, RAMP_DOWN_FROM_LANDING, { z: -7.5, incline: RAMP_RISE_HEIGHT })
-    this._plato.makePlace(Use.BIKEPATH, RIGHT_TURN_TO_ENTER, { z: -14.9 })
-    this._plato.makePlace(Use.BIKEPATH, ENTRANCE_FROM_ABOVE, { z: -14.9 })
+    this._plato.appendToSector(new Byway(ray, Use.BIKEPATH, RAMP_DOWN_FROM_LANDING, { z: -7.5, incline: RAMP_RISE_HEIGHT }))
+    this._plato.appendToSector(new Byway(ray, Use.BIKEPATH, RIGHT_TURN_TO_ENTER, { z: -14.9 }))
+    this._plato.appendToSector(new Byway(ray, Use.BIKEPATH, ENTRANCE_FROM_ABOVE, { z: -14.9 }))
 
-    this._plato.makePlace(Use.BIKEPATH, EXIT_UP, { z: -14.9 })
-    this._plato.makePlace(Use.BIKEPATH, RIGHT_TURN_FROM_EXIT, { z: -14.9 })
+    this._plato.appendToSector(new Byway(ray, Use.BIKEPATH, EXIT_UP, { z: -14.9 }))
+    this._plato.appendToSector(new Byway(ray, Use.BIKEPATH, RIGHT_TURN_FROM_EXIT, { z: -14.9 }))
+
     route = this._plato.makeRoute(Use.BIKEPATH, [
       xyz(170, 22.5, -14.9), // start of EXIT_UP
       xyz(100, 30, -14.9), xyz(60, 44, -14.9), xyz(45, 90, -14.9), // start, middle, end of RIGHT_TURN_FROM_EXIT
@@ -239,13 +244,13 @@ class Bikeway extends Structure {
       xyz(35, 570, 0.1), xyz(25, 660, 0.1) // start and end of ENTRANCE_FROM_BELOW
     ])
     this._vehicles.push(new Vehicle(route, randomInt(3, 6) * 0.04))
-    this._plato.makePlace(Use.BIKEPATH, RAMP_UP_TO_LANDING, { z: -15, incline: -RAMP_RISE_HEIGHT })
+    this._plato.appendToSector(new Byway(ray, Use.BIKEPATH, RAMP_UP_TO_LANDING, { z: -15, incline: -RAMP_RISE_HEIGHT }))
 
-    this._plato.makePlace(Use.WALKWAY, LOWER_PLAZA, { z: -14.9 })
-    this._plato.makePlace(Use.WALKWAY, LOWER_PLAZA_WALKWAY_A, { z: -15 })
-    this._plato.makePlace(Use.WALKWAY, LOWER_PLAZA_WALKWAY_B, { z: -15 })
-    this._plato.makePlace(Use.WALKWAY, LOWER_PLAZA_WALKWAY_C, { z: -15 })
-    this._plato.makePlace(Use.WALKWAY, LOWER_PLAZA_WALKWAY_D, { z: -15 })
+    this._plato.appendToSector(new Byway(ray, Use.WALKWAY, LOWER_PLAZA, { z: -14.9 }))
+    this._plato.appendToSector(new Byway(ray, Use.WALKWAY, LOWER_PLAZA_WALKWAY_A, { z: -15 }))
+    this._plato.appendToSector(new Byway(ray, Use.WALKWAY, LOWER_PLAZA_WALKWAY_B, { z: -15 }))
+    this._plato.appendToSector(new Byway(ray, Use.WALKWAY, LOWER_PLAZA_WALKWAY_C, { z: -15 }))
+    this._plato.appendToSector(new Byway(ray, Use.WALKWAY, LOWER_PLAZA_WALKWAY_D, { z: -15 }))
     return this
   }
 
@@ -262,9 +267,9 @@ class Bikeway extends Structure {
     ]
     const HIGHLINE_SOIL_THICKNESS = 4
     const HIGHLINE_WALL_HEIGHT = 3 + HIGHLINE_SOIL_THICKNESS
-    this._plato.goto({ x: x, y: y, z: z, facing: facing })
-    this._plato.makePlace(Use.BARE, RETAINING_WALL, { wall: HIGHLINE_WALL_HEIGHT, cap: false })
-    this._plato.makePlace(Use.PARCEL, HIGHLINE_SOIL, { depth: HIGHLINE_SOIL_THICKNESS })
+    const ray = this._plato.goto({ x: x, y: y, z: z, facing: facing })
+    this._plato.appendToSector(new Storey(ray, Use.BARE, RETAINING_WALL, { wall: HIGHLINE_WALL_HEIGHT, cap: false }))
+    this._plato.appendToSector(new Storey(ray, Use.PARCEL, HIGHLINE_SOIL, { depth: HIGHLINE_SOIL_THICKNESS }))
     return this
   }
 
@@ -279,8 +284,8 @@ class Bikeway extends Structure {
     const WINDOW_RECTS = count(5, 585, 5).map(x => xywh2rect(x, 3, 4, height - 5))
     const WINDOWS = [[2, WINDOW_RECTS]]
 
-    this._plato.goto({ x: x, y: y, z: z, facing: facing })
-    this._plato.makePlace(Use.ROOM, LONGHOUSE, { wall: height, openings: WINDOWS })
+    const ray = this._plato.goto({ x: x, y: y, z: z, facing: facing })
+    this._plato.appendToSector(new Storey(ray, Use.ROOM, LONGHOUSE, { wall: height, openings: WINDOWS }))
     return this
   }
 
@@ -291,8 +296,8 @@ class Bikeway extends Structure {
     const NORTH_SOUTH_ALTITUDE = 22.5
     const HIGHLINE_ALTITUDE = 37.5
 
-    this._plato.goto({ x: x, y: y, z: -0.1, facing: Facing.NORTH })
-    this._plato.makePlace(Use.PARCEL, PARCEL)
+    const ray = this._plato.goto({ x: x, y: y, z: -0.1, facing: Facing.NORTH })
+    this._plato.appendToSector(new Storey(ray, Use.PARCEL, PARCEL))
 
     this.addBoulevard({ x: x, y: y, z: NORTH_SOUTH_ALTITUDE, facing: Facing.NORTH })
     if (buildings) {

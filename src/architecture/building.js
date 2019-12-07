@@ -7,6 +7,7 @@
 
 import { array, cornersFromShape, countTo, randomInt, xyzAdd } from '../core/util.js'
 import { Group, LODGroup } from './group.js'
+import { Storey } from './storey.js'
 import { Structure } from './structure.js'
 import { Use } from '../architecture/use.js'
 
@@ -40,17 +41,18 @@ class Building extends Structure {
       let z = point.z || 0
       const height = _intFromSpec(storyHeight)
       const stories = _intFromSpec(numStories)
+      let ray
       for (const i in countTo(stories)) {
         point.z = z
         const floorName = 'Floor ' + i + 'of ' + name
-        plato.goto(point)
-        const story = plato.makePlace2(Use.ROOM, corners, { name: floorName, wall: height })
+        ray = plato.goto(point)
+        const story = new Storey(ray, Use.ROOM, corners, { name: floorName, wall: height })
         mainGroup.add(story)
         z = z + height
       }
       point.z = z
-      plato.goto(point)
-      const roofPlace = plato.makePlace2(Use.ROOF, corners, { wall: roof.parapetHeight })
+      ray = plato.goto(point)
+      const roofPlace = new Storey(ray, Use.ROOF, corners, { wall: roof.parapetHeight })
       mainGroup.add(roofPlace)
     }
     const defaultsForChildren = { storyHeight, roof }

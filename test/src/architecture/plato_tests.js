@@ -1,16 +1,18 @@
 /** @file plato_tests.js
-  * @author Authored in 2019 at <https://github.com/nicky-nym/city3d>
-  * @license UNLICENSE
-  * This is free and unencumbered software released into the public domain.
-  * For more information, please refer to <http://unlicense.org>
-  */
+ * @author Authored in 2019 at <https://github.com/nicky-nym/city3d>
+ * @license UNLICENSE
+ * This is free and unencumbered software released into the public domain.
+ * For more information, please refer to <http://unlicense.org>
+ */
 
+import { Byway } from '../../../src/architecture/byway.js'
 import { City } from '../../../src/architecture/city.js'
-import { Geometry } from '../../../src/core/geometry.js'
 import { Group } from '../../../src/architecture/group.js'
 import { Facing } from '../../../src/core/facing.js'
 import { Parcel } from '../../../src/architecture/parcel.js'
 import { Plato } from '../../../src/architecture/plato.js'
+import { Ray } from '../../../src/core/ray.js'
+import { Storey } from '../../../src/architecture/storey.js'
 import { Use } from '../../../src/architecture/use.js'
 import { xy, xyz } from '../../../src/core/util.js'
 
@@ -18,6 +20,7 @@ import { xy, xyz } from '../../../src/core/util.js'
 
 describe('Plato', function () {
   const plato = new Plato()
+  const ray = new Ray()
 
   describe('#makeRoute', function () {
     const listOfWaypoints = [xyz(0, 0, 0), xyz(50, 20, 0), xyz(200, 20, 8)]
@@ -45,63 +48,32 @@ describe('Plato', function () {
     })
   })
 
-  describe('#makePlace2()', function () {
-    const rectangle = [xy(0, 0), xy(50, 0), xy(50, 20), xy(0, 20)]
-    let count
-
-    beforeEach(function () {
-      count = 0
-    })
-
-    it('should return a Group with the right name if one was specified', function () {
-      const room = plato.makePlace2(Use.ROOM, rectangle, { name: 'lobby' })
-
-      room.name.should.equal('lobby')
-    })
-    it('should return a Group named by its use if no name was specified', function () {
-      const room = plato.makePlace2(Use.ROOM, rectangle)
-
-      room.name.should.equal('ROOM')
-    })
-    it('should return a Group with one Instance when called with a rectangle and no wall value', function () {
-      const room = plato.makePlace2(Use.ROOM, rectangle)
-
-      room.accept(node => { count += node instanceof Geometry.Instance ? 1 : 0 })
-      count.should.equal(1)
-    })
-    it('should return a Group with five Instances when called with a rectangle and a wall value', function () {
-      const room = plato.makePlace2(Use.ROOM, rectangle, { wall: 12 })
-
-      room.accept(node => { count += node instanceof Geometry.Instance ? 1 : 0 })
-      count.should.equal(5)
-    })
-  })
-
   describe('#aggregateMetric()', function () {
     const rect1 = [xy(0, 0), xy(50, 0), xy(50, 20), xy(0, 20)]
     const rect2 = [xy(0, 0), xy(40, 0), xy(40, 20), xy(0, 20)]
 
     beforeEach(function () {
+
     })
 
     it('should return the correct floor area for a room made from a single rectangle', function () {
-      const room = plato.makePlace2(Use.ROOM, rect1)
+      const room = new Storey(ray, Use.ROOM, rect1)
 
       Plato.aggregateMetric(room, 'Floor area: ROOM').should.equal(1000)
     })
     it('should return the correct floor area for a house made of two rectangular rooms', function () {
       const house = new Group()
-      house.add(plato.makePlace2(Use.ROOM, rect1))
-      house.add(plato.makePlace2(Use.ROOM, rect2))
+      house.add(new Storey(ray, Use.ROOM, rect1))
+      house.add(new Storey(ray, Use.ROOM, rect2))
 
       Plato.aggregateMetric(house, 'Floor area: ROOM').should.equal(1800)
     })
     it('should return the correct floor area for a house with nested rectangular rooms', function () {
       const house = new Group()
-      house.add(plato.makePlace2(Use.ROOM, rect1))
+      house.add(new Storey(ray, Use.ROOM, rect1))
       const wing = new Group()
-      wing.add(plato.makePlace2(Use.ROOM, rect2))
-      wing.add(plato.makePlace2(Use.ROOM, rect2))
+      wing.add(new Storey(ray, Use.ROOM, rect2))
+      wing.add(new Storey(ray, Use.ROOM, rect2))
       house.add(wing)
 
       Plato.aggregateMetric(house, 'Floor area: ROOM').should.equal(2600)
@@ -144,20 +116,21 @@ describe('Plato', function () {
 
     it('should add the expected metrics when a Parcel and a room are created', function () {
       plato.appendToSector(new Parcel(parcelRect, ray))
-      plato.makePlace(Use.ROOM, roomRect)
+      plato.appendToSector(new Storey(ray, Use.ROOM, roomRect))
+
       plato.pontificate()
 
       sector.metrics.should.include.all.keys('Floor area', 'Parcel FAR', 'Overall FAR')
     })
     it('should add Floor area metric but not FAR metrics when a room but no Parcel is created', function () {
-      plato.makePlace(Use.ROOM, roomRect)
+      plato.appendToSector(new Storey(ray, Use.ROOM, roomRect))
       plato.pontificate()
 
       sector.metrics.should.include.keys('Floor area')
       sector.metrics.should.not.include.any.keys('Parcel FAR', 'Overall FAR')
     })
     it('should compute the correct value and units for Floor area for one rectangular room', function () {
-      plato.makePlace(Use.ROOM, roomRect)
+      plato.appendToSector(new Storey(ray, Use.ROOM, roomRect))
       plato.pontificate()
 
       const floorAreaMetric = sector.metrics.get('Floor area')
@@ -166,7 +139,7 @@ describe('Plato', function () {
     })
     it('should compute the correct values and units for FAR metrics for a rectangular Parcel and room', function () {
       plato.appendToSector(new Parcel(parcelRect, ray))
-      plato.makePlace(Use.ROOM, roomRect)
+      plato.appendToSector(new Storey(ray, Use.ROOM, roomRect))
       plato.pontificate()
 
       sector.metrics.get('Parcel FAR').value.should.equal('0.4')
@@ -175,7 +148,7 @@ describe('Plato', function () {
       sector.metrics.get('Overall FAR').units.should.equal('floor area ratio')
     })
     it('should compute the correct value and units for Wall area for one rectangular room with walls', function () {
-      plato.makePlace(Use.ROOM, roomRect, { wall: 10 })
+      plato.appendToSector(new Storey(ray, Use.ROOM, roomRect, { wall: 10 }))
       plato.pontificate()
 
       const wallAreaMetric = sector.metrics.get('Wall area')
@@ -195,16 +168,16 @@ describe('Plato', function () {
         plato.study('test sector')
         sector = city.getSectors()[0]
         plato.appendToSector(new Parcel(parcelRect, ray))
-        plato.goto(xyz(5, 5, 0))
-        plato.makePlace(Use.ROOM, storyRect, { wall: 10 })
-        plato.goto(xyz(5, 5, 10))
-        plato.makePlace(Use.ROOM, storyRect, { wall: 10 })
-        plato.goto(xyz(5, 5, 20))
-        plato.makePlace(Use.ROOM, storyRect, { wall: 10 })
-        plato.goto(xyz(0, 20, 0))
-        plato.makePlace(Use.STREET, streetRect)
-        plato.goto(xyz(0, -20, 0))
-        plato.makePlace(Use.STREET, streetRect)
+        ray = plato.goto(xyz(5, 5, 0))
+        plato.appendToSector(new Storey(ray, Use.ROOM, storyRect, { wall: 10 }))
+        ray = plato.goto(xyz(5, 5, 10))
+        plato.appendToSector(new Storey(ray, Use.ROOM, storyRect, { wall: 10 }))
+        ray = plato.goto(xyz(5, 5, 20))
+        plato.appendToSector(new Storey(ray, Use.ROOM, storyRect, { wall: 10 }))
+        ray = plato.goto(xyz(0, 20, 0))
+        plato.appendToSector(new Byway(ray, Use.STREET, streetRect))
+        ray = plato.goto(xyz(0, -20, 0))
+        plato.appendToSector(new Byway(ray, Use.STREET, streetRect))
       })
 
       it('should compute the correct values for Floor area', function () {

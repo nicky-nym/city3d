@@ -7,6 +7,7 @@
 
 import { Bikeway } from './structures/bikeway.js'
 import { Building } from './architecture/building.js'
+import { Byway } from './architecture/byway.js'
 import { Campus } from './places/campus.js'
 import { City } from './architecture/city.js'
 import { Cottage } from './structures/cottage.js'
@@ -23,6 +24,7 @@ import { Parcel } from './architecture/parcel.js'
 import { Place } from './architecture/place.js'
 import { Plato } from './architecture/plato.js'
 import { Roof } from './architecture/roof.js'
+import { Storey } from './architecture/storey.js'
 import { Suburbia } from './places/suburbia.js'
 import { SummaryOutput } from './outputs/summary_output.js'
 import { ThreeOutput } from './outputs/three_output.js'
@@ -33,6 +35,7 @@ import { Wurster } from './structures/wurster.js'
 export const CITY = {
   Bikeway,
   Building,
+  Byway,
   Campus,
   City,
   Cottage,
@@ -49,6 +52,7 @@ export const CITY = {
   Place,
   Plato,
   Roof,
+  Storey,
   Suburbia,
   SummaryOutput,
   ThreeOutput,

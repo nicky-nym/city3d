@@ -8,6 +8,7 @@
 import { UNIT } from '../core/unit.js'
 import { xy, countTo } from '../core/util.js'
 import { Highrise } from '../structures/highrise.js'
+import { Byway } from '../architecture/byway.js'
 import { Place } from '../architecture/place.js'
 import { Use } from '../architecture/use.js'
 
@@ -59,7 +60,7 @@ const REPEAT_DY = BLOCK_DY + STREET_WIDTH + (SIDEWALK_WIDTH_STREETS * 2)
  * Manhattan objects know how to describe the city blocks in New York.
  */
 class Manhattan extends Place {
-  makePlace (place, area,
+  makeByway (use, area,
     {
       x = 0,
       y = 0,
@@ -69,8 +70,9 @@ class Manhattan extends Place {
       wall = 0,
       openings = [] // Sequence[Tuple]
     } = {}) {
-    this._plato.goto({ x: x + dx, y: y + dy, z: z })
-    this._plato.makePlace(place, area, { wall: wall, openings: openings })
+    const ray = this._plato.goto({ x: x + dx, y: y + dy, z: z })
+    const story = new Byway(ray, use, area, { wall: wall, openings: openings })
+    this._plato.appendToSector(story)
   }
 
   addBuildingAt (x = 0, y = 0) {
@@ -97,20 +99,20 @@ class Manhattan extends Place {
       }
     }
 
-    this.makePlace(Use.STREET, STREET, { x: x, y: y, dx: HALF_AVENUE + SIDEWALK_WIDTH_AVENUES })
-    this.makePlace(Use.STREET, STREET, { x: x, y: y, dx: HALF_AVENUE + SIDEWALK_WIDTH_AVENUES, dy: HALF_STREET + (SIDEWALK_WIDTH_STREETS * 2) + BLOCK_DY })
-    this.makePlace(Use.STREET, AVENUE, { x: x, y: y, dy: HALF_STREET + SIDEWALK_WIDTH_STREETS })
-    this.makePlace(Use.STREET, AVENUE, { x: x, y: y, dx: HALF_AVENUE + (SIDEWALK_WIDTH_AVENUES * 2) + BLOCK_DX, dy: HALF_STREET + SIDEWALK_WIDTH_STREETS })
+    this.makeByway(Use.STREET, STREET, { x: x, y: y, dx: HALF_AVENUE + SIDEWALK_WIDTH_AVENUES })
+    this.makeByway(Use.STREET, STREET, { x: x, y: y, dx: HALF_AVENUE + SIDEWALK_WIDTH_AVENUES, dy: HALF_STREET + (SIDEWALK_WIDTH_STREETS * 2) + BLOCK_DY })
+    this.makeByway(Use.STREET, AVENUE, { x: x, y: y, dy: HALF_STREET + SIDEWALK_WIDTH_STREETS })
+    this.makeByway(Use.STREET, AVENUE, { x: x, y: y, dx: HALF_AVENUE + (SIDEWALK_WIDTH_AVENUES * 2) + BLOCK_DX, dy: HALF_STREET + SIDEWALK_WIDTH_STREETS })
 
-    this.makePlace(Use.STREET, INTERSECTION, { x: x, y: y })
-    this.makePlace(Use.STREET, INTERSECTION, { x: x, y: y, dx: HALF_AVENUE + (SIDEWALK_WIDTH_AVENUES * 2) + BLOCK_DX })
-    this.makePlace(Use.STREET, INTERSECTION, { x: x, y: y, dy: HALF_STREET + (SIDEWALK_WIDTH_STREETS * 2) + BLOCK_DY })
-    this.makePlace(Use.STREET, INTERSECTION, { x: x, y: y, dx: HALF_AVENUE + (SIDEWALK_WIDTH_AVENUES * 2) + BLOCK_DX, dy: HALF_STREET + (SIDEWALK_WIDTH_STREETS * 2) + BLOCK_DY })
+    this.makeByway(Use.STREET, INTERSECTION, { x: x, y: y })
+    this.makeByway(Use.STREET, INTERSECTION, { x: x, y: y, dx: HALF_AVENUE + (SIDEWALK_WIDTH_AVENUES * 2) + BLOCK_DX })
+    this.makeByway(Use.STREET, INTERSECTION, { x: x, y: y, dy: HALF_STREET + (SIDEWALK_WIDTH_STREETS * 2) + BLOCK_DY })
+    this.makeByway(Use.STREET, INTERSECTION, { x: x, y: y, dx: HALF_AVENUE + (SIDEWALK_WIDTH_AVENUES * 2) + BLOCK_DX, dy: HALF_STREET + (SIDEWALK_WIDTH_STREETS * 2) + BLOCK_DY })
 
-    this.makePlace(Use.WALKWAY, SIDEWALK_FOR_STREET, { x: x, y: y, dx: HALF_AVENUE + SIDEWALK_WIDTH_AVENUES, dy: HALF_STREET })
-    this.makePlace(Use.WALKWAY, SIDEWALK_FOR_STREET, { x: x, y: y, dx: HALF_AVENUE + SIDEWALK_WIDTH_AVENUES, dy: HALF_STREET + SIDEWALK_WIDTH_STREETS + BLOCK_DY })
-    this.makePlace(Use.WALKWAY, SIDEWALK_FOR_AVENUE, { x: x, y: y, dx: HALF_AVENUE, dy: HALF_STREET + SIDEWALK_WIDTH_STREETS })
-    this.makePlace(Use.WALKWAY, SIDEWALK_FOR_AVENUE, { x: x, y: y, dx: HALF_AVENUE + SIDEWALK_WIDTH_AVENUES + BLOCK_DX, dy: HALF_STREET + SIDEWALK_WIDTH_STREETS })
+    this.makeByway(Use.WALKWAY, SIDEWALK_FOR_STREET, { x: x, y: y, dx: HALF_AVENUE + SIDEWALK_WIDTH_AVENUES, dy: HALF_STREET })
+    this.makeByway(Use.WALKWAY, SIDEWALK_FOR_STREET, { x: x, y: y, dx: HALF_AVENUE + SIDEWALK_WIDTH_AVENUES, dy: HALF_STREET + SIDEWALK_WIDTH_STREETS + BLOCK_DY })
+    this.makeByway(Use.WALKWAY, SIDEWALK_FOR_AVENUE, { x: x, y: y, dx: HALF_AVENUE, dy: HALF_STREET + SIDEWALK_WIDTH_STREETS })
+    this.makeByway(Use.WALKWAY, SIDEWALK_FOR_AVENUE, { x: x, y: y, dx: HALF_AVENUE + SIDEWALK_WIDTH_AVENUES + BLOCK_DX, dy: HALF_STREET + SIDEWALK_WIDTH_STREETS })
 
     return this
   }
