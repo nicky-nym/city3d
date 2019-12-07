@@ -5,10 +5,10 @@
  * For more information, please refer to <http://unlicense.org>
  */
 
-import { cornersFromShape, countTo, xy, xyz } from '../core/util.js'
-import { Parcel } from '../architecture/parcel.js'
-import { Place } from '../architecture/place.js'
-import { Wurster } from '../structures/wurster.js'
+import { cornersFromShape, countTo, xy, xyz } from '../../src/core/util.js'
+import { Parcel } from '../../src/architecture/parcel.js'
+import { Place } from '../../src/architecture/place.js'
+import { Wurster } from '../buildings/wurster.js'
 
 const PARCEL = {
   offset: xyz(0, 0, 0),

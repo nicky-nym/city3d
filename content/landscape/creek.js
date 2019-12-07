@@ -5,9 +5,9 @@
   * For more information, please refer to <http://unlicense.org>
   */
 
-import { xyz, countTo } from '../core/util.js'
-import { Geometry } from '../core/geometry.js'
-import { UNIT } from '../core/unit.js'
+import { xyz, countTo } from '../../src/core/util.js'
+import { Geometry } from '../../src/core/geometry.js'
+import { UNIT } from '../../src/core/unit.js'
 
 const NUM_SECTIONS = 270
 const SECTION_LENGTH = UNIT.feet(20)

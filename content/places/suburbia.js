@@ -5,12 +5,12 @@
  * For more information, please refer to <http://unlicense.org>
  */
 
-import { cornersFromShape, countTo, xy, xyz, xyzAdd } from '../core/util.js'
-import { Cottage } from '../structures/cottage.js'
-import { Garage } from '../structures/garage.js'
-import { House } from '../structures/house.js'
-import { Parcel } from '../architecture/parcel.js'
-import { Place } from '../architecture/place.js'
+import { cornersFromShape, countTo, xy, xyz, xyzAdd } from '../../src/core/util.js'
+import { Cottage } from '../buildings/cottage.js'
+import { Garage } from '../buildings/garage.js'
+import { House } from '../buildings/house.js'
+import { Parcel } from '../../src/architecture/parcel.js'
+import { Place } from '../../src/architecture/place.js'
 
 const PARCEL_DY = 50
 const PARCEL_X0_NORTH = -232.72

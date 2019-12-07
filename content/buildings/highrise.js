@@ -5,9 +5,9 @@
   * For more information, please refer to <http://unlicense.org>
   */
 
-import { UNIT } from '../core/unit.js'
-import { xy, xyz } from '../core/util.js'
-import { Building } from '../architecture/building.js'
+import { UNIT } from '../../src/core/unit.js'
+import { xy, xyz } from '../../src/core/util.js'
+import { Building } from '../../src/architecture/building.js'
 
 const HIGHRISE_BUILDING_SPEC = {
   name: 'High-rise building',

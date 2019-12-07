@@ -5,15 +5,15 @@
   * For more information, please refer to <http://unlicense.org>
   */
 
-import { UNIT } from '../core/unit.js'
-import { xy, xyz, xyzAdd, xywh2rect, countTo } from '../core/util.js'
+import { UNIT } from '../../src/core/unit.js'
+import { xy, xyz, xyzAdd, xywh2rect, countTo } from '../../src/core/util.js'
 
-import { Byway } from '../architecture/byway.js'
-import { Facing } from '../core/facing.js'
-import { Roof } from '../architecture/roof.js'
-import { Storey } from '../architecture/storey.js'
-import { Structure } from '../architecture/structure.js'
-import { Use } from '../architecture/use.js'
+import { Byway } from '../../src/architecture/byway.js'
+import { Facing } from '../../src/core/facing.js'
+import { Roof } from '../../src/architecture/roof.js'
+import { Storey } from '../../src/architecture/storey.js'
+import { Structure } from '../../src/architecture/structure.js'
+import { Use } from '../../src/architecture/use.js'
 
 const PARCEL_DY = UNIT.feet(50)
 const PARCEL_X0_NORTH = -232.72

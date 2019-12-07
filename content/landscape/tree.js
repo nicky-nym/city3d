@@ -5,9 +5,9 @@
   * For more information, please refer to <http://unlicense.org>
   */
 
-import { xy, xyzAdd } from '../core/util.js'
-import { Geometry } from '../core/geometry.js'
-import { UNIT } from '../core/unit.js'
+import { xy, xyzAdd } from '../../src/core/util.js'
+import { Geometry } from '../../src/core/geometry.js'
+import { UNIT } from '../../src/core/unit.js'
 
 const TRUNK_HEIGHT = UNIT.feet(8)
 const CROWN_HEIGHT = UNIT.feet(9)

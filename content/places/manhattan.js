@@ -5,12 +5,12 @@
   * For more information, please refer to <http://unlicense.org>
   */
 
-import { UNIT } from '../core/unit.js'
-import { xy, countTo } from '../core/util.js'
-import { Highrise } from '../structures/highrise.js'
-import { Byway } from '../architecture/byway.js'
-import { Place } from '../architecture/place.js'
-import { Use } from '../architecture/use.js'
+import { UNIT } from '../../src/core/unit.js'
+import { xy, countTo } from '../../src/core/util.js'
+import { Highrise } from '../buildings/highrise.js'
+import { Byway } from '../../src/architecture/byway.js'
+import { Place } from '../../src/architecture/place.js'
+import { Use } from '../../src/architecture/use.js'
 
 const BLOCK_DX = UNIT.feet(600)
 const BLOCK_DY = UNIT.feet(200)

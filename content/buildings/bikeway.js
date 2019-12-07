@@ -5,14 +5,14 @@
  * For more information, please refer to <http://unlicense.org>
  */
 
-import { UNIT } from '../core/unit.js'
-import { xy, xyz, xyRotate, xywh2rect, count, countTo, randomInt, hypotenuse } from '../core/util.js'
-import { Byway } from '../architecture/byway.js'
-import { Facing } from '../core/facing.js'
-import { Group } from '../architecture/group.js'
-import { Storey } from '../architecture/storey.js'
-import { Structure } from '../architecture/structure.js'
-import { Use } from '../architecture/use.js'
+import { UNIT } from '../../src/core/unit.js'
+import { xy, xyz, xyRotate, xywh2rect, count, countTo, randomInt, hypotenuse } from '../../src/core/util.js'
+import { Byway } from '../../src/architecture/byway.js'
+import { Facing } from '../../src/core/facing.js'
+import { Group } from '../../src/architecture/group.js'
+import { Storey } from '../../src/architecture/storey.js'
+import { Structure } from '../../src/architecture/structure.js'
+import { Use } from '../../src/architecture/use.js'
 import { Vehicle } from '../movers/vehicle.js'
 
 const BLOCK_LENGTH = UNIT.feet(660)

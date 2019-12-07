@@ -6,8 +6,8 @@
   */
 
 import * as THREE from '../../node_modules/three/build/three.module.js'
-import { xyz, randomInt } from '../core/util.js'
-import { Mover } from './mover.js'
+import { xyz, randomInt } from '../../src/core/util.js'
+import { Mover } from '../../src/architecture/mover.js'
 
 function _newLine (start, end, material) {
   const geometry = new THREE.Geometry()

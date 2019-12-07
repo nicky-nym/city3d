@@ -6,7 +6,7 @@
   */
 
 import { Group } from './group.js'
-import { Mover } from '../movers/mover.js'
+import { Mover } from './mover.js'
 import { Sector } from './sector.js'
 
 function extractRoutes (group, routes) {

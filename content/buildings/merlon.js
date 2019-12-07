@@ -5,14 +5,14 @@
   * For more information, please refer to <http://unlicense.org>
   */
 
-import { xy, xyz, xywh2rect, count, countTo, randomInt, hypotenuse } from '../core/util.js'
-import { Byway } from '../architecture/byway.js'
-import { Facing } from '../core/facing.js'
-import { Roof } from '../architecture/roof.js'
-import { Storey } from '../architecture/storey.js'
-import { Structure } from '../architecture/structure.js'
-import { UNIT } from '../core/unit.js'
-import { Use } from '../architecture/use.js'
+import { xy, xyz, xywh2rect, count, countTo, randomInt, hypotenuse } from '../../src/core/util.js'
+import { Byway } from '../../src/architecture/byway.js'
+import { Facing } from '../../src/core/facing.js'
+import { Roof } from '../../src/architecture/roof.js'
+import { Storey } from '../../src/architecture/storey.js'
+import { Structure } from '../../src/architecture/structure.js'
+import { UNIT } from '../../src/core/unit.js'
+import { Use } from '../../src/architecture/use.js'
 
 const STORY_HEIGHT = UNIT.feet(10)
 const ROOFLINE = STORY_HEIGHT * 5

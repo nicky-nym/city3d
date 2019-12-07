@@ -5,9 +5,9 @@
   * For more information, please refer to <http://unlicense.org>
   */
 
-import { Kayak } from '../movers/kayak.js'
+import { Kayak } from '../../content/movers/kayak.js'
 import { Output } from './output.js'
-import { Vehicle } from '../movers/vehicle.js'
+import { Vehicle } from '../../content/movers/vehicle.js'
 
 /**
  * SummaryOutput can render a summary of city metrics.
