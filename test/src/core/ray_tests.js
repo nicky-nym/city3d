@@ -34,7 +34,7 @@ describe('Ray', function () {
   describe('#applyRay', function () {
     const listOfPoints = [xyz(0, 0, 0), xyz(30, 20, 10)]
 
-    it('should neither rotate nor translate, when faceing NORTH at the origin', function () {
+    it('should neither rotate nor translate, when facing NORTH at the origin', function () {
       ray.goto(Facing.NORTH, xyz(0, 0, 0))
 
       const result = ray.applyRay(listOfPoints)

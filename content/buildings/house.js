@@ -10,6 +10,7 @@ import { xy, xyz, xyzAdd, xywh2rect, countTo } from '../../src/core/util.js'
 
 import { Byway } from '../../src/architecture/byway.js'
 import { Facing } from '../../src/core/facing.js'
+import { Group } from '../../src/architecture/group.js'
 import { Roof } from '../../src/architecture/roof.js'
 import { Storey } from '../../src/architecture/storey.js'
 import { Structure } from '../../src/architecture/structure.js'
@@ -298,9 +299,8 @@ class House extends Structure {
     const y = at.y + FIXME_HACK
     const xNorth = 0
 
-    this.addParcel(xNorth, y, Facing.NORTH)
-    this.addHouse(xNorth, y, Facing.NORTH)
     this.addGarageAndAdu(xNorth, y, Facing.NORTH)
+    return this.makeHouse(xNorth, y, Facing.NORTH)
   }
 
   addStairs (x = 0, y = 0, facing = Facing.NORTH) {
@@ -328,46 +328,47 @@ class House extends Structure {
     return this
   }
 
-  addRoof (vertices, indices) {
+  makeRoof (vertices, indices) {
     const roofSpec = {
       custom: { vertices, indices }
     }
-    const roof = new Roof(roofSpec, this._plato._ray)
-    this._plato.appendToSector(roof)
+    return new Roof(roofSpec, this._plato._ray)
   }
 
-  addHouse (x = 0, y = 0, facing = Facing.NORTH) {
+  makeHouse (x = 0, y = 0, facing = Facing.NORTH) {
     // Tell plato about the floors, walls, roof, etc.
     const plato = this._plato
     let ray
 
+    const group = new Group('House')
+
     // Crawl space
     ray = plato.goto({ x: x, y: y, z: 0, facing: facing })
-    plato.appendToSector(new Storey(ray, Use.BARE, HOUSE, { wall: CRAWL_SPACE_HEIGHT }))
-    plato.appendToSector(new Storey(ray, Use.BARE, ADDON, { wall: CRAWL_SPACE_HEIGHT }))
-    plato.appendToSector(new Storey(ray, Use.BARE, PORCH, { wall: CRAWL_SPACE_HEIGHT }))
+    group.add(new Storey(ray, Use.BARE, HOUSE, { wall: CRAWL_SPACE_HEIGHT }))
+    group.add(new Storey(ray, Use.BARE, ADDON, { wall: CRAWL_SPACE_HEIGHT }))
+    group.add(new Storey(ray, Use.BARE, PORCH, { wall: CRAWL_SPACE_HEIGHT }))
 
     // Main floor
     ray = plato.goto({ x: x, y: y, z: CRAWL_SPACE_HEIGHT, facing: facing })
-    plato.appendToSector(new Storey(ray, Use.ROOM, HOUSE, { wall: GROUND_FLOOR_HEIGHT, openings: HOUSE_WINDOWS }))
-    plato.appendToSector(new Storey(ray, Use.BARE, PORCH))
-    plato.appendToSector(new Storey(ray, Use.ROOM, ADDON, { wall: ADDON_HEIGHT, openings: ADDON_WINDOWS }))
+    group.add(new Storey(ray, Use.ROOM, HOUSE, { wall: GROUND_FLOOR_HEIGHT, openings: HOUSE_WINDOWS }))
+    group.add(new Storey(ray, Use.BARE, PORCH))
+    group.add(new Storey(ray, Use.ROOM, ADDON, { wall: ADDON_HEIGHT, openings: ADDON_WINDOWS }))
 
     // Attic
     const ATTIC_ELEVATION = GROUND_FLOOR_HEIGHT + CRAWL_SPACE_HEIGHT
     ray = plato.goto({ x: x, y: y, z: ATTIC_ELEVATION, facing: facing })
-    plato.appendToSector(new Storey(ray, Use.BARE, CHIMNEY, { height: CHIMNEY_HEIGHT }))
-    plato.appendToSector(new Storey(ray, Use.BARE, ATTIC))
-    this.addRoof(VERTICES_OF_ROOF, INDICES_OF_ROOF_FACES)
-    this.addRoof(VERTICES_OF_DORMER_ROOF, INDICES_OF_DORMER_ROOF_FACES)
+    group.add(new Storey(ray, Use.BARE, CHIMNEY, { height: CHIMNEY_HEIGHT }))
+    group.add(new Storey(ray, Use.BARE, ATTIC))
+    group.add(this.makeRoof(VERTICES_OF_ROOF, INDICES_OF_ROOF_FACES))
+    group.add(this.makeRoof(VERTICES_OF_DORMER_ROOF, INDICES_OF_DORMER_ROOF_FACES))
 
     // Porch roofs
     const PORCH_TOP_ELEVATION = ADDON_HEIGHT + CRAWL_SPACE_HEIGHT
     ray = plato.goto({ x: x, y: y, z: PORCH_TOP_ELEVATION, facing: facing })
-    this.addRoof(VERTICES_OF_PORCH_ROOF, INDICES_OF_PORCH_ROOF_FACES)
-    this.addRoof(VERTICES_OF_ADDON_ROOF, INDICES_OF_ADDON_ROOF_FACES)
+    group.add(this.makeRoof(VERTICES_OF_PORCH_ROOF, INDICES_OF_PORCH_ROOF_FACES))
+    group.add(this.makeRoof(VERTICES_OF_ADDON_ROOF, INDICES_OF_ADDON_ROOF_FACES))
 
-    return this
+    return group
   }
 }
 

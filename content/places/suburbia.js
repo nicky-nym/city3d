@@ -53,7 +53,8 @@ class Suburbia extends Place {
 
       const house = new House(this._plato)
       at = xyzAdd(offset, xy(0, -200))
-      house.makeBuilding(at)
+      const groupForHouse = house.makeBuilding(at)
+      parcel.add(groupForHouse)
     }
   }
 }

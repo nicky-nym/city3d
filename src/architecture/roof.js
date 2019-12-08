@@ -20,7 +20,7 @@ class Roof extends Group {
       let { vertices, indices } = spec.custom
       vertices = ray.applyRay(vertices)
       const abstractRoof = new Geometry.TriangularPolyhedron(vertices, indices)
-      const concreteRoof = new Geometry.Instance(abstractRoof, 0, LIGHT_GRAY, 'roof')
+      const concreteRoof = new Geometry.Instance(abstractRoof, 0, LIGHT_GRAY)
       this.add(concreteRoof)
     } else if (spec.flat) {
       const adjustedCorners = ray.applyRay(spec.flat)

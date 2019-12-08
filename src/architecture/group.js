@@ -14,6 +14,7 @@ class Group {
 
   add (...things) {
     this.children.push(...things)
+    things.forEach(thing => { thing.parent = this })
     return this
   }
 

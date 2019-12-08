@@ -160,4 +160,14 @@ function rectangleOfSize (sizeXY) {
   ]
 }
 
-export { array, cornersFromShape, count, countTo, hypotenuse, randomInt, randomPseudoGaussian, xy, xyz, xyzAdd, xyzSubtract, xyRotate, xywh2rect, rectangleOfSize }
+function fullName (feature) {
+  const names = []
+  let f
+  for (f = feature; f.parent; f = f.parent) {
+    if (f.name) names.push(f.name)
+  }
+  if (f.name) names.push(f.name)
+  return names.join(' of ')
+}
+
+export { array, cornersFromShape, count, countTo, hypotenuse, randomInt, randomPseudoGaussian, xy, xyz, xyzAdd, xyzSubtract, xyRotate, xywh2rect, rectangleOfSize, fullName }

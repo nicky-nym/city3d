@@ -223,6 +223,7 @@ class ThreeOutput extends Output {
   makeLODFromLODGroup (lodGroup) {
     const lod = new THREE.LOD()
     const group = new THREE.Group()
+    group.name = lodGroup.name
     for (const child of lodGroup.children) {
       this._traverse(child, group)
     }
