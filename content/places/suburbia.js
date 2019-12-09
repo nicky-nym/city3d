@@ -37,7 +37,7 @@ class Suburbia extends Place {
       const ray = this._plato.goto(offset)
       const corners = cornersFromShape(PARCEL.shape)
       const parcel = new Parcel(corners, ray)
-      this._plato.appendToSector(parcel)
+      this._plato.appendToDistrict(parcel)
 
       let at
 

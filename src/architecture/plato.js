@@ -6,11 +6,11 @@
  */
 
 import { xyz } from '../core/util.js'
+import { District } from './district.js'
 import { Facing } from '../core/facing.js'
 import { Geometry } from '../core/geometry.js'
 import { Group } from '../architecture/group.js'
 import { Ray } from '../core/ray.js'
-import { Sector } from './sector.js'
 import { Use } from './use.js'
 
 const WHITE = 0xffffff
@@ -62,8 +62,8 @@ class Plato {
 
   study (topic = '', { x0 = 0, y0 = 0 } = {}) {
     if (topic) {
-      this._sector = new Sector(topic)
-      this._city.add(this._sector)
+      this._district = new District(topic)
+      this._city.add(this._district)
     }
     this._topic = topic
     this._x0 = x0
@@ -76,8 +76,8 @@ class Plato {
     return this._ray
   }
 
-  appendToSector (group) {
-    this._sector.add(group)
+  appendToDistrict (group) {
+    this._district.add(group)
     return group
   }
 
@@ -103,21 +103,21 @@ class Plato {
     // Print a report of square footage of rooms, walkways, etc.
     const floorArea = {}
     for (const use of Object.keys(Use)) {
-      const sum = Plato.aggregateMetric(this._sector, `Floor area: ${use}`)
+      const sum = Plato.aggregateMetric(this._district, `Floor area: ${use}`)
       if (sum > 0) {
         floorArea[use] = sum
       }
     }
-    this._sector.addMetric('Floor area', floorArea, 'square feet')
+    this._district.addMetric('Floor area', floorArea, 'square feet')
     if (floorArea[Use.PARCEL]) {
       const parcelFar = floorArea[Use.ROOM] / floorArea[Use.PARCEL]
       const urbanFar = floorArea[Use.ROOM] / (floorArea[Use.PARCEL] + (floorArea[Use.STREET] || 0))
-      this._sector.addMetric('Parcel FAR', parcelFar.toFixed(1), 'floor area ratio')
-      this._sector.addMetric('Overall FAR', urbanFar.toFixed(1), 'floor area ratio')
+      this._district.addMetric('Parcel FAR', parcelFar.toFixed(1), 'floor area ratio')
+      this._district.addMetric('Overall FAR', urbanFar.toFixed(1), 'floor area ratio')
     }
     for (const metric of ['Wall area', 'Wall opening area']) {
-      const sum = Plato.aggregateMetric(this._sector, metric)
-      this._sector.addMetric(metric, sum, 'square feet')
+      const sum = Plato.aggregateMetric(this._district, metric)
+      this._district.addMetric(metric, sum, 'square feet')
     }
     return this
   }

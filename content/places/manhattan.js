@@ -72,7 +72,7 @@ class Manhattan extends Place {
     } = {}) {
     const ray = this._plato.goto({ x: x + dx, y: y + dy, z: z })
     const storey = new Byway(ray, use, area, { wall: wall, openings: openings })
-    this._plato.appendToSector(storey)
+    this._plato.appendToDistrict(storey)
   }
 
   addBuildingAt (x = 0, y = 0) {
@@ -82,7 +82,7 @@ class Manhattan extends Place {
     const highrise = new Highrise(this._plato)
     const groupForBuilding = highrise.makeBuilding(size, offset)
     this._plato.goto({ x, y, z })
-    this._plato.appendToSector(groupForBuilding)
+    this._plato.appendToDistrict(groupForBuilding)
   }
 
   addBlock (row = 0, col = 0) {

@@ -14,11 +14,11 @@ import { Vehicle } from '../../content/movers/vehicle.js'
  */
 class SummaryOutput extends Output {
   render () {
-    const sectors = this._city.getSectors()
-    for (const sector of sectors) {
+    const districts = this._city.getDistricts()
+    for (const district of districts) {
       this.print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
-      this.print(`Sector ${sector.name}:`)
-      for (const [name, { value, units }] of sector.metrics) {
+      this.print(`District ${district.name}:`)
+      for (const [name, { value, units }] of district.metrics) {
         if (typeof value === 'object') {
           this.print(`  ${name}:`)
           for (const key of Object.keys(value)) {

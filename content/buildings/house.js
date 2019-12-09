@@ -290,8 +290,8 @@ class House extends Structure {
       xy(SIDEWALK_WIDTH + STREET_DX, 0)]
 
     const ray = this._plato.goto({ x: 0, y: 0 })
-    this._plato.appendToSector(new Byway(ray, Use.WALKWAY, SIDEWALK))
-    this._plato.appendToSector(new Byway(ray, Use.STREET, STREET))
+    this._plato.appendToDistrict(new Byway(ray, Use.WALKWAY, SIDEWALK))
+    this._plato.appendToDistrict(new Byway(ray, Use.STREET, STREET))
 
     this._plato.goto({ x: STREET_DX + SIDEWALK_WIDTH })
 
@@ -308,23 +308,23 @@ class House extends Structure {
       const z = CRAWL_SPACE_HEIGHT / NUM_STAIR_STEPS * i
       x -= 1
       const ray = this._plato.goto({ x: x, y: y, z: z, facing: facing })
-      this._plato.appendToSector(new Byway(ray, Use.WALKWAY, STAIR))
+      this._plato.appendToDistrict(new Byway(ray, Use.WALKWAY, STAIR))
     }
   }
 
   addParcel (x = 0, y = 0, facing = Facing.NORTH) {
     // Tell plato about the yard, fence, sidewalk, etc.
     const ray = this._plato.goto({ x: x, y: y, z: 0, facing: facing })
-    this._plato.appendToSector(new Byway(ray, Use.BARE, FENCE_LINE, { wall: FENCE_HEIGHT, cap: false }))
-    this._plato.appendToSector(new Byway(ray, Use.WALKWAY, DOORPATH))
-    this._plato.appendToSector(new Byway(ray, Use.STREET, DRIVEWAY))
+    this._plato.appendToDistrict(new Byway(ray, Use.BARE, FENCE_LINE, { wall: FENCE_HEIGHT, cap: false }))
+    this._plato.appendToDistrict(new Byway(ray, Use.WALKWAY, DOORPATH))
+    this._plato.appendToDistrict(new Byway(ray, Use.STREET, DRIVEWAY))
     this.addStairs(x, y, facing)
     return this
   }
 
   addGarageAndAdu (x = 0, y = 0, facing = Facing.NORTH) {
     const ray = this._plato.goto({ x: x, y: y, z: 0, facing: facing })
-    this._plato.appendToSector(new Byway(ray, Use.WALKWAY, ADU_DOORPATH))
+    this._plato.appendToDistrict(new Byway(ray, Use.WALKWAY, ADU_DOORPATH))
     return this
   }
 

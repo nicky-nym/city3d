@@ -7,7 +7,7 @@
 
 import { Group } from './group.js'
 import { Mover } from './mover.js'
-import { Sector } from './sector.js'
+import { District } from './district.js'
 
 function extractRoutes (group, routes) {
   if (group instanceof Mover) {
@@ -29,8 +29,8 @@ class City extends Group {
     return routes
   }
 
-  getSectors () {
-    return this.children.filter(c => c instanceof Sector)
+  getDistricts () {
+    return this.children.filter(c => c instanceof District)
   }
 }
 

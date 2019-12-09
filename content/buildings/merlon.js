@@ -270,9 +270,9 @@ function _addRoofAroundFloor (plato, shape, peakXyz) {
       flat: shape
     }
     const roof = new Roof(roofSpec, ray)
-    plato.appendToSector(roof)
+    plato.appendToDistrict(roof)
   } else {
-    plato.appendToSector(new Storey(ray, Use.BARE, shape))
+    plato.appendToDistrict(new Storey(ray, Use.BARE, shape))
     let i = 0
     for (const corner of shape) {
       const next = i + 1 < shape.length ? i + 1 : 0
@@ -287,7 +287,7 @@ function _addRoofAroundFloor (plato, shape, peakXyz) {
         custom: { vertices, indices }
       }
       const roof = new Roof(roofSpec, ray)
-      plato.appendToSector(roof)
+      plato.appendToDistrict(roof)
     }
   }
 }
@@ -299,15 +299,15 @@ function _addFeaturesAtLanding (plato, rampBearings, at, buildings = true) {
 
   // Landing
   ray = plato.goto({ x: x, y: y, z: z, facing: Facing.NORTH })
-  plato.appendToSector(new Byway(ray, Use.WALKWAY, OCTAGONAL_LANDING))
+  plato.appendToDistrict(new Byway(ray, Use.WALKWAY, OCTAGONAL_LANDING))
   if (!buildings && z % 10 === 0) {
-    plato.appendToSector(new Storey(ray, Use.BARE, DIAMOND_CENTER, { wall: 3 }))
+    plato.appendToDistrict(new Storey(ray, Use.BARE, DIAMOND_CENTER, { wall: 3 }))
   }
 
   // Ramps
   for (const bearing of rampBearings) {
     ray = plato.goto({ x: x, y: y, z: z, facing: bearing })
-    plato.appendToSector(new Byway(ray, Use.WALKWAY, RAMP_CORNERS, { incline: RAMP_RISE_HEIGHT }))
+    plato.appendToDistrict(new Byway(ray, Use.WALKWAY, RAMP_CORNERS, { incline: RAMP_RISE_HEIGHT }))
   }
 
   // Floors, Walls, and Roof
@@ -315,18 +315,18 @@ function _addFeaturesAtLanding (plato, rampBearings, at, buildings = true) {
     for (const bearing of rampBearings) {
       // parcel
       ray = plato.goto({ x: x, y: y, z: 0, facing: bearing })
-      plato.appendToSector(new Storey(ray, Use.PARCEL, BASEMENT))
+      plato.appendToDistrict(new Storey(ray, Use.PARCEL, BASEMENT))
 
       // lower floors
       for (const altitude of count(0, z, STOREY_HEIGHT)) {
         ray = plato.goto({ x: x, y: y, z: altitude, facing: bearing })
-        plato.appendToSector(new Storey(ray, Use.ROOM, BASEMENT))
+        plato.appendToDistrict(new Storey(ray, Use.ROOM, BASEMENT))
       }
 
       // upper floors
       for (const altitude of count(z, ROOFLINE, STOREY_HEIGHT)) {
         ray = plato.goto({ x: x, y: y, z: altitude, facing: bearing })
-        plato.appendToSector(new Storey(ray, Use.ROOM, APARTMENT, { wall: STOREY_HEIGHT, openings: APARTMENT_WINDOWS }))
+        plato.appendToDistrict(new Storey(ray, Use.ROOM, APARTMENT, { wall: STOREY_HEIGHT, openings: APARTMENT_WINDOWS }))
       }
 
       // roof

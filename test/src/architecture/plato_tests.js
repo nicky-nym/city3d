@@ -89,12 +89,12 @@ describe('Plato', function () {
       plato = new Plato(city)
     })
 
-    it('should result in a sector of the city being created with the specified name', function () {
-      plato.study('test sector')
+    it('should result in a district of the city being created with the specified name', function () {
+      plato.study('test district')
 
-      const sectors = city.getSectors()
-      sectors.should.have.length(1)
-      sectors[0].name.should.equal('test sector')
+      const districts = city.getDistricts()
+      districts.should.have.length(1)
+      districts[0].name.should.equal('test district')
     })
   })
 
@@ -102,7 +102,7 @@ describe('Plato', function () {
     let city
     let plato
     let ray
-    let sector
+    let district
     const parcelRect = [xy(0, 0), xy(50, 0), xy(50, 20), xy(0, 20)]
     const roomRect = [xyz(5, 5, 0), xyz(45, 5, 0), xyz(45, 15, 0), xyz(5, 15, 0)]
 
@@ -110,48 +110,48 @@ describe('Plato', function () {
       city = new City('Testopia')
       plato = new Plato(city)
       ray = plato.goto()
-      plato.study('test sector')
-      sector = city.getSectors()[0]
+      plato.study('test district')
+      district = city.getDistricts()[0]
     })
 
     it('should add the expected metrics when a Parcel and a room are created', function () {
-      plato.appendToSector(new Parcel(parcelRect, ray))
-      plato.appendToSector(new Storey(ray, Use.ROOM, roomRect))
+      plato.appendToDistrict(new Parcel(parcelRect, ray))
+      plato.appendToDistrict(new Storey(ray, Use.ROOM, roomRect))
 
       plato.pontificate()
 
-      sector.metrics.should.include.all.keys('Floor area', 'Parcel FAR', 'Overall FAR')
+      district.metrics.should.include.all.keys('Floor area', 'Parcel FAR', 'Overall FAR')
     })
     it('should add Floor area metric but not FAR metrics when a room but no Parcel is created', function () {
-      plato.appendToSector(new Storey(ray, Use.ROOM, roomRect))
+      plato.appendToDistrict(new Storey(ray, Use.ROOM, roomRect))
       plato.pontificate()
 
-      sector.metrics.should.include.keys('Floor area')
-      sector.metrics.should.not.include.any.keys('Parcel FAR', 'Overall FAR')
+      district.metrics.should.include.keys('Floor area')
+      district.metrics.should.not.include.any.keys('Parcel FAR', 'Overall FAR')
     })
     it('should compute the correct value and units for Floor area for one rectangular room', function () {
-      plato.appendToSector(new Storey(ray, Use.ROOM, roomRect))
+      plato.appendToDistrict(new Storey(ray, Use.ROOM, roomRect))
       plato.pontificate()
 
-      const floorAreaMetric = sector.metrics.get('Floor area')
+      const floorAreaMetric = district.metrics.get('Floor area')
       floorAreaMetric.value.ROOM.should.equal(400)
       floorAreaMetric.units.should.equal('square feet')
     })
     it('should compute the correct values and units for FAR metrics for a rectangular Parcel and room', function () {
-      plato.appendToSector(new Parcel(parcelRect, ray))
-      plato.appendToSector(new Storey(ray, Use.ROOM, roomRect))
+      plato.appendToDistrict(new Parcel(parcelRect, ray))
+      plato.appendToDistrict(new Storey(ray, Use.ROOM, roomRect))
       plato.pontificate()
 
-      sector.metrics.get('Parcel FAR').value.should.equal('0.4')
-      sector.metrics.get('Parcel FAR').units.should.equal('floor area ratio')
-      sector.metrics.get('Overall FAR').value.should.equal('0.4')
-      sector.metrics.get('Overall FAR').units.should.equal('floor area ratio')
+      district.metrics.get('Parcel FAR').value.should.equal('0.4')
+      district.metrics.get('Parcel FAR').units.should.equal('floor area ratio')
+      district.metrics.get('Overall FAR').value.should.equal('0.4')
+      district.metrics.get('Overall FAR').units.should.equal('floor area ratio')
     })
     it('should compute the correct value and units for Wall area for one rectangular room with walls', function () {
-      plato.appendToSector(new Storey(ray, Use.ROOM, roomRect, { wall: 10 }))
+      plato.appendToDistrict(new Storey(ray, Use.ROOM, roomRect, { wall: 10 }))
       plato.pontificate()
 
-      const wallAreaMetric = sector.metrics.get('Wall area')
+      const wallAreaMetric = district.metrics.get('Wall area')
       wallAreaMetric.value.should.equal(1000)
       wallAreaMetric.units.should.equal('square feet')
     })
@@ -165,43 +165,43 @@ describe('Plato', function () {
         city = new City('Testopia')
         plato = new Plato(city)
         ray = plato.goto()
-        plato.study('test sector')
-        sector = city.getSectors()[0]
-        plato.appendToSector(new Parcel(parcelRect, ray))
+        plato.study('test district')
+        district = city.getDistricts()[0]
+        plato.appendToDistrict(new Parcel(parcelRect, ray))
         ray = plato.goto(xyz(5, 5, 0))
-        plato.appendToSector(new Storey(ray, Use.ROOM, storeyRect, { wall: 10 }))
+        plato.appendToDistrict(new Storey(ray, Use.ROOM, storeyRect, { wall: 10 }))
         ray = plato.goto(xyz(5, 5, 10))
-        plato.appendToSector(new Storey(ray, Use.ROOM, storeyRect, { wall: 10 }))
+        plato.appendToDistrict(new Storey(ray, Use.ROOM, storeyRect, { wall: 10 }))
         ray = plato.goto(xyz(5, 5, 20))
-        plato.appendToSector(new Storey(ray, Use.ROOM, storeyRect, { wall: 10 }))
+        plato.appendToDistrict(new Storey(ray, Use.ROOM, storeyRect, { wall: 10 }))
         ray = plato.goto(xyz(0, 20, 0))
-        plato.appendToSector(new Byway(ray, Use.STREET, streetRect))
+        plato.appendToDistrict(new Byway(ray, Use.STREET, streetRect))
         ray = plato.goto(xyz(0, -20, 0))
-        plato.appendToSector(new Byway(ray, Use.STREET, streetRect))
+        plato.appendToDistrict(new Byway(ray, Use.STREET, streetRect))
       })
 
       it('should compute the correct values for Floor area', function () {
         plato.pontificate()
 
-        sector.metrics.get('Floor area').value.ROOM.should.equal(1200)
-        sector.metrics.get('Floor area').value.PARCEL.should.equal(1000)
-        sector.metrics.get('Floor area').value.STREET.should.equal(2000)
+        district.metrics.get('Floor area').value.ROOM.should.equal(1200)
+        district.metrics.get('Floor area').value.PARCEL.should.equal(1000)
+        district.metrics.get('Floor area').value.STREET.should.equal(2000)
       })
       it('should compute the correct value for Parcel FAR', function () {
         plato.pontificate()
 
-        sector.metrics.get('Parcel FAR').value.should.equal('1.2')
+        district.metrics.get('Parcel FAR').value.should.equal('1.2')
       })
       it('should compute the correct value for Overall FAR', function () {
         plato.pontificate()
 
-        sector.metrics.get('Overall FAR').value.should.equal('0.4')
+        district.metrics.get('Overall FAR').value.should.equal('0.4')
       })
       it('should compute the correct values for Wall areas', function () {
         plato.pontificate()
 
-        sector.metrics.get('Wall area').value.should.equal(3000)
-        sector.metrics.get('Wall opening area').value.should.equal(0)
+        district.metrics.get('Wall area').value.should.equal(3000)
+        district.metrics.get('Wall opening area').value.should.equal(0)
       })
     })
   })
