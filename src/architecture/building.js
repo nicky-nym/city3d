@@ -26,12 +26,12 @@ function _intFromSpec (specValue) {
 /**
  * Building is a class for representing buildings in a city.
  * Buildings know how to have walls, floors, roofs, doors, etc.
- * Buildings can be multistory, and can have sub-buildings as wings.
+ * Buildings can be multistorey, and can have sub-buildings as wings.
  * Buildings can be made from declarative specifications in JSON format.
  */
 class Building extends Structure {
   static makeHighResBuildingFromSpec (plato, spec, mainGroup, defaults, parentOffset = { x: 0, y: 0, z: 0 }) {
-    let { storeyHeight, roof, children, numStories, shape, offset } = spec
+    let { storeyHeight, roof, children, numStoreys, shape, offset } = spec
     roof = roof || defaults.roof
     roof = { parapetHeight: 0, ...roof }
     parentOffset = xyzAdd(parentOffset, offset)
@@ -40,7 +40,7 @@ class Building extends Structure {
       const corners = cornersFromShape(shape)
       let z = point.z || 0
       let ray
-      for (const i in countTo(numStories)) {
+      for (const i in countTo(numStoreys)) {
         point.z = z
         const floorName = `Floor ${i}`
         ray = plato.goto(point)
@@ -62,13 +62,13 @@ class Building extends Structure {
   }
 
   static makeLowResGroupFromSpec (plato, spec, group, defaults, parentOffset = { x: 0, y: 0, z: 0 }) {
-    const { storeyHeight, children, numStories, shape, offset } = spec
+    const { storeyHeight, children, numStoreys, shape, offset } = spec
     parentOffset = xyzAdd(parentOffset, offset)
     const point = { ...parentOffset }
     if (shape) {
       const corners = cornersFromShape(shape)
       plato.goto(point)
-      const depth = storeyHeight * numStories
+      const depth = storeyHeight * numStoreys
       const box = plato.makePlaceholder(Use.WALL, corners, depth)
       group.add(box)
     }
@@ -85,19 +85,19 @@ class Building extends Structure {
   _instantiateSpec (template, defaults = {}) {
     const spec = { ...template }
     if (template.shape) {
-      if (template.numStories === undefined) {
-        spec.numStories = 1
+      if (template.numStoreys === undefined) {
+        spec.numStoreys = 1
       } else {
-        spec.numStories = _intFromSpec(template.numStories)
+        spec.numStoreys = _intFromSpec(template.numStoreys)
       }
-      if (template.storyHeight === undefined) {
-        if (defaults.storyHeight === undefined) {
-          spec.storyHeight = 8
+      if (template.storeyHeight === undefined) {
+        if (defaults.storeyHeight === undefined) {
+          spec.storeyHeight = 8
         } else {
-          spec.storyHeight = _intFromSpec(defaults.storyHeight)
+          spec.storeyHeight = _intFromSpec(defaults.storeyHeight)
         }
       } else {
-        spec.storyHeight = _intFromSpec(template.storyHeight)
+        spec.storeyHeight = _intFromSpec(template.storeyHeight)
       }
     }
     if (template.children) {

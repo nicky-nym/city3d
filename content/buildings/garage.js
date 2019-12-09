@@ -13,7 +13,7 @@ const GARAGE_BUILDING_SPEC = {
   name: 'Garage',
   storeyHeight: 8,
   offset: xyz(0, 0, 0),
-  numStories: 1,
+  numStoreys: 1,
   shape: { type: 'rectangle', data: xy(24, 21) },
   roof: {
     // TODO: make this a peaked roof instead

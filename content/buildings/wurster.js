@@ -42,37 +42,37 @@ const WURSTER_BUILDING_SPEC = Object.freeze({
   },
   children: [{
     name: 'South wing',
-    numStories: 4,
+    numStoreys: 4,
     offset: ORIGIN.south,
     shape: { type: 'rectangle', data: SIZE.south }
   }, {
     name: 'Center wing',
-    numStories: 3,
+    numStoreys: 3,
     offset: ORIGIN.center,
     shape: { type: 'rectangle', data: SIZE.center }
   }, {
     name: 'Tower',
-    numStories: 10,
+    numStoreys: 10,
     offset: ORIGIN.tower,
     shape: { type: 'rectangle', data: SIZE.tower }
   }, {
     name: 'Tower east',
-    numStories: 10,
+    numStoreys: 10,
     offset: ORIGIN.east,
     shape: { type: 'rectangle', data: SIZE.east }
   }, {
     name: 'Tower west',
-    numStories: 11,
+    numStoreys: 11,
     offset: ORIGIN.west,
     shape: { type: 'rectangle', data: SIZE.west }
   }, {
     name: 'Tower west balcony',
-    numStories: 0,
+    numStoreys: 0,
     offset: ORIGIN.balcony,
     shape: { type: 'rectangle', data: SIZE.balcony }
   }, {
     name: 'North wing',
-    numStories: 3,
+    numStoreys: 3,
     offset: ORIGIN.north,
     shape: {
       type: 'xyPolygon',

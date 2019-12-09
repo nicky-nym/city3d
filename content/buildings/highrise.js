@@ -13,7 +13,7 @@ const HIGHRISE_BUILDING_SPEC = {
   name: 'High-rise building',
   storeyHeight: { type: 'randomInt', min: 9, max: 14 },
   offset: xyz(0, 0, 0),
-  numStories: { type: 'randomInt', min: 4, max: 60 },
+  numStoreys: { type: 'randomInt', min: 4, max: 60 },
   shape: { type: 'rectangle', data: null }, // rectangle size is set in constructor
   roof: {
     parapetHeight: UNIT.feet(4)
@@ -26,6 +26,7 @@ const HIGHRISE_BUILDING_SPEC = {
 class Highrise extends Building {
   makeBuilding (size, at = { x: 0, y: 0 }) {
     HIGHRISE_BUILDING_SPEC.shape.data = size
+    console.log('makeBuilding: ' + size)
     return super.makeBuildingFromSpec(HIGHRISE_BUILDING_SPEC, at)
   }
 }
