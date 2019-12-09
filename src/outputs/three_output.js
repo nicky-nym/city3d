@@ -37,6 +37,24 @@ class ThreeOutput extends Output {
     this.stats.showPanel(0) // 0: fps, 1: ms, 2: mb, 3+: custom
     document.body.appendChild(this.stats.dom)
 
+    const infoIconDiv = document.createElement('div')
+    // TODO: Make a css file and figure out where to put it.
+    infoIconDiv.style.position = 'fixed'
+    infoIconDiv.style.bottom = '0'
+    infoIconDiv.style.right = '0'
+    infoIconDiv.style.height = '31px'
+    infoIconDiv.style.cursor = 'pointer'
+    infoIconDiv.style.zIndex = '10000'
+    const infoIcon = document.createElement('img')
+    infoIcon.src = '../src/outputs/images/Information_icon.svg'
+    infoIcon.style.cssText = 'width: 31px; height: 31px'
+    infoIconDiv.appendChild(infoIcon)
+    document.body.appendChild(infoIconDiv)
+    infoIconDiv.addEventListener('click', event => this._onShowKeyboardCommands(event), false)
+
+    // hack to make scrollbars go away
+    document.body.style.overflow = 'hidden'
+
     const WIDTH = window.innerWidth
     const HEIGHT = window.innerHeight
     const NEAR_CAMERA_LIMIT = 1
@@ -130,14 +148,35 @@ class ThreeOutput extends Output {
       this.controls.reset()
       console.log('Restored camera coordinates from sessionStorage. To revert to default coordinates, open in a new tab.')
     }
+
+    // keyboard commands
     window.addEventListener('keydown', evt => {
+      console.log(evt.code)
       switch (evt.code) {
-        case 'KeyS': return this._onSaveOrbitControlsState()
+        case 'KeyK': return this._onShowKeyboardCommands(evt)
         case 'KeyR': return this._onRestoreOrbitControlsState()
+        case 'KeyS': return this._onSaveOrbitControlsState()
+        case 'KeyX': return this._onHideKeyboardCommands(evt)
         case 'Space': return this._onToggleAnimation()
       }
     }, false)
-
+    this._keyInfoDiv = document.createElement('div')
+    this._keyInfoDiv.style.position = 'fixed'
+    this._keyInfoDiv.style.top = '50%'
+    this._keyInfoDiv.style.left = '50%'
+    this._keyInfoDiv.style.transform = 'translate(-50%, -50%)'
+    this._keyInfoDiv.style.backgroundColor = 'white'
+    this._keyInfoDiv.style.padding = '0 20px 20px 20px'
+    this._keyInfoDiv.style.opacity = 0 // invisible
+    document.body.appendChild(this._keyInfoDiv)
+    this._keyInfoDiv.innerHTML = `
+    <h4>Keyboard Commands</h4>
+    K: show keyboard commands (this box)<br>
+    R: restore camera coordinates<br>
+    S: save camera coordinates<br>
+    X: close this box (TODO: any key or click should work)<br>
+    &lt;space&gt;: toggle animation<br>
+    `
     // enable selecting objects with mouse
     this._raycaster = new THREE.Raycaster()
     this._mouse = new THREE.Vector2()
@@ -399,6 +438,16 @@ class ThreeOutput extends Output {
 
   _onToggleAnimation () {
     this._animationOn = !this._animationOn
+  }
+
+  _onShowKeyboardCommands (event) {
+    event.preventDefault()
+    this._keyInfoDiv.style.opacity = 0.9
+  }
+
+  _onHideKeyboardCommands (event) {
+    event.preventDefault()
+    this._keyInfoDiv.style.opacity = 0
   }
 
   _material (materialCost, color, twoSided = false) {
