@@ -26,7 +26,6 @@ const HIGHRISE_BUILDING_SPEC = {
 class Highrise extends Building {
   makeBuilding (size, at = { x: 0, y: 0 }) {
     HIGHRISE_BUILDING_SPEC.shape.data = size
-    console.log('makeBuilding: ' + size)
     return super.makeBuildingFromSpec(HIGHRISE_BUILDING_SPEC, at)
   }
 }
