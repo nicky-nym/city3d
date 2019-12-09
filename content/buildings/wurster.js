@@ -19,7 +19,8 @@ const SIZE = {
   west: xy(29, 44),
   balcony: xy(10, 23),
   north: xy(227, 113),
-  atrium: xy(22, 46)
+  atrium: xy(22, 46),
+  window: xy(8, 9)
 }
 const WEST_DELTA_Y = UNIT.feet(17)
 const ATRIUM_DELTA_Y = UNIT.feet(-7)
@@ -54,7 +55,46 @@ const WURSTER_BUILDING_SPEC = Object.freeze({
     name: 'Tower',
     numStoreys: 10,
     offset: ORIGIN.tower,
-    shape: { type: 'rectangle', data: SIZE.tower }
+    shape: { type: 'rectangle', data: SIZE.tower },
+    walls: [{
+      windows: [
+        { type: 'rectangle', data: SIZE.window, at: xy(1, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(10, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(19, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(28, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(37, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(46, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(54, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(63, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(72, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(81, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(90, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(99, 3) }
+      ]
+    }, {
+      windows: [
+        // { type: 'rectangle', data: SIZE.window, at: xy(4, 3) }
+      ]
+    }, {
+      windows: [
+        { type: 'rectangle', data: SIZE.window, at: xy(1, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(10, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(19, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(28, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(37, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(46, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(54, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(63, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(72, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(81, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(90, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(99, 3) }
+      ]
+    }, {
+      windows: [
+        // { type: 'rectangle', data: SIZE.window, at: xy(4, 3) }
+      ]
+    }]
   }, {
     name: 'Tower east',
     numStoreys: 10,

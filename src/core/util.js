@@ -37,7 +37,7 @@ function cornersFromShape (shape) {
   let corners
   const shapeType = shape.type
   if (shapeType === 'rectangle') {
-    corners = rectangleOfSize(shape.data)
+    corners = rectangleOfSize(shape.data, shape.at)
   } else if (shapeType === 'xyPolygon') {
     corners = shape.data
   } else {
@@ -148,15 +148,16 @@ function xywh2rect (y, z, width, height) {
 
 /**
  * Returns an array with the {x, y} corners of a rectangle.
- * @returns {Object} a object with {x, y} values for width and height
+ * @param {Object} sizeXY - a object with {x, y} values for width and height
+ * @param {Object} at - optional object with {x, y} values for offest of rectangle origin
  * @returns {array} an array with four corner {x, y} objects
  */
-function rectangleOfSize (sizeXY) {
+function rectangleOfSize (sizeXY, at = { x: 0, y: 0 }) {
   return [
-    xy(0, 0),
-    xy(sizeXY.x, 0),
-    xy(sizeXY.x, sizeXY.y),
-    xy(0, sizeXY.y)
+    xy(at.x, at.y),
+    xy(at.x + sizeXY.x, at.y),
+    xy(at.x + sizeXY.x, at.y + sizeXY.y),
+    xy(at.x, at.y + sizeXY.y)
   ]
 }
 

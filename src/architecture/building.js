@@ -1,9 +1,9 @@
 /** @file building.js
-  * @author Authored in 2019 at <https://github.com/nicky-nym/city3d>
-  * @license UNLICENSE
-  * This is free and unencumbered software released into the public domain.
-  * For more information, please refer to <http://unlicense.org>
-  */
+ * @author Authored in 2019 at <https://github.com/nicky-nym/city3d>
+ * @license UNLICENSE
+ * This is free and unencumbered software released into the public domain.
+ * For more information, please refer to <http://unlicense.org>
+ */
 
 import { array, cornersFromShape, countTo, randomInt, xyzAdd } from '../core/util.js'
 import { Group, LODGroup } from './group.js'
@@ -23,6 +23,22 @@ function _intFromSpec (specValue) {
   }
 }
 
+function _openingsFromWallsSpec (wallsSpec) {
+  const openings = []
+  let i = 0
+  for (const wallSpec of array(wallsSpec)) {
+    const windowsSpec = wallSpec.windows
+    const windows = []
+    for (const windowSpec of array(windowsSpec)) {
+      const windowCorners = cornersFromShape(windowSpec)
+      windows.push(windowCorners)
+    }
+    openings.push([i, windows])
+    i++
+  }
+  return openings
+}
+
 /**
  * Building is a class for representing buildings in a city.
  * Buildings know how to have walls, floors, roofs, doors, etc.
@@ -31,20 +47,21 @@ function _intFromSpec (specValue) {
  */
 class Building extends Structure {
   static makeHighResBuildingFromSpec (plato, spec, mainGroup, defaults, parentOffset = { x: 0, y: 0, z: 0 }) {
-    let { storeyHeight, roof, children, numStoreys, shape, offset } = spec
+    let { storeyHeight, roof, children, numStoreys, shape, offset, walls } = spec
     roof = roof || defaults.roof
     roof = { parapetHeight: 0, ...roof }
     parentOffset = xyzAdd(parentOffset, offset)
     const point = { ...parentOffset }
     if (shape) {
       const corners = cornersFromShape(shape)
+      const openings = _openingsFromWallsSpec(walls)
       let z = point.z || 0
       let ray
       for (const i in countTo(numStoreys)) {
         point.z = z
         const floorName = `Floor ${i}`
         ray = plato.goto(point)
-        const storey = new Storey(ray, Use.ROOM, corners, { name: floorName, wall: storeyHeight })
+        const storey = new Storey(ray, Use.ROOM, corners, { name: floorName, wall: storeyHeight, openings: openings })
         mainGroup.add(storey)
         z = z + storeyHeight
       }
