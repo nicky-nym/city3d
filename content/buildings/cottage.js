@@ -11,7 +11,7 @@ import { Building } from '../../src/architecture/building.js'
 
 const COTTAGE_BUILDING_SPEC = {
   name: 'Cottage',
-  storyHeight: 8,
+  storeyHeight: 8,
   offset: xyz(0, 0, 0),
   numStories: 1,
   shape: { type: 'rectangle', data: xy(30, 21) },

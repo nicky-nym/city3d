@@ -6,15 +6,15 @@
   */
 
 import { UNIT } from '../../src/core/unit.js'
-import { xy, xyz } from '../../src/core/util.js'
+import { xyz } from '../../src/core/util.js'
 import { Building } from '../../src/architecture/building.js'
 
 const HIGHRISE_BUILDING_SPEC = {
   name: 'High-rise building',
-  storyHeight: { type: 'randomInt', min: 9, max: 14 },
+  storeyHeight: { type: 'randomInt', min: 9, max: 14 },
   offset: xyz(0, 0, 0),
   numStories: { type: 'randomInt', min: 4, max: 60 },
-  shape: { type: 'rectangle', data: xy(10, 10) },
+  shape: { type: 'rectangle', data: null }, // rectangle size is set in constructor
   roof: {
     parapetHeight: UNIT.feet(4)
   }

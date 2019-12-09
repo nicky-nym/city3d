@@ -71,8 +71,8 @@ class Manhattan extends Place {
       openings = [] // Sequence[Tuple]
     } = {}) {
     const ray = this._plato.goto({ x: x + dx, y: y + dy, z: z })
-    const story = new Byway(ray, use, area, { wall: wall, openings: openings })
-    this._plato.appendToSector(story)
+    const storey = new Byway(ray, use, area, { wall: wall, openings: openings })
+    this._plato.appendToSector(storey)
   }
 
   addBuildingAt (x = 0, y = 0) {

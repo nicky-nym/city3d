@@ -156,10 +156,10 @@ describe('Plato', function () {
       wallAreaMetric.units.should.equal('square feet')
     })
 
-    describe('For a three story building on a Parcel bordered by streets', function () {
+    describe('For a three storey building on a Parcel bordered by streets', function () {
       const parcelRect = [xy(0, 0), xy(50, 0), xy(50, 20), xy(0, 20)]
       const streetRect = [xy(0, 0), xy(50, 0), xy(50, 20), xy(0, 20)]
-      const storyRect = [xyz(0, 0, 0), xyz(40, 0, 0), xyz(40, 10, 0), xyz(0, 10, 0)]
+      const storeyRect = [xyz(0, 0, 0), xyz(40, 0, 0), xyz(40, 10, 0), xyz(0, 10, 0)]
 
       beforeEach(function () {
         city = new City('Testopia')
@@ -169,11 +169,11 @@ describe('Plato', function () {
         sector = city.getSectors()[0]
         plato.appendToSector(new Parcel(parcelRect, ray))
         ray = plato.goto(xyz(5, 5, 0))
-        plato.appendToSector(new Storey(ray, Use.ROOM, storyRect, { wall: 10 }))
+        plato.appendToSector(new Storey(ray, Use.ROOM, storeyRect, { wall: 10 }))
         ray = plato.goto(xyz(5, 5, 10))
-        plato.appendToSector(new Storey(ray, Use.ROOM, storyRect, { wall: 10 }))
+        plato.appendToSector(new Storey(ray, Use.ROOM, storeyRect, { wall: 10 }))
         ray = plato.goto(xyz(5, 5, 20))
-        plato.appendToSector(new Storey(ray, Use.ROOM, storyRect, { wall: 10 }))
+        plato.appendToSector(new Storey(ray, Use.ROOM, storeyRect, { wall: 10 }))
         ray = plato.goto(xyz(0, 20, 0))
         plato.appendToSector(new Byway(ray, Use.STREET, streetRect))
         ray = plato.goto(xyz(0, -20, 0))

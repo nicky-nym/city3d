@@ -9,7 +9,7 @@ import { UNIT } from '../../src/core/unit.js'
 import { xy, xyz } from '../../src/core/util.js'
 import { Building } from '../../src/architecture/building.js'
 
-const STORY_HEIGHT = UNIT.feet(13)
+const STOREY_HEIGHT = UNIT.feet(13)
 
 const SIZE = {
   south: xy(170, 85),
@@ -29,13 +29,13 @@ const ORIGIN = {
   tower: xy(SIZE.center.x, SIZE.south.y + SIZE.center.y),
   east: xy(SIZE.center.x + SIZE.tower.x, SIZE.south.y + SIZE.center.y + 5),
   west: xy(SIZE.center.x - SIZE.west.x, SIZE.south.y + SIZE.center.y + WEST_DELTA_Y),
-  balcony: xyz(SIZE.center.x - SIZE.west.x - SIZE.balcony.x, SIZE.south.y + SIZE.center.y + WEST_DELTA_Y, STORY_HEIGHT * 10),
+  balcony: xyz(SIZE.center.x - SIZE.west.x - SIZE.balcony.x, SIZE.south.y + SIZE.center.y + WEST_DELTA_Y, STOREY_HEIGHT * 10),
   north: xy(SIZE.center.x + SIZE.tower.x - SIZE.north.x, SIZE.south.y + SIZE.center.y)
 }
 
 const WURSTER_BUILDING_SPEC = Object.freeze({
   name: 'Wurster Hall',
-  storyHeight: STORY_HEIGHT,
+  storeyHeight: STOREY_HEIGHT,
   offset: xyz(120, 140, 0),
   roof: {
     parapetHeight: UNIT.feet(4)

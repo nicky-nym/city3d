@@ -11,7 +11,7 @@ import { Building } from '../../src/architecture/building.js'
 
 const GARAGE_BUILDING_SPEC = {
   name: 'Garage',
-  storyHeight: 8,
+  storeyHeight: 8,
   offset: xyz(0, 0, 0),
   numStories: 1,
   shape: { type: 'rectangle', data: xy(24, 21) },

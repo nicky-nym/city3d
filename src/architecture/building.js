@@ -31,7 +31,7 @@ function _intFromSpec (specValue) {
  */
 class Building extends Structure {
   static makeHighResBuildingFromSpec (plato, spec, mainGroup, defaults, parentOffset = { x: 0, y: 0, z: 0 }) {
-    let { storyHeight, roof, children, numStories, shape, offset } = spec
+    let { storeyHeight, roof, children, numStories, shape, offset } = spec
     roof = roof || defaults.roof
     roof = { parapetHeight: 0, ...roof }
     parentOffset = xyzAdd(parentOffset, offset)
@@ -44,9 +44,9 @@ class Building extends Structure {
         point.z = z
         const floorName = `Floor ${i}`
         ray = plato.goto(point)
-        const story = new Storey(ray, Use.ROOM, corners, { name: floorName, wall: storyHeight })
-        mainGroup.add(story)
-        z = z + storyHeight
+        const storey = new Storey(ray, Use.ROOM, corners, { name: floorName, wall: storeyHeight })
+        mainGroup.add(storey)
+        z = z + storeyHeight
       }
       point.z = z
       ray = plato.goto(point)
@@ -62,13 +62,13 @@ class Building extends Structure {
   }
 
   static makeLowResGroupFromSpec (plato, spec, group, defaults, parentOffset = { x: 0, y: 0, z: 0 }) {
-    const { storyHeight, children, numStories, shape, offset } = spec
+    const { storeyHeight, children, numStories, shape, offset } = spec
     parentOffset = xyzAdd(parentOffset, offset)
     const point = { ...parentOffset }
     if (shape) {
       const corners = cornersFromShape(shape)
       plato.goto(point)
-      const depth = storyHeight * numStories
+      const depth = storeyHeight * numStories
       const box = plato.makePlaceholder(Use.WALL, corners, depth)
       group.add(box)
     }

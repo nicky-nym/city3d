@@ -14,8 +14,8 @@ import { Structure } from '../../src/architecture/structure.js'
 import { UNIT } from '../../src/core/unit.js'
 import { Use } from '../../src/architecture/use.js'
 
-const STORY_HEIGHT = UNIT.feet(10)
-const ROOFLINE = STORY_HEIGHT * 5
+const STOREY_HEIGHT = UNIT.feet(10)
+const ROOFLINE = STOREY_HEIGHT * 5
 const RAMP_WIDTH = UNIT.feet(6)
 const RAMP_RUN_LENGTH = UNIT.feet(30)
 const RAMP_RISE_HEIGHT = UNIT.feet(2.5)
@@ -311,22 +311,22 @@ function _addFeaturesAtLanding (plato, rampBearings, at, buildings = true) {
   }
 
   // Floors, Walls, and Roof
-  if (buildings && z % STORY_HEIGHT === 0) {
+  if (buildings && z % STOREY_HEIGHT === 0) {
     for (const bearing of rampBearings) {
       // parcel
       ray = plato.goto({ x: x, y: y, z: 0, facing: bearing })
       plato.appendToSector(new Storey(ray, Use.PARCEL, BASEMENT))
 
       // lower floors
-      for (const altitude of count(0, z, STORY_HEIGHT)) {
+      for (const altitude of count(0, z, STOREY_HEIGHT)) {
         ray = plato.goto({ x: x, y: y, z: altitude, facing: bearing })
         plato.appendToSector(new Storey(ray, Use.ROOM, BASEMENT))
       }
 
       // upper floors
-      for (const altitude of count(z, ROOFLINE, STORY_HEIGHT)) {
+      for (const altitude of count(z, ROOFLINE, STOREY_HEIGHT)) {
         ray = plato.goto({ x: x, y: y, z: altitude, facing: bearing })
-        plato.appendToSector(new Storey(ray, Use.ROOM, APARTMENT, { wall: STORY_HEIGHT, openings: APARTMENT_WINDOWS }))
+        plato.appendToSector(new Storey(ray, Use.ROOM, APARTMENT, { wall: STOREY_HEIGHT, openings: APARTMENT_WINDOWS }))
       }
 
       // roof
