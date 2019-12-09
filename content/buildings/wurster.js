@@ -45,12 +45,116 @@ const WURSTER_BUILDING_SPEC = Object.freeze({
     name: 'South wing',
     numStoreys: 4,
     offset: ORIGIN.south,
-    shape: { type: 'rectangle', data: SIZE.south }
+    shape: { type: 'rectangle', data: SIZE.south },
+    walls: [{
+      windows: [
+        { type: 'rectangle', data: SIZE.window, at: xy(1, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(10, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(19, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(28, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(37, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(46, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(55, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(64, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(73, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(82, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(91, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(100, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(109, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(118, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(127, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(136, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(145, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(154, 3) }
+      ]
+    }, {
+      windows: [
+        { type: 'rectangle', data: SIZE.window, at: xy(1, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(10, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(19, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(28, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(37, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(46, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(55, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(64, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(73, 3) }
+      ]
+    }, {
+      windows: [
+        { type: 'rectangle', data: SIZE.window, at: xy(1, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(10, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(19, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(28, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(37, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(46, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(55, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(64, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(73, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(82, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(91, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(100, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(109, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(118, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(127, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(136, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(145, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(154, 3) }
+      ]
+    }, {
+      windows: [
+        { type: 'rectangle', data: SIZE.window, at: xy(1, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(10, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(19, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(28, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(37, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(46, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(55, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(64, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(73, 3) }
+      ]
+    }]
   }, {
     name: 'Center wing',
     numStoreys: 3,
     offset: ORIGIN.center,
-    shape: { type: 'rectangle', data: SIZE.center }
+    shape: { type: 'rectangle', data: SIZE.center },
+    walls: [{
+      windows: []
+    }, {
+      windows: [
+        { type: 'rectangle', data: SIZE.window, at: xy(1, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(10, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(19, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(28, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(37, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(46, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(55, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(64, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(73, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(82, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(91, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(100, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(109, 3) }
+      ]
+    }, {
+      windows: []
+    }, {
+      windows: [
+        { type: 'rectangle', data: SIZE.window, at: xy(1, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(10, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(19, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(28, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(37, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(46, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(55, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(64, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(73, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(82, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(91, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(100, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(109, 3) }
+      ]
+    }]
   }, {
     name: 'Tower',
     numStoreys: 10,
@@ -64,12 +168,12 @@ const WURSTER_BUILDING_SPEC = Object.freeze({
         { type: 'rectangle', data: SIZE.window, at: xy(28, 3) },
         { type: 'rectangle', data: SIZE.window, at: xy(37, 3) },
         { type: 'rectangle', data: SIZE.window, at: xy(46, 3) },
-        { type: 'rectangle', data: SIZE.window, at: xy(54, 3) },
-        { type: 'rectangle', data: SIZE.window, at: xy(63, 3) },
-        { type: 'rectangle', data: SIZE.window, at: xy(72, 3) },
-        { type: 'rectangle', data: SIZE.window, at: xy(81, 3) },
-        { type: 'rectangle', data: SIZE.window, at: xy(90, 3) },
-        { type: 'rectangle', data: SIZE.window, at: xy(99, 3) }
+        { type: 'rectangle', data: SIZE.window, at: xy(55, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(64, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(73, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(82, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(91, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(100, 3) }
       ]
     }, {
       windows: [
@@ -83,12 +187,12 @@ const WURSTER_BUILDING_SPEC = Object.freeze({
         { type: 'rectangle', data: SIZE.window, at: xy(28, 3) },
         { type: 'rectangle', data: SIZE.window, at: xy(37, 3) },
         { type: 'rectangle', data: SIZE.window, at: xy(46, 3) },
-        { type: 'rectangle', data: SIZE.window, at: xy(54, 3) },
-        { type: 'rectangle', data: SIZE.window, at: xy(63, 3) },
-        { type: 'rectangle', data: SIZE.window, at: xy(72, 3) },
-        { type: 'rectangle', data: SIZE.window, at: xy(81, 3) },
-        { type: 'rectangle', data: SIZE.window, at: xy(90, 3) },
-        { type: 'rectangle', data: SIZE.window, at: xy(99, 3) }
+        { type: 'rectangle', data: SIZE.window, at: xy(55, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(64, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(73, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(82, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(91, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(100, 3) }
       ]
     }, {
       windows: [
@@ -132,7 +236,93 @@ const WURSTER_BUILDING_SPEC = Object.freeze({
         xy(SIZE.north.x, SIZE.north.y),
         xy(0, SIZE.north.y)
       ]
-    }
+    },
+    walls: [{
+      windows: [
+        { type: 'rectangle', data: SIZE.window, at: xy(1, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(10, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(19, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(28, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(37, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(46, 3) }
+      ]
+    }, {
+      windows: []
+    }, {
+      windows: []
+    }, {
+      windows: []
+    }, {
+      windows: []
+    }, {
+      windows: [ // atrium
+        { type: 'rectangle', data: SIZE.window, at: xy(1, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(10, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(19, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(28, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(37, 3) }
+      ]
+    }, {
+      windows: []
+    }, {
+      windows: []
+    }, {
+      windows: []
+    }, {
+      windows: []
+    }, {
+      windows: []
+    }, {
+      windows: [
+        { type: 'rectangle', data: SIZE.window, at: xy(1, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(10, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(19, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(28, 3) }
+      ]
+    }, {
+      windows: [
+        { type: 'rectangle', data: SIZE.window, at: xy(1, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(10, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(19, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(28, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(37, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(46, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(55, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(64, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(73, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(82, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(91, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(100, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(109, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(118, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(127, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(136, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(145, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(154, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(163, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(172, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(181, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(190, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(199, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(208, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(217, 3) }
+      ]
+    }, {
+      windows: [
+        { type: 'rectangle', data: SIZE.window, at: xy(1, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(10, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(19, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(28, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(37, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(46, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(55, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(64, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(73, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(82, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(91, 3) },
+        { type: 'rectangle', data: SIZE.window, at: xy(100, 3) }
+      ]
+    }]
   }]
 })
 
