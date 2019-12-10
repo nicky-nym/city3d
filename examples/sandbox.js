@@ -8,7 +8,7 @@
 import { CITY } from '../src/citylib.js'
 import { xyz } from '../src/core/util.js'
 
-function addBuildings () {
+function addBuildings (plato, city) {
   plato.study('Suburbia', { x0: -100, y0: 100 })
   const suburbia = new CITY.Suburbia(plato)
   suburbia.addStreet(2)
@@ -36,7 +36,7 @@ function addBuildings () {
   plato.pontificate()
 }
 
-function addCreek () {
+function addCreek (city) {
   const creek = new CITY.Creek()
   const creekObject = creek.makeCreek()
   city.add(creekObject)
@@ -49,7 +49,7 @@ function addCreek () {
   city.add(new CITY.Vehicle(creek.creekRoute(7), 0.18, 'bicycle'))
 }
 
-function addTree () {
+function addTree (city) {
   const tree = new CITY.Tree()
   const trunkObject = tree.makeTrunk({ x: 28, y: 52, z: 0 })
   const crownObject = tree.makeCrown({ x: 28, y: 52, z: 8 })
@@ -57,11 +57,16 @@ function addTree () {
   city.add(crownObject)
 }
 
-function addKalpanaOrbital () {
+function addSwingset (plato, city) {
+  const swingset = new CITY.Swingset(plato)
+  city.add(swingset.makeSwingset({ x: 60, y: 52, z: 0 }))
+}
+
+function addKalpanaOrbital (city) {
   city.add(new CITY.Kalpana())
 }
 
-function addMovers () {
+function addMovers (city) {
   const randomVehicles = new CITY.Group('random vehicles')
   randomVehicles.add(new CITY.Vehicle())
   randomVehicles.add(new CITY.Vehicle())
@@ -77,11 +82,12 @@ function addMovers () {
 
 const city = new CITY.City('Paracosm')
 const plato = new CITY.Plato(city)
-addBuildings()
-addCreek()
-addTree()
-addKalpanaOrbital()
-addMovers()
+addCreek(city)
+addTree(city)
+addSwingset(plato, city)
+addBuildings(plato, city)
+addKalpanaOrbital(city)
+addMovers(city)
 const threeOutput = new CITY.ThreeOutput(city)
 threeOutput.envision()
 const summaryOutput = new CITY.SummaryOutput(city)

@@ -33,6 +33,9 @@ import { House } from '../content/buildings/house.js'
 import { Merlon } from '../content/buildings/merlon.js'
 import { Wurster } from '../content/buildings/wurster.js'
 
+// structures
+import { Swingset } from '../content/structures/swingset.js'
+
 // landscape
 import { Creek } from '../content/landscape/creek.js'
 import { Tree } from '../content/landscape/tree.js'
@@ -72,6 +75,7 @@ export const CITY = {
   Storey,
   Suburbia,
   SummaryOutput,
+  Swingset,
   ThreeOutput,
   Tree,
   Vehicle,

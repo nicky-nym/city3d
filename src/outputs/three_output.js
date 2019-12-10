@@ -313,9 +313,27 @@ class ThreeOutput extends Output {
     if (instanceGeometry instanceof Geometry.OutlinePolygon) {
       return this.makeOutlinePolygonLines(instanceGeometry, color)
     }
+    if (instanceGeometry instanceof Geometry.Line) {
+      return this.makeLines(instanceGeometry, color)
+    }
     console.error('unknown geometry')
   }
 
+  // TODO: consider refactoring to merge this with makeOutlinePolygonLines()
+  makeLines (outlinePolygon, hexColor) {
+    const material = new THREE.LineBasicMaterial({ color: hexColor })
+    const geometry = new THREE.Geometry()
+    const corners = outlinePolygon.xyzWaypoints
+    const vectors = []
+    for (const corner of corners) {
+      vectors.push(new THREE.Vector3(corner.x, corner.y, corner.z))
+    }
+    geometry.vertices.push(...vectors)
+    const line = new THREE.Line(geometry, material)
+    return line
+  }
+
+  // TODO: consider refactoring to merge this with makeLines()
   makeOutlinePolygonLines (outlinePolygon, hexColor) {
     const material = new THREE.LineBasicMaterial({ color: hexColor })
     const geometry = new THREE.Geometry()

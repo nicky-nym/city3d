@@ -14,6 +14,12 @@ class Instance {
   }
 }
 
+class Line {
+  constructor (xyzWaypoints) {
+    this.xyzWaypoints = xyzWaypoints
+  }
+}
+
 class OutlinePolygon {
   constructor (xyPolygon) {
     this.xyPolygon = xyPolygon
@@ -83,4 +89,4 @@ class XYPolygon extends Array {
   }
 }
 
-export const Geometry = { Instance, OutlinePolygon, ThickPolygon, TriangularPolyhedron, Wall, XYPolygon }
+export const Geometry = { Instance, Line, OutlinePolygon, ThickPolygon, TriangularPolyhedron, Wall, XYPolygon }
