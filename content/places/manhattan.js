@@ -79,10 +79,9 @@ class Manhattan extends Place {
     const z = 0
     const offset = { x, y, z }
     const size = { x: BUILDING_DX, y: BUILDING_DY }
-    const highrise = new Highrise(this._plato)
-    const groupForBuilding = highrise.makeBuilding(size, offset)
+    const highrise = new Highrise(this._plato, this._city, size, { at: offset })
     this._plato.goto({ x, y, z })
-    this._plato.appendToDistrict(groupForBuilding)
+    this._plato.appendToDistrict(highrise)
   }
 
   addBlock (row = 0, col = 0) {

@@ -25,8 +25,8 @@ const GARAGE_BUILDING_SPEC = {
 * Class representing a suburban 2-car garage.
 */
 class Garage extends Building {
-  makeBuilding (at = { x: 0, y: 0 }) {
-    return super.makeBuildingFromSpec(GARAGE_BUILDING_SPEC, at)
+  constructor (plato, city, { name, at } = {}) {
+    super(plato, city, GARAGE_BUILDING_SPEC, { name, at })
   }
 }
 

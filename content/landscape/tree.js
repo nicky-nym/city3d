@@ -5,14 +5,22 @@
   * For more information, please refer to <http://unlicense.org>
   */
 
-import { xy, xyzAdd } from '../../src/core/util.js'
+import { xy, xyz, xyzAdd } from '../../src/core/util.js'
 import { Geometry } from '../../src/core/geometry.js'
+import { LODGroup } from '../../src/architecture/group.js'
 import { UNIT } from '../../src/core/unit.js'
 
 const TRUNK_HEIGHT = UNIT.feet(8)
 const CROWN_HEIGHT = UNIT.feet(9)
 
-class Tree {
+class Tree extends LODGroup {
+  constructor ({ at = xyz(0, 0, 0), crownHeight = 10, name } = {}) {
+    super(name || 'Tree')
+    this.add(this.makeTrunk(at))
+    at.z = crownHeight
+    this.add(this.makeCrown(at))
+  }
+
   makeTrunk (atXy) {
     const BROWN = 0x663300
     let xyVertices = [

@@ -5,11 +5,14 @@
   * For more information, please refer to <http://unlicense.org>
   */
 
+import { LODGroup } from './group.js'
+
 /**
  * Structure is an abstract superclass for buildings, city blocks, and other types of structures.
  */
-class Structure {
-  constructor (plato, city) {
+class Structure extends LODGroup {
+  constructor (plato, city, name) {
+    super(name)
     this._plato = plato
     this._city = city
   }

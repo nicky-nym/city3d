@@ -41,15 +41,11 @@ class Suburbia extends Place {
 
       let at
 
-      const cottage = new Cottage(this._plato)
       at = xyzAdd(offset, xy(-154, 23))
-      const groupForCottage = cottage.makeBuilding(at)
-      parcel.add(groupForCottage)
+      parcel.add(new Cottage(this._plato, this._city, { at }))
 
-      const garage = new Garage(this._plato)
       at = xyzAdd(offset, xy(-185, 23))
-      const groupForGarage = garage.makeBuilding(at)
-      parcel.add(groupForGarage)
+      parcel.add(new Garage(this._plato, this._city, { at }))
 
       const house = new House(this._plato)
       at = xyzAdd(offset, xy(0, -200))

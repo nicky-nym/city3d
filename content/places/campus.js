@@ -32,9 +32,7 @@ class Campus extends Place {
       const parcel = new Parcel(corners, ray)
       this._plato.appendToDistrict(parcel)
 
-      const wurster = new Wurster(this._plato)
-      const groupForBuilding = wurster.makeBuilding(offset)
-      parcel.add(groupForBuilding)
+      parcel.add(new Wurster(this._plato, this._city, { at: offset }))
     }
   }
 }

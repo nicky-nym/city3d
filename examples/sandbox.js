@@ -10,18 +10,18 @@ import { xyz } from '../src/core/util.js'
 
 function addBuildings (plato, city) {
   plato.study('Suburbia', { x0: -100, y0: 100 })
-  const suburbia = new CITY.Suburbia(plato)
+  const suburbia = new CITY.Suburbia(plato, city)
   suburbia.addStreet(2)
   plato.pontificate()
 
   const CITY_SIZE = 1
   plato.study('Manhattan New York', { x0: -800 * CITY_SIZE, y0: -900 * CITY_SIZE })
-  const nyc = new CITY.Manhattan(plato)
+  const nyc = new CITY.Manhattan(plato, city)
   nyc.addBlocks(CITY_SIZE, CITY_SIZE * 2)
   plato.pontificate()
 
   plato.study('Merlon Buildings', { x0: 238, y0: 238 })
-  const merlon = new CITY.Merlon(plato)
+  const merlon = new CITY.Merlon(plato, city)
   merlon.addBuildings(8, 8, { buildings: true })
   plato.pontificate()
 
@@ -31,7 +31,7 @@ function addBuildings (plato, city) {
   plato.pontificate()
 
   plato.study('Campus', { x0: 100, y0: -600 })
-  const campus = new CITY.Campus(plato)
+  const campus = new CITY.Campus(plato, city)
   campus.makeCampus(3)
   plato.pontificate()
 }
@@ -50,16 +50,11 @@ function addCreek (city) {
 }
 
 function addTree (city) {
-  const tree = new CITY.Tree()
-  const trunkObject = tree.makeTrunk({ x: 28, y: 52, z: 0 })
-  const crownObject = tree.makeCrown({ x: 28, y: 52, z: 8 })
-  city.add(trunkObject)
-  city.add(crownObject)
+  city.add(new CITY.Tree({ at: { x: 28, y: 52, z: 0 }, crownHeight: 8, name: 'Topiary Tree' }))
 }
 
 function addSwingset (plato, city) {
-  const swingset = new CITY.Swingset(plato)
-  city.add(swingset.makeSwingset({ x: 60, y: 52, z: 0 }))
+  city.add(new CITY.Swingset(plato, city, { at: { x: 60, y: 52, z: 0 } }))
 }
 
 function addKalpanaOrbital (city) {

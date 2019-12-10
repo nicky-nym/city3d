@@ -8,7 +8,6 @@
 import { UNIT } from '../../src/core/unit.js'
 import { xyz } from '../../src/core/util.js'
 import { Facing } from '../../src/core/facing.js'
-import { Group } from '../../src/architecture/group.js'
 import { Geometry } from '../../src/core/geometry.js'
 import { Structure } from '../../src/architecture/structure.js'
 
@@ -26,15 +25,15 @@ function _makeLine (waypoints, ray, color) {
  * TODO: animate me!
  */
 class Swingset extends Structure {
-  makeSwingset (atXy) {
+  constructor (plato, city, { name, at = xyz(0, 0, 0) } = {}) {
+    super(plato, city, name || 'Swing set')
     const height = UNIT.feet(8)
     const halfDepth = UNIT.feet(9) / 2
     const span = UNIT.feet(10)
     const splay = UNIT.feet(1)
-    const group = new Group('Swing set')
-    atXy.z = 0
-    atXy.facing = Facing.NORTH
-    const ray = this._plato.goto(atXy)
+    at.z = 0
+    at.facing = Facing.NORTH
+    const ray = this._plato.goto(at)
     const crossBar = [
       xyz(0, 0, height),
       xyz(span, 0, height)
@@ -61,13 +60,11 @@ class Swingset extends Structure {
       xyz(7.4, 1.8, 2),
       xyz(7.4, 0, height)
     ]
-    group.add(_makeLine(crossBar, ray, WOOD))
-    group.add(_makeLine(leftTruss, ray, WOOD))
-    group.add(_makeLine(rightTruss, ray, WOOD))
-    group.add(_makeLine(leftSwing, ray, STEEL))
-    group.add(_makeLine(rightSwing, ray, STEEL))
-
-    return group
+    this.add(_makeLine(crossBar, ray, WOOD))
+    this.add(_makeLine(leftTruss, ray, WOOD))
+    this.add(_makeLine(rightTruss, ray, WOOD))
+    this.add(_makeLine(leftSwing, ray, STEEL))
+    this.add(_makeLine(rightSwing, ray, STEEL))
   }
 }
 

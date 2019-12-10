@@ -25,8 +25,8 @@ const COTTAGE_BUILDING_SPEC = {
  * Class representing a back yard Accessory Dwelling Unit.
  */
 class Cottage extends Building {
-  makeBuilding (at = { x: 0, y: 0 }) {
-    return super.makeBuildingFromSpec(COTTAGE_BUILDING_SPEC, at)
+  constructor (plato, city, { name, at } = {}) {
+    super(plato, city, COTTAGE_BUILDING_SPEC, { name, at })
   }
 }
 
