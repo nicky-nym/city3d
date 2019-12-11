@@ -81,16 +81,20 @@ function addMovers (city) {
   city.add(randomVehicles)
 }
 
-const city = new CITY.City('Paracosm')
-const plato = new CITY.Plato(city)
-addCreek(city)
-addTree(city)
-addSwingset(plato, city)
-addUtilityPoles(plato, city)
-addBuildings(plato, city)
-addKalpanaOrbital(city)
-addMovers(city)
-const threeOutput = new CITY.ThreeOutput(city)
-threeOutput.envision()
-const summaryOutput = new CITY.SummaryOutput(city)
-summaryOutput.envision()
+function main () {
+  const city = new CITY.City('Paracosm')
+  const plato = new CITY.Plato(city)
+  addCreek(city)
+  addTree(city)
+  addSwingset(plato, city)
+  addUtilityPoles(plato, city)
+  addBuildings(plato, city)
+  addKalpanaOrbital(city)
+  addMovers(city)
+
+  // display the city on the web page
+  CITY.Output.addOutput(new CITY.ThreeOutput(city))
+  CITY.Output.addOutput(new CITY.SummaryOutput(city))
+}
+
+main()

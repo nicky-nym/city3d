@@ -1,9 +1,9 @@
 /** @file three_output.js
-  * @author Authored in 2019 at <https://github.com/nicky-nym/city3d>
-  * @license UNLICENSE
-  * This is free and unencumbered software released into the public domain.
-  * For more information, please refer to <http://unlicense.org>
-  */
+ * @author Authored in 2019 at <https://github.com/nicky-nym/city3d>
+ * @license UNLICENSE
+ * This is free and unencumbered software released into the public domain.
+ * For more information, please refer to <http://unlicense.org>
+ */
 
 import * as THREE from '../../node_modules/three/build/three.module.js'
 import Stats from '../../node_modules/stats.js/src/Stats.js'
@@ -12,10 +12,6 @@ import { Geometry } from '../core/geometry.js'
 import { Group, LODGroup } from '../architecture/group.js'
 import { Output } from './output.js'
 import { OrbitControls } from '../../node_modules/three/examples/jsm/controls/OrbitControls.js'
-
-function print (str) {
-  console.log(str)
-}
 
 const ONE_MILE = 5280
 const FIXME_FUCHSIA = 0xff00ff // used as a default so it's obvious when a color is missing
@@ -30,12 +26,10 @@ const COLOR_DIM_GROUND = 0x202020 // eslint-disable-line no-unused-vars
  * ThreeOutput can render faces in three.js.
  */
 class ThreeOutput extends Output {
-  constructor (city) {
-    super(city)
-
+  setDisplayDiv (outputDivElement) {
     this.stats = new Stats()
     this.stats.showPanel(0) // 0: fps, 1: ms, 2: mb, 3+: custom
-    document.body.appendChild(this.stats.dom)
+    outputDivElement.appendChild(this.stats.dom)
 
     const infoIconDiv = document.createElement('div')
     // TODO: Make a css file and figure out where to put it.
@@ -49,11 +43,8 @@ class ThreeOutput extends Output {
     infoIcon.src = '../src/outputs/images/Information_icon.svg'
     infoIcon.style.cssText = 'width: 31px; height: 31px'
     infoIconDiv.appendChild(infoIcon)
-    document.body.appendChild(infoIconDiv)
+    outputDivElement.appendChild(infoIconDiv)
     infoIconDiv.addEventListener('click', event => this._onShowKeyboardCommands(event), false)
-
-    // hack to make scrollbars go away
-    document.body.style.overflow = 'hidden'
 
     const WIDTH = window.innerWidth
     const HEIGHT = window.innerHeight
@@ -130,13 +121,13 @@ class ThreeOutput extends Output {
     this._renderer = new THREE.WebGLRenderer({ antialias: true })
     this._renderer.setSize(WIDTH, HEIGHT)
     this._renderer.setClearColor(0xCCCCCC, 1) // set our background color
-    document.body.appendChild(this._renderer.domElement)
+    outputDivElement.appendChild(this._renderer.domElement)
     window.addEventListener('resize', evt => this._onWindowResize(evt), false)
 
     // DOM setup for tooltips
     this._tooltipDiv = document.createElement('div')
     this._tooltipDiv.className = 'tooltip'
-    document.body.appendChild(this._tooltipDiv)
+    outputDivElement.appendChild(this._tooltipDiv)
 
     this.controls = new OrbitControls(this._camera, this._renderer.domElement)
 
@@ -168,7 +159,7 @@ class ThreeOutput extends Output {
     this._keyInfoDiv.style.backgroundColor = 'white'
     this._keyInfoDiv.style.padding = '0 20px 20px 20px'
     this._keyInfoDiv.style.opacity = 0 // invisible
-    document.body.appendChild(this._keyInfoDiv)
+    outputDivElement.appendChild(this._keyInfoDiv)
     this._keyInfoDiv.innerHTML = `
     <h4>Keyboard Commands</h4>
     K: show keyboard commands (this box)<br>
@@ -557,4 +548,4 @@ class ThreeOutput extends Output {
   }
 }
 
-export { ThreeOutput, print }
+export { ThreeOutput }

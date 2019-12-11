@@ -21,7 +21,9 @@ import { Wall } from './architecture/wall.js'
 import { Window } from './architecture/window.js'
 
 // outputs
+import { Output } from './outputs/output.js'
 import { SummaryOutput } from './outputs/summary_output.js'
+import { TextOutput } from './outputs/text_output.js'
 import { ThreeOutput } from './outputs/three_output.js'
 
 // buildings
@@ -69,6 +71,7 @@ export const CITY = {
   Manhattan,
   Merlon,
   Opening,
+  Output,
   Parcel,
   Place,
   Plato,
@@ -77,6 +80,7 @@ export const CITY = {
   Suburbia,
   SummaryOutput,
   Swingset,
+  TextOutput,
   ThreeOutput,
   Tree,
   UtilityPole,

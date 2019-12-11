@@ -6,11 +6,30 @@
   */
 
 /**
- * Output is an abstract superclass for visualizing cities.
+ * Output is an abstract superclass for displaying some view of a City in some way.
  */
 class Output {
+  /**
+   * Creates an output instance to view a given City.
+   * @param {CITY.City} city - an instance of CITY.City
+   */
   constructor (city) {
     this._city = city
+  }
+
+  /**
+   * Given a newly created Output instance, give it a <div> element to display content in.
+   * @param {Output} outputInstance - a new instance of an Output subclass
+   */
+  static addOutput (outputInstance) {
+    const outputDiv = document.createElement('div')
+    document.body.appendChild(outputDiv)
+
+    // hack to make scrollbars go away
+    // document.body.style.overflow = 'hidden'
+
+    outputInstance.setDisplayDiv(outputDiv)
+    outputInstance.envision()
   }
 
   print (str) {
@@ -19,6 +38,15 @@ class Output {
 
   error (str) {
     console.error(str)
+  }
+
+  /**
+   * Provide the Output instance with an HTML <div> element to display content in.
+   * @param {HTMLElement} htmlDivElement - a new, empty <div> element in the document.body
+   * @abstract
+   */
+  setDisplayDiv (htmlDivElement) {
+    throw new Error('setDisplayDiv was not implemented by Output subclass')
   }
 
   envision () {
