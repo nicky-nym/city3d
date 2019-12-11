@@ -35,6 +35,7 @@ import { Wurster } from '../content/buildings/wurster.js'
 
 // structures
 import { Swingset } from '../content/structures/swingset.js'
+import { UtilityPole } from '../content/structures/utility_pole.js'
 
 // landscape
 import { Creek } from '../content/landscape/creek.js'
@@ -78,6 +79,7 @@ export const CITY = {
   Swingset,
   ThreeOutput,
   Tree,
+  UtilityPole,
   Vehicle,
   Wall,
   Window,

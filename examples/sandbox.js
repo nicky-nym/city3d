@@ -57,6 +57,12 @@ function addSwingset (plato, city) {
   city.add(new CITY.Swingset(plato, city, { at: { x: 60, y: 52, z: 0 } }))
 }
 
+function addUtilityPoles (plato, city) {
+  for (let y = -40; y < 800; y += 120) {
+    city.add(new CITY.UtilityPole(plato, city, { at: { x: -96, y: y, z: 0 } }))
+  }
+}
+
 function addKalpanaOrbital (city) {
   city.add(new CITY.Kalpana())
 }
@@ -80,6 +86,7 @@ const plato = new CITY.Plato(city)
 addCreek(city)
 addTree(city)
 addSwingset(plato, city)
+addUtilityPoles(plato, city)
 addBuildings(plato, city)
 addKalpanaOrbital(city)
 addMovers(city)
