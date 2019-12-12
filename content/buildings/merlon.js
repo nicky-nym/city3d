@@ -262,83 +262,87 @@ function _getLandingPattern (numRows, numCols) {
   return grid
 }
 
-function _addRoofAroundFloor (plato, shape, peakXyz) {
-  let roofSpec = {}
-  const ray = plato._ray
-  if (peakXyz.z === 0) {
-    roofSpec = {
-      flat: shape
-    }
-    const roof = new Roof(roofSpec, ray)
-    plato.appendToDistrict(roof)
-  } else {
-    plato.appendToDistrict(new Storey(ray, Use.BARE, shape))
-    let i = 0
-    for (const corner of shape) {
-      const next = i + 1 < shape.length ? i + 1 : 0
-      i++
-      const vertices = [
-        xyz(corner.x, corner.y, 0),
-        xyz(shape[next].x, shape[next].y, 0),
-        peakXyz
-      ]
-      const indices = [[0, 1, 2]]
-      roofSpec = {
-        custom: { vertices, indices }
-      }
-      const roof = new Roof(roofSpec, ray)
-      plato.appendToDistrict(roof)
-    }
-  }
-}
-
-function _addFeaturesAtLanding (plato, rampBearings, at, buildings = true) {
-  // Make plato envision the floorspace for a landing and its ramps.
-  const [x, y, z] = at
-  let ray
-
-  // Landing
-  ray = plato.goto({ x: x, y: y, z: z, facing: Facing.NORTH })
-  plato.appendToDistrict(new Byway(ray, Use.WALKWAY, OCTAGONAL_LANDING))
-  if (!buildings && z % 10 === 0) {
-    plato.appendToDistrict(new Storey(ray, Use.BARE, DIAMOND_CENTER, { wall: 3 }))
-  }
-
-  // Ramps
-  for (const bearing of rampBearings) {
-    ray = plato.goto({ x: x, y: y, z: z, facing: bearing })
-    plato.appendToDistrict(new Byway(ray, Use.WALKWAY, RAMP_CORNERS, { incline: RAMP_RISE_HEIGHT }))
-  }
-
-  // Floors, Walls, and Roof
-  if (buildings && z % STOREY_HEIGHT === 0) {
-    for (const bearing of rampBearings) {
-      // parcel
-      ray = plato.goto({ x: x, y: y, z: 0, facing: bearing })
-      plato.appendToDistrict(new Storey(ray, Use.PARCEL, BASEMENT))
-
-      // lower floors
-      for (const altitude of count(0, z, STOREY_HEIGHT)) {
-        ray = plato.goto({ x: x, y: y, z: altitude, facing: bearing })
-        plato.appendToDistrict(new Storey(ray, Use.ROOM, BASEMENT))
-      }
-
-      // upper floors
-      for (const altitude of count(z, ROOFLINE, STOREY_HEIGHT)) {
-        ray = plato.goto({ x: x, y: y, z: altitude, facing: bearing })
-        plato.appendToDistrict(new Storey(ray, Use.ROOM, APARTMENT, { wall: STOREY_HEIGHT, openings: APARTMENT_WINDOWS }))
-      }
-
-      // roof
-      const midpoint = (APARTMENT_WIDTH + D2) / 2
-      const peak = xyz(midpoint, midpoint, randomInt(0, 4) * 7)
-      plato.goto({ x: x, y: y, z: ROOFLINE, facing: bearing })
-      _addRoofAroundFloor(plato, ATTIC, peak)
-    }
-  }
-}
-
 class Merlon extends Structure {
+  constructor ({ city, ray, x0, y0, numRows = 2, numCols = 2, hideBuildings = false, name } = {}) {
+    super({ city, ray, x0, y0, name: name || 'Midrise Complex' })
+    this.addBuildings(numRows, numCols, !hideBuildings)
+  }
+
+  _addRoofAroundFloor (shape, peakXyz) {
+    let roofSpec = {}
+    if (peakXyz.z === 0) {
+      roofSpec = {
+        flat: shape
+      }
+      const roof = new Roof(roofSpec, this._ray)
+      this.add(roof)
+    } else {
+      this.add(new Storey(this._ray, Use.BARE, shape))
+      let i = 0
+      for (const corner of shape) {
+        const next = i + 1 < shape.length ? i + 1 : 0
+        i++
+        const vertices = [
+          xyz(corner.x, corner.y, 0),
+          xyz(shape[next].x, shape[next].y, 0),
+          peakXyz
+        ]
+        const indices = [[0, 1, 2]]
+        roofSpec = {
+          custom: { vertices, indices }
+        }
+        const roof = new Roof(roofSpec, this._ray)
+        this.add(roof)
+      }
+    }
+  }
+
+  _addFeaturesAtLanding (rampBearings, at, buildings = true) {
+    // Make plato envision the floorspace for a landing and its ramps.
+    const [x, y, z] = at
+    let ray
+
+    // Landing
+    ray = this.goto({ x: x, y: y, z: z, facing: Facing.NORTH })
+    this.add(new Byway(ray, Use.WALKWAY, OCTAGONAL_LANDING))
+    if (!buildings && z % 10 === 0) {
+      this.add(new Storey(ray, Use.BARE, DIAMOND_CENTER, { wall: 3 }))
+    }
+
+    // Ramps
+    for (const bearing of rampBearings) {
+      ray = this.goto({ x: x, y: y, z: z, facing: bearing })
+      this.add(new Byway(ray, Use.WALKWAY, RAMP_CORNERS, { incline: RAMP_RISE_HEIGHT }))
+    }
+
+    // Floors, Walls, and Roof
+    if (buildings && z % STOREY_HEIGHT === 0) {
+      for (const bearing of rampBearings) {
+        // parcel
+        ray = this.goto({ x: x, y: y, z: 0, facing: bearing })
+        this.add(new Storey(ray, Use.PARCEL, BASEMENT))
+
+        // lower floors
+        for (const altitude of count(0, z, STOREY_HEIGHT)) {
+          ray = this.goto({ x: x, y: y, z: altitude, facing: bearing })
+          this.add(new Storey(ray, Use.ROOM, BASEMENT))
+        }
+
+        // upper floors
+        for (const altitude of count(z, ROOFLINE, STOREY_HEIGHT)) {
+          ray = this.goto({ x: x, y: y, z: altitude, facing: bearing })
+          this.add(new Storey(ray, Use.ROOM, APARTMENT, { wall: STOREY_HEIGHT, openings: APARTMENT_WINDOWS }))
+        }
+
+        // roof
+        const midpoint = (APARTMENT_WIDTH + D2) / 2
+        const peak = xyz(midpoint, midpoint, randomInt(0, 4) * 7)
+        this.goto({ x: x, y: y, z: ROOFLINE, facing: bearing })
+        this._addRoofAroundFloor(ATTIC, peak)
+      }
+    }
+  }
+
   addBuildings (numRows = 2, numCols = 2, buildings = true) {
     // Tell plato about all of our landings, ramps, rooms, and roofs.
     let i = 0
@@ -350,13 +354,12 @@ class Merlon extends Structure {
         for (const landingSpec of gridCell) {
           const z = landingSpec[0]
           const rampBearings = landingSpec[1]
-          _addFeaturesAtLanding(this._plato, rampBearings, [x, y, z], buildings)
+          this._addFeaturesAtLanding(rampBearings, [x, y, z], buildings)
         }
         j++
       }
       i++
     }
-    return this
   }
 }
 

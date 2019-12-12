@@ -7,10 +7,8 @@
  */
 
 import { Building } from '../../../src/architecture/building.js'
-import { City } from '../../../src/architecture/city.js'
 import { Geometry } from '../../../src/core/geometry.js'
 import { Group } from '../../../src/architecture/group.js'
-import { Plato } from '../../../src/architecture/plato.js'
 import { Storey } from '../../../src/architecture/storey.js'
 import { xy, xyz, fullName } from '../../../src/core/util.js'
 
@@ -18,8 +16,6 @@ import { xy, xyz, fullName } from '../../../src/core/util.js'
 
 describe('Building', function () {
   let count
-  const city = new City('Testopia')
-  const plato = new Plato(city)
 
   describe('#makeBuildingFromSpec', function () {
     it('should return a Building with the right name if one was specified', function () {
@@ -28,7 +24,7 @@ describe('Building', function () {
         offset: xyz(0, 0, 0),
         shape: { type: 'rectangle', data: xy(10, 20) }
       }
-      const building = new Building(plato, city, testSpec, { name: 'hut 22' })
+      const building = new Building(testSpec, { name: 'hut 22' })
 
       building.name.should.equal('hut 22')
     })
@@ -38,7 +34,7 @@ describe('Building', function () {
         offset: xyz(0, 0, 0),
         shape: { type: 'rectangle', data: xy(10, 20) }
       }
-      const building = new Building(plato, city, testSpec)
+      const building = new Building(testSpec)
 
       building.name.should.equal('hut')
     })
@@ -55,13 +51,13 @@ describe('Building', function () {
       })
 
       it('should return a Building with two Storeys (one being the roof)', function () {
-        const building = new Building(plato, city, minimalSpec)
+        const building = new Building(minimalSpec)
 
         building.accept(node => { count += node instanceof Storey ? 1 : 0 })
         count.should.equal(2)
       })
       it('should return a Building with two Storeys with the expected names', function () {
-        const building = new Building(plato, city, minimalSpec)
+        const building = new Building(minimalSpec)
 
         const storeys = []
         building.accept(node => { if (node instanceof Storey) storeys.push(node) })
@@ -69,7 +65,7 @@ describe('Building', function () {
         storeys[1].name.toLowerCase().should.equal('roof')
       })
       it('should return a Building with two Storeys with the expected full names', function () {
-        const building = new Building(plato, city, minimalSpec)
+        const building = new Building(minimalSpec)
 
         const storeys = []
         building.accept(node => { if (node instanceof Storey) storeys.push(node) })
@@ -77,12 +73,12 @@ describe('Building', function () {
         fullName(storeys[1]).toLowerCase().should.equal('roof of hut')
       })
       it('should return a Building with two lower resolution levels of detail', function () {
-        const building = new Building(plato, city, minimalSpec)
+        const building = new Building(minimalSpec)
 
         building.getLevelsOfDetail().should.have.length(2)
       })
       it('should create levels with property "instance" with value of type Group', function () {
-        const building = new Building(plato, city, minimalSpec)
+        const building = new Building(minimalSpec)
 
         const lods = building.getLevelsOfDetail()
         lods[0].should.have.property('instance')
@@ -91,7 +87,7 @@ describe('Building', function () {
         lods[1].instance.should.be.an.instanceof(Group)
       })
       it('should create levels of detail with exactly one Geometry Instance', function () {
-        const building = new Building(plato, city, minimalSpec)
+        const building = new Building(minimalSpec)
 
         const lods = building.getLevelsOfDetail()
         lods[0].instance.accept(node => { count += node instanceof Geometry.Instance ? 1 : 0 })
@@ -114,13 +110,13 @@ describe('Building', function () {
       })
 
       it('should return a Building with four Storeys (one being the roof)', function () {
-        const building = new Building(plato, city, simpleThreeStoreySpec)
+        const building = new Building(simpleThreeStoreySpec)
 
         building.accept(node => { count += node instanceof Storey ? 1 : 0 })
         count.should.equal(4)
       })
       it('should return a Building with four Storeys with the expected full names', function () {
-        const building = new Building(plato, city, simpleThreeStoreySpec, { name: '123 Main St.' })
+        const building = new Building(simpleThreeStoreySpec, { name: '123 Main St.' })
 
         const storeys = []
         building.accept(node => { if (node instanceof Storey) storeys.push(node) })
@@ -131,12 +127,12 @@ describe('Building', function () {
         fullName(storeys[3]).toLowerCase().should.equal('roof of 123 main st.')
       })
       it('should return a Building with two lower resolution levels of detail', function () {
-        const building = new Building(plato, city, simpleThreeStoreySpec)
+        const building = new Building(simpleThreeStoreySpec)
 
         building.getLevelsOfDetail().should.have.length(2)
       })
       it('should create levels with property "instance" with value of type Group', function () {
-        const building = new Building(plato, city, simpleThreeStoreySpec)
+        const building = new Building(simpleThreeStoreySpec)
 
         building.getLevelsOfDetail().forEach(lod => {
           lod.should.have.property('instance')
@@ -144,7 +140,7 @@ describe('Building', function () {
         })
       })
       it('should create levels of detail with exactly one Geometry Instance', function () {
-        const building = new Building(plato, city, simpleThreeStoreySpec)
+        const building = new Building(simpleThreeStoreySpec)
 
         building.getLevelsOfDetail().forEach(lod => {
           let count = 0
@@ -167,13 +163,13 @@ describe('Building', function () {
       })
 
       it('should return a Building with a number of Storeys in the specified range', function () {
-        const building = new Building(plato, city, randomSpec)
+        const building = new Building(randomSpec)
 
         building.accept(node => { count += node instanceof Storey ? 1 : 0 })
         count.should.be.within(8 + 1, 60 + 1)
       })
       it('should return a Building with a number of Walls equal to four times the number of non-roof Storeys', function () {
-        const building = new Building(plato, city, randomSpec)
+        const building = new Building(randomSpec)
 
         let storeyCount = 0
         building.accept(node => { storeyCount += node instanceof Storey ? 1 : 0 })
@@ -184,7 +180,7 @@ describe('Building', function () {
         wallCount.should.equal(4 * (storeyCount - 1))
       })
       it('should return a Building with each Wall having the same height, which is in the specified range', function () {
-        const building = new Building(plato, city, randomSpec)
+        const building = new Building(randomSpec)
 
         const walls = []
         building.accept(node => {
@@ -195,12 +191,12 @@ describe('Building', function () {
         walls.forEach(wall => wall.geometry.height.should.equal(firstHeight))
       })
       it('should return a Building with two lower resolution levels of detail', function () {
-        const building = new Building(plato, city, randomSpec)
+        const building = new Building(randomSpec)
 
         building.getLevelsOfDetail().should.have.length(2)
       })
       it('should create levels with property "instance" with value of type Group', function () {
-        const building = new Building(plato, city, randomSpec)
+        const building = new Building(randomSpec)
 
         building.getLevelsOfDetail().forEach(lod => {
           lod.should.have.property('instance')
@@ -208,7 +204,7 @@ describe('Building', function () {
         })
       })
       it('should create levels of detail with exactly one Geometry Instance', function () {
-        const building = new Building(plato, city, randomSpec)
+        const building = new Building(randomSpec)
 
         building.getLevelsOfDetail().forEach(lod => {
           let count = 0
@@ -217,7 +213,7 @@ describe('Building', function () {
         })
       })
       it('should create levels of detail with height equal to the full resolution building', function () {
-        const building = new Building(plato, city, randomSpec)
+        const building = new Building(randomSpec)
 
         const walls = []
         building.accept(node => {
@@ -265,13 +261,13 @@ describe('Building', function () {
       })
 
       it('should return a Building with the expected total number of Storeys', function () {
-        const building = new Building(plato, city, nestedSpec)
+        const building = new Building(nestedSpec)
 
         building.accept(node => { count += node instanceof Storey ? 1 : 0 })
         count.should.equal(numStoreysInSouthWing + 1 + numStoreysInTower + 1 + numStoreysInNorthWing + 1)
       })
       it('should create two levels of detail with property "instance" with value of type Group', function () {
-        const building = new Building(plato, city, nestedSpec)
+        const building = new Building(nestedSpec)
 
         building.getLevelsOfDetail().should.have.length(2)
         building.getLevelsOfDetail().forEach(lod => {
@@ -280,7 +276,7 @@ describe('Building', function () {
         })
       })
       it('should create levels of detail with exactly three Geometry Instances', function () {
-        const building = new Building(plato, city, nestedSpec)
+        const building = new Building(nestedSpec)
 
         building.getLevelsOfDetail().forEach(lod => {
           let count = 0
@@ -289,7 +285,7 @@ describe('Building', function () {
         })
       })
       it('should create levels of detail with full child names equal to the corresponding parts of the full resolution building', function () {
-        const building = new Building(plato, city, nestedSpec)
+        const building = new Building(nestedSpec)
 
         building.getLevelsOfDetail().forEach(lod => {
           fullName(lod.instance.children[0]).should.equal('South Wing of Three Part Building')
@@ -298,7 +294,7 @@ describe('Building', function () {
         })
       })
       it('should create levels of detail with each Instance height equal to the corresponding part of the full resolution building', function () {
-        const building = new Building(plato, city, nestedSpec)
+        const building = new Building(nestedSpec)
 
         building.getLevelsOfDetail().forEach(lod => {
           const geometryInstances = []

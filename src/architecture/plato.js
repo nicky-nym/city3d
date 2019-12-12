@@ -8,37 +8,8 @@
 import { xyz } from '../core/util.js'
 import { District } from './district.js'
 import { Facing } from '../core/facing.js'
-import { Geometry } from '../core/geometry.js'
-import { Group } from '../architecture/group.js'
 import { Ray } from '../core/ray.js'
 import { Use } from './use.js'
-
-const WHITE = 0xffffff
-const RED = 0xcc0000 // eslint-disable-line no-unused-vars
-const BLACKTOP = 0x1a1a1a // very dark grey
-const GREEN = 0x00ff00 // eslint-disable-line no-unused-vars
-const BLUE = 0x0000ff
-const YELLOW = 0xffff00
-
-const GREEN_GRASS = 0x00cc00
-const BROWN = 0x806633
-const DARK_GRAY = 0x404040
-const LIGHT_GRAY = 0xdddddd
-const BLUE_GLASS = 0x9a9aff // eslint-disable-line no-unused-vars
-const MARTIAN_ORANGE = 0xdf4911
-
-const COLORS_BY_USE = {
-  STREET: BLACKTOP,
-  BIKEPATH: MARTIAN_ORANGE,
-  WALKWAY: YELLOW,
-  ROOM: BROWN,
-  BARE: LIGHT_GRAY,
-  PARCEL: GREEN_GRASS,
-  CANAL: BLUE,
-  WALL: WHITE,
-  ROOF: DARK_GRAY,
-  DOOR: YELLOW
-}
 
 /**
  * Plato can envision 3D architectural spaces, with walls, floors, etc.
@@ -52,12 +23,6 @@ class Plato {
     this.study()
     this._city = city
     this._routes = []
-  }
-
-  makeRoute (use, listOfWaypoints) {
-    const route = this._ray.applyRay(listOfWaypoints)
-    this._routes.push(route)
-    return route
   }
 
   study (topic = '', { x0 = 0, y0 = 0 } = {}) {
@@ -78,18 +43,6 @@ class Plato {
 
   appendToDistrict (group) {
     this._district.add(group)
-    return group
-  }
-
-  makePlaceholder (use, corners, depth, { z = 0, name } = {}) {
-    z = z + this._ray.xyz.z
-    const group = new Group(name)
-    const adjustedCorners = this._ray.applyRay(corners)
-    const xyPolygon = new Geometry.XYPolygon(adjustedCorners)
-    const color = COLORS_BY_USE[use]
-    const abstractThickPolygon = new Geometry.ThickPolygon(xyPolygon, { depth })
-    const concreteThickPolygon = new Geometry.Instance(abstractThickPolygon, z, color)
-    group.add(concreteThickPolygon)
     return group
   }
 

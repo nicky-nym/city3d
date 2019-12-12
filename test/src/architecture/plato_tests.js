@@ -8,7 +8,6 @@
 import { Byway } from '../../../src/architecture/byway.js'
 import { City } from '../../../src/architecture/city.js'
 import { Group } from '../../../src/architecture/group.js'
-import { Facing } from '../../../src/core/facing.js'
 import { Parcel } from '../../../src/architecture/parcel.js'
 import { Plato } from '../../../src/architecture/plato.js'
 import { Ray } from '../../../src/core/ray.js'
@@ -19,34 +18,7 @@ import { xy, xyz } from '../../../src/core/util.js'
 /* global describe, it, beforeEach */
 
 describe('Plato', function () {
-  const plato = new Plato()
   const ray = new Ray()
-
-  describe('#makeRoute', function () {
-    const listOfWaypoints = [xyz(0, 0, 0), xyz(50, 20, 0), xyz(200, 20, 8)]
-
-    it('should create a route equal to its input if goto not called', function () {
-      const route = plato.makeRoute('NOTCURRENTLYUSED', listOfWaypoints)
-
-      route.should.eql(listOfWaypoints)
-    })
-    it('should create a route offset from its input after goto called', function () {
-      plato.goto(xyz(1, 2, 4))
-      const expectedRoute = [xyz(1, 2, 4), xyz(51, 22, 4), xyz(201, 22, 12)]
-
-      const route = plato.makeRoute('NOTCURRENTLYUSED', listOfWaypoints)
-
-      route.should.eql(expectedRoute)
-    })
-    it('should create a route rotated by 90 deg from its input after goto called with Facing.WEST', function () {
-      plato.goto({ facing: Facing.WEST })
-      const expectedRoute = [xyz(0, 0, 0), xyz(-20, 50, 0), xyz(-20, 200, 8)]
-
-      const route = plato.makeRoute('NOTCURRENTLYUSED', listOfWaypoints)
-
-      route.should.eql(expectedRoute)
-    })
-  })
 
   describe('#aggregateMetric()', function () {
     const rect1 = [xy(0, 0), xy(50, 0), xy(50, 20), xy(0, 20)]

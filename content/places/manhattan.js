@@ -70,7 +70,7 @@ class Manhattan extends Place {
       wall = 0,
       openings = [] // Sequence[Tuple]
     } = {}) {
-    const ray = this._plato.goto({ x: x + dx, y: y + dy, z: z })
+    const ray = this.goto({ x: x + dx, y: y + dy, z: z })
     const storey = new Byway(ray, use, area, { wall: wall, openings: openings })
     this._plato.appendToDistrict(storey)
   }
@@ -79,8 +79,9 @@ class Manhattan extends Place {
     const z = 0
     const offset = { x, y, z }
     const size = { x: BUILDING_DX, y: BUILDING_DY }
-    const highrise = new Highrise(this._plato, this._city, size, { at: offset })
-    this._plato.goto({ x, y, z })
+    const { _ray: ray, _x0: x0, _y0: y0 } = this._plato
+    const highrise = new Highrise(size, { ray, x0, y0, at: offset })
+    this.goto({ x, y, z })
     this._plato.appendToDistrict(highrise)
   }
 

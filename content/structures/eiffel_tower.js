@@ -33,11 +33,11 @@ const platforms = [
  * Class representing the Eiffel tower in Paris.
  */
 class EiffelTower extends Structure {
-  constructor (plato, city, { name, at = xyz(0, 0, 0) } = {}) {
-    super(plato, city, name || 'Eiffel tower')
+  constructor ({ name, at = xyz(0, 0, 0) } = {}) {
+    super({ name: name || 'Eiffel tower', at })
     at.z = 0
     at.facing = Facing.NORTH
-    this._ray = this._plato.goto(at)
+    this._ray = this.goto(at)
 
     for (const direction of [Facing.NORTH, Facing.SOUTH, Facing.EAST, Facing.WEST]) {
       this._drawQuadrant(direction)

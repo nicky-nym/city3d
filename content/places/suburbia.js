@@ -5,12 +5,14 @@
  * For more information, please refer to <http://unlicense.org>
  */
 
+import { Byway } from '../../src/architecture/byway.js'
 import { cornersFromShape, countTo, xy, xyz, xyzAdd } from '../../src/core/util.js'
 import { Cottage } from '../buildings/cottage.js'
 import { Garage } from '../buildings/garage.js'
 import { House } from '../buildings/house.js'
 import { Parcel } from '../../src/architecture/parcel.js'
 import { Place } from '../../src/architecture/place.js'
+import { Use } from '../../src/architecture/use.js'
 
 const PARCEL_DY = 50
 const PARCEL_X0_NORTH = -232.72
@@ -33,24 +35,43 @@ const PARCEL = {
 class Suburbia extends Place {
   addStreet (numParcels = 1) {
     const offset = { ...PARCEL.offset }
-    for (const i in countTo(numParcels)) { // eslint-disable-line no-unused-vars
-      const ray = this._plato.goto(offset)
+    for (const i in countTo(numParcels)) {
+      offset.y = PARCEL.offset.y + i * PARCEL_DY
+      this.goto(offset)
       const corners = cornersFromShape(PARCEL.shape)
-      const parcel = new Parcel(corners, ray)
+      const parcel = new Parcel(corners, this._ray)
       this._plato.appendToDistrict(parcel)
 
+      const STREET_DX = 15
+      const STREET_DY = PARCEL_DY
+
+      const SIDEWALK_WIDTH = 6
+      const SIDEWALK = [
+        xy(0, 0),
+        xy(SIDEWALK_WIDTH, 0),
+        xy(SIDEWALK_WIDTH, STREET_DY),
+        xy(0, STREET_DY)]
+
+      const STREET = [
+        xy(SIDEWALK_WIDTH, 0),
+        xy(SIDEWALK_WIDTH, STREET_DY),
+        xy(SIDEWALK_WIDTH + STREET_DX, STREET_DY),
+        xy(SIDEWALK_WIDTH + STREET_DX, 0)]
+
+      this._plato.appendToDistrict(new Byway(this._ray, Use.WALKWAY, SIDEWALK))
+      this._plato.appendToDistrict(new Byway(this._ray, Use.STREET, STREET))
+
       let at
+      const { _ray: ray, _x0: x0, _y0: y0 } = this._plato
 
       at = xyzAdd(offset, xy(-154, 23))
-      parcel.add(new Cottage(this._plato, this._city, { at }))
+      parcel.add(new Cottage({ ray, x0, y0, at }))
 
       at = xyzAdd(offset, xy(-185, 23))
-      parcel.add(new Garage(this._plato, this._city, { at }))
+      parcel.add(new Garage({ ray, x0, y0, at }))
 
-      const house = new House(this._plato)
-      at = xyzAdd(offset, xy(0, -200))
-      const groupForHouse = house.makeBuilding(at)
-      parcel.add(groupForHouse)
+      at = xyzAdd(offset, xy(STREET_DX + SIDEWALK_WIDTH, 0))
+      parcel.add(new House({ ray, x0, y0, at }))
     }
   }
 }

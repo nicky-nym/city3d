@@ -20,14 +20,14 @@ function addBuildings (plato, city) {
   nyc.addBlocks(CITY_SIZE, CITY_SIZE * 2)
   plato.pontificate()
 
-  plato.study('Merlon Buildings', { x0: 238, y0: 238 })
-  const merlon = new CITY.Merlon(plato, city)
-  merlon.addBuildings(8, 8, { buildings: true })
+  plato.study('Northeast Quadrant Layer 1', { x0: 238, y0: 238 })
+  const quad = new CITY.Place(plato, city)
+  quad.add(new CITY.Merlon({ x0: 238, y0: 238, numRows: 8, numCols: 8, hideBuildings: false }))
   plato.pontificate()
 
-  plato.study('Bikeways', { x0: 100, y0: 100 })
-  const bikeway = new CITY.Bikeway(plato, city)
-  bikeway.addBikeways(3, 3, { buildings: true })
+  plato.study('Northeast Quadrant Layer 2', { x0: 100, y0: 100 })
+  const bikeway = new CITY.Place(plato, city)
+  bikeway.add(new CITY.Bikeway({ city, x0: 100, y0: 100, numRows: 3, numCols: 3, hideBuildings: false }))
   plato.pontificate()
 
   plato.study('Campus', { x0: 100, y0: -600 })
@@ -53,18 +53,18 @@ function addTree (city) {
   city.add(new CITY.Tree({ at: { x: 28, y: 52, z: 0 }, crownHeight: 8, name: 'Topiary Tree' }))
 }
 
-function addSwingset (plato, city) {
-  city.add(new CITY.Swingset(plato, city, { at: { x: 60, y: 52, z: 0 } }))
+function addSwingset (city) {
+  city.add(new CITY.Swingset({ at: { x: 60, y: 52, z: 0 } }))
 }
 
-function addUtilityPoles (plato, city) {
+function addUtilityPoles (city) {
   for (let y = -40; y < 800; y += 120) {
-    city.add(new CITY.UtilityPole(plato, city, { at: { x: -96, y: y, z: 0 } }))
+    city.add(new CITY.UtilityPole({ at: { x: -96, y: y, z: 0 } }))
   }
 }
 
-function addEiffelTower (plato, city) {
-  city.add(new CITY.EiffelTower(plato, city, { at: { x: 1090, y: 1090, z: 0 } }))
+function addEiffelTower (city) {
+  city.add(new CITY.EiffelTower({ at: { x: 1090, y: 1090, z: 0 } }))
 }
 
 function addKalpanaOrbital (city) {
@@ -90,9 +90,9 @@ function main () {
   const plato = new CITY.Plato(city)
   addCreek(city)
   addTree(city)
-  addSwingset(plato, city)
-  addUtilityPoles(plato, city)
-  addEiffelTower(plato, city)
+  addSwingset(city)
+  addUtilityPoles(city)
+  addEiffelTower(city)
   addBuildings(plato, city)
   addKalpanaOrbital(city)
   addMovers(city)

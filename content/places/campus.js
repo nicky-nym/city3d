@@ -27,12 +27,13 @@ class Campus extends Place {
     const offset = { ...PARCEL.offset }
     for (const i in countTo(numBuildings)) {
       offset.x = i * PARCEL.shape.data.x
-      const ray = this._plato.goto(offset)
+      const ray = this.goto(offset)
       const corners = cornersFromShape(PARCEL.shape)
       const parcel = new Parcel(corners, ray)
       this._plato.appendToDistrict(parcel)
 
-      parcel.add(new Wurster(this._plato, this._city, { at: offset }))
+      const { _ray, _x0, _y0 } = this._plato
+      parcel.add(new Wurster({ ray: _ray, x0: _x0, y0: _y0, at: offset }))
     }
   }
 }

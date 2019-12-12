@@ -10,7 +10,6 @@ import { xy, xyz, xyzAdd, xywh2rect, countTo } from '../../src/core/util.js'
 
 import { Byway } from '../../src/architecture/byway.js'
 import { Facing } from '../../src/core/facing.js'
-import { Group } from '../../src/architecture/group.js'
 import { Roof } from '../../src/architecture/roof.js'
 import { Storey } from '../../src/architecture/storey.js'
 import { Structure } from '../../src/architecture/structure.js'
@@ -269,62 +268,35 @@ function face (a, b, c) {
 * House objects know how to describe a Queen Anne single-family house.
 */
 class House extends Structure {
-  /**
-   * Tell plato about the street the houses are on.
-   */
+  constructor ({ city, ray, x0, y0, at = xyz(0, 0, 0), name } = {}) {
+    super({ city, ray, x0, y0, name: name || 'House' })
+    this.makeBuilding(at)
+  }
+
   makeBuilding (at = { x: 0, y: 0 }) {
-    const STREET_DX = 15
-    const STREET_DY = PARCEL_DY
-
-    const SIDEWALK_WIDTH = 6
-    const SIDEWALK = [
-      xy(0, 0),
-      xy(SIDEWALK_WIDTH, 0),
-      xy(SIDEWALK_WIDTH, STREET_DY),
-      xy(0, STREET_DY)]
-
-    const STREET = [
-      xy(SIDEWALK_WIDTH, 0),
-      xy(SIDEWALK_WIDTH, STREET_DY),
-      xy(SIDEWALK_WIDTH + STREET_DX, STREET_DY),
-      xy(SIDEWALK_WIDTH + STREET_DX, 0)]
-
-    const ray = this._plato.goto({ x: 0, y: 0 })
-    this._plato.appendToDistrict(new Byway(ray, Use.WALKWAY, SIDEWALK))
-    this._plato.appendToDistrict(new Byway(ray, Use.STREET, STREET))
-
-    this._plato.goto({ x: STREET_DX + SIDEWALK_WIDTH })
-
-    const FIXME_HACK = 200
-    const y = at.y + FIXME_HACK
+    const y = at.y
     const xNorth = 0
 
-    this.addGarageAndAdu(xNorth, y, Facing.NORTH)
-    return this.makeHouse(xNorth, y, Facing.NORTH)
+    this.makeHouse(xNorth, y, Facing.NORTH)
+    this.addAppurtenances(xNorth, y, Facing.NORTH)
   }
 
   addStairs (x = 0, y = 0, facing = Facing.NORTH) {
     for (const i of countTo(NUM_STAIR_STEPS)) {
       const z = CRAWL_SPACE_HEIGHT / NUM_STAIR_STEPS * i
       x -= 1
-      const ray = this._plato.goto({ x: x, y: y, z: z, facing: facing })
-      this._plato.appendToDistrict(new Byway(ray, Use.WALKWAY, STAIR))
+      const ray = this.goto({ x: x, y: y, z: z, facing: facing })
+      this.add(new Byway(ray, Use.WALKWAY, STAIR))
     }
   }
 
-  addParcel (x = 0, y = 0, facing = Facing.NORTH) {
-    // Tell plato about the yard, fence, sidewalk, etc.
-    const ray = this._plato.goto({ x: x, y: y, z: 0, facing: facing })
-    this._plato.appendToDistrict(new Byway(ray, Use.BARE, FENCE_LINE, { wall: FENCE_HEIGHT, cap: false }))
-    this._plato.appendToDistrict(new Byway(ray, Use.WALKWAY, DOORPATH))
-    this._plato.appendToDistrict(new Byway(ray, Use.STREET, DRIVEWAY))
+  addAppurtenances (x = 0, y = 0, facing = Facing.NORTH) {
+    const ray = this.goto({ x: x, y: y, z: 0, facing: facing })
+    this.add(new Byway(ray, Use.BARE, FENCE_LINE, { wall: FENCE_HEIGHT, cap: false }))
+    this.add(new Byway(ray, Use.WALKWAY, DOORPATH))
+    this.add(new Byway(ray, Use.STREET, DRIVEWAY, { name: 'Driveway' }))
+    this.add(new Byway(ray, Use.WALKWAY, ADU_DOORPATH))
     this.addStairs(x, y, facing)
-    return this
-  }
-
-  addGarageAndAdu (x = 0, y = 0, facing = Facing.NORTH) {
-    const ray = this._plato.goto({ x: x, y: y, z: 0, facing: facing })
-    this._plato.appendToDistrict(new Byway(ray, Use.WALKWAY, ADU_DOORPATH))
     return this
   }
 
@@ -332,43 +304,35 @@ class House extends Structure {
     const roofSpec = {
       custom: { vertices, indices }
     }
-    return new Roof(roofSpec, this._plato._ray)
+    return new Roof(roofSpec, this._ray)
   }
 
   makeHouse (x = 0, y = 0, facing = Facing.NORTH) {
-    // Tell plato about the floors, walls, roof, etc.
-    const plato = this._plato
-    let ray
-
-    const group = new Group('House')
-
     // Crawl space
-    ray = plato.goto({ x: x, y: y, z: 0, facing: facing })
-    group.add(new Storey(ray, Use.BARE, HOUSE, { wall: CRAWL_SPACE_HEIGHT }))
-    group.add(new Storey(ray, Use.BARE, ADDON, { wall: CRAWL_SPACE_HEIGHT }))
-    group.add(new Storey(ray, Use.BARE, PORCH, { wall: CRAWL_SPACE_HEIGHT }))
+    this.goto({ x: x, y: y, z: 0, facing: facing })
+    this.add(new Storey(this._ray, Use.BARE, HOUSE, { wall: CRAWL_SPACE_HEIGHT }))
+    this.add(new Storey(this._ray, Use.BARE, ADDON, { wall: CRAWL_SPACE_HEIGHT }))
+    this.add(new Storey(this._ray, Use.BARE, PORCH, { wall: CRAWL_SPACE_HEIGHT }))
 
     // Main floor
-    ray = plato.goto({ x: x, y: y, z: CRAWL_SPACE_HEIGHT, facing: facing })
-    group.add(new Storey(ray, Use.ROOM, HOUSE, { wall: GROUND_FLOOR_HEIGHT, openings: HOUSE_WINDOWS }))
-    group.add(new Storey(ray, Use.BARE, PORCH))
-    group.add(new Storey(ray, Use.ROOM, ADDON, { wall: ADDON_HEIGHT, openings: ADDON_WINDOWS }))
+    this.goto({ x: x, y: y, z: CRAWL_SPACE_HEIGHT, facing: facing })
+    this.add(new Storey(this._ray, Use.ROOM, HOUSE, { wall: GROUND_FLOOR_HEIGHT, openings: HOUSE_WINDOWS }))
+    this.add(new Storey(this._ray, Use.BARE, PORCH))
+    this.add(new Storey(this._ray, Use.ROOM, ADDON, { wall: ADDON_HEIGHT, openings: ADDON_WINDOWS }))
 
     // Attic
     const ATTIC_ELEVATION = GROUND_FLOOR_HEIGHT + CRAWL_SPACE_HEIGHT
-    ray = plato.goto({ x: x, y: y, z: ATTIC_ELEVATION, facing: facing })
-    group.add(new Storey(ray, Use.BARE, CHIMNEY, { height: CHIMNEY_HEIGHT }))
-    group.add(new Storey(ray, Use.BARE, ATTIC))
-    group.add(this.makeRoof(VERTICES_OF_ROOF, INDICES_OF_ROOF_FACES))
-    group.add(this.makeRoof(VERTICES_OF_DORMER_ROOF, INDICES_OF_DORMER_ROOF_FACES))
+    this.goto({ x: x, y: y, z: ATTIC_ELEVATION, facing: facing })
+    this.add(new Storey(this._ray, Use.BARE, CHIMNEY, { height: CHIMNEY_HEIGHT }))
+    this.add(new Storey(this._ray, Use.BARE, ATTIC))
+    this.add(this.makeRoof(VERTICES_OF_ROOF, INDICES_OF_ROOF_FACES))
+    this.add(this.makeRoof(VERTICES_OF_DORMER_ROOF, INDICES_OF_DORMER_ROOF_FACES))
 
     // Porch roofs
     const PORCH_TOP_ELEVATION = ADDON_HEIGHT + CRAWL_SPACE_HEIGHT
-    ray = plato.goto({ x: x, y: y, z: PORCH_TOP_ELEVATION, facing: facing })
-    group.add(this.makeRoof(VERTICES_OF_PORCH_ROOF, INDICES_OF_PORCH_ROOF_FACES))
-    group.add(this.makeRoof(VERTICES_OF_ADDON_ROOF, INDICES_OF_ADDON_ROOF_FACES))
-
-    return group
+    this.goto({ x: x, y: y, z: PORCH_TOP_ELEVATION, facing: facing })
+    this.add(this.makeRoof(VERTICES_OF_PORCH_ROOF, INDICES_OF_PORCH_ROOF_FACES))
+    this.add(this.makeRoof(VERTICES_OF_ADDON_ROOF, INDICES_OF_ADDON_ROOF_FACES))
   }
 }
 

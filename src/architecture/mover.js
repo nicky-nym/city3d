@@ -39,7 +39,7 @@ function lookAt (obj, focus, up = UP) {
  */
 class Mover {
   /**
-   * @param {xyz[]} route - array of xyz coordinates specifiying a route
+   * @param {xyz[]} route - array of xyz coordinates specifying a route
    * @param {number} speed - for now, speed is in units of unit vectors per frame
    * @param {THREE.Object3D} [threeComponent] - three.js representation of the Mover
    */

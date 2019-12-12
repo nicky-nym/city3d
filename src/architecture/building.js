@@ -5,7 +5,7 @@
  * For more information, please refer to <http://unlicense.org>
  */
 
-import { array, cornersFromShape, countTo, randomInt, xyzAdd } from '../core/util.js'
+import { array, cornersFromShape, countTo, randomInt, xyz, xyzAdd } from '../core/util.js'
 import { Group } from './group.js'
 import { Storey } from './storey.js'
 import { Structure } from './structure.js'
@@ -46,8 +46,8 @@ function _openingsFromWallsSpec (wallsSpec) {
  * Buildings can be made from declarative specifications in JSON format.
  */
 class Building extends Structure {
-  constructor (plato, city, spec, { name, at } = {}) {
-    super(plato, city, name || spec.name)
+  constructor (spec, { city, ray, x0, y0, name, at = xyz(0, 0, 0) } = {}) {
+    super({ city, ray, x0, y0, name: name || spec.name })
     this._makeBuildingFromSpec(spec, at)
   }
 
@@ -64,13 +64,13 @@ class Building extends Structure {
       for (const i in countTo(numStoreys)) {
         point.z = z
         const floorName = `Floor ${i}`
-        ray = this._plato.goto(point)
+        ray = this.goto(point)
         const storey = new Storey(ray, Use.ROOM, corners, { name: floorName, wall: storeyHeight, openings: openings })
         this.add(storey)
         z = z + storeyHeight
       }
       point.z = z
-      ray = this._plato.goto(point)
+      ray = this.goto(point)
       const roofPlace = new Storey(ray, Use.ROOF, corners, { wall: roof.parapetHeight })
       this.add(roofPlace)
     }
@@ -78,26 +78,26 @@ class Building extends Structure {
       if (!childSpec.roof) {
         childSpec.roof = roof
       }
-      const child = new Building(this._plato, this._city, childSpec, { at: parentOffset })
+      const child = new Building(childSpec, { ray: this._ray, x0: this._x0, y0: this._y0, at: parentOffset })
       this.add(child)
     }
   }
 
-  static _makeLowResGroupFromSpec (plato, spec, group, parentOffset = { x: 0, y: 0, z: 0 }) {
+  _makeLowResGroupFromSpec (spec, group, parentOffset = { x: 0, y: 0, z: 0 }) {
     const { storeyHeight, children, numStoreys, shape, offset } = spec
     parentOffset = xyzAdd(parentOffset, offset)
     const point = { ...parentOffset }
     if (shape) {
       const corners = cornersFromShape(shape)
-      plato.goto(point)
+      this.goto(point)
       const depth = storeyHeight * numStoreys
-      const box = plato.makePlaceholder(Use.WALL, corners, depth)
+      const box = this.makePlaceholder(Use.WALL, corners, depth)
       group.add(box)
     }
     for (const childSpec of array(children)) {
       const subgroup = new Group(childSpec.name)
       group.add(subgroup)
-      Building._makeLowResGroupFromSpec(plato, childSpec, subgroup, parentOffset)
+      this._makeLowResGroupFromSpec(childSpec, subgroup, parentOffset)
     }
   }
 
@@ -134,11 +134,11 @@ class Building extends Structure {
     // TODO: The medium and low resolution instances constructed here are currently
     // identical, so the only difference will be in the material.
     const mediumGroup = new Group(this.name)
-    Building._makeLowResGroupFromSpec(this._plato, resolvedSpec, mediumGroup, at)
+    this._makeLowResGroupFromSpec(resolvedSpec, mediumGroup, at)
     this.addLevelOfDetail(mediumGroup, 1000)
 
     const lowGroup = new Group(this.name)
-    Building._makeLowResGroupFromSpec(this._plato, resolvedSpec, lowGroup, at)
+    this._makeLowResGroupFromSpec(resolvedSpec, lowGroup, at)
     this.addLevelOfDetail(lowGroup, 2000)
   }
 }

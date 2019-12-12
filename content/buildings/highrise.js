@@ -33,14 +33,14 @@ const HIGHRISE_BUILDING_SPEC = {
  * Class representing a high-rise building.
  */
 class Highrise extends Building {
-  constructor (plato, city, size, { name, at } = {}) {
+  constructor (size, { city, ray, x0, y0, name, at } = {}) {
     HIGHRISE_BUILDING_SPEC.shape.data = size
     for (const wallSpec of HIGHRISE_BUILDING_SPEC.walls) {
       for (const windowSpec of wallSpec.windows) {
         windowSpec.data = xy(size.x - 2, 5.5)
       }
     }
-    super(plato, city, HIGHRISE_BUILDING_SPEC, { name, at })
+    super(HIGHRISE_BUILDING_SPEC, { city, ray, x0, y0, name, at })
   }
 }
 

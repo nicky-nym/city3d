@@ -196,14 +196,14 @@ class ThreeOutput extends Output {
     const geometryX = new THREE.BoxGeometry(ORIGIN_SIGN_LENGTH, 1, 8)
     const materialX = this._material('high', 0xff0000, false)
     const meshX = new THREE.Mesh(geometryX, materialX)
-    meshX.name = '+X axis'
+    meshX.name = '+X axis (East)'
     meshX.position.x = ORIGIN_SIGN_LENGTH / 2
     meshX.position.z = ORIGIN_MARKER_HEIGHT * 0.7
     this._scene.add(meshX)
     const geometryY = new THREE.BoxGeometry(1, ORIGIN_SIGN_LENGTH, 8)
     const materialY = this._material('high', 0x00ff00, false)
     const meshY = new THREE.Mesh(geometryY, materialY)
-    meshY.name = '+Y axis'
+    meshY.name = '+Y axis (North)'
     meshY.position.y = ORIGIN_SIGN_LENGTH / 2
     meshY.position.z = ORIGIN_MARKER_HEIGHT * 0.7
     this._scene.add(meshY)

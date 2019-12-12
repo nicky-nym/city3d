@@ -15,8 +15,8 @@ const MARTIAN_ORANGE = 0xdf4911
 * Parcel is a class for representing a parcel of land in a city.
 */
 class Parcel extends Group {
-  constructor (corners, ray) {
-    super('Parcel')
+  constructor (corners, ray, name) {
+    super(name || 'Parcel')
     const adjustedCorners = ray.applyRay(corners)
     adjustedCorners.push(adjustedCorners[0])
     const xyPolygon = new Geometry.XYPolygon(adjustedCorners)

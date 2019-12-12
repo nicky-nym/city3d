@@ -25,15 +25,15 @@ function _makeLine (waypoints, ray, color) {
  * TODO: animate me!
  */
 class Swingset extends Structure {
-  constructor (plato, city, { name, at = xyz(0, 0, 0) } = {}) {
-    super(plato, city, name || 'Swing set')
+  constructor ({ name, at = xyz(0, 0, 0) } = {}) {
+    super({ name: name || 'Swing set', at })
     const height = UNIT.feet(8)
     const halfDepth = UNIT.feet(9) / 2
     const span = UNIT.feet(10)
     const splay = UNIT.feet(1)
     at.z = 0
     at.facing = Facing.NORTH
-    const ray = this._plato.goto(at)
+    const ray = this.goto(at)
     const crossBar = [
       xyz(0, 0, height),
       xyz(span, 0, height)
