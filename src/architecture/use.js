@@ -15,6 +15,7 @@ const Use = {
   ROOM: 'ROOM',
   BARE: 'BARE',
   PARCEL: 'PARCEL',
+  DISTRICT: 'DISTRICT',
   CANAL: 'CANAL',
 
   WALL: 'WALL',

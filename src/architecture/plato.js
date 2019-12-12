@@ -5,7 +5,7 @@
  * For more information, please refer to <http://unlicense.org>
  */
 
-import { xyz } from '../core/util.js'
+import { xyz, rectangleOfSize, xy } from '../core/util.js'
 import { District } from './district.js'
 import { Facing } from '../core/facing.js'
 import { Ray } from '../core/ray.js'
@@ -25,9 +25,11 @@ class Plato {
     this._routes = []
   }
 
-  study (topic = '', { x0 = 0, y0 = 0 } = {}) {
+  study (topic = '', { x0 = 0, y0 = 0 } = {}, size = xy(0, 0)) {
     if (topic) {
-      this._district = new District(topic)
+      const ray = new Ray(Facing.NORTH, xyz(x0, y0, 0))
+      const corners = rectangleOfSize(size)
+      this._district = new District(corners, ray, topic)
       this._city.add(this._district)
     }
     this._topic = topic

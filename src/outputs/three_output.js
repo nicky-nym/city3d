@@ -302,7 +302,7 @@ class ThreeOutput extends Output {
       return this.makeTriangularPolyhedronMesh(instanceGeometry, material, color)
     }
     if (instanceGeometry instanceof Geometry.OutlinePolygon) {
-      return this.makeOutlinePolygonLines(instanceGeometry, color)
+      return this.makeOutlinePolygonLines(instanceGeometry, color, zOffset)
     }
     if (instanceGeometry instanceof Geometry.Line) {
       return this.makeLines(instanceGeometry, color)
@@ -325,13 +325,13 @@ class ThreeOutput extends Output {
   }
 
   // TODO: consider refactoring to merge this with makeLines()
-  makeOutlinePolygonLines (outlinePolygon, hexColor) {
+  makeOutlinePolygonLines (outlinePolygon, hexColor, zOffset) {
     const material = new THREE.LineBasicMaterial({ color: hexColor })
     const geometry = new THREE.Geometry()
     const corners = outlinePolygon.xyPolygon
     const vectors = []
     for (const corner of corners) {
-      vectors.push(new THREE.Vector3(corner.x, corner.y, 0))
+      vectors.push(new THREE.Vector3(corner.x, corner.y, zOffset))
     }
     geometry.vertices.push(...vectors)
     const line = new THREE.Line(geometry, material)

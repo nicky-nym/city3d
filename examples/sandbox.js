@@ -6,31 +6,29 @@
  */
 
 import { CITY } from '../src/citylib.js'
-import { xyz } from '../src/core/util.js'
+import { xy, xyz } from '../src/core/util.js'
 
 function addBuildings (plato, city) {
-  plato.study('Suburbia', { x0: -100, y0: 100 })
+  plato.study('Suburbia', { x0: -100, y0: 100 }, xy(-250, 200))
   const suburbia = new CITY.Suburbia(plato, city)
   suburbia.addStreet(2)
   plato.pontificate()
 
   const CITY_SIZE = 1
-  plato.study('Manhattan New York', { x0: -800 * CITY_SIZE, y0: -900 * CITY_SIZE })
+  plato.study('Manhattan New York', { x0: -800 * CITY_SIZE, y0: -900 * CITY_SIZE }, xy(750, 600))
   const nyc = new CITY.Manhattan(plato, city)
   nyc.addBlocks(CITY_SIZE, CITY_SIZE * 2)
   plato.pontificate()
 
-  plato.study('Northeast Quadrant Layer 1', { x0: 238, y0: 238 })
-  const quad = new CITY.Place(plato, city)
-  quad.add(new CITY.Merlon({ x0: 238, y0: 238, numRows: 8, numCols: 8, hideBuildings: false }))
-  plato.pontificate()
-
-  plato.study('Northeast Quadrant Layer 2', { x0: 100, y0: 100 })
+  plato.study('Kinematic City', { x0: 238, y0: 238 }, xy(2000, 2000))
   const bikeway = new CITY.Place(plato, city)
   bikeway.add(new CITY.Bikeway({ city, x0: 100, y0: 100, numRows: 3, numCols: 3, hideBuildings: false }))
+  const quad = new CITY.Place(plato, city)
+  quad.add(new CITY.Merlon({ x0: 238, y0: 238, numRows: 8, numCols: 8, hideBuildings: false }))
+  // plato.study('Northeast Quadrant Layer 2', { x0: 100, y0: 100 }, xy(2000, 2000))
   plato.pontificate()
 
-  plato.study('Campus', { x0: 100, y0: -600 })
+  plato.study('Campus', { x0: 100, y0: -600 }, xy(1200, 550))
   const campus = new CITY.Campus(plato, city)
   campus.makeCampus(3)
   plato.pontificate()
