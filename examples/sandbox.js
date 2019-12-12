@@ -63,6 +63,10 @@ function addUtilityPoles (plato, city) {
   }
 }
 
+function addEiffelTower (plato, city) {
+  city.add(new CITY.EiffelTower(plato, city, { at: { x: 1090, y: 1090, z: 0 } }))
+}
+
 function addKalpanaOrbital (city) {
   city.add(new CITY.Kalpana())
 }
@@ -88,6 +92,7 @@ function main () {
   addTree(city)
   addSwingset(plato, city)
   addUtilityPoles(plato, city)
+  addEiffelTower(plato, city)
   addBuildings(plato, city)
   addKalpanaOrbital(city)
   addMovers(city)

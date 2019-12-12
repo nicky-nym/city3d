@@ -23,7 +23,7 @@ function _makeLine (waypoints, ray, color) {
  */
 class UtilityPole extends Structure {
   constructor (plato, city, { name, at = xyz(0, 0, 0) } = {}) {
-    super(plato, city, name || 'Utility pole set')
+    super(plato, city, name || 'Utility pole')
     at.z = 0
     at.facing = Facing.NORTH
     const ray = this._plato.goto(at)
