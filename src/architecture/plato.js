@@ -107,6 +107,7 @@ class Plato {
       if (sum > 0) {
         floorArea[use] = sum
       }
+      this._district.addMetric(`${use} floor area`, sum, 'square feet')
     }
     this._district.addMetric('Floor area', floorArea, 'square feet')
     if (floorArea[Use.PARCEL]) {

@@ -1,9 +1,9 @@
 /** @file sandbox.js
-  * @author Authored in 2019 at <https://github.com/nicky-nym/city3d>
-  * @license UNLICENSE
-  * This is free and unencumbered software released into the public domain.
-  * For more information, please refer to <http://unlicense.org>
-  */
+ * @author Authored in 2019 at <https://github.com/nicky-nym/city3d>
+ * @license UNLICENSE
+ * This is free and unencumbered software released into the public domain.
+ * For more information, please refer to <http://unlicense.org>
+ */
 
 import { CITY } from '../src/citylib.js'
 import { xyz } from '../src/core/util.js'
@@ -94,6 +94,7 @@ function main () {
 
   // display the city on the web page
   CITY.Output.addOutput(new CITY.ThreeOutput(city))
+  CITY.Output.addOutput(new CITY.MetricsOutput(city))
   CITY.Output.addOutput(new CITY.SummaryOutput(city))
 }
 

@@ -22,6 +22,7 @@ import { Window } from './architecture/window.js'
 
 // outputs
 import { Output } from './outputs/output.js'
+import { MetricsOutput } from './outputs/metrics_output.js'
 import { SummaryOutput } from './outputs/summary_output.js'
 import { TextOutput } from './outputs/text_output.js'
 import { ThreeOutput } from './outputs/three_output.js'
@@ -70,6 +71,7 @@ export const CITY = {
   House,
   Manhattan,
   Merlon,
+  MetricsOutput,
   Opening,
   Output,
   Parcel,

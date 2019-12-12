@@ -12,15 +12,16 @@ import { Output } from './output.js'
  */
 class TextOutput extends Output {
   setDisplayDiv (outputDivElement) {
-    this._outputDiv = outputDivElement
-    this._outputDiv.style.fontFamily = 'monospace'
-    this._outputDiv.style.color = 'green'
-    this._outputDiv.style.backgroundColor = 'black'
-    this._outputDiv.style.padding = '10px'
+    this._pre = document.createElement('pre')
+    outputDivElement.appendChild(this._pre)
+    outputDivElement.style.fontFamily = 'monospace'
+    outputDivElement.style.color = 'green'
+    outputDivElement.style.backgroundColor = 'black'
+    outputDivElement.style.padding = '10px'
   }
 
   print (str) {
-    this._outputDiv.innerHTML += `<p>${str}</p>`
+    this._pre.innerHTML += `${str}\n`
   }
 }
 

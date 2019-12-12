@@ -14,23 +14,6 @@ import { Vehicle } from '../../content/movers/vehicle.js'
  */
 class SummaryOutput extends TextOutput {
   render () {
-    const districts = this._city.getDistricts()
-    for (const district of districts) {
-      this.print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
-      this.print(`District ${district.name}:`)
-      for (const [name, { value, units }] of district.metrics) {
-        if (typeof value === 'object') {
-          this.print(`  ${name}:`)
-          for (const key of Object.keys(value)) {
-            this.print(`    ${key}: ${value[key]} ${units}`)
-          }
-        } else {
-          this.print(`  ${name}: ${value} ${units}`)
-        }
-      }
-      this.print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
-    }
-
     this.print(`There are ${this.count(this._city, Vehicle)} vehicles in the city.`)
     this.print(`There are ${this.count(this._city, Kayak)} kayaks in the city.`)
   }
