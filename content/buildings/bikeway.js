@@ -180,6 +180,7 @@ const LOWER_PLAZA_WALKWAY_D = [
 class Bikeway extends Structure {
   constructor ({ city, ray, x0, y0, numRows = 2, numCols = 2, hideBuildings = false, name } = {}) {
     super({ city, ray, x0, y0, name: name || 'Veloplex' })
+    this._city = city
     this.addBikeways(numRows, numCols, !hideBuildings)
   }
 

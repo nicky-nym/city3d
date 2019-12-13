@@ -9,6 +9,7 @@
 import { Building } from './architecture/building.js'
 import { Byway } from './architecture/byway.js'
 import { City } from './architecture/city.js'
+import { District } from './architecture/district.js'
 import { Door } from './architecture/door.js'
 import { Group } from './architecture/group.js'
 import { Opening } from './architecture/opening.js'
@@ -63,6 +64,7 @@ export const CITY = {
   City,
   Cottage,
   Creek,
+  District,
   Door,
   EiffelTower,
   Kalpana,

@@ -72,17 +72,17 @@ class Manhattan extends Place {
     } = {}) {
     const ray = this.goto({ x: x + dx, y: y + dy, z: z })
     const storey = new Byway(ray, use, area, { wall: wall, openings: openings })
-    this._plato.appendToDistrict(storey)
+    this._district.add(storey)
   }
 
   addBuildingAt (x = 0, y = 0) {
     const z = 0
     const offset = { x, y, z }
     const size = { x: BUILDING_DX, y: BUILDING_DY }
-    const { _ray: ray, _x0: x0, _y0: y0 } = this._plato
-    const highrise = new Highrise(size, { ray, x0, y0, at: offset })
+    const { _ray: ray, _x0: x0, _y0: y0 } = this
     this.goto({ x, y, z })
-    this._plato.appendToDistrict(highrise)
+    const highrise = new Highrise(size, { ray, x0, y0, at: offset })
+    this._district.add(highrise)
   }
 
   addBlock (row = 0, col = 0) {

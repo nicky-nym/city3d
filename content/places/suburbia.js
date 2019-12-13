@@ -40,7 +40,7 @@ class Suburbia extends Place {
       this.goto(offset)
       const corners = cornersFromShape(PARCEL.shape)
       const parcel = new Parcel(corners, this._ray)
-      this._plato.appendToDistrict(parcel)
+      this._district.add(parcel)
 
       const STREET_DX = 15
       const STREET_DY = PARCEL_DY
@@ -58,11 +58,11 @@ class Suburbia extends Place {
         xy(SIDEWALK_WIDTH + STREET_DX, STREET_DY),
         xy(SIDEWALK_WIDTH + STREET_DX, 0)]
 
-      this._plato.appendToDistrict(new Byway(this._ray, Use.WALKWAY, SIDEWALK))
-      this._plato.appendToDistrict(new Byway(this._ray, Use.STREET, STREET))
+      this._district.add(new Byway(this._ray, Use.WALKWAY, SIDEWALK))
+      this._district.add(new Byway(this._ray, Use.STREET, STREET))
 
       let at
-      const { _ray: ray, _x0: x0, _y0: y0 } = this._plato
+      const { _ray: ray, _x0: x0, _y0: y0 } = this
 
       at = xyzAdd(offset, xy(-154, 23))
       parcel.add(new Cottage({ ray, x0, y0, at }))

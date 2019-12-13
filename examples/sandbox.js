@@ -6,32 +6,53 @@
  */
 
 import { CITY } from '../src/citylib.js'
-import { xy, xyz } from '../src/core/util.js'
+import { Facing } from '../src/core/facing.js'
+import { Ray } from '../src/core/ray.js'
+import { xy, xyz, rectangleOfSize } from '../src/core/util.js'
 
 function addBuildings (plato, city) {
-  plato.study('Suburbia', { x0: -100, y0: 100 }, xy(-250, 200))
-  const suburbia = new CITY.Suburbia(plato, city)
+  let ray
+  let corners
+  let district
+
+  ray = new Ray(Facing.NORTH, xyz(-100, 100, 0))
+  corners = rectangleOfSize(xy(-250, 200))
+  district = new CITY.District(corners, ray, 'Suburbia')
+  city.add(district)
+
+  const suburbia = new CITY.Suburbia(plato, district)
   suburbia.addStreet(2)
-  plato.pontificate()
+  plato.pontificate(district)
 
   const CITY_SIZE = 1
-  plato.study('Manhattan New York', { x0: -800 * CITY_SIZE, y0: -900 * CITY_SIZE }, xy(750, 600))
-  const nyc = new CITY.Manhattan(plato, city)
+  ray = new Ray(Facing.NORTH, xyz(-800 * CITY_SIZE, 900 * CITY_SIZE, 0))
+  corners = rectangleOfSize(xy(750, 600))
+  district = new CITY.District(corners, ray, 'Manhattan')
+  city.add(district)
+
+  const nyc = new CITY.Manhattan(plato, district)
   nyc.addBlocks(CITY_SIZE, CITY_SIZE * 2)
-  plato.pontificate()
+  plato.pontificate(district)
 
-  plato.study('Kinematic City', { x0: 238, y0: 238 }, xy(2000, 2000))
-  const bikeway = new CITY.Place(plato, city)
+  ray = new Ray(Facing.NORTH, xyz(238, 238, 0))
+  corners = rectangleOfSize(xy(2000, 2000))
+  district = new CITY.District(corners, ray, 'Kineborough')
+  city.add(district)
+
+  const bikeway = new CITY.Place(plato, district)
   bikeway.add(new CITY.Bikeway({ city, x0: 100, y0: 100, numRows: 3, numCols: 3, hideBuildings: false }))
-  const quad = new CITY.Place(plato, city)
+  const quad = new CITY.Place(plato, district)
   quad.add(new CITY.Merlon({ x0: 238, y0: 238, numRows: 8, numCols: 8, hideBuildings: false }))
-  // plato.study('Northeast Quadrant Layer 2', { x0: 100, y0: 100 }, xy(2000, 2000))
-  plato.pontificate()
+  plato.pontificate(district)
 
-  plato.study('Campus', { x0: 100, y0: -600 }, xy(1200, 550))
-  const campus = new CITY.Campus(plato, city)
+  ray = new Ray(Facing.NORTH, xyz(100, -600, 0))
+  corners = rectangleOfSize(xy(1200, 550))
+  district = new CITY.District(corners, ray, 'Campus')
+  city.add(district)
+
+  const campus = new CITY.Campus(plato, district)
   campus.makeCampus(3)
-  plato.pontificate()
+  plato.pontificate(district)
 }
 
 function addCreek (city) {

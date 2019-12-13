@@ -20,6 +20,7 @@ const MARTIAN_ORANGE = 0xdf4911
 class District extends Group {
   constructor (corners, ray, name) {
     super(name || 'Parcel')
+    this._ray = ray
     const adjustedCorners = ray.applyRay(corners)
     adjustedCorners.push(adjustedCorners[0])
     const xyPolygon = new Geometry.XYPolygon(adjustedCorners)
