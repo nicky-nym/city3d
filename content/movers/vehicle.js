@@ -8,6 +8,7 @@
 import * as THREE from '../../node_modules/three/build/three.module.js'
 import { xyz, countTo, randomInt } from '../../src/core/util.js'
 import { Mover } from '../../src/architecture/mover.js'
+import { Route } from '../../src/routes/route.js'
 
 const VEHICLE_SPECS = {
 
@@ -747,7 +748,7 @@ function randomRoute () {
   const p1 = xyz(-randomInt(50, 250), -randomInt(50, 250), 0)
   const p2 = xyz(-randomInt(50, 250), -randomInt(50, 250), 0)
   const p3 = xyz(-randomInt(50, 500), -randomInt(50, 250), 0)
-  return [p1, p2, p3, p1]
+  return new Route([p1, p2, p3, p1])
 }
 
 function makeVehicle (typename) {

@@ -18,6 +18,7 @@ import { Roof } from './architecture/roof.js'
 import { Storey } from './architecture/storey.js'
 import { Wall } from './architecture/wall.js'
 import { Window } from './architecture/window.js'
+import { Use } from './architecture/use.js'
 
 // outputs
 import { Output } from './outputs/output.js'
@@ -25,6 +26,9 @@ import { MetricsOutput } from './outputs/metrics_output.js'
 import { SummaryOutput } from './outputs/summary_output.js'
 import { TextOutput } from './outputs/text_output.js'
 import { ThreeOutput } from './outputs/three_output.js'
+
+// routes
+import { Route } from './routes/route.js'
 
 // buildings
 import { Bikeway } from '../content/buildings/bikeway.js'
@@ -78,6 +82,7 @@ export const CITY = {
   Output,
   Parcel,
   Roof,
+  Route,
   Storey,
   Suburbia,
   SummaryOutput,
@@ -85,6 +90,7 @@ export const CITY = {
   TextOutput,
   ThreeOutput,
   Tree,
+  Use,
   UtilityPole,
   Vehicle,
   Wall,

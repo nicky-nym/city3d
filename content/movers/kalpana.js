@@ -7,6 +7,7 @@
 
 import * as THREE from '../../node_modules/three/build/three.module.js'
 import { Mover } from '../../src/architecture/mover.js'
+import { Route } from '../../src/routes/route.js'
 import { UNIT } from '../../src/core/unit.js'
 import { xyz } from '../../src/core/util.js'
 
@@ -30,7 +31,7 @@ class Kalpana extends Mover {
     const HORIZON = UNIT.km(6000)
     const EAST_XYZ = xyz(+HORIZON, EQUATOR, LOW_EARTH_ORBIT_ALTITUDE)
     const WEST_XYZ = xyz(-HORIZON, EQUATOR, LOW_EARTH_ORBIT_ALTITUDE)
-    return [EAST_XYZ, WEST_XYZ]
+    return new Route([EAST_XYZ, WEST_XYZ])
   }
 
   /**

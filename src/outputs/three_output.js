@@ -213,7 +213,7 @@ class ThreeOutput extends Output {
       const material = new THREE.LineBasicMaterial({ color: 0xFF00FF })
       for (const route of this._city.getRoutes()) {
         const geometry = new THREE.Geometry()
-        geometry.vertices.push(...route.map(p => new THREE.Vector3(p.x, p.y, p.z)))
+        geometry.vertices.push(...route.waypoints().map(p => new THREE.Vector3(p.x, p.y, p.z)))
         const line = new THREE.Line(geometry, material)
         this._scene.add(line)
       }

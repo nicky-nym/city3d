@@ -14,8 +14,22 @@ class Route {
    * @param {Use} use - e.g. Use.BIKEPATH
    */
   constructor (listOfWaypoints, use) {
-    this.listOfWaypoints = listOfWaypoints
+    this._listOfWaypoints = listOfWaypoints
     this.use = use
+  }
+
+  /**
+   * Returns the list of waypoints for this Route
+   * @param {Use} use - e.g. Use.BIKEPATH
+   * @returns {xyz[]} array of xyz coordinates specifying the route
+   */
+  waypoints () {
+    return this._listOfWaypoints
+  }
+
+  speedLimit () {
+    // TODO: should be optional constructor arg, and default should at least depend on use
+    return 1
   }
 }
 

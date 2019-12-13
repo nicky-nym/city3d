@@ -6,15 +6,13 @@
  */
 
 import { UNIT } from '../../src/core/unit.js'
-import { xy, xyz, xyRotate, xywh2rect, count, countTo, randomInt, hypotenuse } from '../../src/core/util.js'
+import { xy, xyz, xyRotate, xywh2rect, count, countTo, hypotenuse } from '../../src/core/util.js'
 import { Byway } from '../../src/architecture/byway.js'
 import { Facing } from '../../src/core/facing.js'
-import { Group } from '../../src/architecture/group.js'
 import { Route } from '../../src/routes/route.js'
 import { Storey } from '../../src/architecture/storey.js'
 import { Structure } from '../../src/architecture/structure.js'
 import { Use } from '../../src/architecture/use.js'
-import { Vehicle } from '../movers/vehicle.js'
 
 const BLOCK_LENGTH = UNIT.feet(660)
 
@@ -179,7 +177,7 @@ const LOWER_PLAZA_WALKWAY_D = [
  */
 class Bikeway extends Structure {
   constructor ({ city, ray, x0, y0, numRows = 2, numCols = 2, hideBuildings = false, name } = {}) {
-    super({ city, ray, x0, y0, name: name || 'Veloplex' })
+    super({ city, ray, x0, y0, name: name || 'Lattice' })
     this._city = city
     this.addBikeways(numRows, numCols, !hideBuildings)
   }
@@ -206,7 +204,6 @@ class Bikeway extends Structure {
         xyz(LANE_WIDTH / 2, BLOCK_LENGTH, 0)
       ]), Use.BIKEPATH)
       this.add(route)
-      this._vehicles.push(new Vehicle(route.listOfWaypoints, randomInt(7, 10) * 0.04))
     }
     delta += LANE_WIDTH
     const dxy = xyRotate(xy(delta, 0), facing)
@@ -228,7 +225,6 @@ class Bikeway extends Structure {
       xyz(170, 637.5, -14.9) // end of ENTRANCE_FROM_ABOVE
     ]), Use.BIKEPATH)
     this.add(route)
-    this._vehicles.push(new Vehicle(route.listOfWaypoints, randomInt(6, 10) * 0.04))
 
     this.add(new Byway(ray, Use.BARE, LANDING_PARKING, { z: -7.5 }))
     this.add(new Byway(ray, Use.WALKWAY, LANDING_PLAZA, { z: -7.5 }))
@@ -253,7 +249,6 @@ class Bikeway extends Structure {
       xyz(35, 570, 0.1), xyz(25, 660, 0.1) // start and end of ENTRANCE_FROM_BELOW
     ]), Use.BIKEPATH)
     this.add(route)
-    this._vehicles.push(new Vehicle(route.listOfWaypoints, randomInt(3, 6) * 0.04))
     this.add(new Byway(ray, Use.BIKEPATH, RAMP_UP_TO_LANDING, { z: -15, incline: -RAMP_RISE_HEIGHT }))
 
     this.add(new Byway(ray, Use.WALKWAY, LOWER_PLAZA, { z: -14.9 }))
@@ -347,12 +342,6 @@ class Bikeway extends Structure {
   }
 
   addBikeways (num_rows = 0, num_cols = 0, { buildings = true } = {}) {
-    const vehicleGroup = new Group('bikeway vehicles')
-    this._city.add(vehicleGroup)
-    this._vehicles = vehicleGroup.children
-    const bicycleGroup = new Group('bikeway bicycles')
-    this._city.add(bicycleGroup)
-    this._bicycles = bicycleGroup.children
     for (const row of countTo(num_rows)) {
       for (const col of countTo(num_cols)) {
         this.addBlock(row, col, buildings)

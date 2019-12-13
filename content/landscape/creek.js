@@ -7,30 +7,34 @@
 
 import { xyz, countTo } from '../../src/core/util.js'
 import { Geometry } from '../../src/core/geometry.js'
+import { Route } from '../../src/routes/route.js'
 import { UNIT } from '../../src/core/unit.js'
+import { Use } from '../../src/architecture/use.js'
 
 const NUM_SECTIONS = 270
 const SECTION_LENGTH = UNIT.feet(20)
 const CREEK_WIDTH = UNIT.feet(20)
 const LENGTH = NUM_SECTIONS * SECTION_LENGTH
 const X_OFFSET = -LENGTH / 2
+const CREEK_DEPTH = 0.1
 
 class Creek {
   /**
-   * Returns a route that follows this Creek.
+   * Returns a Route that follows this Creek.
    * @param {number} [lane=2] - Choose an integer between 1 and 5 for one of five equally spaced lanes. 0 or 6 will
    * follow an edge, and values outside that range will follow alongside the creek.
+   * @returns {Route}
    */
-  creekRoute (lane = 2) {
+  creekRoute (lane = 2, use = Use.CANAL) {
     const route = []
     const offset = lane * CREEK_WIDTH / 6
     // TODO: refactor this so that it's not a copy of the code in makeCreek()
     for (const i of countTo(NUM_SECTIONS)) {
       const y = SECTION_LENGTH * Math.sin(i * 4 / SECTION_LENGTH)
       const x = X_OFFSET + i * SECTION_LENGTH
-      route.push(xyz(x, y + offset, 0))
+      route.push(xyz(x, y + offset, CREEK_DEPTH))
     }
-    return route.slice(NUM_SECTIONS / 2)
+    return new Route(route.slice(NUM_SECTIONS / 2), use)
   }
 
   makeCreek () {
@@ -47,7 +51,7 @@ class Creek {
       xyPolygon.push({ x, y })
     }
 
-    const abstractThickPolygon = new Geometry.ThickPolygon(xyPolygon, { depth: 0.1 })
+    const abstractThickPolygon = new Geometry.ThickPolygon(xyPolygon, { depth: CREEK_DEPTH })
     const concreteThickPolygon = new Geometry.Instance(abstractThickPolygon, 0, BLUE)
     return concreteThickPolygon
   }

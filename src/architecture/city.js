@@ -5,19 +5,13 @@
   * For more information, please refer to <http://unlicense.org>
   */
 
-import { Group } from './group.js'
-import { Mover } from './mover.js'
 import { District } from './district.js'
-
-function extractRoutes (group, routes) {
-  if (group instanceof Mover) {
-    routes.push(group.getRoute())
-  } else if (group.children) {
-    for (const child of group.children) {
-      extractRoutes(child, routes)
-    }
-  }
-}
+import { Group } from './group.js'
+import { Kayak } from '../../content/movers/kayak.js'
+import { Route } from '../routes/route.js'
+import { Use } from './use.js'
+import { Vehicle } from '../../content/movers/vehicle.js'
+import { randomInt } from '../../src/core/util.js'
 
 /**
  * City is a class for representing a hierarchical collection of 3D places.
@@ -25,8 +19,19 @@ function extractRoutes (group, routes) {
 class City extends Group {
   getRoutes () {
     const routes = []
-    extractRoutes(this, routes)
+    this.accept(node => { if (node instanceof Route) routes.push(node) })
     return routes
+  }
+
+  populateRoutes () {
+    for (const route of this.getRoutes()) {
+      // TODO: use route.speedLimit(), maybe by having a maxSpeed option for Movers.
+      if (route.use === Use.CANAL) {
+        this.add(new Kayak(route))
+      } else {
+        this.add(new Vehicle(route, randomInt(3, 10) * 0.04))
+      }
+    }
   }
 
   getDistricts () {

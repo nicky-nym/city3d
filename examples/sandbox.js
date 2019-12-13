@@ -49,12 +49,22 @@ function addCreek (city) {
   const creekObject = creek.makeCreek()
   city.add(creekObject)
 
+  // There are several possibilities here:
+  // 1) Explicitly construct a Kayak and add it to the city. The Route will not be added to the city.
   const kayaks = new CITY.Group('kayaks')
-  kayaks.add(new CITY.Kayak(creek.creekRoute()))
-  kayaks.add(new CITY.Kayak(creek.creekRoute(4), 0.13))
+  kayaks.add(new CITY.Kayak(creek.creekRoute(), 0.13))
   city.add(kayaks)
 
-  city.add(new CITY.Vehicle(creek.creekRoute(7), 0.18, 'bicycle'))
+  // 2) Add a Route to the city. creekRoute() creates a Route with use = CANAL by default, so
+  // city.populateRoutes() will construct a Kayak and add it.
+  city.add(creek.creekRoute(4))
+
+  // 3) Create a Route (in this case with use = BIKEPATH). Add it to the city, so that city.populateRoutes()
+  // will construct a Vehicle and add it. Then explicitly add additional Vehicles, using the same Route.
+  const creekBikePath = creek.creekRoute(7, CITY.Use.BIKEPATH)
+  city.add(creekBikePath)
+  city.add(new CITY.Vehicle(creekBikePath, 0.18, 'bicycle'))
+  city.add(new CITY.Vehicle(creekBikePath, 0.15, 'pedicab'))
 }
 
 function addTree (city) {
@@ -80,17 +90,17 @@ function addKalpanaOrbital (city) {
 }
 
 function addMovers (city) {
-  const randomVehicles = new CITY.Group('random vehicles')
-  randomVehicles.add(new CITY.Vehicle())
-  randomVehicles.add(new CITY.Vehicle())
-  randomVehicles.add(new CITY.Vehicle())
-  randomVehicles.add(new CITY.Vehicle())
-  randomVehicles.add(new CITY.Vehicle())
+  const parkedVehicles = new CITY.Group('parked vehicles')
   for (let i = -50; i > -200; i -= 10) {
-    randomVehicles.add(new CITY.Vehicle([xyz(-50, i, 0), xyz(0, 0, 0)], 0))
+    parkedVehicles.add(new CITY.Vehicle(new CITY.Route([xyz(-50, i, 0), xyz(0, 0, 0)]), 0))
   }
+  city.add(parkedVehicles)
 
-  city.add(randomVehicles)
+  city.add(new CITY.Route([xyz(-150, -10, 0), xyz(-200, -120, 0), xyz(-80, -50, 0), xyz(-150, -10, 0)]))
+  city.add(new CITY.Route([xyz(-150, -100, 0), xyz(-100, -200, 0), xyz(-80, -150, 0), xyz(-150, -100, 0)]))
+
+  // Populates all Routes that have been added to the city, including those in bikeway.
+  city.populateRoutes()
 }
 
 function main () {

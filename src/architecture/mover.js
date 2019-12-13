@@ -35,25 +35,26 @@ function lookAt (obj, focus, up = UP) {
 }
 
 /**
- * Mover is an abstract superclass for objects that follow a route.
+ * Mover is an abstract superclass for objects that follow a Route.
  */
 class Mover {
   /**
-   * @param {xyz[]} route - array of xyz coordinates specifying a route
+   * @param {Route} route - specifies a sequence of waypoints to travel between
    * @param {number} speed - for now, speed is in units of unit vectors per frame
    * @param {THREE.Object3D} [threeComponent] - three.js representation of the Mover
    */
   constructor (route, speed, threeComponent) {
     this.route = route
+    const waypoints = route.waypoints()
     this.speed = speed
     this.threeComponent = threeComponent
-    this.position = route[0]
+    this.position = waypoints[0]
     this.routeIndex = 0
     this.routeSegments = []
     this.delta = speed
 
-    for (const i of countTo(route.length - 1)) {
-      const vector = xyzSubtract(route[i + 1], route[i])
+    for (const i of countTo(waypoints.length - 1)) {
+      const vector = xyzSubtract(waypoints[i + 1], waypoints[i])
       const len = hypotenuse(vector.x, vector.y, vector.z)
       const vNorm = { x: vector.x / len, y: vector.y / len, z: vector.z / len }
       this.routeSegments.push({ vNorm, len })
@@ -62,8 +63,8 @@ class Mover {
     this.currSegment = this.routeSegments[0]
 
     if (this.threeComponent) {
-      this.threeComponent.position.set(route[0].x, route[0].y, route[0].z)
-      lookAt(this.threeComponent, route[1])
+      this.threeComponent.position.set(waypoints[0].x, waypoints[0].y, waypoints[0].z)
+      lookAt(this.threeComponent, waypoints[1])
     }
   }
 
@@ -76,14 +77,15 @@ class Mover {
     if (this.speed === 0) return
     let newTarget = null
     this.remainingDist -= this.delta
+    const waypoints = this.route.waypoints()
     if (this.remainingDist <= 0) {
-      this.routeIndex = (this.routeIndex + 1) % (this.route.length - 1)
+      this.routeIndex = (this.routeIndex + 1) % (waypoints.length - 1)
       this.currSegment = this.routeSegments[this.routeIndex]
       // TODO: update speed based on slope of current segment
-      this.position = this.route[this.routeIndex]
+      this.position = waypoints[this.routeIndex]
       this.addScaledVectorToPosition(this.currSegment.vNorm, -this.remainingDist)
       this.remainingDist += this.currSegment.len
-      newTarget = this.route[this.routeIndex + 1]
+      newTarget = waypoints[this.routeIndex + 1]
     } else {
       this.addScaledVectorToPosition(this.currSegment.vNorm, this.delta)
     }
@@ -97,10 +99,6 @@ class Mover {
         wheel.rotation.y += this.speed / Math.PI
       }
     }
-  }
-
-  getRoute () {
-    return this.speed > 0 ? this.route : [this.route[0]]
   }
 
   // This makes Mover a ThreeOutput plugin.
