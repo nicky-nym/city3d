@@ -22,9 +22,8 @@ function addBuildings (city) {
   suburbia.recordMetrics()
 
   const CITY_SIZE = 1
-  ray = new Ray(Facing.NORTH, xyz(-800 * CITY_SIZE, 900 * CITY_SIZE, 0))
-  corners = rectangleOfSize(xy(750, 600))
-  const nyc = new CITY.Manhattan(corners, ray, 'Manhattan')
+  ray = new Ray(Facing.NORTH, xyz(-13200, -5280, 0))
+  const nyc = new CITY.Manhattan(CITY.Manhattan.BOUNDARY, ray, 'Manhattan')
   nyc.addBlocks(CITY_SIZE, CITY_SIZE * 2)
   city.add(nyc)
   nyc.recordMetrics(nyc)
