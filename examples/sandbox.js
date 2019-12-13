@@ -10,7 +10,7 @@ import { Facing } from '../src/core/facing.js'
 import { Ray } from '../src/core/ray.js'
 import { xy, xyz, rectangleOfSize } from '../src/core/util.js'
 
-function addBuildings (plato, city) {
+function addBuildings (city) {
   let ray
   let corners
 
@@ -19,7 +19,7 @@ function addBuildings (plato, city) {
   const suburbia = new CITY.Suburbia(corners, ray, 'Suburbia')
   suburbia.addStreet(2)
   city.add(suburbia)
-  plato.pontificate(suburbia)
+  suburbia.recordMetrics()
 
   const CITY_SIZE = 1
   ray = new Ray(Facing.NORTH, xyz(-800 * CITY_SIZE, 900 * CITY_SIZE, 0))
@@ -27,7 +27,7 @@ function addBuildings (plato, city) {
   const nyc = new CITY.Manhattan(corners, ray, 'Manhattan')
   nyc.addBlocks(CITY_SIZE, CITY_SIZE * 2)
   city.add(nyc)
-  plato.pontificate(nyc)
+  nyc.recordMetrics(nyc)
 
   ray = new Ray(Facing.NORTH, xyz(238, 238, 0))
   corners = rectangleOfSize(xy(2000, 2000))
@@ -35,14 +35,14 @@ function addBuildings (plato, city) {
   city.add(kineborough)
   kineborough.add(new CITY.Bikeway({ city, x0: 100, y0: 100, numRows: 3, numCols: 3, hideBuildings: false }))
   kineborough.add(new CITY.Merlon({ x0: 238, y0: 238, numRows: 8, numCols: 8, hideBuildings: false }))
-  plato.pontificate(kineborough)
+  kineborough.recordMetrics(kineborough)
 
   ray = new Ray(Facing.NORTH, xyz(100, -600, 0))
   corners = rectangleOfSize(xy(1200, 550))
   const campus = new CITY.Campus(corners, ray, 'Campus')
   campus.makeCampus(3)
   city.add(campus)
-  plato.pontificate(campus)
+  campus.recordMetrics(campus)
 }
 
 function addCreek (city) {
@@ -96,13 +96,12 @@ function addMovers (city) {
 
 function main () {
   const city = new CITY.City('Paracosm')
-  const plato = new CITY.Plato(city)
   addCreek(city)
   addTree(city)
   addSwingset(city)
   addUtilityPoles(city)
   addEiffelTower(city)
-  addBuildings(plato, city)
+  addBuildings(city)
   addKalpanaOrbital(city)
   addMovers(city)
 
