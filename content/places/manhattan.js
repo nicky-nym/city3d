@@ -6,10 +6,11 @@
   */
 
 import { UNIT } from '../../src/core/unit.js'
-import { xy, countTo } from '../../src/core/util.js'
-import { Highrise } from '../buildings/highrise.js'
+import { xy, countTo, rectangleOfSize } from '../../src/core/util.js'
 import { Byway } from '../../src/architecture/byway.js'
-import { Place } from '../../src/architecture/place.js'
+import { District } from '../../src/architecture/district.js'
+import { Highrise } from '../buildings/highrise.js'
+import { Parcel } from '../../src/architecture/parcel.js'
 import { Use } from '../../src/architecture/use.js'
 
 const BLOCK_DX = UNIT.feet(600)
@@ -59,7 +60,7 @@ const REPEAT_DY = BLOCK_DY + STREET_WIDTH + (SIDEWALK_WIDTH_STREETS * 2)
 /**
  * Manhattan objects know how to describe the city blocks in New York.
  */
-class Manhattan extends Place {
+class Manhattan extends District {
   makeByway (use, area,
     {
       x = 0,
@@ -71,8 +72,7 @@ class Manhattan extends Place {
       openings = [] // Sequence[Tuple]
     } = {}) {
     const ray = this.goto({ x: x + dx, y: y + dy, z: z })
-    const storey = new Byway(ray, use, area, { wall: wall, openings: openings })
-    this._district.add(storey)
+    this._parcel.add(new Byway(ray, use, area, { wall: wall, openings: openings }))
   }
 
   addBuildingAt (x = 0, y = 0) {
@@ -81,8 +81,7 @@ class Manhattan extends Place {
     const size = { x: BUILDING_DX, y: BUILDING_DY }
     const { _ray: ray, _x0: x0, _y0: y0 } = this
     this.goto({ x, y, z })
-    const highrise = new Highrise(size, { ray, x0, y0, at: offset })
-    this._district.add(highrise)
+    this._parcel.add(new Highrise(size, { ray, x0, y0, at: offset }))
   }
 
   addBlock (row = 0, col = 0) {
@@ -118,6 +117,9 @@ class Manhattan extends Place {
   }
 
   addBlocks (numRows = 2, numCols = 2) {
+    const corners = rectangleOfSize(xy(BLOCK_DX * numRows, BLOCK_DY * numCols))
+    this._parcel = new Parcel(corners, this._ray)
+    this.add(this._parcel)
     for (const row of countTo(numRows)) {
       for (const col of countTo(numCols)) {
         this.addBlock(row, col)

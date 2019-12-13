@@ -5,7 +5,8 @@
  * For more information, please refer to <http://unlicense.org>
  */
 
-import { countTo } from '../core/util.js'
+import { countTo, xyz } from '../core/util.js'
+import { Facing } from '../core/facing.js'
 import { Geometry } from '../core/geometry.js'
 import { Group } from './group.js'
 import { Use } from './use.js'
@@ -19,8 +20,10 @@ const MARTIAN_ORANGE = 0xdf4911
  */
 class District extends Group {
   constructor (corners, ray, name) {
-    super(name || 'Parcel')
+    super(name || 'District')
     this._ray = ray
+    this._x0 = ray.xyz.x
+    this._y0 = ray.xyz.y
     const adjustedCorners = ray.applyRay(corners)
     adjustedCorners.push(adjustedCorners[0])
     const xyPolygon = new Geometry.XYPolygon(adjustedCorners)
@@ -30,6 +33,11 @@ class District extends Group {
       this.add(concreteOutlinePolygon)
     }
     this.addMetric(`${Use.DISTRICT} land area`, xyPolygon.area(), 'square feet')
+  }
+
+  goto ({ x = 0, y = 0, z = 0, facing = Facing.NORTH } = {}) {
+    this._ray.goto(facing, xyz(this._x0 + x, this._y0 + y, z))
+    return this._ray
   }
 }
 

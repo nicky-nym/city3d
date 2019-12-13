@@ -13,46 +13,36 @@ import { xy, xyz, rectangleOfSize } from '../src/core/util.js'
 function addBuildings (plato, city) {
   let ray
   let corners
-  let district
 
   ray = new Ray(Facing.NORTH, xyz(-100, 100, 0))
   corners = rectangleOfSize(xy(-250, 200))
-  district = new CITY.District(corners, ray, 'Suburbia')
-  city.add(district)
-
-  const suburbia = new CITY.Suburbia(plato, district)
+  const suburbia = new CITY.Suburbia(corners, ray, 'Suburbia')
   suburbia.addStreet(2)
-  plato.pontificate(district)
+  city.add(suburbia)
+  plato.pontificate(suburbia)
 
   const CITY_SIZE = 1
   ray = new Ray(Facing.NORTH, xyz(-800 * CITY_SIZE, 900 * CITY_SIZE, 0))
   corners = rectangleOfSize(xy(750, 600))
-  district = new CITY.District(corners, ray, 'Manhattan')
-  city.add(district)
-
-  const nyc = new CITY.Manhattan(plato, district)
+  const nyc = new CITY.Manhattan(corners, ray, 'Manhattan')
   nyc.addBlocks(CITY_SIZE, CITY_SIZE * 2)
-  plato.pontificate(district)
+  city.add(nyc)
+  plato.pontificate(nyc)
 
   ray = new Ray(Facing.NORTH, xyz(238, 238, 0))
   corners = rectangleOfSize(xy(2000, 2000))
-  district = new CITY.District(corners, ray, 'Kineborough')
-  city.add(district)
-
-  const bikeway = new CITY.Place(plato, district)
-  bikeway.add(new CITY.Bikeway({ city, x0: 100, y0: 100, numRows: 3, numCols: 3, hideBuildings: false }))
-  const quad = new CITY.Place(plato, district)
-  quad.add(new CITY.Merlon({ x0: 238, y0: 238, numRows: 8, numCols: 8, hideBuildings: false }))
-  plato.pontificate(district)
+  const kineborough = new CITY.District(corners, ray, 'Kineborough')
+  city.add(kineborough)
+  kineborough.add(new CITY.Bikeway({ city, x0: 100, y0: 100, numRows: 3, numCols: 3, hideBuildings: false }))
+  kineborough.add(new CITY.Merlon({ x0: 238, y0: 238, numRows: 8, numCols: 8, hideBuildings: false }))
+  plato.pontificate(kineborough)
 
   ray = new Ray(Facing.NORTH, xyz(100, -600, 0))
   corners = rectangleOfSize(xy(1200, 550))
-  district = new CITY.District(corners, ray, 'Campus')
-  city.add(district)
-
-  const campus = new CITY.Campus(plato, district)
+  const campus = new CITY.Campus(corners, ray, 'Campus')
   campus.makeCampus(3)
-  plato.pontificate(district)
+  city.add(campus)
+  plato.pontificate(campus)
 }
 
 function addCreek (city) {

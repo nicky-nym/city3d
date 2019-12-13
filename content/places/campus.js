@@ -7,7 +7,7 @@
 
 import { cornersFromShape, countTo, xy, xyz } from '../../src/core/util.js'
 import { Parcel } from '../../src/architecture/parcel.js'
-import { Place } from '../../src/architecture/place.js'
+import { District } from '../../src/architecture/district.js'
 import { Wurster } from '../buildings/wurster.js'
 
 const PARCEL = {
@@ -22,7 +22,7 @@ const PARCEL = {
  * Class representing a college campus.
  * @see [Wikipedia photo]{@link https://en.wikipedia.org/wiki/UC_Berkeley_College_of_Environmental_Design#/media/File:UC_Berkeley_Wurster_Hall.jpg}
  */
-class Campus extends Place {
+class Campus extends District {
   makeCampus (numBuildings = 1) {
     const offset = { ...PARCEL.offset }
     for (const i in countTo(numBuildings)) {
@@ -30,9 +30,8 @@ class Campus extends Place {
       const ray = this.goto(offset)
       const corners = cornersFromShape(PARCEL.shape)
       const parcel = new Parcel(corners, ray)
-      this._district.add(parcel)
-      const { _ray, _x0, _y0 } = this
-      parcel.add(new Wurster({ ray: _ray, x0: _x0, y0: _y0, at: offset }))
+      this.add(parcel)
+      parcel.add(new Wurster({ ray, x0: this._x0, y0: this._y0, at: offset }))
     }
   }
 }

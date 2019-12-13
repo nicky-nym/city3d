@@ -11,7 +11,7 @@ import { Cottage } from '../buildings/cottage.js'
 import { Garage } from '../buildings/garage.js'
 import { House } from '../buildings/house.js'
 import { Parcel } from '../../src/architecture/parcel.js'
-import { Place } from '../../src/architecture/place.js'
+import { District } from '../../src/architecture/district.js'
 import { Use } from '../../src/architecture/use.js'
 
 const PARCEL_DY = 50
@@ -32,15 +32,15 @@ const PARCEL = {
 /**
 * Class representing a low-density suburb of single-family homes.
 */
-class Suburbia extends Place {
+class Suburbia extends District {
   addStreet (numParcels = 1) {
     const offset = { ...PARCEL.offset }
+    this.goto(offset)
     for (const i in countTo(numParcels)) {
       offset.y = PARCEL.offset.y + i * PARCEL_DY
-      this.goto(offset)
       const corners = cornersFromShape(PARCEL.shape)
       const parcel = new Parcel(corners, this._ray)
-      this._district.add(parcel)
+      this.add(parcel)
 
       const STREET_DX = 15
       const STREET_DY = PARCEL_DY
@@ -58,11 +58,13 @@ class Suburbia extends Place {
         xy(SIDEWALK_WIDTH + STREET_DX, STREET_DY),
         xy(SIDEWALK_WIDTH + STREET_DX, 0)]
 
-      this._district.add(new Byway(this._ray, Use.WALKWAY, SIDEWALK))
-      this._district.add(new Byway(this._ray, Use.STREET, STREET))
+      this.add(new Byway(this._ray, Use.WALKWAY, SIDEWALK))
+      this.add(new Byway(this._ray, Use.STREET, STREET))
 
       let at
-      const { _ray: ray, _x0: x0, _y0: y0 } = this
+      const ray = this._ray
+      const x0 = ray.xyz.x
+      const y0 = ray.xyz.y
 
       at = xyzAdd(offset, xy(-154, 23))
       parcel.add(new Cottage({ ray, x0, y0, at }))

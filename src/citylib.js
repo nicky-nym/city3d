@@ -14,7 +14,6 @@ import { Door } from './architecture/door.js'
 import { Group } from './architecture/group.js'
 import { Opening } from './architecture/opening.js'
 import { Parcel } from './architecture/parcel.js'
-import { Place } from './architecture/place.js'
 import { Plato } from './architecture/plato.js'
 import { Roof } from './architecture/roof.js'
 import { Storey } from './architecture/storey.js'
@@ -79,7 +78,6 @@ export const CITY = {
   Opening,
   Output,
   Parcel,
-  Place,
   Plato,
   Roof,
   Storey,
