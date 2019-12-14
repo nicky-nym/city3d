@@ -6,7 +6,7 @@
  */
 
 import * as THREE from '../../node_modules/three/build/three.module.js'
-import { xyzAdd, xyzSubtract, hypotenuse, countTo } from '../core/util.js'
+import { xyzAdd } from '../core/util.js'
 
 const UP = new THREE.Vector3(0, 0, 1)
 
@@ -47,22 +47,17 @@ class Mover {
     this.route = route
     const waypoints = route.waypoints()
     this.speed = speed
+    this.moving = speed > 0 && waypoints.length > 1
     this.threeComponent = threeComponent
     this.position = waypoints[0]
     this.routeIndex = 0
-    this.routeSegments = []
     this.delta = speed
 
-    // TODO: now that we have a real Route class, should this
-    // code be part of Route, with a route.segments() accessor?
-    for (const i of countTo(waypoints.length - 1)) {
-      const vector = xyzSubtract(waypoints[i + 1], waypoints[i])
-      const len = hypotenuse(vector.x, vector.y, vector.z)
-      const vNorm = { x: vector.x / len, y: vector.y / len, z: vector.z / len }
-      this.routeSegments.push({ vNorm, len })
+    if (this.moving) {
+      const segments = route.segments()
+      this.remainingDist = segments[0].len
+      this.currSegment = segments[0]
     }
-    this.remainingDist = this.routeSegments[0].len
-    this.currSegment = this.routeSegments[0]
 
     if (this.threeComponent) {
       this.threeComponent.position.set(waypoints[0].x, waypoints[0].y, waypoints[0].z)
@@ -70,26 +65,26 @@ class Mover {
     }
   }
 
-  addScaledVectorToPosition (vector, c) {
+  _addScaledVectorToPosition (vector, c) {
     const scaledVector = { x: vector.x * c, y: vector.y * c, z: vector.z * c }
     this.position = xyzAdd(this.position, scaledVector)
   }
 
   update () {
-    if (this.speed === 0) return
+    if (!this.moving) return
     let newTarget = null
     this.remainingDist -= this.delta
     const waypoints = this.route.waypoints()
     if (this.remainingDist <= 0) {
       this.routeIndex = (this.routeIndex + 1) % (waypoints.length - 1)
-      this.currSegment = this.routeSegments[this.routeIndex]
+      this.currSegment = this.route.segments()[this.routeIndex]
       // TODO: update speed based on slope of current segment
       this.position = waypoints[this.routeIndex]
-      this.addScaledVectorToPosition(this.currSegment.vNorm, -this.remainingDist)
+      this._addScaledVectorToPosition(this.currSegment.vNorm, -this.remainingDist)
       this.remainingDist += this.currSegment.len
       newTarget = waypoints[this.routeIndex + 1]
     } else {
-      this.addScaledVectorToPosition(this.currSegment.vNorm, this.delta)
+      this._addScaledVectorToPosition(this.currSegment.vNorm, this.delta)
     }
 
     if (this.threeComponent) {
