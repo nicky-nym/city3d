@@ -53,6 +53,8 @@ class Mover {
     this.routeSegments = []
     this.delta = speed
 
+    // TODO: now that we have a real Route class, should this
+    // code be part of Route, with a route.segments() accessor?
     for (const i of countTo(waypoints.length - 1)) {
       const vector = xyzSubtract(waypoints[i + 1], waypoints[i])
       const len = hypotenuse(vector.x, vector.y, vector.z)
