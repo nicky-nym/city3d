@@ -32,7 +32,7 @@ function addBuildings (city) {
   corners = rectangleOfSize(xy(2000, 2000))
   const kineborough = new CITY.District(corners, ray, 'Kineborough')
   city.add(kineborough)
-  kineborough.add(new CITY.Bikeway({ city, x0: 100, y0: 100, numRows: 3, numCols: 3, hideBuildings: false }))
+  kineborough.add(new CITY.Lattice({ city, x0: 100, y0: 100, numRows: 3, numCols: 3, hideBuildings: false }))
   kineborough.add(new CITY.Merlon({ x0: 238, y0: 238, numRows: 8, numCols: 8, hideBuildings: false }))
   kineborough.recordMetrics(kineborough)
 
@@ -99,7 +99,7 @@ function addMovers (city) {
   city.add(new CITY.Route([xyz(-150, -10, 0), xyz(-200, -120, 0), xyz(-80, -50, 0), xyz(-150, -10, 0)]))
   city.add(new CITY.Route([xyz(-150, -100, 0), xyz(-100, -200, 0), xyz(-80, -150, 0), xyz(-150, -100, 0)]))
 
-  // Populates all Routes that have been added to the city, including those in bikeway.
+  // Populates all Routes that have been added to the city, including those in the Lattice.
   city.populateRoutes()
 }
 

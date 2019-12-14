@@ -31,7 +31,7 @@ import { ThreeOutput } from './outputs/three_output.js'
 import { Route } from './routes/route.js'
 
 // buildings
-import { Bikeway } from '../content/buildings/bikeway.js'
+import { Lattice } from '../content/buildings/lattice.js'
 import { Cottage } from '../content/buildings/cottage.js'
 import { Garage } from '../content/buildings/garage.js'
 import { Highrise } from '../content/buildings/highrise.js'
@@ -59,7 +59,7 @@ import { Manhattan } from '../content/places/manhattan.js'
 import { Suburbia } from '../content/places/suburbia.js'
 
 export const CITY = {
-  Bikeway,
+  Lattice,
   Building,
   Byway,
   Campus,

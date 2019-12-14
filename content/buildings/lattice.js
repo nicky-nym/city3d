@@ -1,4 +1,4 @@
-/** @file bikeway.js
+/** @file lattice.js
  * @author Authored in 2019 at <https://github.com/nicky-nym/city3d>
  * @license UNLICENSE
  * This is free and unencumbered software released into the public domain.
@@ -173,13 +173,13 @@ const LOWER_PLAZA_WALKWAY_D = [
 ]
 
 /**
- * Bikeway objects know how to describe the Kinematic city bikeways.
+ * A Lattice is a repeating pattern of Kinematic city bikeways.
  */
-class Bikeway extends Structure {
+class Lattice extends Structure {
   constructor ({ city, ray, x0, y0, numRows = 2, numCols = 2, hideBuildings = false, name } = {}) {
     super({ city, ray, x0, y0, name: name || 'Lattice' })
     this._city = city
-    this.addBikeways(numRows, numCols, !hideBuildings)
+    this.addUnitCells(numRows, numCols, !hideBuildings)
   }
 
   addBoulevard ({ x = 0, y = 0, z = 0, facing = Facing.NORTH } = {}) {
@@ -341,7 +341,7 @@ class Bikeway extends Structure {
     return this
   }
 
-  addBikeways (num_rows = 0, num_cols = 0, { buildings = true } = {}) {
+  addUnitCells (num_rows = 0, num_cols = 0, { buildings = true } = {}) {
     for (const row of countTo(num_rows)) {
       for (const col of countTo(num_cols)) {
         this.addBlock(row, col, buildings)
@@ -350,4 +350,4 @@ class Bikeway extends Structure {
   }
 }
 
-export { Bikeway }
+export { Lattice }
