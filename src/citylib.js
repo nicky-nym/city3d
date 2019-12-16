@@ -36,7 +36,7 @@ import { Cottage } from '../content/buildings/cottage.js'
 import { Garage } from '../content/buildings/garage.js'
 import { Highrise } from '../content/buildings/highrise.js'
 import { House } from '../content/buildings/house.js'
-import { Merlon } from '../content/buildings/merlon.js'
+import { MidriseComplex } from '../content/buildings/midrise_complex.js'
 import { Wurster } from '../content/buildings/wurster.js'
 
 // structures
@@ -76,8 +76,8 @@ export const CITY = {
   Highrise,
   House,
   Manhattan,
-  Merlon,
   MetricsOutput,
+  MidriseComplex,
   Opening,
   Output,
   Parcel,

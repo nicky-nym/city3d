@@ -1,4 +1,4 @@
-/** @file merlon.js
+/** @file midrise_complex.js
   * @author Authored in 2019 at <https://github.com/nicky-nym/city3d>
   * @license UNLICENSE
   * This is free and unencumbered software released into the public domain.
@@ -262,7 +262,7 @@ function _getLandingPattern (numRows, numCols) {
   return grid
 }
 
-class Merlon extends Structure {
+class MidriseComplex extends Structure {
   constructor ({ city, ray, x0, y0, numRows = 2, numCols = 2, hideBuildings = false, name } = {}) {
     super({ city, ray, x0, y0, name: name || 'Midrise Complex' })
     this.addBuildings(numRows, numCols, !hideBuildings)
@@ -298,14 +298,13 @@ class Merlon extends Structure {
   }
 
   _addFeaturesAtLanding (rampBearings, at, buildings = true) {
-    // Make plato envision the floorspace for a landing and its ramps.
     const [x, y, z] = at
     let ray
 
     // Landing
     ray = this.goto({ x: x, y: y, z: z, facing: Facing.NORTH })
     this.add(new Byway(ray, Use.WALKWAY, OCTAGONAL_LANDING))
-    if (!buildings && z % 10 === 0) {
+    if (!buildings && z % STOREY_HEIGHT === 0) {
       this.add(new Storey(ray, Use.BARE, DIAMOND_CENTER, { wall: 3 }))
     }
 
@@ -344,7 +343,6 @@ class Merlon extends Structure {
   }
 
   addBuildings (numRows = 2, numCols = 2, buildings = true) {
-    // Tell plato about all of our landings, ramps, rooms, and roofs.
     let i = 0
     for (const row of _getLandingPattern(numRows, numCols)) {
       let j = 0
@@ -363,4 +361,4 @@ class Merlon extends Structure {
   }
 }
 
-export { Merlon }
+export { MidriseComplex }
