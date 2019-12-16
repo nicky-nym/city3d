@@ -130,6 +130,8 @@ class ThreeOutput extends Output {
     outputDivElement.appendChild(this._tooltipDiv)
 
     this.controls = new OrbitControls(this._camera, this._renderer.domElement)
+    this.controls.enabled = true
+    this._highlightingOn = true
 
     if (window.sessionStorage.getItem('OrbitControls')) {
       const oc = JSON.parse(window.sessionStorage.getItem('OrbitControls'))
@@ -142,11 +144,23 @@ class ThreeOutput extends Output {
 
     // keyboard commands
     window.addEventListener('keydown', evt => {
-      console.log(evt.code)
+      console.log(evt.code, evt.shiftKey)
+
       switch (evt.code) {
+        case 'ArrowLeft':
+        case 'ArrowRight':
+        case 'ArrowUp':
+        case 'ArrowDown': this.controls.enabled = true; return
+        case 'KeyA': return this._onLeft()
+        case 'KeyD': return this._onRight()
+        case 'KeyE': return this._onTurnRight()
+        case 'KeyF': return this._onDown()
+        case 'KeyH': return this._onToggleHighlighting()
         case 'KeyK': return this._onShowKeyboardCommands(evt)
-        case 'KeyR': return this._onRestoreOrbitControlsState()
-        case 'KeyS': return this._onSaveOrbitControlsState()
+        case 'KeyQ': return this._onTurnLeft()
+        case 'KeyR': return evt.shiftKey ? this._onRestoreOrbitControlsState() : this._onUp()
+        case 'KeyS': return evt.shiftKey ? this._onSaveOrbitControlsState() : this._onBackward()
+        case 'KeyW': return this._onForward()
         case 'KeyX': return this._onHideKeyboardCommands(evt)
         case 'Space': return this._onToggleAnimation()
       }
@@ -162,11 +176,22 @@ class ThreeOutput extends Output {
     outputDivElement.appendChild(this._keyInfoDiv)
     this._keyInfoDiv.innerHTML = `
     <h4>Keyboard Commands</h4>
-    K: show keyboard commands (this box)<br>
-    R: restore camera coordinates<br>
     S: save camera coordinates<br>
-    X: close this box (TODO: any key or click should work)<br>
+    R: restore camera coordinates<br>
     &lt;space&gt;: toggle animation<br>
+    h: toggle highlighting<br>
+    k: show keyboard commands (this box)<br>
+    x: close this box (TODO: any key or click should work)<br>
+    <h5>These commands disable the orbit controls until the next arrow key is pressed:</h5>
+    w: move forward one foot<br>
+    a: move left one foot<br>
+    s: move backward one foot<br>
+    d: move right one foot<br>
+    q: turn left 5 degrees<br>
+    e: turn right 5 degrees<br>
+    r: move up one foot<br>
+    f: move down one foot<br>
+    <h5>Orbit controls use the mouse and arrow keys.</h5>
     `
     // enable selecting objects with mouse
     this._raycaster = new THREE.Raycaster()
@@ -433,6 +458,7 @@ class ThreeOutput extends Output {
   }
 
   _onSaveOrbitControlsState () {
+    console.log('pos', this._camera.position)
     this.controls.saveState()
     const { position0: { x: px, y: py, z: pz }, target0: { x: tx, y: ty, z: tz }, zoom0 } = this.controls
     const oc = { position: [px, py, pz], target: [tx, ty, tz], zoom: zoom0 }
@@ -459,6 +485,74 @@ class ThreeOutput extends Output {
     this._keyInfoDiv.style.opacity = 0
   }
 
+  _onToggleHighlighting () {
+    this._highlightingOn = !this._highlightingOn
+  }
+
+  _onUp () {
+    this.controls.enabled = false
+    this._camera.position.z += 1
+  }
+
+  _onDown () {
+    this.controls.enabled = false
+    this._camera.position.z -= 1
+  }
+
+  _onLeft () {
+    this.controls.enabled = false
+    const v = new THREE.Vector3()
+    this._camera.getWorldDirection(v)
+    console.log(v)
+    v.z = 0
+    v.normalize()
+    this._camera.position.x -= v.y
+    this._camera.position.y += v.x
+  }
+
+  _onRight () {
+    this.controls.enabled = false
+    const v = new THREE.Vector3()
+    this._camera.getWorldDirection(v)
+    console.log(v)
+    v.z = 0
+    v.normalize()
+    this._camera.position.x += v.y
+    this._camera.position.y -= v.x
+  }
+
+  _onTurnLeft () {
+    this.controls.enabled = false
+    this._camera.rotateOnWorldAxis(new THREE.Vector3(0, 0, 1), Math.PI / 36)
+  }
+
+  _onTurnRight () {
+    this.controls.enabled = false
+    this._camera.rotateOnWorldAxis(new THREE.Vector3(0, 0, 1), -Math.PI / 36)
+  }
+
+  _onBackward () {
+    this.controls.enabled = false
+    const v = new THREE.Vector3()
+    this._camera.getWorldDirection(v)
+    console.log(v)
+    v.z = 0
+    v.normalize()
+    this._camera.position.x -= v.x
+    this._camera.position.y -= v.y
+  }
+
+  _onForward () {
+    this.controls.enabled = false
+    const v = new THREE.Vector3()
+    this._camera.getWorldDirection(v)
+    console.log(v)
+    v.z = 0
+    v.normalize()
+    this._camera.position.x += v.x
+    this._camera.position.y += v.y
+  }
+
   _material (materialCost, color, twoSided = false) {
     if (isNaN(color)) {
       color = FIXME_FUCHSIA
@@ -480,7 +574,9 @@ class ThreeOutput extends Output {
 
   animate () {
     window.requestAnimationFrame(() => this.animate())
-    this.controls.update()
+    if (this.controls.enabled) {
+      this.controls.update()
+    }
     if (this._animationOn) {
       for (const component of this._animatedComponents) {
         component.update()
@@ -496,6 +592,12 @@ class ThreeOutput extends Output {
   }
 
   handleCurrentTarget () {
+    if (!this._highlightingOn) {
+      if (this._intersected) this.unhighlight(this._intersected)
+      this._intersected = null
+      return
+    }
+
     // update the picking ray with the camera and mouse position
     this._raycaster.setFromCamera(this._mouse, this._camera)
 
