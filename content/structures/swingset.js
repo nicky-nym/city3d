@@ -9,6 +9,7 @@ import { UNIT } from '../../src/core/unit.js'
 import { xyz } from '../../src/core/util.js'
 import { Facing } from '../../src/core/facing.js'
 import { Geometry } from '../../src/core/geometry.js'
+import { Ray } from '../../src/core/ray.js'
 import { Structure } from '../../src/architecture/structure.js'
 
 const WOOD = 0x663300
@@ -31,9 +32,7 @@ class Swingset extends Structure {
     const halfDepth = UNIT.feet(9) / 2
     const span = UNIT.feet(10)
     const splay = UNIT.feet(1)
-    at.z = 0
-    at.facing = Facing.NORTH
-    const ray = this.goto(at)
+    const ray = new Ray(Facing.NORTH)
     const crossBar = [
       xyz(0, 0, height),
       xyz(span, 0, height)

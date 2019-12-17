@@ -277,6 +277,11 @@ class ThreeOutput extends Output {
 
   makeLODFromLODGroup (lodGroup) {
     const lod = new THREE.LOD()
+    if (lodGroup.offset) {
+      lod.translateX(lodGroup.offset.x)
+      lod.translateY(lodGroup.offset.y)
+      lod.translateZ(lodGroup.offset.z)
+    }
     const group = new THREE.Group()
     group.name = lodGroup.name
     for (const child of lodGroup.children) {

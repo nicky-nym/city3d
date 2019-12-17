@@ -9,7 +9,7 @@ import { Facing } from '../core/facing.js'
 import { Geometry } from '../core/geometry.js'
 import { Group, LODGroup } from './group.js'
 import { Ray } from '../core/ray.js'
-import { xyz } from '../core/util.js'
+import { xyz, xyzAdd } from '../core/util.js'
 
 const WHITE = 0xffffff
 const RED = 0xcc0000 // eslint-disable-line no-unused-vars
@@ -42,16 +42,15 @@ const COLORS_BY_USE = {
  * Structure is an abstract superclass for buildings, city blocks, and other types of structures.
  */
 class Structure extends LODGroup {
-  constructor ({ city, ray, x0 = 0, y0 = 0, name } = {}) {
+  constructor ({ city, ray, x0 = 0, y0 = 0, name, at = xyz(0, 0, 0) } = {}) {
     super(name)
     this._city = city
     this._ray = ray || new Ray()
-    this._x0 = x0
-    this._y0 = y0
+    this.offset = xyzAdd({ x: x0, y: y0 }, at)
   }
 
   goto ({ x = 0, y = 0, z = 0, facing = Facing.NORTH } = {}) {
-    this._ray.goto(facing, xyz(this._x0 + x, this._y0 + y, z))
+    this._ray.goto(facing, xyz(x, y, z))
     return this._ray
   }
 

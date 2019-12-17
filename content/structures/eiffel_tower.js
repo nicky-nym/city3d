@@ -9,6 +9,7 @@ import { UNIT } from '../../src/core/unit.js'
 import { xyz } from '../../src/core/util.js'
 import { Facing } from '../../src/core/facing.js'
 import { Geometry } from '../../src/core/geometry.js'
+import { Ray } from '../../src/core/ray.js'
 import { Structure } from '../../src/architecture/structure.js'
 
 // TODO: refactor to merge this with _makeLine() in Swingset & UtilityPole
@@ -35,9 +36,7 @@ const platforms = [
 class EiffelTower extends Structure {
   constructor ({ name, at = xyz(0, 0, 0) } = {}) {
     super({ name: name || 'Eiffel tower', at })
-    at.z = 0
-    at.facing = Facing.NORTH
-    this._ray = this.goto(at)
+    this._ray = new Ray(Facing.NORTH)
 
     for (const direction of [Facing.NORTH, Facing.SOUTH, Facing.EAST, Facing.WEST]) {
       this._drawQuadrant(direction)

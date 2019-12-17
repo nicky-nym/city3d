@@ -9,6 +9,7 @@ import { UNIT } from '../../src/core/unit.js'
 import { xyz } from '../../src/core/util.js'
 import { Facing } from '../../src/core/facing.js'
 import { Geometry } from '../../src/core/geometry.js'
+import { Ray } from '../../src/core/ray.js'
 import { Structure } from '../../src/architecture/structure.js'
 
 // TODO: refactor to merge this with _makeLine() in Swingset
@@ -24,9 +25,7 @@ function _makeLine (waypoints, ray, color) {
 class UtilityPole extends Structure {
   constructor ({ name, at = xyz(0, 0, 0) } = {}) {
     super({ name: name || 'Utility pole', at })
-    at.z = 0
-    at.facing = Facing.NORTH
-    const ray = this.goto(at)
+    const ray = new Ray(Facing.NORTH)
 
     const WOOD = 0x663300
     const height = UNIT.feet(35)

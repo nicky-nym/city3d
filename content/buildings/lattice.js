@@ -6,7 +6,7 @@
  */
 
 import { UNIT } from '../../src/core/unit.js'
-import { xy, xyz, xyRotate, xywh2rect, count, countTo, hypotenuse } from '../../src/core/util.js'
+import { xy, xyz, xyzAdd, xyRotate, xywh2rect, count, countTo, hypotenuse } from '../../src/core/util.js'
 import { Byway } from '../../src/architecture/byway.js'
 import { Facing } from '../../src/core/facing.js'
 import { Route } from '../../src/routes/route.js'
@@ -199,11 +199,10 @@ class Lattice extends Structure {
       const dxy = xyRotate(xy(delta, 0), facing)
       ray = this.goto({ x: x + dxy.x, y: y + dxy.y, z: z, facing: facing })
       this.add(new Byway(ray, Use.BIKEPATH, LANE))
-      const route = new Route(this._ray.applyRay([
+      this.addRoute([
         xyz(LANE_WIDTH / 2, 0, 0),
         xyz(LANE_WIDTH / 2, BLOCK_LENGTH, 0)
-      ]), Use.BIKEPATH)
-      this.add(route)
+      ])
     }
     delta += LANE_WIDTH
     const dxy = xyRotate(xy(delta, 0), facing)
@@ -212,19 +211,24 @@ class Lattice extends Structure {
     return this
   }
 
+  addRoute (xyzList) {
+    const waypointsRelativeToLattice = this._ray.applyRay(xyzList)
+    const absoluteWaypoints = waypointsRelativeToLattice.map(xyz => xyzAdd(xyz, this.offset))
+    this.add(new Route(absoluteWaypoints, Use.BIKEPATH))
+  }
+
   addRamps (self) {
     const ray = this._ray
     this.add(new Byway(ray, Use.BIKEPATH, EXIT_DOWN, { z: 0.1 }))
     this.add(new Byway(ray, Use.BIKEPATH, RAMP_DOWN_TO_LANDING, { incline: RAMP_RISE_HEIGHT }))
     this.add(new Byway(ray, Use.BIKEPATH, LANDING, { z: -7.5 }))
-    let route = new Route(this._ray.applyRay([
+    this.addRoute([
       xyz(25, 0, 0.1), xyz(35, 90, 0.1), // start and end of EXIT_DOWN
       xyz(35, 270, -7.5), // landing
       xyz(45, 390, -7.5),
       xyz(45, 570, -14.9), xyz(60, 616, -14.9), xyz(100, 630, -14.9), // start, middle, end of RIGHT_TURN_TO_ENTER
       xyz(170, 637.5, -14.9) // end of ENTRANCE_FROM_ABOVE
-    ]), Use.BIKEPATH)
-    this.add(route)
+    ])
 
     this.add(new Byway(ray, Use.BARE, LANDING_PARKING, { z: -7.5 }))
     this.add(new Byway(ray, Use.WALKWAY, LANDING_PLAZA, { z: -7.5 }))
@@ -241,14 +245,13 @@ class Lattice extends Structure {
     this.add(new Byway(ray, Use.BIKEPATH, EXIT_UP, { z: -14.9 }))
     this.add(new Byway(ray, Use.BIKEPATH, RIGHT_TURN_FROM_EXIT, { z: -14.9 }))
 
-    route = new Route(this._ray.applyRay([
+    this.addRoute([
       xyz(170, 22.5, -14.9), // start of EXIT_UP
       xyz(100, 30, -14.9), xyz(60, 44, -14.9), xyz(45, 90, -14.9), // start, middle, end of RIGHT_TURN_FROM_EXIT
       xyz(45, 270, -7.5), // landing
       xyz(35, 390, -7.5),
       xyz(35, 570, 0.1), xyz(25, 660, 0.1) // start and end of ENTRANCE_FROM_BELOW
-    ]), Use.BIKEPATH)
-    this.add(route)
+    ])
     this.add(new Byway(ray, Use.BIKEPATH, RAMP_UP_TO_LANDING, { z: -15, incline: -RAMP_RISE_HEIGHT }))
 
     this.add(new Byway(ray, Use.WALKWAY, LOWER_PLAZA, { z: -14.9 }))

@@ -48,8 +48,8 @@ function _openingsFromWallsSpec (wallsSpec) {
  */
 class Building extends Structure {
   constructor (spec, { city, ray, x0, y0, name, at = xyz(0, 0, 0) } = {}) {
-    super({ city, ray, x0, y0, name: name || spec.name })
-    this._makeBuildingFromSpec(spec, at)
+    super({ city, ray, x0, y0, at, name: name || spec.name })
+    this._makeBuildingFromSpec(spec)
   }
 
   _makeHighResBuildingFromSpec (spec, parentOffset = { x: 0, y: 0, z: 0 }) {
@@ -84,7 +84,7 @@ class Building extends Structure {
       if (!childSpec.roof) {
         childSpec.roof = roof
       }
-      const child = new Building(childSpec, { ray: this._ray, x0: this._x0, y0: this._y0, at: parentOffset })
+      const child = new Building(childSpec, { ray: this._ray, at: parentOffset })
       this.add(child)
     }
   }
