@@ -8,6 +8,7 @@
 import { xyz } from '../../../src/core/util.js'
 import { Ray } from '../../../src/core/ray.js'
 import { Facing } from '../../../src/core/facing.js'
+import { UNIT } from '../../../src/core/unit.js'
 
 /* global describe, it */
 /* eslint-disable no-unused-expressions */
@@ -32,7 +33,17 @@ describe('Ray', function () {
   })
 
   describe('#applyRay', function () {
+    const individualPoint = xyz(30, 20, 10)
     const listOfPoints = [xyz(0, 0, 0), xyz(30, 20, 10)]
+
+    it('should operate on individual points as well as lists', function () {
+      ray.goto(Facing.NORTH, xyz(3, 2, 1))
+      const expected = xyz(33, 22, 11)
+
+      const result = ray.applyRay(individualPoint)
+
+      result.should.eql(expected)
+    })
 
     it('should neither rotate nor translate, when facing NORTH at the origin', function () {
       ray.goto(Facing.NORTH, xyz(0, 0, 0))
@@ -41,6 +52,7 @@ describe('Ray', function () {
 
       result.should.eql(listOfPoints)
     })
+
     it('should translate but not rotate, when facing NORTH', function () {
       ray.goto(Facing.NORTH, xyz(300, 200, 100))
       const expected = [xyz(300, 200, 100), xyz(330, 220, 110)]
@@ -49,6 +61,7 @@ describe('Ray', function () {
 
       result.should.eql(expected)
     })
+
     it('should rotate, but not translate, when at the origin', function () {
       ray.goto(Facing.SOUTH, xyz(0, 0, 0))
       const expected = [xyz(0, 0, 0), xyz(-30, -20, 10)]
@@ -57,6 +70,7 @@ describe('Ray', function () {
 
       result.should.eql(expected)
     })
+
     it('should rotate and translate, when not facing NORTH and not at the origin', function () {
       ray.goto(Facing.SOUTH, xyz(300, 200, 100))
       const expected = [xyz(300, 200, 100), xyz(270, 180, 110)]
@@ -64,6 +78,18 @@ describe('Ray', function () {
       const result = ray.applyRay(listOfPoints)
 
       result.should.eql(expected)
+    })
+
+    it('should rotate correctly for angles that are not cardinal directions', function () {
+      ray.goto(UNIT.degrees(30), xyz(0, 0, 0))
+      const expected = [xyz(0, 0, 0), xyz(15.98, 32.32, 10)]
+
+      const result = ray.applyRay(listOfPoints)
+
+      result[0].should.eql(expected[0])
+      result[1].x.should.be.closeTo(expected[1].x, 0.001)
+      result[1].y.should.be.closeTo(expected[1].y, 0.001)
+      result[1].z.should.eql(expected[1].z)
     })
   })
 })

@@ -9,11 +9,13 @@ import { UNIT } from '../../src/core/unit.js'
 import { xy, xyz, countTo, rectangleOfSize } from '../../src/core/util.js'
 import { Byway } from '../../src/architecture/byway.js'
 import { District } from '../../src/architecture/district.js'
+import { Geometry } from '../../src/core/geometry.js'
 import { Highrise } from '../buildings/highrise.js'
 import { Parcel } from '../../src/architecture/parcel.js'
 import { Ray } from '../../src/core/ray.js'
 import { Use } from '../../src/architecture/use.js'
 
+const MANHATTEN_STREET_GRID_ORIENTATION = UNIT.degrees(-29)
 const BLOCK_DX = UNIT.feet(600)
 const BLOCK_DY = UNIT.feet(200)
 
@@ -58,6 +60,13 @@ const SIDEWALK_FOR_AVENUE = [
 const REPEAT_DX = BLOCK_DX + AVENUE_WIDTH + (SIDEWALK_WIDTH_AVENUES * 2)
 const REPEAT_DY = BLOCK_DY + STREET_WIDTH + (SIDEWALK_WIDTH_STREETS * 2)
 
+// TODO: refactor to merge this with _makeLine() in EiffelTower, Swingset & UtilityPole
+function _makeLine (waypoints, ray, color) {
+  const adjustedWaypoints = ray.applyRay(waypoints)
+  const line = new Geometry.Line(adjustedWaypoints)
+  return new Geometry.Instance(line, 0, color)
+}
+
 /**
  * Manhattan objects know how to describe the city blocks in New York.
  */
@@ -65,7 +74,9 @@ class Manhattan extends District {
   makeByway (use, area, { x = 0, y = 0, z = 0, dx = 0, dy = 0 } = {}) {
     // TODO: This is messy. It needs some clean up.
     let ray = this._ray
-    ray = new Ray(ray.az, xyz(ray.xyz.x + x + dx, ray.xyz.y + y + dy, z))
+    ray = new Ray(ray.az, xyz(ray.xyz.x, ray.xyz.y, z))
+    const delta = new Ray(ray.az, ray.xyz)
+    ray.xyz = delta.applyRay({ x: x + dx, y: y + dy })
     this._parcel.add(new Byway(ray, use, area))
   }
 
@@ -114,8 +125,10 @@ class Manhattan extends District {
   }
 
   addBlocks (numRows = 2, numCols = 2) {
-    this._ray.xyz.x += 12000 // TODO: this places the blocks at about 1st Ave and 1st St
-    this._ray.xyz.y += 6000 //  TODO: someday we should adjust the location, and add more blocks
+    this._ray.xyz.x += UNIT.feet(7200) // TODO: this places the blocks at about 1st Ave and 1st St
+    this._ray.xyz.y += UNIT.feet(6000) //  TODO: someday we should adjust the location, and add more blocks
+    this._ray.az = MANHATTEN_STREET_GRID_ORIENTATION
+    this._addLowLevelOfDetailStreetsAndAvenues(this._ray)
     const corners = rectangleOfSize(xy(REPEAT_DX * numRows, REPEAT_DY * numCols))
     this._parcel = new Parcel(corners, this._ray)
     this.add(this._parcel)
@@ -125,6 +138,30 @@ class Manhattan extends District {
       }
     }
     return this
+  }
+
+  _addLowLevelOfDetailStreetsAndAvenues (ray) {
+    const ASPHALT_GRAY = 0x222222
+    const NUM_AVENUES = 11
+    const NUM_STREETS = 217
+    const ISLAND_WIDTH = (NUM_AVENUES - 1) * REPEAT_DX
+    const ISLAND_LENGTH = (NUM_STREETS - 1) * REPEAT_DY
+    const PAVEMENT_HEIGHT = 0.5
+    for (const street of countTo(NUM_STREETS)) {
+      const endpoints = [
+        xyz(REPEAT_DX - ISLAND_WIDTH, street * REPEAT_DY, PAVEMENT_HEIGHT),
+        xyz(REPEAT_DX, street * REPEAT_DY, PAVEMENT_HEIGHT)
+      ]
+      this.add(_makeLine(endpoints, ray, ASPHALT_GRAY))
+    }
+    for (const avenue of countTo(NUM_AVENUES)) {
+      const x = REPEAT_DX + (avenue * -REPEAT_DX)
+      const endpoints = [
+        xyz(x, 0, PAVEMENT_HEIGHT),
+        xyz(x, ISLAND_LENGTH, PAVEMENT_HEIGHT)
+      ]
+      this.add(_makeLine(endpoints, ray, ASPHALT_GRAY))
+    }
   }
 }
 

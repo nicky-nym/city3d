@@ -22,14 +22,20 @@ class Ray {
     this.xyz = xyz
   }
 
-  applyRay (xyzList) {
-    const transformed = []
-    for (const xyzPoint of xyzList) {
-      const rotated = xyRotate(xyzPoint, this.az)
-      rotated.z = xyzPoint.z
-      transformed.push(xyzAdd(rotated, this.xyz))
+  applyRay (xyzObjOrList) {
+    if (Array.isArray(xyzObjOrList)) {
+      const transformed = []
+      for (const xyzPoint of xyzObjOrList) {
+        const rotated = xyRotate(xyzPoint, this.az)
+        rotated.z = xyzPoint.z
+        transformed.push(xyzAdd(rotated, this.xyz))
+      }
+      return transformed
+    } else {
+      const rotated = xyRotate(xyzObjOrList, this.az)
+      rotated.z = xyzObjOrList.z
+      return xyzAdd(rotated, this.xyz)
     }
-    return transformed
   }
 }
 

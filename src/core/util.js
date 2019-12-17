@@ -6,6 +6,7 @@
   */
 
 import { Facing } from './facing.js'
+import { UNIT } from './unit.js'
 
 /**
  * Given either a value or an array, returns an array
@@ -127,19 +128,10 @@ function xyRotate (xy, facing) {
     case Facing.WEST:
       return { x: -y, y: x }
   }
-  const SIN45 = 0.707
-  const COS45 = 0.707
-  switch (facing) {
-    case Facing.NORTHEAST:
-      return { x: x * COS45 - y * SIN45, y: x * COS45 + y * SIN45 }
-    case Facing.SOUTHEAST:
-      throw new Error('not implemented')
-    case Facing.SOUTHWEST:
-      throw new Error('not implemented')
-    case Facing.NORTHWEST:
-      throw new Error('not implemented')
-  }
-  throw new Error('bad compass facing in util xyRotate(): ' + facing.value.toString())
+  const radians = UNIT.toRadians(facing)
+  const xOut = x * Math.cos(radians) - y * Math.sin(radians)
+  const yOut = x * Math.sin(radians) + y * Math.cos(radians)
+  return { x: xOut, y: yOut }
 }
 
 function xywh2rect (y, z, width, height) {

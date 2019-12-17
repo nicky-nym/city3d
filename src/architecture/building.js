@@ -7,6 +7,7 @@
 
 import { array, cornersFromShape, countTo, randomInt, xyz, xyzAdd } from '../core/util.js'
 import { Group } from './group.js'
+import { Ray } from '../core/ray.js'
 import { Storey } from './storey.js'
 import { Structure } from './structure.js'
 import { Use } from '../architecture/use.js'
@@ -55,23 +56,28 @@ class Building extends Structure {
     let { storeyHeight, roof, children, numStoreys, shape, offset, walls } = spec
     roof = { parapetHeight: 0, ...roof }
     parentOffset = xyzAdd(parentOffset, offset)
-    const point = { ...parentOffset }
+    // const point = { ...parentOffset }
+    let point = { ...parentOffset }
+    const ray = new Ray(this._ray.az)
+    point = ray.applyRay(point)
+    const facing = this._ray.az
     if (shape) {
       const corners = cornersFromShape(shape)
       const openings = _openingsFromWallsSpec(walls)
       let z = point.z || 0
-      let ray
       for (const i in countTo(numStoreys)) {
         point.z = z
         const floorName = `Floor ${i}`
-        ray = this.goto(point)
-        const storey = new Storey(ray, Use.ROOM, corners, { name: floorName, wall: storeyHeight, openings: openings })
+        this.goto(point)
+        this._ray.az = facing
+        const storey = new Storey(this._ray, Use.ROOM, corners, { name: floorName, wall: storeyHeight, openings: openings })
         this.add(storey)
         z = z + storeyHeight
       }
       point.z = z
-      ray = this.goto(point)
-      const roofPlace = new Storey(ray, Use.ROOF, corners, { wall: roof.parapetHeight })
+      this.goto(point)
+      this._ray.az = facing
+      const roofPlace = new Storey(this._ray, Use.ROOF, corners, { wall: roof.parapetHeight })
       this.add(roofPlace)
     }
     for (const childSpec of array(children)) {
@@ -86,10 +92,14 @@ class Building extends Structure {
   _makeLowResGroupFromSpec (spec, group, parentOffset = { x: 0, y: 0, z: 0 }) {
     const { storeyHeight, children, numStoreys, shape, offset } = spec
     parentOffset = xyzAdd(parentOffset, offset)
-    const point = { ...parentOffset }
+    let point = { ...parentOffset }
+    const ray = new Ray(this._ray.az)
+    point = ray.applyRay(point)
+    const facing = this._ray.az
     if (shape) {
       const corners = cornersFromShape(shape)
       this.goto(point)
+      this._ray.az = facing
       const depth = storeyHeight * numStoreys
       const box = this.makePlaceholder(Use.WALL, corners, depth)
       group.add(box)
