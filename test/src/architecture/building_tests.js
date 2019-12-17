@@ -10,6 +10,7 @@ import { Building } from '../../../src/architecture/building.js'
 import { Geometry } from '../../../src/core/geometry.js'
 import { Group } from '../../../src/architecture/group.js'
 import { Storey } from '../../../src/architecture/storey.js'
+import { Wall } from '../../../src/architecture/wall.js'
 import { xy, xyz, fullName } from '../../../src/core/util.js'
 
 /* global describe, it, beforeEach */
@@ -174,21 +175,17 @@ describe('Building', function () {
         let storeyCount = 0
         building.accept(node => { storeyCount += node instanceof Storey ? 1 : 0 })
         let wallCount = 0
-        building.accept(node => {
-          wallCount += (node instanceof Geometry.Instance && node.geometry instanceof Geometry.Wall) ? 1 : 0
-        })
+        building.accept(node => { wallCount += node instanceof Wall ? 1 : 0 })
         wallCount.should.equal(4 * (storeyCount - 1))
       })
       it('should return a Building with each Wall having the same height, which is in the specified range', function () {
         const building = new Building(randomSpec)
 
         const walls = []
-        building.accept(node => {
-          if (node instanceof Geometry.Instance && node.geometry instanceof Geometry.Wall) { walls.push(node) }
-        })
-        const firstHeight = walls[0].geometry.height
+        building.accept(node => { if (node instanceof Wall) { walls.push(node) } })
+        const firstHeight = walls[0].height()
         firstHeight.should.be.within(9, 14)
-        walls.forEach(wall => wall.geometry.height.should.equal(firstHeight))
+        walls.forEach(wall => wall.height().should.equal(firstHeight))
       })
       it('should return a Building with two lower resolution levels of detail', function () {
         const building = new Building(randomSpec)
@@ -216,10 +213,8 @@ describe('Building', function () {
         const building = new Building(randomSpec)
 
         const walls = []
-        building.accept(node => {
-          if (node instanceof Geometry.Instance && node.geometry instanceof Geometry.Wall) { walls.push(node) }
-        })
-        const storeyHeight = walls[0].geometry.height
+        building.accept(node => { if (node instanceof Wall) { walls.push(node) } })
+        const storeyHeight = walls[0].height()
         const fullResTotalHeight = storeyHeight * walls.length / 4
         building.getLevelsOfDetail().forEach(lod => {
           let geometryInstance

@@ -8,8 +8,7 @@
 import { Geometry } from '../core/geometry.js'
 import { Group } from './group.js'
 import { Use } from './use.js'
-
-const ALMOST_WHITE = 0x999999
+import { Wall } from './wall.js'
 
 const WHITE = 0xffffff
 const RED = 0xcc0000 // eslint-disable-line no-unused-vars
@@ -39,8 +38,6 @@ const COLORS_BY_USE = {
 }
 
 function _addWalls (group, xyPolygon, height, z, openingsByWall, cap) {
-  let wallArea = 0
-  let openingArea = 0
   let i = 0
   for (const v of xyPolygon) {
     const entryForThisWall = openingsByWall.find(item => item[0] === i)
@@ -50,16 +47,9 @@ function _addWalls (group, xyPolygon, height, z, openingsByWall, cap) {
       const next = i % xyPolygon.length
       const near = v
       const far = xyPolygon[next]
-      const abstractWall = new Geometry.Wall(near, far, height, { openings })
-      const name = `wall from ${JSON.stringify(near)} to ${JSON.stringify(far)}`
-      const concreteWall = new Geometry.Instance(abstractWall, z, ALMOST_WHITE, name)
-      wallArea += abstractWall.area()
-      openingArea += abstractWall.areaOfOpenings()
-      group.add(concreteWall)
+      group.add(new Wall(near, far, height, { z, openings }))
     }
   }
-  group.addMetric('Wall area', wallArea, 'square feet')
-  group.addMetric('Wall opening area', openingArea, 'square feet')
 }
 
 /**

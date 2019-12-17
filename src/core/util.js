@@ -77,6 +77,14 @@ function hypotenuse (x, y, z = 0) {
 }
 
 /**
+ * Returns the length of a vector
+ * @returns {number} the length of the vector
+ */
+function length ({ x, y, z = 0 }) {
+  return Math.sqrt(x ** 2 + y ** 2 + z ** 2)
+}
+
+/**
  * Returns a random integer between min and max, inclusive
  * @returns {number} a random integer
  */
@@ -164,4 +172,4 @@ function fullName (feature) {
   return names.join(' of ')
 }
 
-export { array, cornersFromShape, count, countTo, hypotenuse, randomInt, randomPseudoGaussian, xy, xyz, xyzAdd, xyzSubtract, xyRotate, xywh2rect, rectangleOfSize, fullName }
+export { array, cornersFromShape, count, countTo, hypotenuse, length, randomInt, randomPseudoGaussian, xy, xyz, xyzAdd, xyzSubtract, xyRotate, xywh2rect, rectangleOfSize, fullName }

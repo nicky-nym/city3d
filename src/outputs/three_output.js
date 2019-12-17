@@ -323,13 +323,13 @@ class ThreeOutput extends Output {
 
   makeMeshFromInstanceGeometry (instanceGeometry, material, color, zOffset) {
     if (instanceGeometry instanceof Geometry.ThickPolygon) {
-      return this.makeThickPolygonMesh(instanceGeometry, zOffset, material, color)
+      return this.makeThickPolygonMesh(instanceGeometry, zOffset, material)
     }
-    if (instanceGeometry instanceof Geometry.Wall) {
-      return this.makeWallMesh(instanceGeometry, zOffset, material, color)
+    if (instanceGeometry instanceof Geometry.ThickPolygon2) {
+      return this.makeThickPolygon2Mesh(instanceGeometry, zOffset, material)
     }
     if (instanceGeometry instanceof Geometry.TriangularPolyhedron) {
-      return this.makeTriangularPolyhedronMesh(instanceGeometry, material, color)
+      return this.makeTriangularPolyhedronMesh(instanceGeometry, material)
     }
     if (instanceGeometry instanceof Geometry.OutlinePolygon) {
       return this.makeOutlinePolygonLines(instanceGeometry, color, zOffset)
@@ -403,37 +403,25 @@ class ThreeOutput extends Output {
     return mesh
   }
 
-  makeWallMesh (wall, zOffset, material) {
-    const { x: x0, y: y0 } = wall.xyVertex0
-    const near = new THREE.Vector2(x0, y0)
-    const { x: x1, y: y1 } = wall.xyVertex1
-    const far = new THREE.Vector2(x1, y1)
-    const length = near.distanceTo(far)
-    const height = wall.height
-    const rectangle = [
-      new THREE.Vector2(0, 0),
-      new THREE.Vector2(length, 0),
-      new THREE.Vector2(length, height),
-      new THREE.Vector2(0, height)
-    ]
-    const shape = new THREE.Shape(rectangle)
+  makeThickPolygon2Mesh (thickPolygon, zOffset, material) {
+    const xyPolygon = thickPolygon.xyPolygon
+    const shape = new THREE.Shape(xyPolygon)
     shape.closePath()
-    for (const opening of wall.openings) {
+
+    for (const opening of thickPolygon.openings) {
       const points = opening.map(xy => new THREE.Vector2(xy.x, xy.y))
       const path = new THREE.Path(points)
       shape.holes.push(path)
     }
 
     const geometry = new THREE.ExtrudeGeometry(shape, {
-      depth: wall.depth,
+      depth: thickPolygon.depth,
       bevelEnabled: false
     })
-    geometry.rotateX(Math.PI / 2)
 
-    const difference = new THREE.Vector2()
-    const netAngle = difference.subVectors(near, far).angle()
-    geometry.rotateZ(netAngle - Math.PI)
-    geometry.translate(x0, y0, zOffset)
+    geometry.rotateX(thickPolygon.xRotation)
+    geometry.rotateZ(thickPolygon.zRotation)
+    geometry.translate(thickPolygon.xOffset, thickPolygon.yOffset, zOffset)
 
     const mesh = new THREE.Mesh(geometry, material)
     mesh.castShadow = true

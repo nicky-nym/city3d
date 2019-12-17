@@ -7,7 +7,7 @@
 
 import { UNIT } from '../../../src/core/unit.js'
 import { Facing } from '../../../src/core/facing.js'
-import { xy, xyz, xyzAdd, xyzSubtract, xyRotate, rectangleOfSize, count, countTo, randomInt, randomPseudoGaussian, hypotenuse, array } from '../../../src/core/util.js'
+import { xy, xyz, xyzAdd, xyzSubtract, xyRotate, rectangleOfSize, count, countTo, randomInt, randomPseudoGaussian, hypotenuse, length, array } from '../../../src/core/util.js'
 
 /* global describe, it */
 /* eslint-disable no-unused-expressions */
@@ -56,6 +56,17 @@ describe('util', function () {
     })
     it('should work for 3D vectors', function () {
       const result = hypotenuse(2, 8, 16)
+      result.should.equal(18)
+    })
+  })
+
+  describe('#length()', function () {
+    it('should work for 2D vectors', function () {
+      const result = length(xy(3, 4))
+      result.should.equal(5)
+    })
+    it('should work for 3D vectors', function () {
+      const result = length(xyz(2, 8, 16))
       result.should.equal(18)
     })
   })

@@ -41,35 +41,40 @@ class TriangularPolyhedron {
   }
 }
 
-function _xyDistance (xy0, xy1) {
-  const dx = xy0.x - xy1.x
-  const dy = xy0.y - xy1.y
-  return Math.sqrt(dx ** 2 + dy ** 2)
-}
+const DEFAULT_THICKNESS = 0.5
 
-const DEFAULT_WALL_THICKNESS = 0.5
-class Wall {
-  constructor (xyVertex0, xyVertex1, height, { depth, openings } = {}) {
-    this.xyVertex0 = xyVertex0
-    this.xyVertex1 = xyVertex1
-    this.height = height
-    this.depth = depth || DEFAULT_WALL_THICKNESS
-    this.openings = openings || []
+/**
+ * ThickPolygon2 is currently used for building Walls.
+ * TODO: merge with ThickPolygon
+ *
+ * @param {XYPolygon} xyPolygon
+ * @param {Number} [xRotation=0] - rotation around x-axis in radians
+ * @param {Number} [zRotation=0] - rotation around z-axis in radians
+ * @param {Number} [xOffset=0]
+ * @param {Number} [yOffset=0]
+ * @param {Number} [depth=DEFAULT_THICKNESS]
+ * @param {xy[][]} [openings] - array of openings, where each is specified by an array of xy values
+ */
+class ThickPolygon2 {
+  constructor (xyPolygon, {
+    xRotation = 0, zRotation = 0, xOffset = 0, yOffset = 0, depth = DEFAULT_THICKNESS, openings = []
+  } = {}) {
+    this.xyPolygon = xyPolygon
+    this.xRotation = xRotation
+    this.zRotation = zRotation
+    this.xOffset = xOffset
+    this.yOffset = yOffset
+    this.depth = depth
+    this.openings = openings
   }
 
   area () {
-    return this.height * _xyDistance(this.xyVertex0, this.xyVertex1)
+    return this.xyPolygon.area()
   }
 
   areaOfOpenings () {
     let sum = 0
-    const n = this.openings
-    for (let i = 0; i < n - 1; i++) {
-      const opening = this.openings[i] // eslint-disable-line no-unused-vars
-      // TODO: implement me!
-      // sum += opening[i].x * opening[i + 1].y - opening[i + 1].x * opening[i].y
-      sum += 0
-    }
+    this.openings.forEach(o => { sum += (new XYPolygon(o)).area() })
     return sum
   }
 }
@@ -89,4 +94,4 @@ class XYPolygon extends Array {
   }
 }
 
-export const Geometry = { Instance, Line, OutlinePolygon, ThickPolygon, TriangularPolyhedron, Wall, XYPolygon }
+export const Geometry = { Instance, Line, OutlinePolygon, ThickPolygon, ThickPolygon2, TriangularPolyhedron, XYPolygon }
