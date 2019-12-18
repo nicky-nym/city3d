@@ -1,9 +1,9 @@
-/** @file wurster.js
-  * @author Authored in 2019 at <https://github.com/nicky-nym/city3d>
-  * @license UNLICENSE
-  * This is free and unencumbered software released into the public domain.
-  * For more information, please refer to <http://unlicense.org>
-  */
+/** @file wurster_hall.js
+ * @author Authored in 2019 at <https://github.com/nicky-nym/city3d>
+ * @license UNLICENSE
+ * This is free and unencumbered software released into the public domain.
+ * For more information, please refer to <http://unlicense.org>
+ */
 
 import { UNIT } from '../../src/core/unit.js'
 import { xy, xyz } from '../../src/core/util.js'
@@ -341,10 +341,10 @@ const NUM_SOUTH_WING_CRENELS_Y = 9 // eslint-disable-line no-unused-vars
  * Class representing UC Berkeley's Wurster Hall.
  * @see [Wikipedia photo]{@link https://en.wikipedia.org/wiki/UC_Berkeley_College_of_Environmental_Design#/media/File:UC_Berkeley_Wurster_Hall.jpg}
  */
-class Wurster extends Building {
+class WursterHall extends Building {
   constructor ({ city, ray, x0, y0, at = xyz(0, 0, 0), name } = {}) {
     super(WURSTER_BUILDING_SPEC, { city, ray, x0, y0, name, at })
   }
 }
 
-export { Wurster }
+export { WursterHall }

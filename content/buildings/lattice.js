@@ -177,8 +177,7 @@ const LOWER_PLAZA_WALKWAY_D = [
  */
 class Lattice extends Structure {
   constructor ({ city, ray, x0, y0, numRows = 2, numCols = 2, hideBuildings = false, name } = {}) {
-    super({ city, ray, x0, y0, name: name || 'Lattice' })
-    this._city = city
+    super({ ray, x0, y0, name: name || 'Lattice' })
     this.addUnitCells(numRows, numCols, !hideBuildings)
   }
 

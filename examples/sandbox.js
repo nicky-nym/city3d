@@ -30,11 +30,10 @@ function addBuildings (city) {
 
   ray = new Ray(Facing.NORTH, xyz(238, 238, 0))
   corners = rectangleOfSize(xy(2000, 2000))
-  const kineborough = new CITY.District(corners, ray, 'Kineborough')
-  city.add(kineborough)
-  kineborough.add(new CITY.Lattice({ city, x0: 100, y0: 100, numRows: 3, numCols: 3, hideBuildings: false }))
-  kineborough.add(new CITY.MidriseComplex({ x0: 238, y0: 238, numRowPairs: 4, numColPairs: 4, hideBuildings: false }))
-  kineborough.recordMetrics(kineborough)
+  const latticeburg = new CITY.LatticeDistrict(corners, ray, 'Latticeburg')
+  latticeburg.makeFeatures()
+  city.add(latticeburg)
+  latticeburg.recordMetrics(latticeburg)
 
   ray = new Ray(Facing.NORTH, xyz(100, -600, 0))
   corners = rectangleOfSize(xy(1200, 550))

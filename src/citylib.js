@@ -37,7 +37,7 @@ import { Garage } from '../content/buildings/garage.js'
 import { Highrise } from '../content/buildings/highrise.js'
 import { House } from '../content/buildings/house.js'
 import { MidriseComplex } from '../content/buildings/midrise_complex.js'
-import { Wurster } from '../content/buildings/wurster.js'
+import { WursterHall } from '../content/buildings/wurster_hall.js'
 
 // structures
 import { EiffelTower } from '../content/structures/eiffel_tower.js'
@@ -53,10 +53,11 @@ import { Kalpana } from '../content/movers/kalpana.js'
 import { Kayak } from '../content/movers/kayak.js'
 import { Vehicle } from '../content/movers/vehicle.js'
 
-// places
-import { Campus } from '../content/places/campus.js'
-import { Manhattan } from '../content/places/manhattan.js'
-import { Suburbia } from '../content/places/suburbia.js'
+// districts
+import { Campus } from '../content/districts/campus.js'
+import { LatticeDistrict } from '../content/districts/lattice_district.js'
+import { Manhattan } from '../content/districts/manhattan.js'
+import { Suburbia } from '../content/districts/suburbia.js'
 
 export const CITY = {
   Lattice,
@@ -75,6 +76,7 @@ export const CITY = {
   Group,
   Highrise,
   House,
+  LatticeDistrict,
   Manhattan,
   MetricsOutput,
   MidriseComplex,
@@ -95,5 +97,5 @@ export const CITY = {
   Vehicle,
   Wall,
   Window,
-  Wurster
+  WursterHall
 }

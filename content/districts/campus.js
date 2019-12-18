@@ -8,7 +8,7 @@
 import { cornersFromShape, countTo, xy, xyz } from '../../src/core/util.js'
 import { Parcel } from '../../src/architecture/parcel.js'
 import { District } from '../../src/architecture/district.js'
-import { Wurster } from '../buildings/wurster.js'
+import { WursterHall } from '../buildings/wurster_hall.js'
 
 const PARCEL = {
   offset: xyz(0, 0, 0),
@@ -31,7 +31,7 @@ class Campus extends District {
       const corners = cornersFromShape(PARCEL.shape)
       const parcel = new Parcel(corners, ray)
       this.add(parcel)
-      parcel.add(new Wurster({ ray, x0: this._x0, y0: this._y0, at: offset }))
+      parcel.add(new WursterHall({ ray, x0: this._x0, y0: this._y0, at: offset }))
     }
   }
 }
