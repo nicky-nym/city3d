@@ -1,9 +1,9 @@
 /** @file midrise_complex.js
-  * @author Authored in 2019 at <https://github.com/nicky-nym/city3d>
-  * @license UNLICENSE
-  * This is free and unencumbered software released into the public domain.
-  * For more information, please refer to <http://unlicense.org>
-  */
+ * @author Authored in 2019 at <https://github.com/nicky-nym/city3d>
+ * @license UNLICENSE
+ * This is free and unencumbered software released into the public domain.
+ * For more information, please refer to <http://unlicense.org>
+ */
 
 import { xy, xyz, xywh2rect, count, countTo, randomInt, hypotenuse } from '../../src/core/util.js'
 import { Byway } from '../../src/architecture/byway.js'
@@ -59,7 +59,7 @@ const BASEMENT = [
 ]
 const APARTMENT_WIDTH = D1 + RAMP_RUN_LENGTH + (D1 + D2) / 2
 
-const DOOR_HEIGHT = 6 + 8 / 12
+const DOOR_HEIGHT = UNIT.feet(6 + 8 / 12)
 const DOORS = [
   xywh2rect(1.2, 0.01, 3, DOOR_HEIGHT),
   xywh2rect(4.285, 0.01, 3, DOOR_HEIGHT)
@@ -98,19 +98,19 @@ for (const [point, windows] of APARTMENT_SPEC) { // eslint-disable-line no-unuse
   i++
 }
 
-function nudgeXY (xy, delta) {
+function _nudgeXY (xy, delta) {
   return { x: xy.x + delta.x, y: xy.y + delta.y }
 }
 
 const ATTIC = [
-  nudgeXY(APARTMENT[0], xy(-1.2, -2)),
-  nudgeXY(APARTMENT[1], xy(-2, -1.2)),
-  nudgeXY(APARTMENT[2], xy(-2, 1.2)),
-  nudgeXY(APARTMENT[3], xy(-1.2, 2)),
-  nudgeXY(APARTMENT[4], xy(1.2, 2)),
-  nudgeXY(APARTMENT[5], xy(2, 1.2)),
-  nudgeXY(APARTMENT[6], xy(2, -1.2)),
-  nudgeXY(APARTMENT[7], xy(1.2, -2))
+  _nudgeXY(APARTMENT[0], xy(-1.2, -2)),
+  _nudgeXY(APARTMENT[1], xy(-2, -1.2)),
+  _nudgeXY(APARTMENT[2], xy(-2, 1.2)),
+  _nudgeXY(APARTMENT[3], xy(-1.2, 2)),
+  _nudgeXY(APARTMENT[4], xy(1.2, 2)),
+  _nudgeXY(APARTMENT[5], xy(2, 1.2)),
+  _nudgeXY(APARTMENT[6], xy(2, -1.2)),
+  _nudgeXY(APARTMENT[7], xy(1.2, -2))
 ]
 
 function _getCloverleafLandingPattern () {
@@ -248,12 +248,12 @@ function _trimEdgeRampsFromPattern (grid) {
   return grid
 }
 
-function _getLandingPattern (numRows, numCols) {
+function _getLandingPattern (numRowPairs, numColPairs) {
   const pattern = _getLandingPatternForFourCloverleafs()
   let grid = []
-  for (const i of countTo(numRows + 1)) {
+  for (const i of countTo((numRowPairs * 2) + 1)) {
     const row = []
-    for (const j of countTo(numCols + 1)) {
+    for (const j of countTo((numColPairs * 2) + 1)) {
       row.push(pattern[i % 4][j % 4])
     }
     grid.push(row)
@@ -263,9 +263,9 @@ function _getLandingPattern (numRows, numCols) {
 }
 
 class MidriseComplex extends Structure {
-  constructor ({ city, ray, x0, y0, numRows = 2, numCols = 2, hideBuildings = false, name } = {}) {
-    super({ city, ray, x0, y0, name: name || 'Midrise Complex' })
-    this.addBuildings(numRows, numCols, !hideBuildings)
+  constructor ({ city, ray, x0, y0, numRowPairs = 1, numColPairs = 1, hideBuildings = false, name = 'Midrise Complex' } = {}) {
+    super({ city, ray, x0, y0, name })
+    this._addBuildings(numRowPairs, numColPairs, !hideBuildings)
   }
 
   _addRoofAroundFloor (shape, peakXyz) {
@@ -342,9 +342,9 @@ class MidriseComplex extends Structure {
     }
   }
 
-  addBuildings (numRows = 2, numCols = 2, buildings = true) {
+  _addBuildings (numRowPairs = 1, numColPairs = 1, buildings = true) {
     let i = 0
-    for (const row of _getLandingPattern(numRows, numCols)) {
+    for (const row of _getLandingPattern(numRowPairs, numColPairs)) {
       let j = 0
       for (const gridCell of row) {
         const x = i * TOWER_SPACING

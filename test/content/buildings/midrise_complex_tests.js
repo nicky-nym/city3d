@@ -1,9 +1,9 @@
 /** @file midrise_complex_tests.js
-  * @author Authored in 2019 at <https://github.com/nicky-nym/city3d>
-  * @license UNLICENSE
-  * This is free and unencumbered software released into the public domain.
-  * For more information, please refer to <http://unlicense.org>
-  */
+ * @author Authored in 2019 at <https://github.com/nicky-nym/city3d>
+ * @license UNLICENSE
+ * This is free and unencumbered software released into the public domain.
+ * For more information, please refer to <http://unlicense.org>
+ */
 
 import { Byway } from '../../../src/architecture/byway.js'
 import { City } from '../../../src/architecture/city.js'
@@ -40,25 +40,25 @@ describe('MidriseComplex', function () {
       fullName(complex).should.equal('Napoleon Complex of Testopia')
     })
     it('should result in at least one Roof for a 1 x 1 pattern', function () {
-      const complex = new MidriseComplex({ numRows: 1, numCols: 1 })
+      const complex = new MidriseComplex({ numRowPairs: 1, numColPairs: 1 })
 
       complex.accept(node => { count += node instanceof Roof ? 1 : 0 })
       count.should.be.at.least(1)
     })
-    it('should result in at least 64 Roofs for a 8 x 8 pattern', function () {
-      const complex = new MidriseComplex({ numRows: 8, numCols: 8 })
+    it('should result in at least 64 Roofs for a 4 x 4 pattern', function () {
+      const complex = new MidriseComplex({ numRowPairs: 4, numColPairs: 4 })
 
       complex.accept(node => { count += node instanceof Roof ? 1 : 0 })
       count.should.be.at.least(64)
     })
     it('should result in at least one Storey for a 1 x 1 pattern', function () {
-      const complex = new MidriseComplex({ numRows: 1, numCols: 1 })
+      const complex = new MidriseComplex({ numRowPairs: 1, numColPairs: 1 })
 
       complex.accept(node => { count += node instanceof Storey ? 1 : 0 })
       count.should.be.at.least(1)
     })
     it('should result in at least one Byway for a 1 x 1 pattern', function () {
-      const complex = new MidriseComplex({ numRows: 1, numCols: 1 })
+      const complex = new MidriseComplex({ numRowPairs: 1, numColPairs: 1 })
 
       complex.accept(node => { count += node instanceof Byway ? 1 : 0 })
       count.should.be.at.least(1)

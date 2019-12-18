@@ -153,6 +153,7 @@ function rectangleOfSize (sizeXY, at = { x: 0, y: 0 }) {
   ]
 }
 
+// TODO: if we create a class named Feature, we should move this to be feature.fullName()
 function fullName (feature) {
   const names = []
   let f

@@ -33,7 +33,7 @@ function addBuildings (city) {
   const kineborough = new CITY.District(corners, ray, 'Kineborough')
   city.add(kineborough)
   kineborough.add(new CITY.Lattice({ city, x0: 100, y0: 100, numRows: 3, numCols: 3, hideBuildings: false }))
-  kineborough.add(new CITY.MidriseComplex({ x0: 238, y0: 238, numRows: 8, numCols: 8, hideBuildings: false }))
+  kineborough.add(new CITY.MidriseComplex({ x0: 238, y0: 238, numRowPairs: 4, numColPairs: 4, hideBuildings: false }))
   kineborough.recordMetrics(kineborough)
 
   ray = new Ray(Facing.NORTH, xyz(100, -600, 0))
