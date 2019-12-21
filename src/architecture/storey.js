@@ -7,6 +7,7 @@
 
 import { Geometry } from '../core/geometry.js'
 import { Group } from './group.js'
+import { METRIC } from './metric.js'
 import { Use } from './use.js'
 import { Wall } from './wall.js'
 
@@ -35,6 +36,16 @@ const COLORS_BY_USE = {
   WALL: WHITE,
   ROOF: DARK_GRAY,
   DOOR: YELLOW
+}
+
+const METRICS_BY_USE = {
+  STREET: METRIC.CIRCULATION_AREA,
+  BIKEPATH: METRIC.CIRCULATION_AREA,
+  WALKWAY: METRIC.CIRCULATION_AREA,
+  ROOM: METRIC.USABLE_FLOOR_AREA,
+  PARCEL: METRIC.LAND_AREA,
+  CANAL: METRIC.WATER_AREA,
+  ROOF: METRIC.ROOF_AREA
 }
 
 function _addWalls (group, xyPolygon, height, z, openingsByWall, cap) {
@@ -68,6 +79,12 @@ class Storey extends Group {
       const concreteThickPolygon = new Geometry.Instance(abstractThickPolygon, z, color)
       this.add(concreteThickPolygon)
       const squareFeet = xyPolygon.area()
+
+      const metric = METRICS_BY_USE[use]
+      if (metric) {
+        this.setValueForMetric(metric, squareFeet)
+      }
+      // TODO: delete this legacy metrics code once the new Metric code is finished
       this.addMetric(`Floor area: ${use}`, squareFeet, 'square feet')
     }
     if (wall !== 0) {

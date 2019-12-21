@@ -22,13 +22,18 @@ import { Use } from './architecture/use.js'
 
 // outputs
 import { Output } from './outputs/output.js'
-import { MetricsOutput } from './outputs/metrics_output.js'
+import { TableOutput } from './outputs/table_output.js'
+import { NewMetricsOutput } from './outputs/new_metrics_output.js'
+import { OldMetricsOutput } from './outputs/old_metrics_output.js'
 import { SummaryOutput } from './outputs/summary_output.js'
 import { TextOutput } from './outputs/text_output.js'
 import { ThreeOutput } from './outputs/three_output.js'
 
 // routes
 import { Route } from './routes/route.js'
+
+// metrics
+import { Tabulator } from './metrics/tabulator.js'
 
 // buildings
 import { Lattice } from '../content/buildings/lattice.js'
@@ -78,8 +83,9 @@ export const CITY = {
   House,
   LatticeDistrict,
   Manhattan,
-  MetricsOutput,
   MidriseComplex,
+  NewMetricsOutput,
+  OldMetricsOutput,
   Opening,
   Output,
   Parcel,
@@ -89,6 +95,8 @@ export const CITY = {
   Suburbia,
   SummaryOutput,
   Swingset,
+  TableOutput,
+  Tabulator,
   TextOutput,
   ThreeOutput,
   Tree,

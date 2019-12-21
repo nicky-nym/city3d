@@ -68,5 +68,36 @@ function toRadians (angle) {
   return angle / DEGREES_PER_RADIAN
 }
 
-const UNIT = { meters, km, feet, radians, degrees, toRadians }
+// TODO: code review: reconsider whether we really want this
+function count (count) {
+  return count
+}
+
+// TODO: code review: reconsider whether we really want this
+function squareFeet (area) {
+  return area
+}
+
+// TODO: code review: reconsider whether we really want this
+function numberPerSquareFoot (average) {
+  return average
+}
+
+// TODO: code review: reconsider whether we really want this
+function ratio (float) {
+  return float
+}
+
+const UNIT = {
+  meters,
+  km,
+  feet,
+  radians,
+  degrees,
+  toRadians,
+  count,
+  squareFeet,
+  numberPerSquareFoot,
+  ratio
+}
 export { UNIT }

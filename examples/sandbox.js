@@ -115,8 +115,9 @@ function main () {
 
   // display the city on the web page
   CITY.Output.addOutput(new CITY.ThreeOutput(city))
-  CITY.Output.addOutput(new CITY.MetricsOutput(city))
+  CITY.Output.addOutput(new CITY.OldMetricsOutput(city, 'City Metrics (original version)'))
   CITY.Output.addOutput(new CITY.SummaryOutput(city))
+  CITY.Output.addOutput(new CITY.NewMetricsOutput(city, 'City Metrics (refactored version)'))
 }
 
 main()

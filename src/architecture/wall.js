@@ -7,6 +7,7 @@
 
 import { Geometry } from '../core/geometry.js'
 import { Group } from './group.js'
+import { METRIC } from './metric.js'
 import { xy, hypotenuse } from '../core/util.js'
 
 const ALMOST_WHITE = 0x999999
@@ -40,6 +41,12 @@ class Wall extends Group {
     const abstractWall = new Geometry.ThickPolygon2(xyPolygon, { xRotation, zRotation, xOffset: v1.x, yOffset: v1.y, depth, openings })
     const concreteWall = new Geometry.Instance(abstractWall, z, ALMOST_WHITE, name)
     this.add(concreteWall)
+
+    this.setValueForMetric(METRIC.WALL_AREA, abstractWall.area())
+    this.setValueForMetric(METRIC.WINDOW_AREA, abstractWall.areaOfOpenings()) // TODO: separate out doors vs. windows
+    // this.setValueForMetric(METRIC.DOOR_AREA, abstractWall.areaOfOpenings()) // TODO: separate out doors vs. windows
+
+    // TODO: delete this legacy metrics code once the new Metric code is finished
     this.addMetric('Wall area', abstractWall.area(), 'square feet')
     this.addMetric('Wall opening area', abstractWall.areaOfOpenings(), 'square feet')
   }

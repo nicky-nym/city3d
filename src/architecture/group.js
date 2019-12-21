@@ -1,15 +1,16 @@
 /** @file group.js
-  * @author Authored in 2019 at <https://github.com/nicky-nym/city3d>
-  * @license UNLICENSE
-  * This is free and unencumbered software released into the public domain.
-  * For more information, please refer to <http://unlicense.org>
-  */
+ * @author Authored in 2019 at <https://github.com/nicky-nym/city3d>
+ * @license UNLICENSE
+ * This is free and unencumbered software released into the public domain.
+ * For more information, please refer to <http://unlicense.org>
+ */
 
 class Group {
   constructor (name) {
     this.name = name
     this.children = []
-    this.metrics = new Map()
+    this._valuesByMetric = new Map()
+    this.metrics = new Map() // TODO: delete this legacy metrics code once the new Metric code is finished
   }
 
   add (...things) {
@@ -29,6 +30,16 @@ class Group {
     visitor(this)
   }
 
+  /**
+   * Creates a new instance that represents some measurable physical attribute.
+   * @param {Metric} metric - - a physical attribute of a feature, like the square footage of a room.
+   * @param {number} value - the value of the Metric for this group
+   */
+  setValueForMetric (metric, value) {
+    this._valuesByMetric.set(metric, value)
+  }
+
+  // TODO: delete this legacy metrics code once the new Metric code is finished
   addMetric (name, value, units) {
     this.metrics.set(name, { value, units })
   }

@@ -9,8 +9,9 @@ import { countTo, xyz } from '../core/util.js'
 import { Facing } from '../core/facing.js'
 import { Geometry } from '../core/geometry.js'
 import { Group } from './group.js'
-import { Use } from './use.js'
+import { METRIC } from './metric.js'
 import { Ray } from '../core/ray.js'
+import { Use } from './use.js'
 
 const MARTIAN_ORANGE = 0xdf4911
 
@@ -32,6 +33,10 @@ class District extends Group {
       const concreteOutlinePolygon = new Geometry.Instance(abstractOutlinePolygon, ray.xyz.z + (i * 3), MARTIAN_ORANGE)
       this.add(concreteOutlinePolygon)
     }
+
+    this.setValueForMetric(METRIC.LAND_AREA, xyPolygon.area())
+
+    // TODO: delete this legacy metrics code once the new Metric code is finished
     this.addMetric(`${Use.DISTRICT} land area`, xyPolygon.area(), 'square feet')
   }
 

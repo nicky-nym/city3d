@@ -7,6 +7,7 @@
 
 import { Geometry } from '../core/geometry.js'
 import { Group } from './group.js'
+import { METRIC } from './metric.js'
 import { Use } from './use.js'
 
 const MARTIAN_ORANGE = 0xdf4911
@@ -23,6 +24,10 @@ class Parcel extends Group {
     const abstractOutlinePolygon = new Geometry.OutlinePolygon(xyPolygon)
     const concreteOutlinePolygon = new Geometry.Instance(abstractOutlinePolygon, ray.xyz.z, MARTIAN_ORANGE)
     this.add(concreteOutlinePolygon)
+
+    this.setValueForMetric(METRIC.LAND_AREA, xyPolygon.area())
+
+    // TODO: delete this legacy metrics code once the new Metric code is finished
     this.addMetric(`Floor area: ${Use.PARCEL}`, xyPolygon.area(), 'square feet')
   }
 }
