@@ -155,6 +155,7 @@ class ThreeOutput extends Output {
         case 'KeyD': return this._onRight()
         case 'KeyE': return this._onTurnRight()
         case 'KeyF': return this._onDown()
+        case 'KeyG': return this._onGoTo()
         case 'KeyH': return this._onToggleHighlighting()
         case 'KeyK': return this._onShowKeyboardCommands(evt)
         case 'KeyQ': return this._onTurnLeft()
@@ -191,6 +192,7 @@ class ThreeOutput extends Output {
     e: turn right 5 degrees<br>
     r: move up one foot<br>
     f: move down one foot<br>
+    g: go to where the cursor is pointing<br>
     <h5>Orbit controls use the mouse and arrow keys.</h5>
     `
     // enable selecting objects with mouse
@@ -544,6 +546,25 @@ class ThreeOutput extends Output {
     v.normalize()
     this._camera.position.x += v.x
     this._camera.position.y += v.y
+  }
+
+  _onGoTo () {
+    this.controls.enabled = false
+
+    // update the picking ray with the camera and mouse position
+    this._raycaster.setFromCamera(this._mouse, this._camera)
+
+    // calculate objects intersecting the picking ray
+    const intersects = this._raycaster.intersectObjects(this._scene.children, true)
+
+    if (intersects.length > 0) {
+      const diff = new THREE.Vector3()
+      diff.subVectors(intersects[0].point, this._camera.position)
+      this._camera.position.copy(intersects[0].point)
+      this._camera.position.z += 5
+      const focus = this._camera.position.clone().add(new THREE.Vector3(diff.x, diff.y, 0))
+      this._camera.lookAt(focus)
+    }
   }
 
   _material (materialCost, color, twoSided = false) {

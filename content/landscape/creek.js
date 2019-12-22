@@ -37,7 +37,7 @@ class Creek {
     return new Route(route.slice(NUM_SECTIONS / 2), use)
   }
 
-  makeCreek () {
+  makeCreek (name) {
     const BLUE = 0x0000ff
     const xyPolygon = new Geometry.XYPolygon()
     for (const i of countTo(NUM_SECTIONS)) {
@@ -52,7 +52,7 @@ class Creek {
     }
 
     const abstractThickPolygon = new Geometry.ThickPolygon(xyPolygon, { depth: CREEK_DEPTH })
-    const concreteThickPolygon = new Geometry.Instance(abstractThickPolygon, 0, BLUE)
+    const concreteThickPolygon = new Geometry.Instance(abstractThickPolygon, 0, BLUE, name || 'Creek')
     return concreteThickPolygon
   }
 }
