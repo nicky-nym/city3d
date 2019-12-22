@@ -26,19 +26,19 @@ METRIC.WALL_AREA = new Metric('Wall area', UNIT.squareFeet)
 
 // derived metrics
 METRIC.POPULATION_DENSITY = new Metric(
-  'Population density',
+  'Population density  (per square mile)',
   UNIT.numberPerSquareFoot,
-  feature => METRIC.POPULATION.getValue(feature) / METRIC.LAND_AREA.getValue(feature)
+  feature => 5280 * 5280 * feature.getValueForMetric(METRIC.POPULATION) / feature.getValueForMetric(METRIC.LAND_AREA)
 )
 METRIC.FLOOR_AREA_RATIO = new Metric(
   'Floor area ratio',
   UNIT.ratio,
-  feature => METRIC.GROSS_FLOOR_AREA.getValue(feature) / METRIC.LAND_AREA.getValue(feature)
+  feature => feature.getValueForMetric(METRIC.USABLE_FLOOR_AREA) / feature.getValueForMetric(METRIC.LAND_AREA)
 )
 METRIC.CIRCULATION_AREA_RATIO = new Metric(
   'Circulation area ratio',
   UNIT.ratio,
-  feature => METRIC.CIRCULATION_AREA.getValue(feature) / METRIC.GROSS_FLOOR_AREA.getValue(feature)
+  feature => feature.getValueForMetric(METRIC.CIRCULATION_AREA) / feature.getValueForMetric(METRIC.USABLE_FLOOR_AREA)
 )
 METRIC.KINEMATIC_RANGE_30 = new Metric(
   'Kinematic range, 30 minute',
@@ -48,7 +48,7 @@ METRIC.KINEMATIC_RANGE_30 = new Metric(
 METRIC.DAYLIGHT_FACTOR_ESTIMATE = new Metric(
   'Daylight factor estimate',
   UNIT.ratio,
-  feature => ((45 * METRIC.WINDOW_AREA.getValue(feature)) + (90 * METRIC.WINDOW_AREA.getValue(feature))) / (METRIC.WALL_AREA.getValue(feature) + (2 * METRIC.GROSS_FLOOR_AREA.getValue(feature)))
+  feature => ((45 * feature.getValueForMetric(METRIC.WINDOW_AREA)) + (90 * feature.getValueForMetric(METRIC.WINDOW_AREA))) / (feature.getValueForMetric(METRIC.WALL_AREA) + (2 * feature.getValueForMetric(METRIC.USABLE_FLOOR_AREA)))
 )
 
 export { METRIC }

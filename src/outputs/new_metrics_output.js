@@ -6,34 +6,21 @@
  */
 
 import { TableOutput } from './table_output.js'
-import { METRIC } from '../architecture/metric.js'
-import { Tabulator } from '../metrics/tabulator.js'
 
 /**
  * NewMetricsOutput can display a summary of city metrics.
  */
 class NewMetricsOutput extends TableOutput {
+  constructor (city, title, metrics) {
+    super(city, title)
+    this._metrics = metrics
+  }
+
   render () {
-    const tabulator = new Tabulator(this._city)
     const districts = this._city.getDistricts()
     const headers = ['District']
-    const metrics = [
-      METRIC.POPULATION,
-      METRIC.LAND_AREA,
-      METRIC.WATER_AREA,
-      METRIC.PLANTED_AREA,
-      METRIC.FLOOR_AREA,
-      METRIC.GROSS_FLOOR_AREA,
-      METRIC.CIRCULATION_AREA,
-      METRIC.USABLE_FLOOR_AREA,
-      METRIC.ROOF_AREA,
-      METRIC.SKYLIGHT_AREA,
-      METRIC.WINDOW_AREA,
-      METRIC.DOOR_AREA,
-      METRIC.WALL_AREA
-    ]
-    for (const metric of metrics) {
-      const units = '?'
+    for (const metric of this._metrics) {
+      const units = metric.unit.name // TODO: replace this camelCase unit name with a proper display name
       const columnHeader = `${metric.displayName}  (${units}) &nbsp;`.replace(/ /g, '<br>')
       headers.push(columnHeader)
     }
@@ -41,10 +28,13 @@ class NewMetricsOutput extends TableOutput {
 
     for (const district of districts) {
       const stringValues = [district.name]
-      for (const metric of metrics) {
-        const value = tabulator.aggregateValuesForMetric(metric, district)
-        // const value = tabulator.getValueOfMetricForFeature(metric, district)
-        stringValues.push(TableOutput.toStringWithCommas(value))
+      for (const metric of this._metrics) {
+        const value = district.getValueForMetric(metric)
+        if (value > 10 || value === 0) { // TODO: this is a hack, figure out a better way to determine number format based on metric
+          stringValues.push(TableOutput.toStringWithCommas(value))
+        } else {
+          stringValues.push(value.toFixed(2))
+        }
       }
       this.renderBodyRow(stringValues)
     }

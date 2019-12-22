@@ -39,6 +39,20 @@ class Group {
     this._valuesByMetric.set(metric, value)
   }
 
+  getValueForMetric (metric) {
+    if (metric.formula) {
+      return metric.formula(this)
+    } else {
+      return this._aggregateValuesForMetric(metric)
+    }
+  }
+
+  _aggregateValuesForMetric (metric) {
+    let sum = 0
+    this.accept(node => { const val = node._valuesByMetric && node._valuesByMetric.get(metric); if (val) sum += val })
+    return sum
+  }
+
   // TODO: delete this legacy metrics code once the new Metric code is finished
   addMetric (name, value, units) {
     this.metrics.set(name, { value, units })

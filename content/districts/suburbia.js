@@ -8,10 +8,11 @@
 import { Byway } from '../../src/architecture/byway.js'
 import { cornersFromShape, countTo, xy, xyz } from '../../src/core/util.js'
 import { Cottage } from '../buildings/cottage.js'
+import { District } from '../../src/architecture/district.js'
 import { Garage } from '../buildings/garage.js'
 import { House } from '../buildings/house.js'
+import { METRIC } from '../../src/architecture/metric.js'
 import { Parcel } from '../../src/architecture/parcel.js'
-import { District } from '../../src/architecture/district.js'
 import { Use } from '../../src/architecture/use.js'
 
 const PARCEL_DY = 50
@@ -68,6 +69,9 @@ class Suburbia extends District {
       parcel.add(new Cottage({ ray, x0, y0, at: xy(-154, 23) }))
       parcel.add(new Garage({ ray, x0, y0, at: xy(-185, 23) }))
       parcel.add(new House({ ray, x0, y0, at: xy(STREET_DX + SIDEWALK_WIDTH, 0) }))
+
+      const PEOPLE_PER_PARCEL = 3
+      this.setValueForMetric(METRIC.POPULATION, numParcels * PEOPLE_PER_PARCEL)
     }
   }
 }

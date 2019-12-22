@@ -11,6 +11,7 @@ import { Byway } from '../../src/architecture/byway.js'
 import { District } from '../../src/architecture/district.js'
 import { Geometry } from '../../src/core/geometry.js'
 import { Highrise } from '../buildings/highrise.js'
+import { METRIC } from '../../src/architecture/metric.js'
 import { Parcel } from '../../src/architecture/parcel.js'
 import { Ray } from '../../src/core/ray.js'
 import { Use } from '../../src/architecture/use.js'
@@ -137,6 +138,9 @@ class Manhattan extends District {
         this.addBlock(row, col)
       }
     }
+    const PEOPLE_PER_BLOCK = 682 // roughly accurate for actual Manhattan population density
+    const population = PEOPLE_PER_BLOCK * numRows * numCols
+    this.setValueForMetric(METRIC.POPULATION, population)
     return this
   }
 

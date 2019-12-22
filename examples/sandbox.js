@@ -7,6 +7,7 @@
 
 import { CITY } from '../src/citylib.js'
 import { Facing } from '../src/core/facing.js'
+import { METRIC } from '../src/architecture/metric.js'
 import { Ray } from '../src/core/ray.js'
 import { xy, xyz, rectangleOfSize } from '../src/core/util.js'
 
@@ -117,7 +118,36 @@ function main () {
   CITY.Output.addOutput(new CITY.ThreeOutput(city))
   CITY.Output.addOutput(new CITY.OldMetricsOutput(city, 'City Metrics (original version)'))
   CITY.Output.addOutput(new CITY.SummaryOutput(city))
-  CITY.Output.addOutput(new CITY.NewMetricsOutput(city, 'City Metrics (refactored version)'))
+  CITY.Output.addOutput(new CITY.NewMetricsOutput(
+    city,
+    'City size information',
+    [
+      METRIC.POPULATION,
+      METRIC.LAND_AREA,
+      METRIC.WATER_AREA,
+      METRIC.PLANTED_AREA,
+      METRIC.FLOOR_AREA,
+      METRIC.GROSS_FLOOR_AREA,
+      METRIC.CIRCULATION_AREA,
+      METRIC.USABLE_FLOOR_AREA,
+      METRIC.ROOF_AREA,
+      METRIC.SKYLIGHT_AREA,
+      METRIC.WINDOW_AREA,
+      METRIC.DOOR_AREA,
+      METRIC.WALL_AREA
+    ]
+  ))
+  CITY.Output.addOutput(new CITY.NewMetricsOutput(
+    city,
+    'City metrics',
+    [
+      METRIC.POPULATION_DENSITY,
+      METRIC.FLOOR_AREA_RATIO,
+      METRIC.CIRCULATION_AREA_RATIO,
+      METRIC.KINEMATIC_RANGE_30,
+      METRIC.DAYLIGHT_FACTOR_ESTIMATE
+    ]
+  ))
 }
 
 main()
