@@ -23,6 +23,7 @@ import { Use } from './architecture/use.js'
 // outputs
 import { Output } from './outputs/output.js'
 import { TableOutput } from './outputs/table_output.js'
+import { MemoryOutput } from './outputs/memory_output.js'
 import { NewMetricsOutput } from './outputs/new_metrics_output.js'
 import { OldMetricsOutput } from './outputs/old_metrics_output.js'
 import { SummaryOutput } from './outputs/summary_output.js'
@@ -83,6 +84,7 @@ export const CITY = {
   House,
   LatticeDistrict,
   Manhattan,
+  MemoryOutput,
   MidriseComplex,
   NewMetricsOutput,
   OldMetricsOutput,

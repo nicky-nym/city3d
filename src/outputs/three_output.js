@@ -249,6 +249,10 @@ class ThreeOutput extends Output {
     this._traverse(this._city, this._scene)
   }
 
+  add (thing) {
+    this._traverse(thing, this._scene)
+  }
+
   _traverse (thing, threeObject) {
     if (thing instanceof Group) {
       if (thing instanceof LODGroup) {

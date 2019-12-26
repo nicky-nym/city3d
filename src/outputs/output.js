@@ -59,7 +59,7 @@ class Output {
       this.error('Output.envision() failed: requires animate() or render().')
       return
     }
-    this.print(`rendering time time was ${Date.now() - t0} milliseconds`)
+    this.print(`rendering time was ${Date.now() - t0} milliseconds`)
   }
 }
 
