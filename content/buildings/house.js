@@ -14,6 +14,7 @@ import { Roof } from '../../src/architecture/roof.js'
 import { Storey } from '../../src/architecture/storey.js'
 import { Structure } from '../../src/architecture/structure.js'
 import { Use } from '../../src/architecture/use.js'
+import { Wall } from '../../src/architecture/wall.js'
 
 const PARCEL_DY = UNIT.feet(50)
 const PARCEL_X0_NORTH = -232.72
@@ -292,7 +293,9 @@ class House extends Structure {
 
   addAppurtenances (x = 0, y = 0, facing = Facing.NORTH) {
     const ray = this.goto({ x: x, y: y, z: 0, facing: facing })
-    this.add(new Byway(ray, Use.BARE, FENCE_LINE, { wall: FENCE_HEIGHT, cap: false }))
+    for (const i of countTo(FENCE_LINE.length - 1)) {
+      this.add(new Wall(FENCE_LINE[i], FENCE_LINE[i + 1], FENCE_HEIGHT))
+    }
     this.add(new Byway(ray, Use.WALKWAY, DOORPATH))
     this.add(new Byway(ray, Use.STREET, DRIVEWAY, { name: 'Driveway' }))
     this.add(new Byway(ray, Use.WALKWAY, ADU_DOORPATH))

@@ -46,7 +46,7 @@ function addBuildings (city) {
 
 function addCreek (city) {
   const creek = new CITY.Creek()
-  const creekObject = creek.makeCreek()
+  const creekObject = creek.makeCreek('River Tethys')
   city.add(creekObject)
 
   // There are several possibilities here:

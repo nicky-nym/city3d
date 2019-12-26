@@ -39,11 +39,11 @@ describe('MidriseComplex', function () {
 
       fullName(complex).should.equal('Napoleon Complex of Testopia')
     })
-    it('should result in at least one Roof for a 1 x 1 pattern', function () {
+    it('should result in at least four Roofs for a 1 x 1 pattern', function () {
       const complex = new MidriseComplex({ numRowPairs: 1, numColPairs: 1 })
 
       complex.accept(node => { count += node instanceof Roof ? 1 : 0 })
-      count.should.be.at.least(1)
+      count.should.be.at.least(4)
     })
     it('should result in at least 64 Roofs for a 4 x 4 pattern', function () {
       const complex = new MidriseComplex({ numRowPairs: 4, numColPairs: 4 })
