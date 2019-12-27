@@ -136,7 +136,7 @@ function xyRotate (xy, facing) {
     case Facing.WEST:
       return { x: -y, y: x }
   }
-  const radians = UNIT.toRadians(facing)
+  const radians = UNIT.convert({ from: UNIT.degrees(facing), to: UNIT.radians })
   const xOut = x * Math.cos(radians) - y * Math.sin(radians)
   const yOut = x * Math.sin(radians) + y * Math.cos(radians)
   return { x: xOut, y: yOut }

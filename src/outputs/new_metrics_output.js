@@ -20,7 +20,7 @@ class NewMetricsOutput extends TableOutput {
     const districts = this._city.getDistricts()
     const headers = ['District']
     for (const metric of this._metrics) {
-      const units = metric.unit.name // TODO: replace this camelCase unit name with a proper display name
+      const units = metric.unit.displayName || metric.unit.name // TODO: replace this camelCase unit name with a proper display name
       const columnHeader = `${metric.displayName}  (${units}) &nbsp;`.replace(/ /g, '<br>')
       headers.push(columnHeader)
     }

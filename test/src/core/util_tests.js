@@ -136,7 +136,7 @@ describe('util', function () {
       const angleInDegrees = UNIT.degrees(30)
       const result = xyRotate(xy(1, 0), angleInDegrees)
 
-      const angleInRadians = UNIT.toRadians(angleInDegrees)
+      const angleInRadians = UNIT.convert({ from: UNIT.degrees(angleInDegrees), to: UNIT.radians })
       result.should.eql({ x: Math.cos(angleInRadians), y: Math.sin(angleInRadians) })
     })
 
@@ -144,7 +144,7 @@ describe('util', function () {
       const angleInDegrees = UNIT.degrees(30)
       const result = xyRotate(xy(0, 1), angleInDegrees)
 
-      const angleInRadians = UNIT.toRadians(angleInDegrees)
+      const angleInRadians = UNIT.convert({ from: UNIT.degrees(angleInDegrees), to: UNIT.radians })
       result.should.eql({ x: -Math.sin(angleInRadians), y: Math.cos(angleInRadians) })
     })
   })

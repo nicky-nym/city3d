@@ -13,11 +13,29 @@ import { UNIT } from '../../../src/core/unit.js'
 /* eslint-disable no-unused-expressions */
 
 describe('UNIT', function () {
+  describe('#convert', function () {
+    it('should convert from meters to km', function () {
+      const result = UNIT.convert({ from: UNIT.meters(2100), to: UNIT.km })
+
+      result.should.equal(2.1)
+    })
+    it('should convert from km to meters', function () {
+      const result = UNIT.convert({ from: UNIT.km(4.2), to: UNIT.meters })
+
+      result.should.be.closeTo(4200, 0.0001)
+    })
+    it('should convert from meters to meters', function () {
+      const result = UNIT.convert({ from: UNIT.meters(1), to: UNIT.meters })
+
+      result.should.equal(1)
+    })
+  })
+
   describe('#meters', function () {
     it('should convert from meters to feet', function () {
       const result = UNIT.meters(1)
 
-      result.should.eql(3.28084)
+      result.should.equal(3.28084)
     })
   })
 
@@ -25,7 +43,7 @@ describe('UNIT', function () {
     it('should convert from kilometers to feet', function () {
       const result = UNIT.km(1)
 
-      result.should.eql(3280.84)
+      result.should.equal(3280.84)
     })
   })
 
@@ -33,7 +51,15 @@ describe('UNIT', function () {
     it('should return the value it is given', function () {
       const result = UNIT.feet(1)
 
-      result.should.eql(1)
+      result.should.equal(1)
+    })
+  })
+
+  describe('#squareFeet', function () {
+    it('should have a display name', function () {
+      const result = UNIT.squareFeet.displayName
+
+      result.should.equal('square feet')
     })
   })
 
@@ -41,13 +67,13 @@ describe('UNIT', function () {
     it('should return the same value for an angle of 0 radians', function () {
       const result = UNIT.radians(0)
 
-      result.should.eql(0)
+      result.should.equal(0)
     })
 
     it('should convert from radians to degrees for a positive value', function () {
       const result = UNIT.radians(Math.PI)
 
-      result.should.eql(180)
+      result.should.equal(180)
     })
   })
 
@@ -55,28 +81,28 @@ describe('UNIT', function () {
     it('should return the value it is given', function () {
       const result = UNIT.degrees(180)
 
-      result.should.eql(180)
+      result.should.equal(180)
     })
   })
 
-  describe('#toRadians', function () {
+  describe('#convert', function () {
     it('should return the same value for an angle of 0 radians', function () {
-      const result = UNIT.toRadians(0)
+      const radians = UNIT.convert({ from: UNIT.degrees(0), to: UNIT.radians })
 
-      result.should.eql(0)
+      radians.should.equal(0)
     })
 
     it('should convert from degrees to radians for a cardinal direction', function () {
-      const result = UNIT.toRadians(180)
+      const radians = UNIT.convert({ from: UNIT.degrees(180), to: UNIT.radians })
 
-      result.should.eql(Math.PI)
+      radians.should.equal(Math.PI)
     })
 
     it('should convert from degrees to radians for any positive angle', function () {
-      const result = UNIT.toRadians(45)
+      const radians = UNIT.convert({ from: UNIT.degrees(45), to: UNIT.radians })
       const expected = Math.PI / 4
 
-      result.should.eql(expected)
+      radians.should.equal(expected)
     })
   })
 })

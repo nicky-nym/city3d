@@ -15,6 +15,16 @@ const DEGREES_PER_RADIAN = 180 / Math.PI
 const DEGREES_PER_DEGREE = 1
 
 /**
+ * Returns a value in a new unit of measure from a given value.
+ * @param {number} from - a measurement, such as UNIT.meters(5)
+ * @param {function} to - a unit of measure, such as UNIT.km
+ * @returns {number} the measurement, after converting to the new units
+ */
+function convert ({ from, to }) {
+  return 1 / to(1 / from)
+}
+
+/**
  * Returns a value in feet when given a value in meters.
  * @param {number} length - a measurement in meters
  * @returns {number} the measurement in feet
@@ -22,6 +32,7 @@ const DEGREES_PER_DEGREE = 1
 function meters (length) {
   return length * FEET_PER_METER
 }
+meters.displayName = 'meters'
 
 /**
  * Returns a value in feet when given a value in kilometers.
@@ -31,6 +42,7 @@ function meters (length) {
 function km (length) {
   return length * FEET_PER_KILOMETER
 }
+km.displayName = 'km'
 
 /**
  * Returns a value in feet when given a value in feet.
@@ -40,6 +52,7 @@ function km (length) {
 function feet (length) {
   return length * FEET_PER_FOOT
 }
+feet.displayName = 'feet'
 
 /**
  * Returns a value in degrees when given a value in radians.
@@ -49,6 +62,7 @@ function feet (length) {
 function radians (angle) {
   return angle * DEGREES_PER_RADIAN
 }
+radians.displayName = 'radians'
 
 /**
  * Returns a value in degrees when given a value in degrees.
@@ -58,43 +72,39 @@ function radians (angle) {
 function degrees (angle) {
   return angle * DEGREES_PER_DEGREE
 }
-
-/**
- * Returns a value in radians when given a value in degrees.
- * @param {number} angle - a measurement in degrees
- * @returns {number} the measurement in radians
- */
-function toRadians (angle) {
-  return angle / DEGREES_PER_RADIAN
-}
+degrees.displayName = 'degrees'
 
 // TODO: code review: reconsider whether we really want this
 function count (count) {
   return count
 }
+count.displayName = 'count'
 
 // TODO: code review: reconsider whether we really want this
 function squareFeet (area) {
   return area
 }
+squareFeet.displayName = 'square feet'
 
 // TODO: code review: reconsider whether we really want this
 function numberPerSquareFoot (average) {
   return average
 }
+numberPerSquareFoot.displayName = 'per square foot'
 
 // TODO: code review: reconsider whether we really want this
 function ratio (float) {
   return float
 }
+ratio.displayName = 'ratio'
 
 const UNIT = {
+  convert,
   meters,
   km,
   feet,
   radians,
   degrees,
-  toRadians,
   count,
   squareFeet,
   numberPerSquareFoot,
