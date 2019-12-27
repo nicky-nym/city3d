@@ -35,16 +35,20 @@ class MemoryOutput extends TableOutput {
 
   async add (note) {
     await this.currentQueueDone()
-    const stats = performance.memory
     const stringValues = []
     stringValues.push((new Date()).toTimeString().substr(0, 8))
     stringValues.push(note)
-    stringValues.push(TableOutput.toStringWithCommas(stats.usedJSHeapSize))
-    stringValues.push(TableOutput.toStringWithCommas(stats.usedJSHeapSize - this.prev.usedJSHeapSize))
-    stringValues.push(TableOutput.toStringWithCommas(stats.totalJSHeapSize))
-    stringValues.push(TableOutput.toStringWithCommas(stats.totalJSHeapSize - this.prev.totalJSHeapSize))
+    if (performance.memory) {
+      const stats = performance.memory
+      stringValues.push(TableOutput.toStringWithCommas(stats.usedJSHeapSize))
+      stringValues.push(TableOutput.toStringWithCommas(stats.usedJSHeapSize - this.prev.usedJSHeapSize))
+      stringValues.push(TableOutput.toStringWithCommas(stats.totalJSHeapSize))
+      stringValues.push(TableOutput.toStringWithCommas(stats.totalJSHeapSize - this.prev.totalJSHeapSize))  
+      this.prev = stats
+    } else {
+      stringValues.push('Sorry, "performance.memory" is not available in this browser.')
+    }
     this.renderBodyRow(stringValues)
-    this.prev = stats
   }
 }
 
