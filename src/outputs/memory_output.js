@@ -43,7 +43,7 @@ class MemoryOutput extends TableOutput {
       stringValues.push(TableOutput.toStringWithCommas(stats.usedJSHeapSize))
       stringValues.push(TableOutput.toStringWithCommas(stats.usedJSHeapSize - this.prev.usedJSHeapSize))
       stringValues.push(TableOutput.toStringWithCommas(stats.totalJSHeapSize))
-      stringValues.push(TableOutput.toStringWithCommas(stats.totalJSHeapSize - this.prev.totalJSHeapSize))  
+      stringValues.push(TableOutput.toStringWithCommas(stats.totalJSHeapSize - this.prev.totalJSHeapSize))
       this.prev = stats
     } else {
       stringValues.push('Sorry, "performance.memory" is not available in this browser.')
