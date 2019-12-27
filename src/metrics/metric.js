@@ -8,9 +8,9 @@
 // import { UNIT } from '../core/unit.js'
 
 /**
- * Metric is a class for representing measurable physical attribute, such as LAND_AREA and POPULATION.
+ * Metric is a class for representing measurable physical attributes, such as LAND_AREA and POPULATION.
  * You can think of each instance of Metric as being sort of like the column header
- * information in a spreadsheet table. Each instance of Metric knows it's own
+ * information in a spreadsheet table. Each instance of Metric knows its own
  * display name and the unit-of-measure used for its values, but the actual values
  * are stored elsewhere (by analogy, the values are down in the cells of the
  * spreadsheet, not in the column headers).

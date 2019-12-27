@@ -9,9 +9,9 @@
 
 /**
  * Tabulator is a class for keeping track of the values of all the different Metrics for all the different Features in a city.
- * Tabulator knows how to record simple facts, like the square foot of a Building.
- * Tabulator knows how calculate aggregate values, like the square footage of all the Buildings in a Distrct.
- * Tabulator knows how ask a Metric to calculate a derived value, like Population Density.
+ * Tabulator knows how to record simple facts, like the square footage of a Building.
+ * Tabulator knows how to calculate aggregate values, like the square footage of all the Buildings in a District.
+ * Tabulator knows how to ask a Metric to calculate a derived value, like Population Density.
  */
 class Tabulator {
   constructor () {
@@ -27,18 +27,14 @@ class Tabulator {
   getValueOfMetricForFeature (metric, feature) {
     if (this._metricsByFeature.has(feature)) {
       const featureValuesByMetric = this._metricsByFeature.get(feature)
-      if (featureValuesByMetric.has(metric)) {
-        return featureValuesByMetric.get(metric)
-      } else {
-        return NaN
-      }
+      return featureValuesByMetric.get(metric)
     } else {
-      throw new Error('Tabulator failed to construct maps for all features')
+      throw new Error(`Tabulator failed to construct map for ${feature.toString()}`)
     }
   }
 
   /**
-   * Traverses a tree of Features, and sums up values from the leaf Features (e.g. Rooms) towards the rootward Features (Building, District, City).
+   * Assigns a value for a Metric for a given Feature.
    * @param {Feature} [feature] - a building or other physical feature in the city, about which there are quantitative values for different metrics.
    * @param {Metric} [metric] - a physical attribute of a feature, like the square footage of a room.
    * @param {number} [value] - the value to record for the Metric.
@@ -69,7 +65,7 @@ class Tabulator {
   /**
    * Returns a Map of the values of different metrics for a given feature.
    * @param {Feature} [feature] - a physical feature in the city, about which there are quantitative values for different metrics.
-   * @return {Map.<Metric, number>} a Map keyed by instances of Metric, with num
+   * @return {Map.<Metric, number>} a Map keyed by instances of Metric, with numeric values
    */
   _getMetricsByFeature (feature) {
     if (!this._metricsByFeature.has(feature)) {
