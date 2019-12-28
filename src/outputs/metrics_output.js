@@ -1,4 +1,4 @@
-/** @file new_metrics_output.js
+/** @file metrics_output.js
  * @author Authored in 2019 at <https://github.com/nicky-nym/city3d>
  * @license UNLICENSE
  * This is free and unencumbered software released into the public domain.
@@ -8,9 +8,9 @@
 import { TableOutput } from './table_output.js'
 
 /**
- * NewMetricsOutput can display a summary of city metrics.
+ * MetricsOutput can display a summary of city metrics.
  */
-class NewMetricsOutput extends TableOutput {
+class MetricsOutput extends TableOutput {
   constructor (city, title, metrics) {
     super(city, title)
     this._metrics = metrics
@@ -41,4 +41,4 @@ class NewMetricsOutput extends TableOutput {
   }
 }
 
-export { NewMetricsOutput }
+export { MetricsOutput }
