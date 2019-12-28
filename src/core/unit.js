@@ -96,6 +96,13 @@ UNIT.squareFeet = UNIT.define('square feet', area => area)
 UNIT.numberPerSquareFoot = UNIT.define('per square foot', average => average)
 
 /**
+ * Returns a value in quantity per square foot when given a value in quantity per square mile.
+ * @param {number} average - a measurement in quantity per square mile
+ * @returns {number} the measurement in quantity per square foot
+ */
+UNIT.numberPerSquareMile = UNIT.define('per square mile', average => average / (5280 * 5280))
+
+/**
  * Returns a ratio value when given a ratio value.
  * @param {float} float - a ratio value
  * @returns {float} the ratio value

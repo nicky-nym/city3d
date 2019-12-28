@@ -26,8 +26,8 @@ METRIC.WALL_AREA = new Metric('Wall area', UNIT.squareFeet)
 
 // derived metrics
 METRIC.POPULATION_DENSITY = new Metric(
-  'Population density  (per square mile)',
-  UNIT.numberPerSquareFoot,
+  'Population density',
+  UNIT.numberPerSquareMile,
   feature => 5280 * 5280 * feature.getValueForMetric(METRIC.POPULATION) / feature.getValueForMetric(METRIC.LAND_AREA)
 )
 METRIC.FLOOR_AREA_RATIO = new Metric(
