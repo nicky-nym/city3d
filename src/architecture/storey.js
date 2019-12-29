@@ -84,8 +84,6 @@ class Storey extends Group {
       if (metric) {
         this.setValueForMetric(metric, squareFeet)
       }
-      // TODO: delete this legacy metrics code once the new Metric code is finished
-      this.addMetric(`Floor area: ${use}`, squareFeet, 'square feet')
     }
     if (wall !== 0) {
       _addWalls(this, xyPolygon, wall, z, openings, cap)

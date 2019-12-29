@@ -6,6 +6,7 @@
  */
 
 import { Geometry } from '../../../src/core/geometry.js'
+import { METRIC } from '../../../src/architecture/metric.js'
 import { UNIT } from '../../../src/core/unit.js'
 import { Wall } from '../../../src/architecture/wall.js'
 import { xy } from '../../../src/core/util.js'
@@ -38,16 +39,15 @@ describe('Wall', function () {
       const wall = new Wall(xy(UNIT.km(3), 0), xy(0, UNIT.km(4)), UNIT.meters(6))
 
       const expectedArea = 5 * FEET_PER_METER * 1000 * 6 * FEET_PER_METER
-      wall.metrics.get('Wall area').value.should.be.closeTo(expectedArea, 0.1)
-      wall.metrics.get('Wall area').units.should.equal('square feet')
-      wall.metrics.get('Wall opening area').value.should.equal(0)
+      wall._valuesByMetric.get(METRIC.WALL_AREA).should.be.closeTo(expectedArea, 0.1)
+      wall._valuesByMetric.get(METRIC.WINDOW_AREA).should.equal(0)
     })
     it('should return a Wall with the expected metrics for a wall with one opening', function () {
       const openings = [[xy(4, 3), xy(6, 3), xy(6, 5), xy(4, 5)]]
       const wall = new Wall(xy(0, 0), xy(10, 0), 6, { openings })
 
-      wall.metrics.get('Wall area').value.should.equal(60)
-      wall.metrics.get('Wall opening area').value.should.equal(4)
+      wall._valuesByMetric.get(METRIC.WALL_AREA).should.equal(60)
+      wall._valuesByMetric.get(METRIC.WINDOW_AREA).should.equal(4)
     })
     it('should return a Wall with the expected metrics for a wall with three openings', function () {
       const openings = [
@@ -57,15 +57,15 @@ describe('Wall', function () {
       ]
       const wall = new Wall(xy(0, 6), xy(8, 0), 6, { openings })
 
-      wall.metrics.get('Wall area').value.should.equal(60)
-      wall.metrics.get('Wall opening area').value.should.equal(12)
+      wall._valuesByMetric.get(METRIC.WALL_AREA).should.equal(60)
+      wall._valuesByMetric.get(METRIC.WINDOW_AREA).should.equal(12)
     })
     it('should return a Wall with the expected metrics for a wall with a non-rectangular opening', function () {
       const openings = [[xy(4, 3), xy(6, 3), xy(6, 5)]]
       const wall = new Wall(xy(0, 0), xy(10, 0), 6, { openings })
 
-      wall.metrics.get('Wall area').value.should.equal(60)
-      wall.metrics.get('Wall opening area').value.should.equal(2)
+      wall._valuesByMetric.get(METRIC.WALL_AREA).should.equal(60)
+      wall._valuesByMetric.get(METRIC.WINDOW_AREA).should.equal(2)
     })
   })
 })

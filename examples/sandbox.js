@@ -20,28 +20,24 @@ function addBuildings (city) {
   const suburbia = new CITY.Suburbia(corners, ray, 'Suburbia')
   suburbia.addStreet(2)
   city.add(suburbia)
-  suburbia.recordMetrics()
 
   const CITY_SIZE = 1
   ray = new Ray(Facing.NORTH, xyz(-13200, -5280, 0))
   const nyc = new CITY.Manhattan(CITY.Manhattan.BOUNDARY, ray, 'Manhattan')
   nyc.addBlocks(CITY_SIZE, CITY_SIZE * 2)
   city.add(nyc)
-  nyc.recordMetrics(nyc)
 
   ray = new Ray(Facing.NORTH, xyz(238, 238, 0))
   corners = rectangleOfSize(xy(2000, 2000))
   const latticeburg = new CITY.LatticeDistrict(corners, ray, 'Latticeburg')
   latticeburg.makeFeatures()
   city.add(latticeburg)
-  latticeburg.recordMetrics(latticeburg)
 
   ray = new Ray(Facing.NORTH, xyz(100, -600, 0))
   corners = rectangleOfSize(xy(1200, 550))
   const campus = new CITY.Campus(corners, ray, 'Campus')
   campus.makeCampus(3)
   city.add(campus)
-  campus.recordMetrics(campus)
 }
 
 function addCreek (city) {

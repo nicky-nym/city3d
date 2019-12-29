@@ -45,10 +45,6 @@ class Wall extends Group {
     this.setValueForMetric(METRIC.WALL_AREA, abstractWall.area())
     this.setValueForMetric(METRIC.WINDOW_AREA, abstractWall.areaOfOpenings()) // TODO: separate out doors vs. windows
     // this.setValueForMetric(METRIC.DOOR_AREA, abstractWall.areaOfOpenings()) // TODO: separate out doors vs. windows
-
-    // TODO: delete this legacy metrics code once the new Metric code is finished
-    this.addMetric('Wall area', abstractWall.area(), 'square feet')
-    this.addMetric('Wall opening area', abstractWall.areaOfOpenings(), 'square feet')
   }
 
   height () {
