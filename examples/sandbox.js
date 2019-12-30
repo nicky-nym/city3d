@@ -81,6 +81,10 @@ function addEiffelTower (city) {
   city.add(new CITY.EiffelTower({ at: { x: 1090, y: 1090, z: 0 } }))
 }
 
+function addPyramid (city) {
+  city.add(new CITY.PyramidOfKhufu({ at: { x: -600, y: -600, z: 0 } }))
+}
+
 function addKalpanaOrbital (city) {
   city.add(new CITY.Kalpana())
 }
@@ -106,6 +110,7 @@ function main () {
   addSwingset(city)
   addUtilityPoles(city)
   addEiffelTower(city)
+  addPyramid(city)
   addBuildings(city)
   addKalpanaOrbital(city)
   addMovers(city)
