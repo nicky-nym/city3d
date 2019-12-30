@@ -20,11 +20,13 @@ class Metric {
    * Creates a new instance that represents some measurable physical attribute.
    * @param {string} displayName - a display name to show the user when reporting values
    * @param {UNIT} unit - the unit of measure that values are measured in
+   * @param {string} description - a definition to show the user
    * @param {function=} formula - an optional JavaScript function that returns a number value
    */
-  constructor (displayName, unit, formula = null) {
+  constructor (displayName, unit, description, formula = null) {
     this.displayName = displayName
     this.unit = unit
+    this.description = description
     this.formula = formula
   }
 }

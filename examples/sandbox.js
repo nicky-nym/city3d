@@ -120,25 +120,42 @@ function main () {
       METRIC.LAND_AREA,
       METRIC.WATER_AREA,
       METRIC.PLANTED_AREA,
-      METRIC.FLOOR_AREA,
-      METRIC.GROSS_FLOOR_AREA,
-      METRIC.CIRCULATION_AREA,
-      METRIC.USABLE_FLOOR_AREA,
-      METRIC.ROOF_AREA,
-      METRIC.SKYLIGHT_AREA,
-      METRIC.WINDOW_AREA,
-      METRIC.DOOR_AREA,
-      METRIC.WALL_AREA
+      METRIC.TRANSPORTATION_AREA
     ]
   ))
   CITY.Output.addOutput(new CITY.SummaryOutput(city))
   CITY.Output.addOutput(new CITY.MetricsOutput(
     city,
+    'Building floor area information',
+    [
+      METRIC.GROSS_FLOOR_AREA,
+      METRIC.STRUCTURAL_AREA,
+      METRIC.NET_FLOOR_AREA,
+      METRIC.NET_ASSIGNABLE_AREA,
+      METRIC.NET_NON_ASSIGNABLE_AREA,
+      METRIC.CIRCULATION_AREA,
+      METRIC.BUILDING_SERVICE_AREA,
+      METRIC.MECHANICAL_AREA
+    ]
+  ))
+  CITY.Output.addOutput(new CITY.MetricsOutput(
+    city,
+    'Wall and roof surface area information',
+    [
+      METRIC.ROOF_AREA,
+      METRIC.SKYLIGHT_AREA,
+      METRIC.WALL_AREA,
+      METRIC.WINDOW_AREA,
+      METRIC.DOOR_AREA
+    ]
+  ))
+  CITY.Output.addOutput(new CITY.MetricsOutput(
+    city,
     'City metrics',
     [
       METRIC.POPULATION_DENSITY,
-      METRIC.FLOOR_AREA_RATIO,
-      METRIC.CIRCULATION_AREA_RATIO,
+      METRIC.GROSS_FLOOR_AREA_RATIO,
+      METRIC.NET_ASSIGNABLE_FLOOR_AREA_RATIO,
       METRIC.KINEMATIC_RANGE_30,
       METRIC.DAYLIGHT_FACTOR_ESTIMATE
     ]

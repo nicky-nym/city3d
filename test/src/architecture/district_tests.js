@@ -30,14 +30,14 @@ describe('District', function () {
       const house = new District()
       house.add(new Storey(ray, Use.ROOM, rect1))
 
-      house._aggregateValuesForMetric(METRIC.USABLE_FLOOR_AREA).should.equal(1000)
+      house._aggregateValuesForMetric(METRIC.GROSS_FLOOR_AREA).should.equal(1000)
     })
     it('should return the correct floor area for a house made of two rectangular rooms', function () {
       const house = new District()
       house.add(new Storey(ray, Use.ROOM, rect1))
       house.add(new Storey(ray, Use.ROOM, rect2))
 
-      house._aggregateValuesForMetric(METRIC.USABLE_FLOOR_AREA).should.equal(1800)
+      house._aggregateValuesForMetric(METRIC.GROSS_FLOOR_AREA).should.equal(1800)
     })
     it('should return the correct floor area for a house with nested rectangular rooms', function () {
       const house = new District()
@@ -47,7 +47,7 @@ describe('District', function () {
       wing.add(new Storey(ray, Use.ROOM, rect2))
       house.add(wing)
 
-      house._aggregateValuesForMetric(METRIC.USABLE_FLOOR_AREA).should.equal(2600)
+      house._aggregateValuesForMetric(METRIC.GROSS_FLOOR_AREA).should.equal(2600)
     })
   })
 
@@ -76,8 +76,8 @@ describe('District', function () {
       const districtArea = 1000 * 1000
       const expectedFAR = floorArea / districtArea
 
-      district.getValueForMetric(METRIC.USABLE_FLOOR_AREA).should.equal(floorArea)
-      district.getValueForMetric(METRIC.FLOOR_AREA_RATIO).should.be.closeTo(expectedFAR, 0.0001)
+      district.getValueForMetric(METRIC.GROSS_FLOOR_AREA).should.equal(floorArea)
+      district.getValueForMetric(METRIC.GROSS_FLOOR_AREA_RATIO).should.be.closeTo(expectedFAR, 0.0001)
     })
     it('should add Floor area metric and FAR metrics when a room but no Parcel is created', function () {
       district.add(new Storey(ray, Use.ROOM, roomRect))
@@ -86,8 +86,8 @@ describe('District', function () {
       const districtArea = 1000 * 1000
       const expectedFAR = floorArea / districtArea
 
-      district.getValueForMetric(METRIC.USABLE_FLOOR_AREA).should.equal(floorArea)
-      district.getValueForMetric(METRIC.FLOOR_AREA_RATIO).should.equal(expectedFAR)
+      district.getValueForMetric(METRIC.GROSS_FLOOR_AREA).should.equal(floorArea)
+      district.getValueForMetric(METRIC.GROSS_FLOOR_AREA_RATIO).should.equal(expectedFAR)
     })
     it('should compute the correct values and units for FAR metrics for a rectangular Parcel and room', function () {
       const parcel = new Parcel(parcelRect, ray)
@@ -100,8 +100,8 @@ describe('District', function () {
       const parcelFAR = floorArea / parcelArea
       const districtFAR = floorArea / districtArea
 
-      parcel.getValueForMetric(METRIC.FLOOR_AREA_RATIO).should.equal(parcelFAR)
-      district.getValueForMetric(METRIC.FLOOR_AREA_RATIO).should.be.closeTo(districtFAR, 0.0001)
+      parcel.getValueForMetric(METRIC.GROSS_FLOOR_AREA_RATIO).should.equal(parcelFAR)
+      district.getValueForMetric(METRIC.GROSS_FLOOR_AREA_RATIO).should.be.closeTo(districtFAR, 0.0001)
     })
     it('should compute the correct value and units for Wall area for one rectangular room with walls', function () {
       district.add(new Storey(ray, Use.ROOM, roomRect, { wall: 10 }))
@@ -135,9 +135,9 @@ describe('District', function () {
       })
 
       it('should compute the correct values for different areas', function () {
-        district.getValueForMetric(METRIC.USABLE_FLOOR_AREA).should.equal(1200)
+        district.getValueForMetric(METRIC.GROSS_FLOOR_AREA).should.equal(1200)
         parcel.getValueForMetric(METRIC.LAND_AREA).should.equal(1000)
-        district.getValueForMetric(METRIC.CIRCULATION_AREA).should.equal(2000)
+        district.getValueForMetric(METRIC.TRANSPORTATION_AREA).should.equal(2000)
       })
       it('should count only the district land as land area', function () {
         const districtArea = 1000000
@@ -147,10 +147,10 @@ describe('District', function () {
         district.getValueForMetric(METRIC.LAND_AREA).should.equal(expected)
       })
       it('should compute the correct value for Parcel FAR', function () {
-        parcel.getValueForMetric(METRIC.FLOOR_AREA_RATIO).should.equal(1.2)
+        parcel.getValueForMetric(METRIC.GROSS_FLOOR_AREA_RATIO).should.equal(1.2)
       })
       it('should compute the correct value for Overall FAR', function () {
-        district.getValueForMetric(METRIC.FLOOR_AREA_RATIO).should.be.closeTo(0.0012, 0.0001)
+        district.getValueForMetric(METRIC.GROSS_FLOOR_AREA_RATIO).should.be.closeTo(0.0012, 0.0001)
       })
       it('should compute the correct values for Wall areas', function () {
         district.getValueForMetric(METRIC.WALL_AREA).should.equal(3000)
