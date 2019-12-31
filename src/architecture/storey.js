@@ -30,6 +30,8 @@ const COLORS_BY_USE = {
   BIKEPATH: MARTIAN_ORANGE,
   WALKWAY: YELLOW,
   ROOM: BROWN,
+  CIRCULATION: YELLOW,
+  UNFINISHED: LIGHT_GRAY,
   BARE: LIGHT_GRAY,
   PARCEL: GREEN_GRASS,
   CANAL: BLUE,
@@ -42,7 +44,10 @@ const METRICS_BY_USE = {
   STREET: METRIC.TRANSPORTATION_AREA,
   BIKEPATH: METRIC.TRANSPORTATION_AREA,
   WALKWAY: METRIC.TRANSPORTATION_AREA,
-  ROOM: METRIC.GROSS_FLOOR_AREA,
+  CIRCULATION: METRIC.CIRCULATION_AREA,
+  UNFINISHED: METRIC.MECHANICAL_AREA,
+  BARE: null,
+  ROOM: METRIC.NET_ASSIGNABLE_AREA,
   PARCEL: METRIC.LAND_AREA,
   CANAL: METRIC.WATER_AREA,
   ROOF: METRIC.ROOF_AREA
@@ -82,7 +87,13 @@ class Storey extends Group {
 
       const metric = METRICS_BY_USE[use]
       if (metric) {
+        // TODO: This code isn't right.
+        // We should only set GROSS_FLOOR_AREA here.
+        // Things like CIRCULATION_AREA should be set on a Room by Room basis, not per Storey.
         this.setValueForMetric(metric, squareFeet)
+        if (metric === METRIC.CIRCULATION_AREA || metric === METRIC.MECHANICAL_AREA || metric === METRIC.NET_ASSIGNABLE_AREA) {
+          this.setValueForMetric(METRIC.GROSS_FLOOR_AREA, squareFeet)
+        }
       }
     }
     if (wall !== 0) {

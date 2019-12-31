@@ -1,9 +1,9 @@
 /** @file house.js
-  * @author Authored in 2019 at <https://github.com/nicky-nym/city3d>
-  * @license UNLICENSE
-  * This is free and unencumbered software released into the public domain.
-  * For more information, please refer to <http://unlicense.org>
-  */
+ * @author Authored in 2019 at <https://github.com/nicky-nym/city3d>
+ * @license UNLICENSE
+ * This is free and unencumbered software released into the public domain.
+ * For more information, please refer to <http://unlicense.org>
+ */
 
 import { UNIT } from '../../src/core/unit.js'
 import { xy, xyz, xyzAdd, xywh2rect, countTo } from '../../src/core/util.js'
@@ -269,8 +269,8 @@ function face (a, b, c) {
 * House objects know how to describe a Queen Anne single-family house.
 */
 class House extends Structure {
-  constructor ({ city, ray, x0, y0, at = xyz(0, 0, 0), name } = {}) {
-    super({ city, ray, x0, y0, name: name || 'House' })
+  constructor ({ city, ray, x0, y0, at = xyz(0, 0, 0), name = 'House' } = {}) {
+    super({ city, ray, x0, y0, name })
     this.makeBuilding(at)
   }
 
@@ -320,14 +320,14 @@ class House extends Structure {
     // Main floor
     this.goto({ x: x, y: y, z: CRAWL_SPACE_HEIGHT, facing: facing })
     this.add(new Storey(this._ray, Use.ROOM, HOUSE, { wall: GROUND_FLOOR_HEIGHT, openings: HOUSE_WINDOWS }))
-    this.add(new Storey(this._ray, Use.BARE, PORCH))
+    this.add(new Storey(this._ray, Use.CIRCULATION, PORCH))
     this.add(new Storey(this._ray, Use.ROOM, ADDON, { wall: ADDON_HEIGHT, openings: ADDON_WINDOWS }))
 
     // Attic
     const ATTIC_ELEVATION = GROUND_FLOOR_HEIGHT + CRAWL_SPACE_HEIGHT
     this.goto({ x: x, y: y, z: ATTIC_ELEVATION, facing: facing })
-    this.add(new Storey(this._ray, Use.BARE, CHIMNEY, { height: CHIMNEY_HEIGHT }))
-    this.add(new Storey(this._ray, Use.BARE, ATTIC))
+    this.add(new Storey(this._ray, Use.UNFINISHED, CHIMNEY, { height: CHIMNEY_HEIGHT }))
+    this.add(new Storey(this._ray, Use.UNFINISHED, ATTIC))
     this.add(this.makeRoof(VERTICES_OF_ROOF, INDICES_OF_ROOF_FACES))
     this.add(this.makeRoof(VERTICES_OF_DORMER_ROOF, INDICES_OF_DORMER_ROOF_FACES))
 
