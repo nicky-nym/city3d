@@ -68,18 +68,18 @@ const BED_AND_BATH_WINDOWS = [
   xywh2rect(3.875, 2.166, 3.666, 6.250), // bedroom
   xywh2rect(12.708, 4.166, 2.375, 3.083)] // bathroom
 const HOUSE_SPEC = [
-  [xy(-57.792, 44.542), KITCHEN_WINDOWS],
-  [xy(-44.333, 44.542), []],
-  [xy(-44.333, 47), DINING_ROOM_WINDOWS],
-  [xy(-19.375, 47), BAY_WINDOW_NORTHEAST],
-  [xy(-16, 43.65), BAY_WINDOW_EAST],
-  [xy(-16, 36.1), BAY_WINDOW_SOUTHEAST],
-  [xy(-19.375, 32.75), []],
-  [xy(-25.792, 32.75), PORCH_WINDOWS],
-  [xy(-25.792, 14.75), OFFICE_WINDOW],
-  [xy(-41.167, 14.75), []],
-  [xy(-41.167, 16.75), BED_AND_BATH_WINDOWS],
-  [xy(-57.792, 16.75), []]
+  [xy(-57.792, 44.542), []],
+  [xy(-57.792, 16.75), BED_AND_BATH_WINDOWS],
+  [xy(-41.167, 16.75), []],
+  [xy(-41.167, 14.75), OFFICE_WINDOW],
+  [xy(-25.792, 14.75), PORCH_WINDOWS],
+  [xy(-25.792, 32.75), []],
+  [xy(-19.375, 32.75), BAY_WINDOW_SOUTHEAST],
+  [xy(-16, 36.1), BAY_WINDOW_EAST],
+  [xy(-16, 43.65), BAY_WINDOW_NORTHEAST],
+  [xy(-19.375, 47), DINING_ROOM_WINDOWS],
+  [xy(-44.333, 47), []],
+  [xy(-44.333, 44.542), KITCHEN_WINDOWS]
 ]
 const HOUSE = HOUSE_SPEC.map(([point, openings]) => point)
 
@@ -98,10 +98,10 @@ const WEST_WINDOWS = [
   xywh2rect(11.354, 0, 2.666, 6.666), // door
   xywh2rect(18.875, 4.333, 3.750, 2.083)] // kitchen
 const ADDON_SPEC = [
-  [xy(-63.75, 43.625), []],
-  [xy(-57.792, 43.625), []],
+  [xy(-63.75, 43.625), WEST_WINDOWS],
+  [xy(-63.75, 17.833), []],
   [xy(-57.792, 17.833), []],
-  [xy(-63.75, 17.833), WEST_WINDOWS]
+  [xy(-57.792, 43.625), []]
 ]
 
 const ADDON = ADDON_SPEC.map(([point, openings]) => point)
@@ -119,20 +119,20 @@ function nudgeXY (xy, delta) {
 }
 const ATTIC = [
   nudgeXY(HOUSE[0], xy(-1, 1)),
-  nudgeXY(HOUSE[1], xy(-1, 1)),
-  nudgeXY(HOUSE[2], xy(-1, 1)),
-  nudgeXY(xy(HOUSE[4].x, HOUSE[3].y), xy(1, 1)),
-  nudgeXY(xy(HOUSE[5].x, HOUSE[6].y), xy(1, -1)),
-  nudgeXY(HOUSE[7], xy(1, -1)),
-  nudgeXY(HOUSE[8], xy(1, -1)),
-  nudgeXY(HOUSE[9], xy(-1, -1)),
-  nudgeXY(HOUSE[10], xy(-1, -1)),
-  nudgeXY(HOUSE[11], xy(-1, -1))]
+  nudgeXY(HOUSE[1], xy(-1, -1)),
+  nudgeXY(HOUSE[2], xy(-1, -1)),
+  nudgeXY(HOUSE[3], xy(-1, -1)),
+  nudgeXY(HOUSE[4], xy(1, -1)),
+  nudgeXY(HOUSE[5], xy(1, -1)),
+  nudgeXY(xy(HOUSE[7].x, HOUSE[6].y), xy(1, -1)),
+  nudgeXY(xy(HOUSE[8].x, HOUSE[9].y), xy(1, 1)),
+  nudgeXY(HOUSE[10], xy(-1, 1)),
+  nudgeXY(HOUSE[11], xy(-1, 1))]
 const PORCH = [
   xy(-25.792, 32.75),
-  xy(-25.792 + 5.333, 32.75),
+  xy(-25.792, 32.75 - 17.083),
   xy(-25.792 + 5.333, 32.75 - 17.083),
-  xy(-25.792, 32.75 - 17.083)]
+  xy(-25.792 + 5.333, 32.75)]
 const NUM_STAIR_STEPS = 5
 const STAIR_X = -25.792 + 5.333 + NUM_STAIR_STEPS
 const STAIR = [
@@ -141,20 +141,20 @@ const STAIR = [
   xy(STAIR_X + 1, 26.75),
   xy(STAIR_X, 26.75)]
 
-const D1 = (ATTIC[0].y - ATTIC[9].y) / 2.0
+const D1 = (ATTIC[0].y - ATTIC[1].y) / 2.0
 const PEAK_BACK = xyz(HOUSE[0].x + D1, HOUSE[0].y - D1, D1)
 const PEAK_BACK_INSET = xyz(ATTIC[5].x - D1, PEAK_BACK.y, D1)
 
-const D2 = (ATTIC[5].x - ATTIC[1].x) / 2.0
-const PEAK_NORTH = xyz(ATTIC[2].x + D2, ATTIC[2].y - D2, D2)
-const PEAK_NORTH_INSET = xyz(PEAK_NORTH.x, PEAK_NORTH.y - (ATTIC[2].y - ATTIC[1].y), D2)
+const D2 = (ATTIC[5].x - ATTIC[9].x) / 2.0
+const PEAK_NORTH = xyz(ATTIC[8].x + D2, ATTIC[8].y - D2, D2)
+const PEAK_NORTH_INSET = xyz(PEAK_NORTH.x, PEAK_NORTH.y - (ATTIC[8].y - ATTIC[9].y), D2)
 
-const D3 = (ATTIC[6].x - ATTIC[7].x) / 2.0
-const PEAK_OFFICE = xyz(ATTIC[7].x + D3, ATTIC[7].y + D3, D3)
-const PEAK_OFFICE_INSET = xyz(PEAK_OFFICE.x, PEAK_OFFICE.y + (ATTIC[8].y - ATTIC[7].y), D3)
+const D3 = (ATTIC[4].x - ATTIC[3].x) / 2.0
+const PEAK_OFFICE = xyz(ATTIC[3].x + D3, ATTIC[3].y + D3, D3)
+const PEAK_OFFICE_INSET = xyz(PEAK_OFFICE.x, PEAK_OFFICE.y + (ATTIC[2].y - ATTIC[3].y), D3)
 
-const D4 = (ATTIC[3].y - ATTIC[4].y) / 2.0
-const PEAK_FRONT = xyz(ATTIC[3].x, (ATTIC[3].y + ATTIC[4].y) / 2.0, D4)
+const D4 = (ATTIC[7].y - ATTIC[6].y) / 2.0
+const PEAK_FRONT = xyz(ATTIC[7].x, (ATTIC[7].y + ATTIC[6].y) / 2.0, D4)
 const PEAK_FRONT_INSET = xyz(ATTIC[5].x - D4, PEAK_FRONT.y, D4)
 
 function xy2xyz (xy, z) {
@@ -163,9 +163,9 @@ function xy2xyz (xy, z) {
 // corners of porch roof
 const VERTICES_OF_PORCH_ROOF = []
 VERTICES_OF_PORCH_ROOF[0] = xy2xyz(PORCH[0], 2)
-VERTICES_OF_PORCH_ROOF[1] = xy2xyz(PORCH[1], 0)
+VERTICES_OF_PORCH_ROOF[1] = xy2xyz(PORCH[1], 2)
 VERTICES_OF_PORCH_ROOF[2] = xy2xyz(PORCH[2], 0)
-VERTICES_OF_PORCH_ROOF[3] = xy2xyz(PORCH[3], 2)
+VERTICES_OF_PORCH_ROOF[3] = xy2xyz(PORCH[3], 0)
 
 const INDICES_OF_PORCH_ROOF_FACES = [
   face(0, 1, 2),
@@ -175,9 +175,9 @@ const INDICES_OF_PORCH_ROOF_FACES = [
 // corners of back addition addon roof
 const VERTICES_OF_ADDON_ROOF = []
 VERTICES_OF_ADDON_ROOF[0] = xy2xyz(ADDON[0], 0)
-VERTICES_OF_ADDON_ROOF[1] = xy2xyz(ADDON[1], 2)
+VERTICES_OF_ADDON_ROOF[1] = xy2xyz(ADDON[1], 0)
 VERTICES_OF_ADDON_ROOF[2] = xy2xyz(ADDON[2], 2)
-VERTICES_OF_ADDON_ROOF[3] = xy2xyz(ADDON[3], 0)
+VERTICES_OF_ADDON_ROOF[3] = xy2xyz(ADDON[3], 2)
 
 const INDICES_OF_ADDON_ROOF_FACES = [
   face(0, 1, 2),
@@ -187,7 +187,7 @@ const INDICES_OF_ADDON_ROOF_FACES = [
 // corners of attic roof
 const VERTICES_OF_ROOF = []
 for (const i of countTo(ATTIC.length)) {
-  VERTICES_OF_ROOF[i] = xy2xyz(ATTIC[i], 0)
+  VERTICES_OF_ROOF[i] = xy2xyz(ATTIC[(10 - i) % 10], 0)
 }
 VERTICES_OF_ROOF[10] = PEAK_BACK
 VERTICES_OF_ROOF[11] = PEAK_BACK_INSET

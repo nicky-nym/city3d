@@ -8,6 +8,7 @@
 import { array, cornersFromShape, countTo, randomInt, xyz, xyzAdd } from '../core/util.js'
 import { Group } from './group.js'
 import { Ray } from '../core/ray.js'
+import { Roof } from './roof.js'
 import { Storey } from './storey.js'
 import { Structure } from './structure.js'
 import { Use } from '../architecture/use.js'
@@ -77,8 +78,12 @@ class Building extends Structure {
       point.z = z
       this.goto(point)
       this._ray.az = facing
-      const roofPlace = new Storey(this._ray, Use.ROOF, corners, { wall: roof.parapetHeight })
-      this.add(roofPlace)
+      if (roof.custom) {
+        this.add(new Roof(roof, new Ray(this._ray.az)))
+      } else {
+        const roofPlace = new Storey(this._ray, Use.ROOF, corners, { wall: roof.parapetHeight })
+        this.add(roofPlace)
+      }
     }
     for (const childSpec of array(children)) {
       if (!childSpec.roof) {

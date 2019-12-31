@@ -9,6 +9,7 @@ import * as THREE from '../../node_modules/three/build/three.module.js'
 import Stats from '../../node_modules/stats.js/src/Stats.js'
 
 import { Geometry } from '../core/geometry.js'
+import { fullName } from '../core/util.js'
 import { Group, LODGroup } from '../architecture/group.js'
 import { Output } from './output.js'
 import { OrbitControls } from '../../node_modules/three/examples/jsm/controls/OrbitControls.js'
@@ -112,7 +113,7 @@ class ThreeOutput extends Output {
     const ground = new THREE.Mesh(new THREE.PlaneBufferGeometry(ONE_MILE, ONE_MILE), groundMaterial)
     ground.geometry.rotateX(Math.PI / 2)
     ground.position.y = -250
-    ground.position.z = -1
+    ground.position.z = -0.01
     ground.rotation.x = -Math.PI / 2
     ground.receiveShadow = true
     ground.userData.noHighlight = true
@@ -639,12 +640,9 @@ class ThreeOutput extends Output {
   }
 
   highlight (obj) {
-    const names = []
-    for (let o = obj; o.parent; o = o.parent) {
-      if (o.name) names.push(o.name)
-    }
-    console.log(obj.uuid, names.join('-of-'))
-    this._tooltipDiv.textContent = names.join('-of-')
+    const label = fullName(obj)
+    console.log(obj.uuid, label)
+    this._tooltipDiv.textContent = label
 
     // position tooltip near mouse, offsetting based on which quadrant it's in
     const xOffset = this._mouse.x < 0 ? 50 : -50
