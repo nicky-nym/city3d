@@ -63,7 +63,7 @@ function _addWalls (group, xyPolygon, height, z, openingsByWall, cap) {
       const next = i % xyPolygon.length
       const near = v
       const far = xyPolygon[next]
-      group.add(new Wall(near, far, height, { z, openings }))
+      group.add(new Wall(near, far, height, { z, openings, name: `Wall ${i}` }))
     }
   }
 }
@@ -72,7 +72,7 @@ function _addWalls (group, xyPolygon, height, z, openingsByWall, cap) {
 * Storey is a class for representing one storey of a building.
 */
 class Storey extends Group {
-  constructor (ray, use, corners, { z = 0, incline = 0, depth = -0.5, cap = true, wall = 0, openings = [], name } = {}) {
+  constructor (ray, use, corners, { z = 0, incline = 0, depth = 0.5, cap = true, wall = 0, openings = [], name } = {}) {
     super(name || use)
     z = z + ray.xyz.z
     name = name || `${Use[use]}${corners.name ? ` (${corners.name})` : ''}`

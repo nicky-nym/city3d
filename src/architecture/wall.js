@@ -29,7 +29,7 @@ const DEFAULT_WALL_THICKNESS = 0.5
 * @param {string} [name]
 */
 class Wall extends Group {
-  constructor (v1, v2, height, { z = 0, depth = DEFAULT_WALL_THICKNESS, openings = [], name } = {}) {
+  constructor (v1, v2, height, { z = 0, depth = -DEFAULT_WALL_THICKNESS, openings = [], name } = {}) {
     super(name || 'Wall')
     this._height = height
     const dx = v2.x - v1.x
@@ -39,7 +39,7 @@ class Wall extends Group {
     const xRotation = Math.PI / 2
     const zRotation = Math.atan2(dy, dx)
     const abstractWall = new Geometry.ThickPolygon2(xyPolygon, { xRotation, zRotation, xOffset: v1.x, yOffset: v1.y, depth, openings })
-    const concreteWall = new Geometry.Instance(abstractWall, z, ALMOST_WHITE, name)
+    const concreteWall = new Geometry.Instance(abstractWall, z, ALMOST_WHITE)
     this.add(concreteWall)
 
     this.setValueForMetric(METRIC.WALL_AREA, abstractWall.area())
