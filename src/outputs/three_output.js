@@ -393,14 +393,12 @@ class ThreeOutput extends Output {
     if (thickPolygon.incline) {
       const x1 = xyPolygon[1].x
       const y1 = xyPolygon[1].y
-      const edge = new THREE.Vector2(x1 - x0, y1 - y0)
+      const edge = new THREE.Vector3(x1 - x0, y1 - y0, 0)
       const hypotenuse = edge.length()
       const angle = Math.asin(thickPolygon.incline / hypotenuse)
 
-      const LAST = xyPolygon.length - 1
-      const xN = xyPolygon[LAST].x
-      const yN = xyPolygon[LAST].y
-      const axis = new THREE.Vector3(xN - x0, yN - y0, 0)
+      // want to rotate around axis perpendicular to edge and in x-y plane
+      const axis = new THREE.Vector3().crossVectors(edge, new THREE.Vector3(0, 0, 1))
       axis.normalize()
       const R = new THREE.Matrix4().makeRotationAxis(axis, -angle)
       mesh.applyMatrix(R)
