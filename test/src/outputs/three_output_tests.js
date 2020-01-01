@@ -60,7 +60,7 @@ describe('ThreeOutput', function () {
 
         const v = new THREE.Vector3()
         mesh.getWorldDirection(v)
-        v.y.should.be.closeTo(1 / SQRT2, 0.00001)
+        v.y.should.be.closeTo(-1 / SQRT2, 0.00001)
         v.z.should.be.closeTo(1 / SQRT2, 0.00001)
       })
       it('should return expected world direction with 30 deg incline', function () {
@@ -69,7 +69,7 @@ describe('ThreeOutput', function () {
 
         const v = new THREE.Vector3()
         mesh.getWorldDirection(v)
-        v.y.should.be.closeTo(1 / 2, 0.00001)
+        v.y.should.be.closeTo(-1 / 2, 0.00001)
         v.z.should.be.closeTo(SQRT3 / 2, 0.00001)
       })
       it('should return a mesh with a matrix that transforms its vertices to the expected values, with 30 deg incline', function () {
@@ -82,11 +82,11 @@ describe('ThreeOutput', function () {
 
         const transformedVertices = mesh.geometry.vertices.map(v => roundXYZ(v.applyMatrix4(mesh.matrix)))
         const A = round(Y / 2 * SQRT3)
-        const B = 1 / 2
+        const B = -1 / 2
         const C = round(SQRT3 / 2)
 
         // Depth > 0, so bottom face is at z = 0 before rotation.
-        const expectedVerticesOfBottomFace = [xyz(0, 0, 0), xyz(0, A, -Y / 2), xyz(X, A, -Y / 2), xyz(X, 0, 0)]
+        const expectedVerticesOfBottomFace = [xyz(0, 0, 0), xyz(0, A, Y / 2), xyz(X, A, Y / 2), xyz(X, 0, 0)]
         const expectedVerticesOfTopFace = expectedVerticesOfBottomFace.map(v => roundXYZ(xyzAdd(v, xyz(0, B, C))))
         transformedVertices.should.include.deep.members(expectedVerticesOfBottomFace)
         transformedVertices.should.include.deep.members(expectedVerticesOfTopFace)
@@ -100,12 +100,12 @@ describe('ThreeOutput', function () {
 
         // If we look at the four vertices on the front edge (y = 0 before rotation) compared to
         // those on the back edge (y = Y before rotation), then the z-coordinates of the latter
-        // should equal the z-coordinates of the former minus INC.
+        // should equal the z-coordinates of the former plus INC.
         const zCoordsOfFrontEdge = transformedVertices.filter(v => v.y < Y / 2).map(v => v.z).sort((a, b) => a - b)
         const zCoordsOfBackEdge = transformedVertices.filter(v => v.y > Y / 2).map(v => v.z).sort((a, b) => a - b)
         zCoordsOfBackEdge.should.have.length(4)
         zCoordsOfFrontEdge.should.have.length(4)
-        zCoordsOfBackEdge.forEach((z, i) => z.should.be.closeTo(zCoordsOfFrontEdge[i] - INC, 0.00001))
+        zCoordsOfBackEdge.forEach((z, i) => z.should.be.closeTo(zCoordsOfFrontEdge[i] + INC, 0.00001))
       })
       it('should achieve specified incline when rectangle is offset', function () {
         const [X0, Y0] = [2, 3]
@@ -123,31 +123,33 @@ describe('ThreeOutput', function () {
 
         // If we look at the four vertices on the front edge (y = Y0 before rotation) compared to
         // those on the back edge (y = Y + Y0 before rotation), then the z-coordinates of the latter
-        // should equal the z-coordinates of the former minus INC.
+        // should equal the z-coordinates of the former plus INC.
         const zCoordsOfFrontEdge = transformedVertices.filter(v => v.y - Y0 < Y / 2).map(v => v.z).sort((a, b) => a - b)
         const zCoordsOfBackEdge = transformedVertices.filter(v => v.y - Y0 > Y / 2).map(v => v.z).sort((a, b) => a - b)
         zCoordsOfFrontEdge.should.have.length(4)
         zCoordsOfBackEdge.should.have.length(4)
-        zCoordsOfBackEdge.forEach((z, i) => z.should.be.closeTo(zCoordsOfFrontEdge[i] - INC, 0.00001))
+        zCoordsOfBackEdge.forEach((z, i) => z.should.be.closeTo(zCoordsOfFrontEdge[i] + INC, 0.00001))
       })
       it('should achieve specified incline when rectangle is rotated 90 deg', function () {
+        const INC = 3
         const rotatedRectangle = new Geometry.XYPolygon([{ x: 0, y: 0 }, { x: Y, y: 0 }, { x: Y, y: -X }, { x: 0, y: -X }])
 
-        const poly = new Geometry.ThickPolygon(rotatedRectangle, { incline: 3, depth: 1 })
+        const poly = new Geometry.ThickPolygon(rotatedRectangle, { incline: INC, depth: 1 })
         const mesh = threeOutput.makeThickPolygonMesh(poly, 0, null)
 
         const transformedVertices = mesh.geometry.vertices.map(v => roundXYZ(v.applyMatrix4(mesh.matrix)))
 
         // If we look at the four vertices on the left edge (x = 0 before rotation) compared to
         // those on the right edge (x = Y before rotation), then the z-coordinates of the latter
-        // should equal the z-coordinates of the former minus 3.
+        // should equal the z-coordinates of the former plus INC.
         const zCoordsOfLeftEdge = transformedVertices.filter(v => v.x < Y / 2).map(v => v.z).sort((a, b) => a - b)
         const zCoordsOfRightEdge = transformedVertices.filter(v => v.x > Y / 2).map(v => v.z).sort((a, b) => a - b)
         zCoordsOfLeftEdge.should.have.length(4)
         zCoordsOfRightEdge.should.have.length(4)
-        zCoordsOfRightEdge.forEach((z, i) => z.should.be.closeTo(zCoordsOfLeftEdge[i] - 3, 0.00001))
+        zCoordsOfRightEdge.forEach((z, i) => z.should.be.closeTo(zCoordsOfLeftEdge[i] + INC, 0.00001))
       })
       it('should achieve specified incline when rectangle is rotated 45 deg', function () {
+        const INC = 3
         const rotatedRectangle = new Geometry.XYPolygon([
           { x: 0, y: 0 },
           { x: Y / SQRT2, y: Y / SQRT2 },
@@ -155,19 +157,19 @@ describe('ThreeOutput', function () {
           { x: X / SQRT2, y: -X / SQRT2 }
         ])
 
-        const poly = new Geometry.ThickPolygon(rotatedRectangle, { incline: 3, depth: 1 })
+        const poly = new Geometry.ThickPolygon(rotatedRectangle, { incline: INC, depth: 1 })
         const mesh = threeOutput.makeThickPolygonMesh(poly, 0, null)
 
         const transformedVertices = mesh.geometry.vertices.map(v => roundXYZ(v.applyMatrix4(mesh.matrix)))
 
         // If we look at the four vertices on the last edge (nearest to origin) compared to
         // those on the second edge (farthest from origin), then the z-coordinates of the latter
-        // should equal the z-coordinates of the former minus 3.
+        // should equal the z-coordinates of the former plus INC.
         const zCoordsOfNearEdge = transformedVertices.filter(v => v.x + v.y < (X + Y) / 2).map(v => v.z).sort((a, b) => a - b)
         const zCoordsOfFarEdge = transformedVertices.filter(v => v.x + v.y > (X + Y) / 2).map(v => v.z).sort((a, b) => a - b)
         zCoordsOfNearEdge.should.have.length(4)
         zCoordsOfFarEdge.should.have.length(4)
-        zCoordsOfFarEdge.forEach((z, i) => z.should.be.closeTo(zCoordsOfNearEdge[i] - 3, 0.00001))
+        zCoordsOfFarEdge.forEach((z, i) => z.should.be.closeTo(zCoordsOfNearEdge[i] + INC, 0.00001))
       })
       it('should achieve specified incline when rectangle is counterclockwise', function () {
         const INC = 3
@@ -184,12 +186,12 @@ describe('ThreeOutput', function () {
 
         // If we look at the four vertices on the front edge (y = 0 before rotation) compared to
         // those on the back edge (y = Y before rotation), then the z-coordinates of the latter
-        // should equal the z-coordinates of the former minus INC.
+        // should equal the z-coordinates of the former plus INC.
         const zCoordsOfFrontEdge = transformedVertices.filter(v => v.y < Y / 2).map(v => v.z).sort((a, b) => a - b)
         const zCoordsOfBackEdge = transformedVertices.filter(v => v.y > Y / 2).map(v => v.z).sort((a, b) => a - b)
         zCoordsOfFrontEdge.should.have.length(4)
         zCoordsOfBackEdge.should.have.length(4)
-        zCoordsOfBackEdge.forEach((z, i) => z.should.be.closeTo(zCoordsOfFrontEdge[i] - INC, 0.00001))
+        zCoordsOfBackEdge.forEach((z, i) => z.should.be.closeTo(zCoordsOfFrontEdge[i] + INC, 0.00001))
       })
     })
 
@@ -213,12 +215,12 @@ describe('ThreeOutput', function () {
 
         // Because of symmetry, if we look at the six vertices on the front half (y <= 1 before rotation)
         // compared to those on the back half (y >= Y - 1 before rotation), then the z-coordinates of the latter
-        // should equal the z-coordinates of the former minus INC.
+        // should equal the z-coordinates of the former plus INC.
         const zCoordsOfFrontHalf = transformedVertices.filter(v => v.y < Y / 2).map(v => v.z).sort((a, b) => a - b)
         const zCoordsOfBackHalf = transformedVertices.filter(v => v.y > Y / 2).map(v => v.z).sort((a, b) => a - b)
         zCoordsOfFrontHalf.should.have.length(6)
         zCoordsOfBackHalf.should.have.length(6)
-        zCoordsOfBackHalf.forEach((z, i) => z.should.be.closeTo(zCoordsOfFrontHalf[i] - INC, 0.00001))
+        zCoordsOfBackHalf.forEach((z, i) => z.should.be.closeTo(zCoordsOfFrontHalf[i] + INC, 0.00001))
       })
     })
   })

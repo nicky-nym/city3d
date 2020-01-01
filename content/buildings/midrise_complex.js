@@ -311,7 +311,7 @@ class MidriseComplex extends Structure {
     // Ramps
     for (const bearing of rampBearings) {
       ray = this.goto({ x: x, y: y, z: z, facing: bearing })
-      this.add(new Byway(ray, Use.WALKWAY, RAMP_CORNERS, { incline: -RAMP_RISE_HEIGHT }))
+      this.add(new Byway(ray, Use.WALKWAY, RAMP_CORNERS, { incline: RAMP_RISE_HEIGHT }))
     }
 
     // Floors, Walls, and Roof

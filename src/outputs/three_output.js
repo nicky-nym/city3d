@@ -400,7 +400,7 @@ class ThreeOutput extends Output {
       // want to rotate around axis perpendicular to edge and in x-y plane
       const axis = new THREE.Vector3().crossVectors(edge, new THREE.Vector3(0, 0, 1))
       axis.normalize()
-      const R = new THREE.Matrix4().makeRotationAxis(axis, -angle)
+      const R = new THREE.Matrix4().makeRotationAxis(axis, angle)
       mesh.applyMatrix(R)
     }
     const T = new THREE.Matrix4().setPosition(x0, y0, zOffset)

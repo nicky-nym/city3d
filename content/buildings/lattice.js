@@ -219,7 +219,7 @@ class Lattice extends Structure {
   addRamps (self) {
     const ray = this._ray
     this.add(new Byway(ray, Use.BIKEPATH, EXIT_DOWN, { z: 0.1 }))
-    this.add(new Byway(ray, Use.BIKEPATH, RAMP_DOWN_TO_LANDING, { incline: RAMP_RISE_HEIGHT }))
+    this.add(new Byway(ray, Use.BIKEPATH, RAMP_DOWN_TO_LANDING, { incline: -RAMP_RISE_HEIGHT }))
     this.add(new Byway(ray, Use.BIKEPATH, LANDING, { z: -7.5 }))
     this.addRoute([
       xyz(25, 0, 0.1), xyz(35, 90, 0.1), // start and end of EXIT_DOWN
@@ -231,13 +231,13 @@ class Lattice extends Structure {
 
     this.add(new Byway(ray, Use.BARE, LANDING_PARKING, { z: -7.5 }))
     this.add(new Byway(ray, Use.WALKWAY, LANDING_PLAZA, { z: -7.5 }))
-    this.add(new Byway(ray, Use.WALKWAY, LANDING_NORTH_WALKWAY, { z: -7.5, incline: -RISE_HEIGHT }))
-    this.add(new Byway(ray, Use.WALKWAY, LANDING_SOUTH_WALKWAY, { z: -7.5, incline: -RISE_HEIGHT }))
+    this.add(new Byway(ray, Use.WALKWAY, LANDING_NORTH_WALKWAY, { z: -7.5, incline: RISE_HEIGHT }))
+    this.add(new Byway(ray, Use.WALKWAY, LANDING_SOUTH_WALKWAY, { z: -7.5, incline: RISE_HEIGHT }))
 
-    this.add(new Byway(ray, Use.BIKEPATH, RAMP_UP_FROM_LANDING, { z: -7.5, incline: -RAMP_RISE_HEIGHT }))
+    this.add(new Byway(ray, Use.BIKEPATH, RAMP_UP_FROM_LANDING, { z: -7.5, incline: RAMP_RISE_HEIGHT }))
     this.add(new Byway(ray, Use.BIKEPATH, ENTRANCE_FROM_BELOW, { z: 0.1 }))
 
-    this.add(new Byway(ray, Use.BIKEPATH, RAMP_DOWN_FROM_LANDING, { z: -7.5, incline: RAMP_RISE_HEIGHT }))
+    this.add(new Byway(ray, Use.BIKEPATH, RAMP_DOWN_FROM_LANDING, { z: -7.5, incline: -RAMP_RISE_HEIGHT }))
     this.add(new Byway(ray, Use.BIKEPATH, RIGHT_TURN_TO_ENTER, { z: -14.9 }))
     this.add(new Byway(ray, Use.BIKEPATH, ENTRANCE_FROM_ABOVE, { z: -14.9 }))
 
@@ -251,7 +251,7 @@ class Lattice extends Structure {
       xyz(35, 390, -7.5),
       xyz(35, 570, 0.1), xyz(25, 660, 0.1) // start and end of ENTRANCE_FROM_BELOW
     ])
-    this.add(new Byway(ray, Use.BIKEPATH, RAMP_UP_TO_LANDING, { z: -15, incline: -RAMP_RISE_HEIGHT }))
+    this.add(new Byway(ray, Use.BIKEPATH, RAMP_UP_TO_LANDING, { z: -15, incline: RAMP_RISE_HEIGHT }))
 
     this.add(new Byway(ray, Use.WALKWAY, LOWER_PLAZA, { z: -14.9 }))
     this.add(new Byway(ray, Use.WALKWAY, LOWER_PLAZA_WALKWAY_A, { z: -15 }))
