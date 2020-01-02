@@ -113,7 +113,7 @@ class ThreeOutput extends Output {
     const ground = new THREE.Mesh(new THREE.PlaneBufferGeometry(ONE_MILE, ONE_MILE), groundMaterial)
     ground.geometry.rotateX(Math.PI / 2)
     ground.position.y = -250
-    ground.position.z = -0.01
+    ground.position.z = -0.1
     ground.rotation.x = -Math.PI / 2
     ground.receiveShadow = true
     ground.userData.noHighlight = true
