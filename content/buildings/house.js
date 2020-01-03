@@ -51,22 +51,27 @@ const ADU_DOORPATH = [
   xy(-155, 36),
   xy(-155, 13)]
 
-// exterior walls (0.5 feet thick), clockwise from the back wall of the house
-const KITCHEN_WINDOWS = [xywh2rect(3.958, 2.583, 5.750, 4.083)]
-const DINING_ROOM_WINDOWS = [
-  xywh2rect(4.166, 2.0, 2.250, 6.400),
-  xywh2rect(7.083, 2.0, 2.250, 6.400)]
-const BAY_WINDOW_NORTHEAST = [xywh2rect(1.000, 2.0, 2.750, 6.400)]
-const BAY_WINDOW_EAST = [xywh2rect(1.525, 2.0, 4.333, 6.400)]
-const BAY_WINDOW_SOUTHEAST = [xywh2rect(1.000, 2.0, 2.750, 6.400)]
-const PORCH_WINDOWS = [
-  xywh2rect(0.875, 0, 3.0, 7.0), // door
-  xywh2rect(7.583, 2.0, 2.250, 6.400),
-  xywh2rect(10.500, 2.0, 2.250, 6.400)]
-const OFFICE_WINDOW = [xywh2rect(6.916, 2.0, 2.250, 6.400)]
 const BED_AND_BATH_WINDOWS = [
-  xywh2rect(3.875, 2.166, 3.666, 6.250), // bedroom
-  xywh2rect(12.708, 4.166, 2.375, 3.083)] // bathroom
+  xywh2rect(1.542, 4.166, 2.375, 3.083), // bathroom
+  xywh2rect(9.084, 2.166, 3.666, 6.250) // bedroom
+]
+const OFFICE_WINDOW = [xywh2rect(6.209, 2.0, 2.250, 6.400)]
+const PORCH_WINDOWS = [
+  xywh2rect(5.25, 2.0, 2.250, 6.400),
+  xywh2rect(8.167, 2.0, 2.250, 6.400),
+  xywh2rect(14.125, 0, 3.0, 7.0) // door
+]
+const BAY_WINDOW_SOUTHEAST = [xywh2rect(1.000, 2.0, 2.750, 6.400)]
+const BAY_WINDOW_EAST = [xywh2rect(1.608, 2.0, 4.333, 6.400)]
+const BAY_WINDOW_NORTHEAST = [xywh2rect(1.000, 2.0, 2.750, 6.400)]
+const DINING_ROOM_WINDOWS = [
+  xywh2rect(15.625, 2.0, 2.250, 6.400),
+  xywh2rect(18.542, 2.0, 2.250, 6.400)
+]
+const KITCHEN_WINDOWS = [xywh2rect(3.751, 2.583, 5.750, 4.083)]
+
+// Exterior walls (0.5 feet thick)
+// counter-clockwise from the back wall of the house
 const HOUSE_SPEC = [
   [xy(-57.792, 44.542), []],
   [xy(-57.792, 16.75), BED_AND_BATH_WINDOWS],
@@ -93,10 +98,11 @@ for (const [point, windows] of HOUSE_SPEC) { // eslint-disable-line no-unused-va
 }
 
 const WEST_WINDOWS = [
-  xywh2rect(1.500, 4.500, 1.750, 2.083), // half-bath
-  xywh2rect(5.104, 2.583, 5.750, 4.083), // laundry
-  xywh2rect(11.354, 0, 2.666, 6.666), // door
-  xywh2rect(18.875, 4.333, 3.750, 2.083)] // kitchen
+  xywh2rect(3.167, 4.333, 3.750, 2.083), // kitchen
+  xywh2rect(11.772, 0, 2.666, 6.666), // door
+  xywh2rect(14.938, 2.583, 5.750, 4.083), // laundry
+  xywh2rect(22.542, 4.500, 1.750, 2.083) // half-bath
+]
 const ADDON_SPEC = [
   [xy(-63.75, 43.625), WEST_WINDOWS],
   [xy(-63.75, 17.833), []],
