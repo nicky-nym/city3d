@@ -258,9 +258,9 @@ const CHIMNEY_HEIGHT = 16
 const CHIMNEY_XYZ = xyzAdd(PEAK_BACK, xyz(-1.5, 3, -PEAK_BACK.z))
 const CHIMNEY = [
   CHIMNEY_XYZ,
-  xyzAdd(CHIMNEY_XYZ, xyz(0.0, 2.95, 0)),
+  xyzAdd(CHIMNEY_XYZ, xyz(2.1, 0.00, 0)),
   xyzAdd(CHIMNEY_XYZ, xyz(2.1, 2.95, 0)),
-  xyzAdd(CHIMNEY_XYZ, xyz(2.1, 0.00, 0))
+  xyzAdd(CHIMNEY_XYZ, xyz(0.0, 2.95, 0))
 ]
 
 const CRAWL_SPACE_HEIGHT = 4
@@ -332,7 +332,7 @@ class House extends Structure {
     // Attic
     const ATTIC_ELEVATION = GROUND_FLOOR_HEIGHT + CRAWL_SPACE_HEIGHT
     this.goto({ x: x, y: y, z: ATTIC_ELEVATION, facing: facing })
-    this.add(new Storey(this._ray, Use.UNFINISHED, CHIMNEY, { height: CHIMNEY_HEIGHT }))
+    this.add(new Storey(this._ray, Use.UNFINISHED, CHIMNEY, { wall: CHIMNEY_HEIGHT }))
     this.add(new Storey(this._ray, Use.UNFINISHED, ATTIC))
     this.add(this.makeRoof(VERTICES_OF_ROOF, INDICES_OF_ROOF_FACES))
     this.add(this.makeRoof(VERTICES_OF_DORMER_ROOF, INDICES_OF_DORMER_ROOF_FACES))
