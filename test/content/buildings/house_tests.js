@@ -36,7 +36,7 @@ describe('House', function () {
     })
 
     it('should have the correct WALL_AREA', function () {
-      house.getValueForMetric(METRIC.WALL_AREA).should.be.closeTo(5909, 1)
+      house.getValueForMetric(METRIC.WALL_AREA).should.be.closeTo(6070, 1)
     })
 
     it('should have the correct WINDOW_AREA', function () {
