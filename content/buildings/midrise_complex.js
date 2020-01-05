@@ -44,18 +44,18 @@ const OCTAGONAL_LANDING = [
 ]
 const DIAMOND_CENTER = [
   xy(-3, 0),
-  xy(0, +3),
+  xy(0, -3),
   xy(+3, 0),
-  xy(0, -3)
+  xy(0, +3)
 ]
 const BASEMENT = [
   xy(D1, 0),
-  xy(D1, D2),
-  xy(D2, D1),
-  xy(0, D1),
-  xy(0, 2 * D1 + RAMP_RUN_LENGTH),
+  xy(2 * D1 + RAMP_RUN_LENGTH, 0),
   xy(2 * D1 + RAMP_RUN_LENGTH, 2 * D1 + RAMP_RUN_LENGTH),
-  xy(2 * D1 + RAMP_RUN_LENGTH, 0)
+  xy(0, 2 * D1 + RAMP_RUN_LENGTH),
+  xy(0, D1),
+  xy(D2, D1),
+  xy(D1, D2)
 ]
 const APARTMENT_WIDTH = D1 + RAMP_RUN_LENGTH + (D1 + D2) / 2
 
@@ -79,14 +79,14 @@ const WINDOWS = [
 ]
 const SPAN = RAMP_RUN_LENGTH + (D1 + D2) / 2
 const APARTMENT_SPEC = [
-  [xy(D1, D2), DOORS],
-  [xy(D2, D1), WINDOWS],
-  [xy(D2, D1 + RAMP_RUN_LENGTH), []],
-  [xy(D1, D1 + SPAN), WINDOWS],
-  [xy(D1 + RAMP_RUN_LENGTH, D1 + SPAN), []],
-  [xy(D1 + SPAN, D1 + RAMP_RUN_LENGTH), WINDOWS],
-  [xy(D1 + SPAN, D1), []],
-  [xy(D1 + RAMP_RUN_LENGTH, D2), WINDOWS]
+  [xy(D1, D2), WINDOWS],
+  [xy(D1 + RAMP_RUN_LENGTH, D2), []],
+  [xy(D1 + SPAN, D1), WINDOWS],
+  [xy(D1 + SPAN, D1 + RAMP_RUN_LENGTH), []],
+  [xy(D1 + RAMP_RUN_LENGTH, D1 + SPAN), WINDOWS],
+  [xy(D1, D1 + SPAN), []],
+  [xy(D2, D1 + RAMP_RUN_LENGTH), WINDOWS],
+  [xy(D2, D1), DOORS]
 ]
 const APARTMENT = APARTMENT_SPEC.map(([point, openings]) => point)
 
@@ -104,13 +104,13 @@ function _nudgeXY (xy, delta) {
 
 const ATTIC = [
   _nudgeXY(APARTMENT[0], xy(-1.2, -2)),
-  _nudgeXY(APARTMENT[1], xy(-2, -1.2)),
-  _nudgeXY(APARTMENT[2], xy(-2, 1.2)),
-  _nudgeXY(APARTMENT[3], xy(-1.2, 2)),
+  _nudgeXY(APARTMENT[1], xy(1.2, -2)),
+  _nudgeXY(APARTMENT[2], xy(2, -1.2)),
+  _nudgeXY(APARTMENT[3], xy(2, 1.2)),
   _nudgeXY(APARTMENT[4], xy(1.2, 2)),
-  _nudgeXY(APARTMENT[5], xy(2, 1.2)),
-  _nudgeXY(APARTMENT[6], xy(2, -1.2)),
-  _nudgeXY(APARTMENT[7], xy(1.2, -2))
+  _nudgeXY(APARTMENT[5], xy(-1.2, 2)),
+  _nudgeXY(APARTMENT[6], xy(-2, 1.2)),
+  _nudgeXY(APARTMENT[7], xy(-2, -1.2))
 ]
 
 function _getCloverleafLandingPattern () {
