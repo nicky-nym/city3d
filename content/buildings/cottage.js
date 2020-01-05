@@ -1,23 +1,24 @@
 /** @file cottage.js
-  * @author Authored in 2019 at <https://github.com/nicky-nym/city3d>
-  * @license UNLICENSE
-  * This is free and unencumbered software released into the public domain.
-  * For more information, please refer to <http://unlicense.org>
-  */
+ * @author Authored in 2019 at <https://github.com/nicky-nym/city3d>
+ * @license UNLICENSE
+ * This is free and unencumbered software released into the public domain.
+ * For more information, please refer to <http://unlicense.org>
+ */
 
-import { UNIT } from '../../src/core/unit.js'
-import { xy, xyz } from '../../src/core/util.js'
+import { x, xy, xyz } from '../../src/core/util.js'
 import { Building } from '../../src/architecture/building.js'
 
 const COTTAGE_BUILDING_SPEC = { // eslint-disable-line no-unused-vars
   name: 'Cottage',
-  storeyHeight: UNIT.feet(8),
+  unit: 'feet',
+  storeyHeight: 8,
   offset: xyz(0, 0, 0),
   numStoreys: 1,
   shape: { type: 'rectangle', data: xy(30 + 4 / 12, 21) },
   roof: {
-    pitched: { rise: 8, run: 12 },
-    eaves: UNIT.feet(1)
+    type: 'pitched',
+    pitch: { rise: 8, run: 12 },
+    eaves: x(1)
   },
   walls: [{
     name: 'front wall',
@@ -48,18 +49,16 @@ const COTTAGE_BUILDING_SPEC = { // eslint-disable-line no-unused-vars
       { at: x(-0.25) }
     ],
     roof: {
-      edges: [{
-        type: 'mixed',
-        mix: [{
-          type: 'pitched',
-          distance: UNIT.feet(2)
-        }, {
-          type: 'gabled',
-          distance: UNIT.feet(17 + 4 / 12)
-        }, {
-          type: 'pitched',
-          distance: UNIT.feet(13)
-        }]
+      type: 'mixed',
+      mix: [{
+        type: 'pitched',
+        distance: x(2)
+      }, {
+        type: 'gabled',
+        distance: x(17 + 4 / 12)
+      }, {
+        type: 'pitched',
+        distance: x(13)
       }]
     }
   }, {
@@ -72,10 +71,10 @@ const COTTAGE_BUILDING_SPEC = { // eslint-disable-line no-unused-vars
       center: xy(2 + 4 / 12, 5),
       casing: { width: x(0.5) }
     }],
-    roof: 'gabled'
+    roof: { type: 'gabled' }
   }, {
     name: 'back wall',
-    roof: 'pitched',
+    roof: { type: 'pitched' },
     downspouts: [
       { at: x(+0.25) },
       { at: x(-0.25) }
@@ -108,13 +107,13 @@ const COTTAGE_BUILDING_SPEC = { // eslint-disable-line no-unused-vars
     fixtures: [
       { at: xy(13 + 6 / 12, 6), type: 'sconce' }
     ],
-    roof: 'gabled'
+    roof: { type: 'gabled' }
   }],
   partitions: [{
     name: 'bedroom wall',
     ends: [
-      xy(-11 + 3 / 12, 21),
-      xy(-11 + 3 / 12, 0)
+      xy(-11 + 6 / 12, 21),
+      xy(-11 + 6 / 12, 0)
     ],
     doors: [{
       name: 'bedroom door',
@@ -127,8 +126,8 @@ const COTTAGE_BUILDING_SPEC = { // eslint-disable-line no-unused-vars
   }, {
     name: 'bathroom wall',
     ends: [
-      xy(-11, -(5 + 5 / 12)),
-      xy(0, -(5 + 5 / 12))
+      xy(-11, -(5 + 8 / 12)),
+      xy(0, -(5 + 8 / 12))
     ],
     doors: [{
       name: 'bathroom door',
@@ -141,8 +140,8 @@ const COTTAGE_BUILDING_SPEC = { // eslint-disable-line no-unused-vars
   }, {
     name: 'closet wall',
     ends: [
-      xy(-8, -(8 + 3 / 12)),
-      xy(0, -(8 + 3 / 12))
+      xy(-8, -8),
+      xy(0, -8)
     ],
     doors: [{
       name: 'closet doors',
@@ -155,14 +154,14 @@ const COTTAGE_BUILDING_SPEC = { // eslint-disable-line no-unused-vars
   }, {
     name: 'wall toward bathroom',
     ends: [
-      xy(-8, -(5 + 5 / 12)),
-      xy(-8, -(8 + 3 / 12))
+      xy(-8, -(5 + 8 / 12)),
+      xy(-8, -8)
     ]
   }, {
     name: 'laundry room wall',
     ends: [
-      xy(0, -(7 + 5 / 12)),
-      xy(10 + 6 / 12, -(7 + 5 / 12))
+      xy(0, -(7 + 8 / 12)),
+      xy(10 + 6 / 12, -(7 + 8 / 12))
     ],
     doors: [{
       name: 'laundry room door',
@@ -175,8 +174,8 @@ const COTTAGE_BUILDING_SPEC = { // eslint-disable-line no-unused-vars
   }, {
     name: 'kitchen/laundry wall',
     ends: [
-      xy(7 + 3 / 12, 0),
-      xy(7 + 3 / 12, -(7 + 5 / 12))
+      xy(7, 0),
+      xy(7, -(7 + 2 / 12))
     ]
   }]
   // TODO: add half-wall behind kitchen sink
@@ -196,13 +195,8 @@ const OLD_COTTAGE_BUILDING_SPEC = {
   shape: { type: 'rectangle', data: xy(30, 21) },
   roof: {
     // TODO: make this a peaked roof instead
-    parapetHeight: UNIT.feet(1)
+    parapetHeight: 1
   }
-}
-
-// TODO: move this to util.js ???
-function x (length) {
-  return length
 }
 
 /**

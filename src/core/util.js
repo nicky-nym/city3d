@@ -108,6 +108,10 @@ function randomPseudoGaussian (median, standardDeviation) {
   return random
 }
 
+function x (x) {
+  return { x }
+}
+
 function xy (x, y) {
   return { x, y }
 }
@@ -172,4 +176,4 @@ function fullName (feature) {
   return names.join(' of ')
 }
 
-export { array, cornersFromShape, count, countTo, hypotenuse, length, randomInt, randomPseudoGaussian, xy, xyz, xyzAdd, xyzSubtract, xyRotate, xywh2rect, rectangleOfSize, fullName }
+export { array, cornersFromShape, count, countTo, hypotenuse, length, randomInt, randomPseudoGaussian, x, xy, xyz, xyzAdd, xyzSubtract, xyRotate, xywh2rect, rectangleOfSize, fullName }

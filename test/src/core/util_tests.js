@@ -7,7 +7,7 @@
 
 import { UNIT } from '../../../src/core/unit.js'
 import { Facing } from '../../../src/core/facing.js'
-import { xy, xyz, xyzAdd, xyzSubtract, xyRotate, rectangleOfSize, count, countTo, randomInt, randomPseudoGaussian, hypotenuse, length, array } from '../../../src/core/util.js'
+import { x, xy, xyz, xyzAdd, xyzSubtract, xyRotate, rectangleOfSize, count, countTo, randomInt, randomPseudoGaussian, hypotenuse, length, array } from '../../../src/core/util.js'
 
 /* global describe, it */
 /* eslint-disable no-unused-expressions */
@@ -82,6 +82,13 @@ describe('util', function () {
     it('should return a number', function () {
       const random = randomPseudoGaussian(100, 10)
       random.should.be.finite
+    })
+  })
+
+  describe('#x()', function () {
+    it('should return an object with an .x property', function () {
+      const obj = x(3.4)
+      obj.should.have.property('x', 3.4)
     })
   })
 
