@@ -16,11 +16,10 @@ import { xy } from '../../../src/core/util.js'
 
 describe('Storey', function () {
   const ray = new Ray()
+  const rectangle = [xy(0, 0), xy(50, 0), xy(50, 20), xy(0, 20)]
   let count
 
   describe('#constructor', function () {
-    const rectangle = [xy(0, 0), xy(50, 0), xy(50, 20), xy(0, 20)]
-
     beforeEach(function () {
       count = 0
     })
@@ -46,6 +45,20 @@ describe('Storey', function () {
 
       room.accept(node => { count += node instanceof Geometry.Instance ? 1 : 0 })
       count.should.equal(5)
+    })
+  })
+
+  describe('#floorDepth', function () {
+    it('should return negative value if no depth was specified.', function () {
+      const storey = new Storey(ray, Use.BARE, rectangle)
+
+      storey.floorDepth().should.be.lessThan(0)
+    })
+
+    it('should return the specified depth if there was one.', function () {
+      const storey = new Storey(ray, Use.BARE, rectangle, { depth: 0.8 })
+
+      storey.floorDepth().should.equal(0.8)
     })
   })
 })

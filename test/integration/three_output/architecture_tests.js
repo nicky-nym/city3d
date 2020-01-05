@@ -92,7 +92,6 @@ describe('Wall', function () {
 })
 
 describe('Storey traversed by ThreeOutput', function () {
-  const D = 0.8
   const threeOutput = new ThreeOutput()
   threeOutput._material = function () { return null }
   const [X, Y, Z] = [50, 20, 8]
@@ -103,9 +102,9 @@ describe('Storey traversed by ThreeOutput', function () {
     spy = new ThreeObjectSpy()
   })
 
-  describe('Constructed with counterclockwise rectangle, and walls', function () {
+  describe('Constructed with counterclockwise rectangle, walls of height Z, and no depth specified', function () {
     const widdershins = [xy(0, 0), xy(X, 0), xy(X, Y), xy(0, Y)]
-    const storey = new Storey(new Ray(Facing.NORTH), Use.BARE, widdershins, { depth: D, wall: Z })
+    const storey = new Storey(new Ray(Facing.NORTH), Use.BARE, widdershins, { wall: Z })
 
     beforeEach(function () {
       threeOutput._traverse(storey, spy)
@@ -116,8 +115,12 @@ describe('Storey traversed by ThreeOutput', function () {
       vertices.should.have.length(8 /* floor */ + 4 * 8 /* 4 walls */)
     })
 
-    it('should have z-coordinates of bounding box exactly matching wall, i.e. bottom of floor is not below bottom of wall.', function () {
-      Math.min(...vertices.map(v => v.z)).should.equal(0)
+    it('should have negative depth.', function () {
+      storey.floorDepth().should.be.lessThan(0)
+    })
+
+    it('should have z-coordinates with min = depth (where depth < 0) and max = Z.', function () {
+      Math.min(...vertices.map(v => v.z)).should.equal(storey.floorDepth())
       Math.max(...vertices.map(v => v.z)).should.equal(Z)
     })
 
@@ -129,9 +132,9 @@ describe('Storey traversed by ThreeOutput', function () {
     })
   })
 
-  describe('Constructed with clockwise rectangle, and walls', function () {
+  describe('Constructed with clockwise rectangle, walls of height Z, and no depth specified', function () {
     const clockwise = [xy(0, 0), xy(0, Y), xy(X, Y), xy(X, 0)]
-    const storey = new Storey(new Ray(Facing.NORTH), Use.BARE, clockwise, { depth: D, wall: Z })
+    const storey = new Storey(new Ray(Facing.NORTH), Use.BARE, clockwise, { wall: Z })
 
     beforeEach(function () {
       threeOutput._traverse(storey, spy)
@@ -142,8 +145,12 @@ describe('Storey traversed by ThreeOutput', function () {
       vertices.should.have.length(8 /* floor */ + 4 * 8 /* 4 walls */)
     })
 
-    it('should have z-coordinates of bounding box exactly matching wall, i.e. bottom of floor is not below bottom of wall.', function () {
-      Math.min(...vertices.map(v => v.z)).should.equal(0)
+    it('should have negative depth.', function () {
+      storey.floorDepth().should.be.lessThan(0)
+    })
+
+    it('should have z-coordinates with min = depth (where depth < 0) and max = Z.', function () {
+      Math.min(...vertices.map(v => v.z)).should.equal(storey.floorDepth())
       Math.max(...vertices.map(v => v.z)).should.equal(Z)
     })
 
@@ -152,6 +159,50 @@ describe('Storey traversed by ThreeOutput', function () {
       Math.max(...vertices.map(v => v.x)).should.equal(X + 0.5)
       Math.min(...vertices.map(v => v.y)).should.equal(0 - 0.5)
       Math.max(...vertices.map(v => v.y)).should.equal(Y + 0.5)
+    })
+  })
+
+  describe('Constructed with counterclockwise rectangle, walls of height Z and non-default depth', function () {
+    const widdershins = [xy(0, 0), xy(X, 0), xy(X, Y), xy(0, Y)]
+
+    it('should have z-coordinates with min = -1 and max = Z, when depth = -1.', function () {
+      const storey = new Storey(new Ray(Facing.NORTH), Use.BARE, widdershins, { depth: -1, wall: Z })
+      threeOutput._traverse(storey, spy)
+      vertices = spy.getAllAddedVertices()
+
+      Math.min(...vertices.map(v => v.z)).should.equal(-1)
+      Math.max(...vertices.map(v => v.z)).should.equal(Z)
+    })
+
+    it('should have z-coordinates of bounding box exactly matching wall, when depth = 1, i.e. bottom of floor is not below bottom of wall.', function () {
+      const storey = new Storey(new Ray(Facing.NORTH), Use.BARE, widdershins, { depth: 1, wall: Z })
+      threeOutput._traverse(storey, spy)
+      vertices = spy.getAllAddedVertices()
+
+      Math.min(...vertices.map(v => v.z)).should.equal(0)
+      Math.max(...vertices.map(v => v.z)).should.equal(Z)
+    })
+  })
+
+  describe('Constructed with clockwise rectangle, walls of height Z and non-default depth', function () {
+    const clockwise = [xy(0, 0), xy(0, Y), xy(X, Y), xy(X, 0)]
+
+    it('should have z-coordinates with min = -1 and max = Z, when depth = -1.', function () {
+      const storey = new Storey(new Ray(Facing.NORTH), Use.BARE, clockwise, { depth: -1, wall: Z })
+      threeOutput._traverse(storey, spy)
+      vertices = spy.getAllAddedVertices()
+
+      Math.min(...vertices.map(v => v.z)).should.equal(-1)
+      Math.max(...vertices.map(v => v.z)).should.equal(Z)
+    })
+
+    it('should have z-coordinates of bounding box exactly matching wall, when depth = 1, i.e. bottom of floor is not below bottom of wall.', function () {
+      const storey = new Storey(new Ray(Facing.NORTH), Use.BARE, clockwise, { depth: 1, wall: Z })
+      threeOutput._traverse(storey, spy)
+      vertices = spy.getAllAddedVertices()
+
+      Math.min(...vertices.map(v => v.z)).should.equal(0)
+      Math.max(...vertices.map(v => v.z)).should.equal(Z)
     })
   })
 })
@@ -167,15 +218,10 @@ describe('Building traversed by ThreeOutput', function () {
     spy = new ThreeObjectSpy()
   })
 
-  describe('Constructed with default (counerclockwise) rectangle and zero height roof', function () {
-    const zeroHeightRoofSpec = {
-      vertices: [xyz(0, 0, Z), xyz(0, Y, Z), xyz(X, Y, Z), xyz(X, 0, Z)],
-      indices: [[0, 1, 2], [2, 3, 0]]
-    }
+  describe('Constructed with default (counterclockwise) rectangle and default (flat slab) roof', function () {
     const buildingSpec = {
       offset: xyz(0, 0, 0),
-      shape: { type: 'rectangle', data: xy(X, Y) },
-      roof: { custom: zeroHeightRoofSpec }
+      shape: { type: 'rectangle', data: xy(X, Y) }
     }
     const building = new Building(buildingSpec)
 
@@ -184,12 +230,14 @@ describe('Building traversed by ThreeOutput', function () {
       vertices = spy.getAllAddedVertices()
     })
 
-    it('should have the expected number of vertices for a rectangular floor, four walls and a two-triangle roof.', function () {
-      vertices.should.have.length(8 /* floor */ + 4 * 8 /* 4 walls */ + 4 /* roof */)
+    it('should have the expected number of vertices for a rectangular floor, four walls and a flat roof.', function () {
+      vertices.should.have.length(8 /* floor */ + 4 * 8 /* 4 walls */ + 8 /* roof */)
     })
 
-    it('should have z-coordinates of bounding box exactly matching wall, i.e. bottom of floor is not below bottom of wall.', function () {
-      Math.min(...vertices.map(v => v.z)).should.equal(0)
+    it('should have z-coordinates with min = floor depth < 0.', function () {
+      Math.min(...vertices.map(v => v.z)).should.be.lessThan(0)
+    })
+    it('should have z-coordinates with max = height of wall, i.e. top of roof is not above top of wall.', function () {
       Math.max(...vertices.map(v => v.z)).should.equal(Z)
     })
 
