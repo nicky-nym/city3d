@@ -29,8 +29,6 @@ const COLOR_DIM_GROUND = 0x202020 // eslint-disable-line no-unused-vars
  */
 class ThreeOutput extends Output {
   setDisplayDiv (outputDivElement) {
-    this._addGuiControlPanel()
-
     this.stats = new Stats()
     this.stats.showPanel(0) // 0: fps, 1: ms, 2: mb, 3+: custom
     outputDivElement.appendChild(this.stats.dom)
@@ -127,6 +125,10 @@ class ThreeOutput extends Output {
     this._renderer.setClearColor(0xCCCCCC, 1) // set our background color
     outputDivElement.appendChild(this._renderer.domElement)
     window.addEventListener('resize', evt => this._onWindowResize(evt), false)
+
+    const clippingPlane = this._addClippingPlane()
+    this._addGuiControlPanel(clippingPlane)
+    this._renderer.clippingPlanes = [clippingPlane]
 
     // DOM setup for tooltips
     this._tooltipDiv = document.createElement('div')
@@ -256,7 +258,12 @@ class ThreeOutput extends Output {
     this._traverse(this._city, this._scene)
   }
 
-  _addGuiControlPanel () {
+  _addClippingPlane () {
+    const clippingPlane = new THREE.Plane(new THREE.Vector3(0, 0, -1), 1000)
+    return clippingPlane
+  }
+
+  _addGuiControlPanel (clippingPlane) {
     const ui = {
       start: {
         'play / pause animation': this._onToggleAnimation.bind(this),
@@ -278,7 +285,12 @@ class ThreeOutput extends Output {
         'turn right': this._onTurnRight.bind(this)
       },
       cut: {
-        'plan cut': 1000,
+        get 'plan cut' () {
+          return clippingPlane.constant
+        },
+        set 'plan cut' (value) {
+          clippingPlane.constant = value
+        },
         northerly: 10000,
         southerly: -10000,
         easterly: 10000,
@@ -323,9 +335,8 @@ class ThreeOutput extends Output {
       }
     }
 
-    const GUI = false
-    if (window && GUI) {
-      const gui = new GUI()
+    if (window && typeof GUI !== 'undefined') { // eslint-disable-line no-undef
+      const gui = new GUI() // eslint-disable-line no-undef
 
       const startFolder = gui.addFolder('Start')
 
