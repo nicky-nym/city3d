@@ -24,6 +24,9 @@ const ALMOST_WHITE = 0x999999 // eslint-disable-line no-unused-vars
 const COLOR_BRIGHT_SKY = 0xddeeff // eslint-disable-line no-unused-vars
 const COLOR_DIM_GROUND = 0x202020 // eslint-disable-line no-unused-vars
 
+const NO_CLIPPING_PLANES = Object.freeze([])
+const CLIPPING_PLANES = []
+
 /**
  * ThreeOutput can render faces in three.js.
  */
@@ -126,9 +129,9 @@ class ThreeOutput extends Output {
     outputDivElement.appendChild(this._renderer.domElement)
     window.addEventListener('resize', evt => this._onWindowResize(evt), false)
 
+    this._renderer.clippingPlanes = NO_CLIPPING_PLANES
     const clippingPlane = this._addClippingPlane()
     this._addGuiControlPanel(clippingPlane)
-    this._renderer.clippingPlanes = [clippingPlane]
 
     // DOM setup for tooltips
     this._tooltipDiv = document.createElement('div')
@@ -259,11 +262,14 @@ class ThreeOutput extends Output {
   }
 
   _addClippingPlane () {
-    const clippingPlane = new THREE.Plane(new THREE.Vector3(0, 0, -1), 1000)
+    const DEFAULT_PLAN_CUT_Z = 6 // feet
+    const clippingPlane = new THREE.Plane(new THREE.Vector3(0, 0, -1), DEFAULT_PLAN_CUT_Z)
+    CLIPPING_PLANES.push(clippingPlane)
     return clippingPlane
   }
 
   _addGuiControlPanel (clippingPlane) {
+    const _this = this
     const ui = {
       start: {
         'play / pause animation': this._onToggleAnimation.bind(this),
@@ -285,6 +291,12 @@ class ThreeOutput extends Output {
         'turn right': this._onTurnRight.bind(this)
       },
       cut: {
+        get enabled () {
+          return _this._renderer.clippingPlanes !== NO_CLIPPING_PLANES
+        },
+        set enabled (value) {
+          _this._renderer.clippingPlanes = value ? CLIPPING_PLANES : NO_CLIPPING_PLANES
+        },
         get 'plan cut' () {
           return clippingPlane.constant
         },
@@ -362,6 +374,7 @@ class ThreeOutput extends Output {
 
       const sectionCutsFolder = gui.addFolder('Section cuts')
 
+      sectionCutsFolder.add(ui.cut, 'enabled')
       sectionCutsFolder.add(ui.cut, 'plan cut').min(0).max(1000).step(1)
       sectionCutsFolder.add(ui.cut, 'northerly').min(-10000).max(10000).step(1)
       sectionCutsFolder.add(ui.cut, 'southerly').min(-10000).max(10000).step(1)
