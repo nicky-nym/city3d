@@ -259,23 +259,23 @@ class ThreeOutput extends Output {
   _addGuiControlPanel () {
     const ui = {
       start: {
-        'play/pause animation': function () { return this._onToggleAnimation() },
-        'save location': function () { return this._onSaveOrbitControlsState() },
-        'restore location': function () { return this._onRestoreOrbitControlsState() },
-        'show shortcuts': function () { return this._onShowKeyboardCommands() },
-        'hide shortcuts': function () { return this._onHideKeyboardCommands() },
-        'show/hide toolips': function () { return this._onToggleHighlighting() },
+        'play / pause animation': this._onToggleAnimation.bind(this),
+        'save location': this._onSaveOrbitControlsState.bind(this),
+        'restore location': this._onRestoreOrbitControlsState.bind(this),
+        'show shortcuts': this._onShowKeyboardCommands.bind(this),
+        'hide shortcuts': this._onHideKeyboardCommands.bind(this),
+        'show / hide toolips': this._onToggleHighlighting.bind(this),
         'highlight color': '#ff00ff'
       },
       nav: {
-        forward: function () { return this._onForward() },
-        backward: function () { return this._onBackward() },
-        up: function () { return this._onUp() },
-        down: function () { return this._onDown() },
-        left: function () { return this._onLeft() },
-        right: function () { return this._onRight() },
-        'turn left': function () { return this._onTurnLeft() },
-        'turn right': function () { return this._onTurnRight() }
+        forward: this._onForward.bind(this),
+        backward: this._onBackward.bind(this),
+        up: this._onUp.bind(this),
+        down: this._onDown.bind(this),
+        left: this._onLeft.bind(this),
+        right: this._onRight.bind(this),
+        'turn left': this._onTurnLeft.bind(this),
+        'turn right': this._onTurnRight.bind(this)
       },
       cut: {
         'plan cut': 1000,
@@ -329,12 +329,12 @@ class ThreeOutput extends Output {
 
       const startFolder = gui.addFolder('Start')
 
-      startFolder.add(ui.start, 'play/pause animation')
+      startFolder.add(ui.start, 'play / pause animation')
       startFolder.add(ui.start, 'save location')
       startFolder.add(ui.start, 'restore location')
       startFolder.add(ui.start, 'show shortcuts')
       startFolder.add(ui.start, 'hide shortcuts')
-      startFolder.add(ui.start, 'show/hide toolips')
+      startFolder.add(ui.start, 'show / hide toolips')
       startFolder.addColor(ui.start, 'highlight color')
       startFolder.open()
 
@@ -620,12 +620,16 @@ class ThreeOutput extends Output {
   }
 
   _onShowKeyboardCommands (event) {
-    event.preventDefault()
+    if (event) {
+      event.preventDefault()
+    }
     this._keyInfoDiv.style.opacity = 0.9
   }
 
   _onHideKeyboardCommands (event) {
-    event.preventDefault()
+    if (event) {
+      event.preventDefault()
+    }
     this._keyInfoDiv.style.opacity = 0
   }
 
