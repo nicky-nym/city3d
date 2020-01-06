@@ -91,9 +91,24 @@ describe('ThreeOutput', function () {
         transformedVertices.should.include.deep.members(expectedVerticesOfBottomFace)
         transformedVertices.should.include.deep.members(expectedVerticesOfTopFace)
       })
+      it('should return a mesh with a matrix that transforms its vertices to the expected values, with depth < 0', function () {
+        const poly = new Geometry.ThickPolygon(rectangle, { incline: Y / 2, depth: -1 })
+        const mesh = threeOutput.makeThickPolygonMesh(poly, 0, null)
+
+        const transformedVertices = mesh.geometry.vertices.map(v => roundXYZ(v.applyMatrix4(mesh.matrix)))
+        const A = round(Y / 2 * SQRT3)
+        const B = 1 / 2
+        const C = -round(SQRT3 / 2)
+
+        // Depth < 0, so top face is at z = 0 before rotation.
+        const expectedVerticesOfTopFace = [xyz(0, 0, 0), xyz(0, A, Y / 2), xyz(X, A, Y / 2), xyz(X, 0, 0)]
+        const expectedVerticesOfBottomFace = expectedVerticesOfTopFace.map(v => roundXYZ(xyzAdd(v, xyz(0, B, C))))
+        transformedVertices.should.include.deep.members(expectedVerticesOfBottomFace)
+        transformedVertices.should.include.deep.members(expectedVerticesOfTopFace)
+      })
       it('should return a mesh with a matrix that transforms its vertices so the specified incline is achieved', function () {
         const INC = 3
-        const poly = new Geometry.ThickPolygon(rectangle, { incline: INC, depth: 1 })
+        const poly = new Geometry.ThickPolygon(rectangle, { incline: INC })
         const mesh = threeOutput.makeThickPolygonMesh(poly, 0, null)
 
         const transformedVertices = mesh.geometry.vertices.map(v => roundXYZ(v.applyMatrix4(mesh.matrix)))
@@ -107,34 +122,11 @@ describe('ThreeOutput', function () {
         zCoordsOfFrontEdge.should.have.length(4)
         zCoordsOfBackEdge.forEach((z, i) => z.should.be.closeTo(zCoordsOfFrontEdge[i] + INC, 0.00001))
       })
-      it('should achieve specified incline when rectangle is offset', function () {
-        const [X0, Y0] = [2, 3]
-        const INC = 3
-        const offsetRectangle = new Geometry.XYPolygon([
-          { x: X0 + 0, y: Y0 + 0 },
-          { x: X0 + 0, y: Y0 + Y },
-          { x: X0 + X, y: Y0 + Y },
-          { x: X0 + X, y: Y0 + 0 }
-        ])
-        const poly = new Geometry.ThickPolygon(offsetRectangle, { incline: INC, depth: 1 })
-        const mesh = threeOutput.makeThickPolygonMesh(poly, 0, null)
-
-        const transformedVertices = mesh.geometry.vertices.map(v => roundXYZ(v.applyMatrix4(mesh.matrix)))
-
-        // If we look at the four vertices on the front edge (y = Y0 before rotation) compared to
-        // those on the back edge (y = Y + Y0 before rotation), then the z-coordinates of the latter
-        // should equal the z-coordinates of the former plus INC.
-        const zCoordsOfFrontEdge = transformedVertices.filter(v => v.y - Y0 < Y / 2).map(v => v.z).sort((a, b) => a - b)
-        const zCoordsOfBackEdge = transformedVertices.filter(v => v.y - Y0 > Y / 2).map(v => v.z).sort((a, b) => a - b)
-        zCoordsOfFrontEdge.should.have.length(4)
-        zCoordsOfBackEdge.should.have.length(4)
-        zCoordsOfBackEdge.forEach((z, i) => z.should.be.closeTo(zCoordsOfFrontEdge[i] + INC, 0.00001))
-      })
       it('should achieve specified incline when rectangle is rotated 90 deg', function () {
         const INC = 3
         const rotatedRectangle = new Geometry.XYPolygon([{ x: 0, y: 0 }, { x: Y, y: 0 }, { x: Y, y: -X }, { x: 0, y: -X }])
 
-        const poly = new Geometry.ThickPolygon(rotatedRectangle, { incline: INC, depth: 1 })
+        const poly = new Geometry.ThickPolygon(rotatedRectangle, { incline: INC })
         const mesh = threeOutput.makeThickPolygonMesh(poly, 0, null)
 
         const transformedVertices = mesh.geometry.vertices.map(v => roundXYZ(v.applyMatrix4(mesh.matrix)))
@@ -157,7 +149,7 @@ describe('ThreeOutput', function () {
           { x: X / SQRT2, y: -X / SQRT2 }
         ])
 
-        const poly = new Geometry.ThickPolygon(rotatedRectangle, { incline: INC, depth: 1 })
+        const poly = new Geometry.ThickPolygon(rotatedRectangle, { incline: INC })
         const mesh = threeOutput.makeThickPolygonMesh(poly, 0, null)
 
         const transformedVertices = mesh.geometry.vertices.map(v => roundXYZ(v.applyMatrix4(mesh.matrix)))
@@ -179,7 +171,7 @@ describe('ThreeOutput', function () {
           { x: -X, y: Y },
           { x: -X, y: 0 }
         ])
-        const poly = new Geometry.ThickPolygon(ccwRectangle, { incline: INC, depth: 1 })
+        const poly = new Geometry.ThickPolygon(ccwRectangle, { incline: INC })
         const mesh = threeOutput.makeThickPolygonMesh(poly, 0, null)
 
         const transformedVertices = mesh.geometry.vertices.map(v => roundXYZ(v.applyMatrix4(mesh.matrix)))
@@ -195,20 +187,79 @@ describe('ThreeOutput', function () {
       })
     })
 
+    describe('with ThickPolygon constructed with offset rectangle and incline', function () {
+      const X = 2
+      const Y = 6
+      const [X0, Y0, Z0] = [2, 3, 7]
+      const INC = 3
+      const offsetRectangle = new Geometry.XYPolygon([
+        { x: X0 + 0, y: Y0 + 0 },
+        { x: X0 + 0, y: Y0 + Y },
+        { x: X0 + X, y: Y0 + Y },
+        { x: X0 + X, y: Y0 + 0 }
+      ])
+      const D = 0.1
+      const poly = new Geometry.ThickPolygon(offsetRectangle, { incline: INC, depth: D })
+
+      it('should achieve specified incline', function () {
+        const mesh = threeOutput.makeThickPolygonMesh(poly, 0, null)
+
+        const transformedVertices = mesh.geometry.vertices.map(v => roundXYZ(v.applyMatrix4(mesh.matrix)))
+
+        // If we look at the four vertices on the front edge (y = Y0 before rotation) compared to
+        // those on the back edge (y = Y + Y0 before rotation), then the z-coordinates of the latter
+        // should equal the z-coordinates of the former plus INC.
+        const zCoordsOfFrontEdge = transformedVertices.filter(v => v.y - Y0 < Y / 2).map(v => v.z).sort((a, b) => a - b)
+        const zCoordsOfBackEdge = transformedVertices.filter(v => v.y - Y0 > Y / 2).map(v => v.z).sort((a, b) => a - b)
+        zCoordsOfFrontEdge.should.have.length(4)
+        zCoordsOfBackEdge.should.have.length(4)
+        zCoordsOfBackEdge.forEach((z, i) => z.should.be.closeTo(zCoordsOfFrontEdge[i] + INC, 0.00001))
+      })
+      it('should achieve specified incline with non-zero zOffset', function () {
+        const mesh = threeOutput.makeThickPolygonMesh(poly, Z0, null)
+
+        const transformedVertices = mesh.geometry.vertices.map(v => roundXYZ(v.applyMatrix4(mesh.matrix)))
+
+        // If we look at the four vertices on the front edge (y = Y0 before rotation) compared to
+        // those on the back edge (y = Y + Y0 before rotation), then the z-coordinates of the latter
+        // should equal the z-coordinates of the former plus INC.
+        const zCoordsOfFrontEdge = transformedVertices.filter(v => v.y - Y0 < Y / 2).map(v => v.z).sort((a, b) => a - b)
+        const zCoordsOfBackEdge = transformedVertices.filter(v => v.y - Y0 > Y / 2).map(v => v.z).sort((a, b) => a - b)
+        zCoordsOfFrontEdge.should.have.length(4)
+        zCoordsOfBackEdge.should.have.length(4)
+        zCoordsOfBackEdge.forEach((z, i) => z.should.be.closeTo(zCoordsOfFrontEdge[i] + INC, 0.00001))
+      })
+      it('should result in vertices with minimum z-coordinate close to 0, if zOffset = 0', function () {
+        const mesh = threeOutput.makeThickPolygonMesh(poly, 0, null)
+
+        const transformedVertices = mesh.geometry.vertices.map(v => roundXYZ(v.applyMatrix4(mesh.matrix)))
+        Math.min(...transformedVertices.map(v => v.z)).should.be.closeTo(0, D)
+      })
+      it('should result in vertices with minimum z-coordinate close to specified non-zero zOffset', function () {
+        const mesh = threeOutput.makeThickPolygonMesh(poly, Z0, null)
+
+        const transformedVertices = mesh.geometry.vertices.map(v => roundXYZ(v.applyMatrix4(mesh.matrix)))
+        Math.min(...transformedVertices.map(v => v.z)).should.be.closeTo(Z0, D)
+      })
+    })
+
     describe('with non-rectangular input geometry', function () {
+      const X = 2
+      const Y = 6
+      const INC = 3
+      const chevron = new Geometry.XYPolygon([
+        { x: 0, y: 0 },
+        { x: 0, y: Y },
+        { x: X / 2, y: Y + 1 },
+        { x: X, y: Y },
+        { x: X, y: 0 },
+        { x: X / 2, y: 1 }
+      ])
+      const D = 0.1
+      const poly = new Geometry.ThickPolygon(chevron, { incline: INC, depth: -D })
+      const Z0 = 5
+
       it('should return a mesh with a matrix that transforms its vertices so the specified incline is achieved', function () {
-        const X = 2
-        const Y = 6
-        const INC = 3
-        const chevron = new Geometry.XYPolygon([
-          { x: 0, y: 0 },
-          { x: 0, y: Y },
-          { x: X / 2, y: Y + 1 },
-          { x: X, y: Y },
-          { x: X, y: 0 },
-          { x: X / 2, y: 1 }
-        ])
-        const poly = new Geometry.ThickPolygon(chevron, { incline: INC, depth: 1 })
         const mesh = threeOutput.makeThickPolygonMesh(poly, 0, null)
 
         const transformedVertices = mesh.geometry.vertices.map(v => roundXYZ(v.applyMatrix4(mesh.matrix)))
@@ -221,6 +272,22 @@ describe('ThreeOutput', function () {
         zCoordsOfFrontHalf.should.have.length(6)
         zCoordsOfBackHalf.should.have.length(6)
         zCoordsOfBackHalf.forEach((z, i) => z.should.be.closeTo(zCoordsOfFrontHalf[i] + INC, 0.00001))
+      })
+      it('should achieve specified incline with non-zero zOffset', function () {
+        const mesh = threeOutput.makeThickPolygonMesh(poly, Z0, null)
+
+        const transformedVertices = mesh.geometry.vertices.map(v => roundXYZ(v.applyMatrix4(mesh.matrix)))
+        const zCoordsOfFrontHalf = transformedVertices.filter(v => v.y < Y / 2).map(v => v.z).sort((a, b) => a - b)
+        const zCoordsOfBackHalf = transformedVertices.filter(v => v.y > Y / 2).map(v => v.z).sort((a, b) => a - b)
+        zCoordsOfFrontHalf.should.have.length(6)
+        zCoordsOfBackHalf.should.have.length(6)
+        zCoordsOfBackHalf.forEach((z, i) => z.should.be.closeTo(zCoordsOfFrontHalf[i] + INC, 0.00001))
+      })
+      it('should result in vertices with minimum z-coordinate close to specified non-zero zOffset', function () {
+        const mesh = threeOutput.makeThickPolygonMesh(poly, Z0, null)
+
+        const transformedVertices = mesh.geometry.vertices.map(v => roundXYZ(v.applyMatrix4(mesh.matrix)))
+        Math.min(...transformedVertices.map(v => v.z)).should.be.closeTo(Z0, D)
       })
     })
   })
