@@ -7,6 +7,7 @@
 
 import * as THREE from '../../node_modules/three/build/three.module.js'
 import Stats from '../../node_modules/stats.js/src/Stats.js'
+// import { GUI } from '../../node_modules/dat.gui/build/dat.gui.module.js'
 
 import { Geometry } from '../core/geometry.js'
 import { fullName } from '../core/util.js'
@@ -28,6 +29,8 @@ const COLOR_DIM_GROUND = 0x202020 // eslint-disable-line no-unused-vars
  */
 class ThreeOutput extends Output {
   setDisplayDiv (outputDivElement) {
+    this._addGuiControlPanel()
+
     this.stats = new Stats()
     this.stats.showPanel(0) // 0: fps, 1: ms, 2: mb, 3+: custom
     outputDivElement.appendChild(this.stats.dom)
@@ -157,11 +160,12 @@ class ThreeOutput extends Output {
         case 'KeyE': return this._onTurnRight()
         case 'KeyF': return this._onDown()
         case 'KeyG': return this._onGoTo()
-        case 'KeyH': return this._onToggleHighlighting()
+        // case 'KeyH': // this is used by the dat.gui panel
         case 'KeyK': return this._onShowKeyboardCommands(evt)
         case 'KeyQ': return this._onTurnLeft()
         case 'KeyR': return evt.shiftKey ? this._onRestoreOrbitControlsState() : this._onUp()
         case 'KeyS': return evt.shiftKey ? this._onSaveOrbitControlsState() : this._onBackward()
+        case 'KeyT': return this._onToggleHighlighting()
         case 'KeyW': return this._onForward()
         case 'KeyX': return this._onHideKeyboardCommands(evt)
         case 'Space': return this._onToggleAnimation()
@@ -181,9 +185,11 @@ class ThreeOutput extends Output {
     S: save camera coordinates<br>
     R: restore camera coordinates<br>
     &lt;space&gt;: toggle animation<br>
-    h: toggle highlighting<br>
+    h: show/hide control panel<br>
     k: show keyboard commands (this box)<br>
+    t: show/hide tooltips &amp; highlighting<br>
     x: close this box (TODO: any key or click should work)<br>
+    PgDn: show more...<br>
     <h5>These commands disable the orbit controls until the next arrow key is pressed:</h5>
     w: move forward one foot<br>
     a: move left one foot<br>
@@ -248,6 +254,146 @@ class ThreeOutput extends Output {
     }
 
     this._traverse(this._city, this._scene)
+  }
+
+  _addGuiControlPanel () {
+    const ui = {
+      start: {
+        'play/pause animation': function () { return this._onToggleAnimation() },
+        'save location': function () { return this._onSaveOrbitControlsState() },
+        'restore location': function () { return this._onRestoreOrbitControlsState() },
+        'show shortcuts': function () { return this._onShowKeyboardCommands() },
+        'hide shortcuts': function () { return this._onHideKeyboardCommands() },
+        'show/hide toolips': function () { return this._onToggleHighlighting() },
+        'highlight color': '#ff00ff'
+      },
+      nav: {
+        forward: function () { return this._onForward() },
+        backward: function () { return this._onBackward() },
+        up: function () { return this._onUp() },
+        down: function () { return this._onDown() },
+        left: function () { return this._onLeft() },
+        right: function () { return this._onRight() },
+        'turn left': function () { return this._onTurnLeft() },
+        'turn right': function () { return this._onTurnRight() }
+      },
+      cut: {
+        'plan cut': 1000,
+        northerly: 10000,
+        southerly: -10000,
+        easterly: 10000,
+        westerly: -10000
+      },
+      layers: {
+        building: {
+          'walls & floors': true,
+          'doors & windows': true,
+          roofs: true
+        },
+        pavement: {
+          'streets, etc.': true
+        },
+        landscape: {
+          'trees & plants': true,
+          'ground surface': true,
+          water: true
+        },
+        entourage: {
+          people: false,
+          animals: false,
+          'vehicles & movers': true,
+          furniture: false
+        },
+        weather: {
+          clouds: false,
+          fog: false,
+          lightning: false
+        },
+        abstract: {
+          'vehicle route lines': true,
+          'parcel boundary lines': true,
+          tooltips: true,
+          grid: true,
+          'sun path & day arcs': false,
+          'daylight factor heatmap': false,
+          'kinematic range heatmap': false,
+          'green space heatmap': false,
+          'assignable FAR heatmap': false
+        }
+      }
+    }
+
+    const GUI = false
+    if (window && GUI) {
+      const gui = new GUI()
+
+      const startFolder = gui.addFolder('Start')
+
+      startFolder.add(ui.start, 'play/pause animation')
+      startFolder.add(ui.start, 'save location')
+      startFolder.add(ui.start, 'restore location')
+      startFolder.add(ui.start, 'show shortcuts')
+      startFolder.add(ui.start, 'hide shortcuts')
+      startFolder.add(ui.start, 'show/hide toolips')
+      startFolder.addColor(ui.start, 'highlight color')
+      startFolder.open()
+
+      const navigationFolder = gui.addFolder('Navigation')
+
+      navigationFolder.add(ui.nav, 'forward')
+      navigationFolder.add(ui.nav, 'backward')
+      navigationFolder.add(ui.nav, 'up')
+      navigationFolder.add(ui.nav, 'down')
+      navigationFolder.add(ui.nav, 'left')
+      navigationFolder.add(ui.nav, 'right')
+      navigationFolder.add(ui.nav, 'turn left')
+      navigationFolder.add(ui.nav, 'turn right')
+
+      const sectionCutsFolder = gui.addFolder('Section cuts')
+
+      sectionCutsFolder.add(ui.cut, 'plan cut').min(0).max(1000).step(1)
+      sectionCutsFolder.add(ui.cut, 'northerly').min(-10000).max(10000).step(1)
+      sectionCutsFolder.add(ui.cut, 'southerly').min(-10000).max(10000).step(1)
+      sectionCutsFolder.add(ui.cut, 'easterly').min(-10000).max(10000).step(1)
+      sectionCutsFolder.add(ui.cut, 'westerly').min(-10000).max(10000).step(1)
+
+      const layersFolder = gui.addFolder('Layers')
+
+      const buildings = layersFolder.addFolder('Buildings')
+      buildings.add(ui.layers.building, 'walls & floors')
+      buildings.add(ui.layers.building, 'doors & windows')
+      buildings.add(ui.layers.building, 'roofs')
+
+      const pavement = layersFolder.addFolder('Pavement')
+      pavement.add(ui.layers.pavement, 'streets, etc.')
+
+      const landscape = layersFolder.addFolder('Landscape')
+      landscape.add(ui.layers.landscape, 'trees & plants')
+      landscape.add(ui.layers.landscape, 'ground surface')
+      landscape.add(ui.layers.landscape, 'water')
+
+      const entourage = layersFolder.addFolder('Entourage')
+      entourage.add(ui.layers.entourage, 'people')
+      entourage.add(ui.layers.entourage, 'animals')
+      entourage.add(ui.layers.entourage, 'vehicles & movers')
+      entourage.add(ui.layers.entourage, 'furniture')
+
+      const weather = layersFolder.addFolder('Weather')
+      weather.add(ui.layers.weather, 'clouds')
+      weather.add(ui.layers.weather, 'fog')
+      weather.add(ui.layers.weather, 'lightning')
+
+      const abstractions = layersFolder.addFolder('Abstract')
+      abstractions.add(ui.layers.abstract, 'vehicle route lines')
+      abstractions.add(ui.layers.abstract, 'parcel boundary lines')
+      abstractions.add(ui.layers.abstract, 'tooltips')
+      abstractions.add(ui.layers.abstract, 'grid')
+      abstractions.add(ui.layers.abstract, 'sun path & day arcs')
+      abstractions.add(ui.layers.abstract, 'daylight factor heatmap')
+      abstractions.add(ui.layers.abstract, 'kinematic range heatmap')
+      abstractions.add(ui.layers.abstract, 'green space heatmap')
+      abstractions.add(ui.layers.abstract, 'assignable FAR heatmap')
+    }
   }
 
   add (thing) {

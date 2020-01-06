@@ -24,6 +24,7 @@
   },
   "dependencies": {
     "stats.js": "^0.17.0",
+    "dat.gui": "^0.7.6",
     "three": "^0.112.0"
   }
 }
