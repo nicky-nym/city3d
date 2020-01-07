@@ -52,7 +52,7 @@ class Creek {
     }
 
     const abstractThickPolygon = new Geometry.ThickPolygon(xyPolygon, { depth: CREEK_DEPTH })
-    const concreteThickPolygon = new Geometry.Instance(abstractThickPolygon, 0, BLUE, name || 'Creek')
+    const concreteThickPolygon = new Geometry.Instance(abstractThickPolygon, xyz(X_OFFSET, 0, 0), BLUE, name || 'Creek')
     return concreteThickPolygon
   }
 }

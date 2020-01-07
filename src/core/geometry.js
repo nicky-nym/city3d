@@ -5,10 +5,21 @@
   * For more information, please refer to <http://unlicense.org>
   */
 
+/**
+ * Instance is a class for specifying an instance of a geometrical template.
+ * The vertices are obtained by translating the template so that the first vertex has the specified coordinates.
+ *
+ * @param {Object} geometry - a template such as ThickPolygon or TriangularPolyhedron
+ * @param {Number} [x=0] - desired x-coordinate of first vertex
+ * @param {Number} [y=0] - desired y-coordinate of first vertex
+ * @param {Number} [z=0] - desired z-coordinate of first vertex
+ * @param {Number} hexColor - rgb color, e.g. 0x0000ff
+ * @param {string} [name]
+ */
 class Instance {
-  constructor (geometry, zOffset, hexColor, name) {
+  constructor (geometry, { x = 0, y = 0, z = 0 }, hexColor, name) {
     this.geometry = geometry
-    this.zOffset = zOffset
+    this.p0 = { x, y, z }
     this.hexColor = hexColor
     this.name = name
   }
@@ -50,20 +61,16 @@ const DEFAULT_THICKNESS = 0.5
  * @param {XYPolygon} xyPolygon
  * @param {Number} [xRotation=0] - rotation around x-axis in radians
  * @param {Number} [zRotation=0] - rotation around z-axis in radians
- * @param {Number} [xOffset=0]
- * @param {Number} [yOffset=0]
  * @param {Number} [depth=DEFAULT_THICKNESS]
  * @param {xy[][]} [openings] - array of openings, where each is specified by an array of xy values
  */
 class ThickPolygon2 {
   constructor (xyPolygon, {
-    xRotation = 0, zRotation = 0, xOffset = 0, yOffset = 0, depth = DEFAULT_THICKNESS, openings = []
+    xRotation = 0, zRotation = 0, depth = DEFAULT_THICKNESS, openings = []
   } = {}) {
     this.xyPolygon = xyPolygon
     this.xRotation = xRotation
     this.zRotation = zRotation
-    this.xOffset = xOffset
-    this.yOffset = yOffset
     this.depth = depth
     this.openings = openings
   }
@@ -82,6 +89,12 @@ class ThickPolygon2 {
 class XYPolygon extends Array {
   constructor (xyVertices = []) {
     super(...xyVertices)
+  }
+
+  map (fn) {
+    const out = []
+    this.forEach(v => out.push(fn(v)))
+    return out
   }
 
   area () {

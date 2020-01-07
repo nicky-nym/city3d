@@ -20,13 +20,14 @@ class Roof extends Group {
       let { vertices, indices } = spec.custom
       vertices = ray.applyRay(vertices)
       const abstractRoof = new Geometry.TriangularPolyhedron(vertices, indices)
-      const concreteRoof = new Geometry.Instance(abstractRoof, 0, LIGHT_GRAY)
+      const concreteRoof = new Geometry.Instance(abstractRoof, { ...vertices[0] }, LIGHT_GRAY)
       this.add(concreteRoof)
     } else if (spec.flat) {
       const adjustedCorners = ray.applyRay(spec.flat)
       const xyPolygon = new Geometry.XYPolygon(adjustedCorners)
       const abstractThickPolygon = new Geometry.ThickPolygon(xyPolygon, { depth: 0.5 })
-      const concreteThickPolygon = new Geometry.Instance(abstractThickPolygon, ray.xyz.z, LIGHT_GRAY)
+      const p0 = { ...adjustedCorners[0], z: ray.xyz.z }
+      const concreteThickPolygon = new Geometry.Instance(abstractThickPolygon, p0, LIGHT_GRAY)
       this.add(concreteThickPolygon)
     } else {
       throw new Error('bad roof type in spec for new Roof()')

@@ -28,8 +28,9 @@ class District extends Group {
     adjustedCorners.push(adjustedCorners[0])
     const xyPolygon = new Geometry.XYPolygon(adjustedCorners)
     const abstractOutlinePolygon = new Geometry.OutlinePolygon(xyPolygon)
+    const [{ x, y }, z] = [adjustedCorners[0], ray.xyz.z]
     for (const i of countTo(3)) {
-      const concreteOutlinePolygon = new Geometry.Instance(abstractOutlinePolygon, ray.xyz.z + (i * 3), MARTIAN_ORANGE)
+      const concreteOutlinePolygon = new Geometry.Instance(abstractOutlinePolygon, { x, y, z: z + (i * 3) }, MARTIAN_ORANGE)
       this.add(concreteOutlinePolygon)
     }
 

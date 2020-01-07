@@ -10,7 +10,7 @@ import Stats from '../../node_modules/stats.js/src/Stats.js'
 // import { GUI } from '../../node_modules/dat.gui/build/dat.gui.module.js'
 
 import { Geometry } from '../core/geometry.js'
-import { fullName, xyz } from '../core/util.js'
+import { fullName, xyz, xyzSubtract } from '../core/util.js'
 import { Group, LODGroup } from '../architecture/group.js'
 import { Output } from './output.js'
 import { OrbitControls } from '../../node_modules/three/examples/jsm/controls/OrbitControls.js'
@@ -477,7 +477,7 @@ class ThreeOutput extends Output {
       }
     } else if (thing instanceof Geometry.Instance) {
       const material = this._material('high', thing.hexColor, true)
-      const mesh = this.makeMeshFromInstanceGeometry(thing.geometry, material, thing.hexColor, thing.zOffset)
+      const mesh = this.makeMeshFromInstanceGeometry(thing.geometry, material, thing.hexColor, thing.p0)
       mesh.name = thing.name
       threeObject.add(mesh)
     } else {
@@ -528,57 +528,55 @@ class ThreeOutput extends Output {
     }
 
     const material = this._material(materialCost, instance.hexColor, true)
-    return this.makeMeshFromInstanceGeometry(instance.geometry, material, instance.hexColor, instance.zOffset)
+    return this.makeMeshFromInstanceGeometry(instance.geometry, material, instance.hexColor, instance.p0)
   }
 
-  makeMeshFromInstanceGeometry (instanceGeometry, material, color, zOffset) {
+  makeMeshFromInstanceGeometry (instanceGeometry, material, color, p0) {
     if (instanceGeometry instanceof Geometry.ThickPolygon) {
-      return this.makeThickPolygonMesh(instanceGeometry, zOffset, material)
+      return this.makeThickPolygonMesh(instanceGeometry, material, p0)
     }
     if (instanceGeometry instanceof Geometry.ThickPolygon2) {
-      return this.makeThickPolygon2Mesh(instanceGeometry, zOffset, material)
+      return this.makeThickPolygon2Mesh(instanceGeometry, material, p0)
     }
     if (instanceGeometry instanceof Geometry.TriangularPolyhedron) {
-      return this.makeTriangularPolyhedronMesh(instanceGeometry, material)
+      return this.makeTriangularPolyhedronMesh(instanceGeometry, material, p0)
     }
     if (instanceGeometry instanceof Geometry.OutlinePolygon) {
-      return this.makeOutlinePolygonLines(instanceGeometry, color, zOffset)
+      return this.makeOutlinePolygonLines(instanceGeometry, color, p0)
     }
     if (instanceGeometry instanceof Geometry.Line) {
-      return this.makeLines(instanceGeometry, color)
+      return this.makeLines(instanceGeometry, color, p0)
     }
     console.error('unknown geometry')
   }
 
   // TODO: consider refactoring to merge this with makeOutlinePolygonLines()
-  makeLines (outlinePolygon, hexColor) {
+  makeLines (outlinePolygon, hexColor, p0 = { x: 0, y: 0, z: 0 }) {
     const material = new THREE.LineBasicMaterial({ color: hexColor })
     const geometry = new THREE.Geometry()
-    const corners = outlinePolygon.xyzWaypoints
-    const vectors = []
-    for (const corner of corners) {
-      vectors.push(new THREE.Vector3(corner.x, corner.y, corner.z))
-    }
+    const inputVertices = outlinePolygon.xyzWaypoints
+    const verticesTranslatedToOrigin = inputVertices.map(v => xyzSubtract(v, inputVertices[0]))
+    const vectors = verticesTranslatedToOrigin.map(v => new THREE.Vector3(v.x, v.y, v.z))
     geometry.vertices.push(...vectors)
+    geometry.translate(p0.x, p0.y, p0.z)
     const line = new THREE.Line(geometry, material)
     return line
   }
 
   // TODO: consider refactoring to merge this with makeLines()
-  makeOutlinePolygonLines (outlinePolygon, hexColor, zOffset) {
+  makeOutlinePolygonLines (outlinePolygon, hexColor, p0 = { x: 0, y: 0, z: 0 }) {
     const material = new THREE.LineBasicMaterial({ color: hexColor })
     const geometry = new THREE.Geometry()
-    const corners = outlinePolygon.xyPolygon
-    const vectors = []
-    for (const corner of corners) {
-      vectors.push(new THREE.Vector3(corner.x, corner.y, zOffset))
-    }
+    const xyInputVertices = outlinePolygon.xyPolygon
+    const xyVerticesTranslatedToOrigin = xyInputVertices.map(v => xyzSubtract(v, xyInputVertices[0]))
+    const vectors = xyVerticesTranslatedToOrigin.map(v => new THREE.Vector3(v.x, v.y, 0))
     geometry.vertices.push(...vectors)
+    geometry.translate(p0.x, p0.y, p0.z)
     const line = new THREE.Line(geometry, material)
     return line
   }
 
-  makeThickPolygonMesh (thickPolygon, zOffset, material) {
+  makeThickPolygonMesh (thickPolygon, material, p0 = { x: 0, y: 0, z: 0 }) {
     const xyPolygon = thickPolygon.xyPolygon
     const x0 = xyPolygon[0].x
     const y0 = xyPolygon[0].y
@@ -606,13 +604,15 @@ class ThreeOutput extends Output {
       const R = new THREE.Matrix4().makeRotationAxis(axis, angle)
       mesh.applyMatrix(R)
     }
-    const T = new THREE.Matrix4().setPosition(x0, y0, zOffset)
+    const T = new THREE.Matrix4().setPosition(p0.x, p0.y, p0.z)
     mesh.applyMatrix(T)
     return mesh
   }
 
-  makeThickPolygon2Mesh (thickPolygon, zOffset, material) {
+  makeThickPolygon2Mesh (thickPolygon, material, p0 = { x: 0, y: 0, z: 0 }) {
     const xyPolygon = thickPolygon.xyPolygon
+    const x0 = xyPolygon[0].x
+    const y0 = xyPolygon[0].y
     const shape = new THREE.Shape(xyPolygon)
     shape.closePath()
 
@@ -626,10 +626,10 @@ class ThreeOutput extends Output {
       depth: thickPolygon.depth,
       bevelEnabled: false
     })
-
+    geometry.translate(-x0, -y0, 0)
     geometry.rotateX(thickPolygon.xRotation)
     geometry.rotateZ(thickPolygon.zRotation)
-    geometry.translate(thickPolygon.xOffset, thickPolygon.yOffset, zOffset)
+    geometry.translate(p0.x, p0.y, p0.z)
 
     const mesh = new THREE.Mesh(geometry, material)
     mesh.castShadow = true
@@ -640,11 +640,16 @@ class ThreeOutput extends Output {
    * Returns a THREE.Mesh() with a geometry that matches the given spec
    * @param {Object} triangularPolyhedron - an object like { vertices: [xyz, xyz...], indicesOfFaces: [3, 8, 2...] }
    * @param {THREE.Material} material - the material for the new Mesh
-   * @returns {THREE.Mesh} an array of integers
+   * @param {xyz} p0 - desired position of first vertex
+   * @returns {THREE.Mesh}
    */
-  makeTriangularPolyhedronMesh (triangularPolyhedron, material) {
+  makeTriangularPolyhedronMesh (triangularPolyhedron, material, p0) {
+    const v0 = triangularPolyhedron.vertices[0]
+    const verticesTranslatedToOrigin = triangularPolyhedron.vertices.map(v => xyzSubtract(v, v0))
     const geometry = new THREE.Geometry()
-    geometry.vertices = triangularPolyhedron.vertices.map(xyz => new THREE.Vector3(xyz.x, xyz.y, xyz.z))
+    geometry.vertices = verticesTranslatedToOrigin.map(v => new THREE.Vector3(v.x, v.y, v.z))
+
+    geometry.translate(p0.x, p0.y, p0.z)
     geometry.faces = triangularPolyhedron.indicesOfFaces.map(abc => new THREE.Face3(...abc))
     geometry.computeBoundingSphere()
     geometry.computeFaceNormals()

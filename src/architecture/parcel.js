@@ -21,7 +21,8 @@ class Parcel extends Group {
     adjustedCorners.push(adjustedCorners[0])
     const xyPolygon = new Geometry.XYPolygon(adjustedCorners)
     const abstractOutlinePolygon = new Geometry.OutlinePolygon(xyPolygon)
-    const concreteOutlinePolygon = new Geometry.Instance(abstractOutlinePolygon, ray.xyz.z, MARTIAN_ORANGE)
+    const p0 = { ...adjustedCorners[0], z: ray.xyz.z }
+    const concreteOutlinePolygon = new Geometry.Instance(abstractOutlinePolygon, p0, MARTIAN_ORANGE)
     this.add(concreteOutlinePolygon)
 
     this.setValueForMetric(METRIC.LAND_AREA, xyPolygon.area())

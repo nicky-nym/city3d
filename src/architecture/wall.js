@@ -38,8 +38,8 @@ class Wall extends Group {
     const xyPolygon = new Geometry.XYPolygon([xy(0, 0), xy(length, 0), xy(length, height), xy(0, height)])
     const xRotation = Math.PI / 2
     const zRotation = Math.atan2(dy, dx)
-    const abstractWall = new Geometry.ThickPolygon2(xyPolygon, { xRotation, zRotation, xOffset: v1.x, yOffset: v1.y, depth, openings })
-    const concreteWall = new Geometry.Instance(abstractWall, z, ALMOST_WHITE)
+    const abstractWall = new Geometry.ThickPolygon2(xyPolygon, { xRotation, zRotation, depth, openings })
+    const concreteWall = new Geometry.Instance(abstractWall, { ...v1, z }, ALMOST_WHITE)
     this.add(concreteWall)
 
     this.setValueForMetric(METRIC.WALL_AREA, abstractWall.area())

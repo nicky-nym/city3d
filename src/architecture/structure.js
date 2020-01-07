@@ -61,7 +61,8 @@ class Structure extends LODGroup {
     const xyPolygon = new Geometry.XYPolygon(adjustedCorners)
     const color = COLORS_BY_USE[use]
     const abstractThickPolygon = new Geometry.ThickPolygon(xyPolygon, { depth })
-    const concreteThickPolygon = new Geometry.Instance(abstractThickPolygon, z, color)
+    const p0 = { ...adjustedCorners[0], z }
+    const concreteThickPolygon = new Geometry.Instance(abstractThickPolygon, p0, color)
     group.add(concreteThickPolygon)
     return group
   }

@@ -33,7 +33,7 @@ class Tree extends LODGroup {
     xyVertices = xyVertices.map(xy => xyzAdd(xy, atXy))
     const xyPolygon = new Geometry.XYPolygon(xyVertices)
     const abstractThickPolygon = new Geometry.ThickPolygon(xyPolygon, { depth: TRUNK_HEIGHT })
-    const concreteThickPolygon = new Geometry.Instance(abstractThickPolygon, 0, BROWN)
+    const concreteThickPolygon = new Geometry.Instance(abstractThickPolygon, xyVertices[0], BROWN)
     return concreteThickPolygon
   }
 
@@ -51,7 +51,7 @@ class Tree extends LODGroup {
     xyVertices = xyVertices.map(xy => xyzAdd(xy, atXy))
     const xyPolygon = new Geometry.XYPolygon(xyVertices)
     const abstractThickPolygon = new Geometry.ThickPolygon(xyPolygon, { depth: CROWN_HEIGHT })
-    const concreteThickPolygon = new Geometry.Instance(abstractThickPolygon, TRUNK_HEIGHT, GREEN)
+    const concreteThickPolygon = new Geometry.Instance(abstractThickPolygon, { ...xyVertices[0], z: TRUNK_HEIGHT }, GREEN)
     return concreteThickPolygon
   }
 }

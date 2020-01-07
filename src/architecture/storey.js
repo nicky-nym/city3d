@@ -94,7 +94,7 @@ class Storey extends Group {
     if (cap) {
       const color = COLORS_BY_USE[use]
       const abstractThickPolygon = new Geometry.ThickPolygon(xyPolygon, { incline: incline, depth: depth })
-      const concreteThickPolygon = new Geometry.Instance(abstractThickPolygon, z, color)
+      const concreteThickPolygon = new Geometry.Instance(abstractThickPolygon, { ...xyPolygon[0], z }, color)
       this.add(concreteThickPolygon)
       const squareFeet = xyPolygon.area()
 

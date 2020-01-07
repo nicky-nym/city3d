@@ -65,7 +65,7 @@ const REPEAT_DY = BLOCK_DY + STREET_WIDTH + (SIDEWALK_WIDTH_STREETS * 2)
 function _makeLine (waypoints, ray, color) {
   const adjustedWaypoints = ray.applyRay(waypoints)
   const line = new Geometry.Line(adjustedWaypoints)
-  return new Geometry.Instance(line, 0, color)
+  return new Geometry.Instance(line, adjustedWaypoints[0], color)
 }
 
 /**
