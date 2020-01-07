@@ -7,20 +7,14 @@
 
 import * as THREE from '../../node_modules/three/build/three.module.js'
 import Stats from '../../node_modules/stats.js/src/Stats.js'
-// import { GUI } from '../../node_modules/dat.gui/build/dat.gui.module.js'
+import { GUI } from '../../node_modules/dat.gui/build/dat.gui.module.js'
 
-import { Geometry } from '../core/geometry.js'
-import { fullName, xyz, xyzSubtract } from '../core/util.js'
-import { Group, LODGroup } from '../architecture/group.js'
+import { fullName, xyz } from '../core/util.js'
 import { Output } from './output.js'
 import { OrbitControls } from '../../node_modules/three/examples/jsm/controls/OrbitControls.js'
+import { ThreeOutputScene } from './three_output_scene.js'
 
 const ONE_MILE = 5280
-const FIXME_FUCHSIA = 0xff00ff // used as a default so it's obvious when a color is missing
-const COLOR_GREY = 0x808080
-const BLUE = 0x0000ff
-const BLUE_GLASS = 0x9999ff // eslint-disable-line no-unused-vars
-const ALMOST_WHITE = 0x999999 // eslint-disable-line no-unused-vars
 const COLOR_BRIGHT_SKY = 0xddeeff // eslint-disable-line no-unused-vars
 const COLOR_DIM_GROUND = 0x202020 // eslint-disable-line no-unused-vars
 
@@ -56,18 +50,13 @@ class ThreeOutput extends Output {
     const NEAR_CAMERA_LIMIT = 1
     const FAR_CAMERA_LIMIT = ONE_MILE * 2
 
-    this._materials = {
-      lowest: { [THREE.FrontSide]: {}, [THREE.DoubleSide]: {} },
-      medium: { [THREE.FrontSide]: {}, [THREE.DoubleSide]: {} },
-      high: { [THREE.FrontSide]: {}, [THREE.DoubleSide]: {} }
-    }
-
-    this._shape = null
+    // textures
+    const loader = new THREE.TextureLoader()
+    const textures = new Map()
+    textures.set('ground', loader.load('../src/outputs/textures/metallic-green-glitter-texture.jpg'))
 
     // scene
-    this._scene = new THREE.Scene()
-    this._scene.background = new THREE.Color(0xcce0ff)
-    this._scene.fog = new THREE.Fog(0xcce0ff, 500, 10000)
+    this._scene = new ThreeOutputScene(textures)
 
     // camera
     this._camera = new THREE.PerspectiveCamera(70, WIDTH / HEIGHT, NEAR_CAMERA_LIMIT, FAR_CAMERA_LIMIT)
@@ -76,15 +65,6 @@ class ThreeOutput extends Output {
     this._camera.position.z = 300
     this._camera.up.set(0, 0, 1) // make z be up instead of y
     this._scene.add(this._camera)
-
-    // XYZ axes
-    const axesHelper = new THREE.AxesHelper(ONE_MILE)
-    this._scene.add(axesHelper)
-
-    // grid
-    const gridHelper = new THREE.GridHelper(ONE_MILE, 8, COLOR_GREY, COLOR_GREY)
-    gridHelper.geometry.rotateX(Math.PI / 2)
-    this._scene.add(gridHelper)
 
     // lights
     const light = new THREE.DirectionalLight(0xdfebff, 3.0)
@@ -106,22 +86,6 @@ class ThreeOutput extends Output {
     //   3 // intensity
     // )
     // this._scene.add(ambientLight)
-
-    // ground
-    const loader = new THREE.TextureLoader()
-    const texture = loader.load('../src/outputs/textures/metallic-green-glitter-texture.jpg')
-    texture.wrapS = texture.wrapT = THREE.RepeatWrapping
-    texture.repeat.set(100, 100) // 25, 25)
-    texture.anisotropy = 16
-    var groundMaterial = new THREE.MeshLambertMaterial({ map: texture })
-    const ground = new THREE.Mesh(new THREE.PlaneBufferGeometry(ONE_MILE, ONE_MILE), groundMaterial)
-    ground.geometry.rotateX(Math.PI / 2)
-    ground.position.y = -250
-    ground.position.z = -0.1
-    ground.rotation.x = -Math.PI / 2
-    ground.receiveShadow = true
-    ground.userData.noHighlight = true
-    this._scene.add(ground)
 
     this._renderer = new THREE.WebGLRenderer({ antialias: true })
     this._renderer.setSize(WIDTH, HEIGHT)
@@ -220,45 +184,17 @@ class ThreeOutput extends Output {
       this._mouseClientY = evt.clientY
     }, false)
 
-    this._animatedComponents = []
     this._animationOn = true
 
-    // add an origin marker for debugging purposes
-    const ORIGIN_MARKER_HEIGHT = 100
-    const ORIGIN_SIGN_LENGTH = 30
-    const geometry = new THREE.BoxGeometry(4, 4, ORIGIN_MARKER_HEIGHT)
-    const material = this._material('high', BLUE, false)
-    const mesh = new THREE.Mesh(geometry, material)
-    mesh.name = 'origin marker'
-    mesh.position.z = ORIGIN_MARKER_HEIGHT / 2
-    this._scene.add(mesh)
-    const geometryX = new THREE.BoxGeometry(ORIGIN_SIGN_LENGTH, 1, 8)
-    const materialX = this._material('high', 0xff0000, false)
-    const meshX = new THREE.Mesh(geometryX, materialX)
-    meshX.name = '+X axis (East)'
-    meshX.position.x = ORIGIN_SIGN_LENGTH / 2
-    meshX.position.z = ORIGIN_MARKER_HEIGHT * 0.7
-    this._scene.add(meshX)
-    const geometryY = new THREE.BoxGeometry(1, ORIGIN_SIGN_LENGTH, 8)
-    const materialY = this._material('high', 0x00ff00, false)
-    const meshY = new THREE.Mesh(geometryY, materialY)
-    meshY.name = '+Y axis (North)'
-    meshY.position.y = ORIGIN_SIGN_LENGTH / 2
-    meshY.position.z = ORIGIN_MARKER_HEIGHT * 0.7
-    this._scene.add(meshY)
-
+    this._scene.buildFrom(this._city)
     const SHOW_PATH = true
     if (SHOW_PATH) {
-      const material = new THREE.LineBasicMaterial({ color: 0xFF00FF })
-      for (const route of this._city.getRoutes()) {
-        const geometry = new THREE.Geometry()
-        geometry.vertices.push(...route.waypoints().map(p => new THREE.Vector3(p.x, p.y, p.z)))
-        const line = new THREE.Line(geometry, material)
-        this._scene.add(line)
-      }
+      this._scene.addPaths(this._city)
     }
+  }
 
-    this._traverse(this._city, this._scene)
+  add (thing) {
+    this._scene.buildFrom(thing)
   }
 
   _addClippingPlane (name, xyzVal, distance) {
@@ -453,210 +389,6 @@ class ThreeOutput extends Output {
     }
   }
 
-  add (thing) {
-    this._traverse(thing, this._scene)
-  }
-
-  _traverse (thing, threeObject) {
-    if (thing instanceof Group) {
-      if (thing instanceof LODGroup) {
-        const lod = this.makeLODFromLODGroup(thing)
-        threeObject.add(lod)
-      } else {
-        const group = new THREE.Group()
-        group.name = thing.name
-        threeObject.add(group)
-        for (const child of thing.children) {
-          this._traverse(child, group)
-        }
-      }
-    } else if (thing.threeComponent) {
-      threeObject.add(thing.threeComponent)
-      if (thing.threeComponent.update) {
-        this._animatedComponents.push(thing.threeComponent)
-      }
-    } else if (thing instanceof Geometry.Instance) {
-      const material = this._material('high', thing.hexColor, true)
-      const mesh = this.makeMeshFromInstanceGeometry(thing.geometry, material, thing.hexColor, thing.p0)
-      mesh.name = thing.name
-      threeObject.add(mesh)
-    } else {
-      // TODO
-    }
-  }
-
-  makeLODFromLODGroup (lodGroup) {
-    const lod = new THREE.LOD()
-    if (lodGroup.offset) {
-      lod.translateX(lodGroup.offset.x)
-      lod.translateY(lodGroup.offset.y)
-      lod.translateZ(lodGroup.offset.z)
-    }
-    const group = new THREE.Group()
-    group.name = lodGroup.name
-    for (const child of lodGroup.children) {
-      this._traverse(child, group)
-    }
-    lod.addLevel(group, 0)
-
-    const levels = lodGroup.getLevelsOfDetail()
-
-    // Sort so highest threshold (= lowest resolution) is first.
-    levels.sort(level => -level.distanceThreshold)
-
-    let materialCost = 'lowest'
-    for (const level of levels) {
-      const object = this.makeLowResObject(level.instance, materialCost)
-      lod.addLevel(object, level.distanceThreshold)
-      materialCost = 'medium'
-    }
-    return lod
-  }
-
-  makeLowResObject (instance, materialCost) {
-    if (instance instanceof Group) {
-      const group = new THREE.Group()
-      group.name = instance.name
-      for (const child of instance.children) {
-        group.add(this.makeLowResObject(child, materialCost))
-      }
-      return group
-    }
-    if (!instance.geometry) {
-      console.error('Error: instance must either be an instance of Group or have a property "geometry"')
-      return
-    }
-
-    const material = this._material(materialCost, instance.hexColor, true)
-    return this.makeMeshFromInstanceGeometry(instance.geometry, material, instance.hexColor, instance.p0)
-  }
-
-  makeMeshFromInstanceGeometry (instanceGeometry, material, color, p0) {
-    if (instanceGeometry instanceof Geometry.ThickPolygon) {
-      return this.makeThickPolygonMesh(instanceGeometry, material, p0)
-    }
-    if (instanceGeometry instanceof Geometry.ThickPolygon2) {
-      return this.makeThickPolygon2Mesh(instanceGeometry, material, p0)
-    }
-    if (instanceGeometry instanceof Geometry.TriangularPolyhedron) {
-      return this.makeTriangularPolyhedronMesh(instanceGeometry, material, p0)
-    }
-    if (instanceGeometry instanceof Geometry.OutlinePolygon) {
-      return this.makeOutlinePolygonLines(instanceGeometry, color, p0)
-    }
-    if (instanceGeometry instanceof Geometry.Line) {
-      return this.makeLines(instanceGeometry, color, p0)
-    }
-    console.error('unknown geometry')
-  }
-
-  // TODO: consider refactoring to merge this with makeOutlinePolygonLines()
-  makeLines (outlinePolygon, hexColor, p0 = { x: 0, y: 0, z: 0 }) {
-    const material = new THREE.LineBasicMaterial({ color: hexColor })
-    const geometry = new THREE.Geometry()
-    const inputVertices = outlinePolygon.xyzWaypoints
-    const verticesTranslatedToOrigin = inputVertices.map(v => xyzSubtract(v, inputVertices[0]))
-    const vectors = verticesTranslatedToOrigin.map(v => new THREE.Vector3(v.x, v.y, v.z))
-    geometry.vertices.push(...vectors)
-    geometry.translate(p0.x, p0.y, p0.z)
-    const line = new THREE.Line(geometry, material)
-    return line
-  }
-
-  // TODO: consider refactoring to merge this with makeLines()
-  makeOutlinePolygonLines (outlinePolygon, hexColor, p0 = { x: 0, y: 0, z: 0 }) {
-    const material = new THREE.LineBasicMaterial({ color: hexColor })
-    const geometry = new THREE.Geometry()
-    const xyInputVertices = outlinePolygon.xyPolygon
-    const xyVerticesTranslatedToOrigin = xyInputVertices.map(v => xyzSubtract(v, xyInputVertices[0]))
-    const vectors = xyVerticesTranslatedToOrigin.map(v => new THREE.Vector3(v.x, v.y, 0))
-    geometry.vertices.push(...vectors)
-    geometry.translate(p0.x, p0.y, p0.z)
-    const line = new THREE.Line(geometry, material)
-    return line
-  }
-
-  makeThickPolygonMesh (thickPolygon, material, p0 = { x: 0, y: 0, z: 0 }) {
-    const xyPolygon = thickPolygon.xyPolygon
-    const x0 = xyPolygon[0].x
-    const y0 = xyPolygon[0].y
-    const shape = new THREE.Shape(xyPolygon)
-    shape.closePath()
-
-    const geometry = new THREE.ExtrudeGeometry(shape, {
-      depth: thickPolygon.depth,
-      bevelEnabled: false
-    })
-
-    geometry.translate(-x0, -y0, 0)
-    const mesh = new THREE.Mesh(geometry, material)
-    mesh.castShadow = true
-    if (thickPolygon.incline) {
-      const x1 = xyPolygon[1].x
-      const y1 = xyPolygon[1].y
-      const edge = new THREE.Vector3(x1 - x0, y1 - y0, 0)
-      const hypotenuse = edge.length()
-      const angle = Math.asin(thickPolygon.incline / hypotenuse)
-
-      // want to rotate around axis perpendicular to edge and in x-y plane
-      const axis = new THREE.Vector3().crossVectors(edge, new THREE.Vector3(0, 0, 1))
-      axis.normalize()
-      const R = new THREE.Matrix4().makeRotationAxis(axis, angle)
-      mesh.applyMatrix(R)
-    }
-    const T = new THREE.Matrix4().setPosition(p0.x, p0.y, p0.z)
-    mesh.applyMatrix(T)
-    return mesh
-  }
-
-  makeThickPolygon2Mesh (thickPolygon, material, p0 = { x: 0, y: 0, z: 0 }) {
-    const xyPolygon = thickPolygon.xyPolygon
-    const x0 = xyPolygon[0].x
-    const y0 = xyPolygon[0].y
-    const shape = new THREE.Shape(xyPolygon)
-    shape.closePath()
-
-    for (const opening of thickPolygon.openings) {
-      const points = opening.map(xy => new THREE.Vector2(xy.x, xy.y))
-      const path = new THREE.Path(points)
-      shape.holes.push(path)
-    }
-
-    const geometry = new THREE.ExtrudeGeometry(shape, {
-      depth: thickPolygon.depth,
-      bevelEnabled: false
-    })
-    geometry.translate(-x0, -y0, 0)
-    geometry.rotateX(thickPolygon.xRotation)
-    geometry.rotateZ(thickPolygon.zRotation)
-    geometry.translate(p0.x, p0.y, p0.z)
-
-    const mesh = new THREE.Mesh(geometry, material)
-    mesh.castShadow = true
-    return mesh
-  }
-
-  /**
-   * Returns a THREE.Mesh() with a geometry that matches the given spec
-   * @param {Object} triangularPolyhedron - an object like { vertices: [xyz, xyz...], indicesOfFaces: [3, 8, 2...] }
-   * @param {THREE.Material} material - the material for the new Mesh
-   * @param {xyz} p0 - desired position of first vertex
-   * @returns {THREE.Mesh}
-   */
-  makeTriangularPolyhedronMesh (triangularPolyhedron, material, p0) {
-    const v0 = triangularPolyhedron.vertices[0]
-    const verticesTranslatedToOrigin = triangularPolyhedron.vertices.map(v => xyzSubtract(v, v0))
-    const geometry = new THREE.Geometry()
-    geometry.vertices = verticesTranslatedToOrigin.map(v => new THREE.Vector3(v.x, v.y, v.z))
-
-    geometry.translate(p0.x, p0.y, p0.z)
-    geometry.faces = triangularPolyhedron.indicesOfFaces.map(abc => new THREE.Face3(...abc))
-    geometry.computeBoundingSphere()
-    geometry.computeFaceNormals()
-    const mesh = new THREE.Mesh(geometry, material)
-    return mesh
-  }
-
   _onWindowResize () {
     this._camera.aspect = window.innerWidth / window.innerHeight
     this._camera.updateProjectionMatrix()
@@ -782,32 +514,13 @@ class ThreeOutput extends Output {
     }
   }
 
-  _material (materialCost, color, twoSided = false) {
-    if (isNaN(color)) {
-      color = FIXME_FUCHSIA
-    }
-    const side = twoSided ? THREE.DoubleSide : THREE.FrontSide
-    if (!(color in this._materials[materialCost][side])) {
-      if (materialCost === 'lowest') {
-        this._materials[materialCost][side][color] = new THREE.MeshBasicMaterial({ color, side })
-      } else if (materialCost === 'medium') {
-        this._materials[materialCost][side][color] = new THREE.MeshLambertMaterial({ color, side })
-      } else if (materialCost === 'high') {
-        this._materials[materialCost][side][color] = new THREE.MeshPhongMaterial({ color, side })
-      } else {
-        console.error('unknown materialCost', materialCost)
-      }
-    }
-    return this._materials[materialCost][side][color]
-  }
-
   animate () {
     window.requestAnimationFrame(() => this.animate())
     if (this.controls.enabled) {
       this.controls.update()
     }
     if (this._animationOn) {
-      for (const component of this._animatedComponents) {
+      for (const component of this._scene._animatedComponents) {
         component.update()
       }
     }
