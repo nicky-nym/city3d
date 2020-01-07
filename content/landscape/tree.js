@@ -1,23 +1,23 @@
 /** @file tree.js
-  * @author Authored in 2019 at <https://github.com/nicky-nym/city3d>
-  * @license UNLICENSE
-  * This is free and unencumbered software released into the public domain.
-  * For more information, please refer to <http://unlicense.org>
-  */
+ * @author Authored in 2019, 2020 at <https://github.com/nicky-nym/city3d>
+ * @license UNLICENSE
+ * This is free and unencumbered software released into the public domain.
+ * For more information, please refer to <http://unlicense.org>
+ */
 
 import { xy, xyz, xyzAdd } from '../../src/core/util.js'
 import { Geometry } from '../../src/core/geometry.js'
-import { LODGroup } from '../../src/architecture/group.js'
+import { Formation } from '../../src/architecture/formation.js'
 import { UNIT } from '../../src/core/unit.js'
 
 const TRUNK_HEIGHT = UNIT.feet(8)
 const CROWN_HEIGHT = UNIT.feet(9)
 
-class Tree extends LODGroup {
-  constructor ({ at = xyz(0, 0, 0), crownHeight = 10, name } = {}) {
-    super(name || 'Tree')
+class Tree extends Formation {
+  constructor ({ at = xyz(0, 0, 0), crownHeight = 10, name = 'Tree' } = {}) {
+    super(name)
     this.add(this.makeTrunk(at))
-    at.z = crownHeight
+    at.z += crownHeight
     this.add(this.makeCrown(at))
   }
 

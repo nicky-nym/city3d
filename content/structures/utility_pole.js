@@ -23,8 +23,8 @@ function _makeLine (waypoints, ray, color) {
  * Class representing a typical suburban telephone pole or powerline pole.
  */
 class UtilityPole extends Structure {
-  constructor ({ name, at = xyz(0, 0, 0) } = {}) {
-    super({ name: name || 'Utility pole', at })
+  constructor ({ name = 'Utility pole', at = xyz(0, 0, 0) } = {}) {
+    super({ name, at })
     const ray = new Ray(Facing.NORTH)
 
     const WOOD = 0x663300

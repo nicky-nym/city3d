@@ -1,5 +1,5 @@
 /** @file citylib.js
- * @author Authored in 2019 at <https://github.com/nicky-nym/city3d>
+ * @author Authored in 2019, 2020 at <https://github.com/nicky-nym/city3d>
  * @license UNLICENSE
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -11,6 +11,7 @@ import { Byway } from './architecture/byway.js'
 import { City } from './architecture/city.js'
 import { District } from './architecture/district.js'
 import { Door } from './architecture/door.js'
+import { Formation } from './architecture/formation.js'
 import { Group } from './architecture/group.js'
 import { Opening } from './architecture/opening.js'
 import { Parcel } from './architecture/parcel.js'
@@ -52,6 +53,7 @@ import { UtilityPole } from '../content/structures/utility_pole.js'
 
 // landscape
 import { Creek } from '../content/landscape/creek.js'
+import { SoccerField } from '../content/landscape/soccer_field.js'
 import { Tree } from '../content/landscape/tree.js'
 
 // movers
@@ -76,6 +78,7 @@ export const CITY = {
   District,
   Door,
   EiffelTower,
+  Formation,
   Kalpana,
   Kayak,
   Garage,
@@ -93,6 +96,7 @@ export const CITY = {
   PyramidOfKhufu,
   Roof,
   Route,
+  SoccerField,
   Storey,
   Suburbia,
   SummaryOutput,

@@ -1,11 +1,12 @@
 /** @file creek.js
-  * @author Authored in 2019 at <https://github.com/nicky-nym/city3d>
-  * @license UNLICENSE
-  * This is free and unencumbered software released into the public domain.
-  * For more information, please refer to <http://unlicense.org>
-  */
+ * @author Authored in 2019, 2020 at <https://github.com/nicky-nym/city3d>
+ * @license UNLICENSE
+ * This is free and unencumbered software released into the public domain.
+ * For more information, please refer to <http://unlicense.org>
+ */
 
 import { xyz, countTo } from '../../src/core/util.js'
+import { Formation } from '../../src/architecture/formation.js'
 import { Geometry } from '../../src/core/geometry.js'
 import { Route } from '../../src/routes/route.js'
 import { UNIT } from '../../src/core/unit.js'
@@ -18,7 +19,11 @@ const LENGTH = NUM_SECTIONS * SECTION_LENGTH
 const X_OFFSET = -LENGTH / 2
 const CREEK_DEPTH = 0.1
 
-class Creek {
+class Creek extends Formation {
+  constructor (name = 'Creek') {
+    super(name)
+  }
+
   /**
    * Returns a Route that follows this Creek.
    * @param {number} [lane=2] - Choose an integer between 1 and 5 for one of five equally spaced lanes. 0 or 6 will

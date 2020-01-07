@@ -1,5 +1,5 @@
 /** @file sandbox.js
- * @author Authored in 2019 at <https://github.com/nicky-nym/city3d>
+ * @author Authored in 2019, 2020 at <https://github.com/nicky-nym/city3d>
  * @license UNLICENSE
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -85,6 +85,10 @@ function addPyramid (city) {
   city.add(new CITY.PyramidOfKhufu({ at: { x: -600, y: -600, z: 0 } }))
 }
 
+function addSoccerField (city) {
+  city.add(new CITY.SoccerField({ at: { x: 920, y: 315, z: 0 } }))
+}
+
 function addKalpanaOrbital (city) {
   city.add(new CITY.Kalpana())
 }
@@ -111,6 +115,7 @@ function main () {
   addUtilityPoles(city)
   addEiffelTower(city)
   addPyramid(city)
+  addSoccerField(city)
   addBuildings(city)
   addKalpanaOrbital(city)
   addMovers(city)
