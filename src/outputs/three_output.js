@@ -10,7 +10,7 @@ import Stats from '../../node_modules/stats.js/src/Stats.js'
 // import { GUI } from '../../node_modules/dat.gui/build/dat.gui.module.js'
 
 import { Geometry } from '../core/geometry.js'
-import { fullName } from '../core/util.js'
+import { fullName, xyz } from '../core/util.js'
 import { Group, LODGroup } from '../architecture/group.js'
 import { Output } from './output.js'
 import { OrbitControls } from '../../node_modules/three/examples/jsm/controls/OrbitControls.js'
@@ -130,8 +130,8 @@ class ThreeOutput extends Output {
     window.addEventListener('resize', evt => this._onWindowResize(evt), false)
 
     this._renderer.clippingPlanes = NO_CLIPPING_PLANES
-    const clippingPlane = this._addClippingPlane()
-    this._addGuiControlPanel(clippingPlane)
+    this._addClippingPlanes()
+    this._addGuiControlPanel()
 
     // DOM setup for tooltips
     this._tooltipDiv = document.createElement('div')
@@ -261,14 +261,27 @@ class ThreeOutput extends Output {
     this._traverse(this._city, this._scene)
   }
 
-  _addClippingPlane () {
-    const DEFAULT_PLAN_CUT_Z = 6 // feet
-    const clippingPlane = new THREE.Plane(new THREE.Vector3(0, 0, -1), DEFAULT_PLAN_CUT_Z)
-    CLIPPING_PLANES.push(clippingPlane)
-    return clippingPlane
+  _addClippingPlane (name, xyzVal, distance) {
+    const { x, y, z } = xyzVal
+    const plane = new THREE.Plane(new THREE.Vector3(x, y, z), distance)
+    this._clippingPlanesByName[name] = plane
+    CLIPPING_PLANES.push(plane)
   }
 
-  _addGuiControlPanel (clippingPlane) {
+  _addClippingPlanes () {
+    this._clippingPlanesByName = {}
+
+    const DEFAULT_PLAN_CUT_Z = 6 // feet
+    const DEFAULT_DISTANCE = 10000
+
+    this._addClippingPlane('plan cut', xyz(0, 0, -1), DEFAULT_PLAN_CUT_Z)
+    this._addClippingPlane('northerly', xyz(0, -1, 0), DEFAULT_DISTANCE)
+    this._addClippingPlane('southerly', xyz(0, 1, 0), DEFAULT_DISTANCE)
+    this._addClippingPlane('easterly', xyz(-1, 0, 0), DEFAULT_DISTANCE)
+    this._addClippingPlane('westerly', xyz(1, 0, 0), DEFAULT_DISTANCE)
+  }
+
+  _addGuiControlPanel () {
     const _this = this
     const ui = {
       start: {
@@ -298,15 +311,35 @@ class ThreeOutput extends Output {
           _this._renderer.clippingPlanes = value ? CLIPPING_PLANES : NO_CLIPPING_PLANES
         },
         get 'plan cut' () {
-          return clippingPlane.constant
+          return _this._clippingPlanesByName['plan cut'].constant
         },
         set 'plan cut' (value) {
-          clippingPlane.constant = value
+          _this._clippingPlanesByName['plan cut'].constant = value
         },
-        northerly: 10000,
-        southerly: -10000,
-        easterly: 10000,
-        westerly: -10000
+        get northerly () {
+          return _this._clippingPlanesByName.northerly.constant
+        },
+        set northerly (value) {
+          _this._clippingPlanesByName.northerly.constant = value
+        },
+        get southerly () {
+          return _this._clippingPlanesByName.southerly.constant
+        },
+        set southerly (value) {
+          _this._clippingPlanesByName.southerly.constant = value
+        },
+        get easterly () {
+          return _this._clippingPlanesByName.easterly.constant
+        },
+        set easterly (value) {
+          _this._clippingPlanesByName.easterly.constant = value
+        },
+        get westerly () {
+          return _this._clippingPlanesByName.westerly.constant
+        },
+        set westerly (value) {
+          _this._clippingPlanesByName.westerly.constant = value
+        }
       },
       layers: {
         building: {
@@ -375,7 +408,7 @@ class ThreeOutput extends Output {
       const sectionCutsFolder = gui.addFolder('Section cuts')
 
       sectionCutsFolder.add(ui.cut, 'enabled')
-      sectionCutsFolder.add(ui.cut, 'plan cut').min(0).max(1000).step(1)
+      sectionCutsFolder.add(ui.cut, 'plan cut').min(0).max(100).step(1)
       sectionCutsFolder.add(ui.cut, 'northerly').min(-10000).max(10000).step(1)
       sectionCutsFolder.add(ui.cut, 'southerly').min(-10000).max(10000).step(1)
       sectionCutsFolder.add(ui.cut, 'easterly').min(-10000).max(10000).step(1)
