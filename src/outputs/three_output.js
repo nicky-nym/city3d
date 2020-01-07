@@ -221,6 +221,7 @@ class ThreeOutput extends Output {
     const _this = this
     const ui = {
       start: {
+        city: 'Manhattan',
         'play / pause animation': this._onToggleAnimation.bind(this),
         'save location': this._onSaveOrbitControlsState.bind(this),
         'restore location': this._onRestoreOrbitControlsState.bind(this),
@@ -321,6 +322,7 @@ class ThreeOutput extends Output {
 
       const startFolder = gui.addFolder('Start')
 
+      startFolder.add(ui.start, 'city', ['Manhattan', 'Suburbia', 'College Campus', 'Kinematic City'])
       startFolder.add(ui.start, 'play / pause animation')
       startFolder.add(ui.start, 'save location')
       startFolder.add(ui.start, 'restore location')
