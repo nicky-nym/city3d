@@ -42,13 +42,13 @@ describe('Wall', function () {
       const wall = new Wall(xy(0, 0), xy(10, 0), 6)
       threeOutputScene._traverse(wall, spy)
 
-      spy.getAllAddedVertices().should.have.length(8)
+      spy.getAllAddedVerticesAfterTransform().should.have.length(8)
     })
     it('should have the expected vertices for v1 = (0, 0), v2 = (X, 0)', function () {
       const wall = new Wall(xy(0, 0), xy(10, 0), 6, { depth: D })
       threeOutputScene._traverse(wall, spy)
 
-      spy.getAllAddedVertices().should.include.deep.members([
+      spy.getAllAddedVerticesAfterTransform().should.include.deep.members([
         xyz(0, 0, 0), xyz(10, 0, 0), xyz(10, -D, 0), xyz(0, -D, 0),
         xyz(0, 0, 6), xyz(10, 0, 6), xyz(10, -D, 6), xyz(0, -D, 6)
       ])
@@ -57,7 +57,7 @@ describe('Wall', function () {
       const wall = new Wall(xy(2, 0), xy(10, 0), 6, { depth: D })
       threeOutputScene._traverse(wall, spy)
 
-      spy.getAllAddedVertices().should.include.deep.members([
+      spy.getAllAddedVerticesAfterTransform().should.include.deep.members([
         xyz(2, 0, 0), xyz(10, 0, 0), xyz(10, -D, 0), xyz(2, -D, 0),
         xyz(2, 0, 6), xyz(10, 0, 6), xyz(10, -D, 6), xyz(2, -D, 6)
       ])
@@ -66,7 +66,7 @@ describe('Wall', function () {
       const wall = new Wall(xy(0, -5), xy(0, 15), 6, { depth: D })
       threeOutputScene._traverse(wall, spy)
 
-      spy.getAllAddedVertices().should.include.deep.members([
+      spy.getAllAddedVerticesAfterTransform().should.include.deep.members([
         xyz(0, -5, 0), xyz(0, 15, 0), xyz(D, 15, 0), xyz(D, -5, 0),
         xyz(0, -5, 6), xyz(0, 15, 6), xyz(D, 15, 6), xyz(D, -5, 6)
       ])
@@ -76,7 +76,7 @@ describe('Wall', function () {
       const wall = new Wall(xy(-3, -5), xy(13, 15), 6)
       threeOutputScene._traverse(wall, spy)
 
-      spy.getAllAddedVertices().should.include.deep.members([
+      spy.getAllAddedVerticesAfterTransform().should.include.deep.members([
         xyz(-3, -5, 0), xyz(13, 15, 0), xyz(-3, -5, 6), xyz(13, 15, 6)
       ])
     })
@@ -84,7 +84,7 @@ describe('Wall', function () {
       const wall = new Wall(xy(0, 0), xy(10, 0), 6, { z: 20 })
       threeOutputScene._traverse(wall, spy)
 
-      spy.getAllAddedVertices().should.include.deep.members([
+      spy.getAllAddedVerticesAfterTransform().should.include.deep.members([
         xyz(0, 0, 20), xyz(10, 0, 20), xyz(0, 0, 26), xyz(10, 0, 26)
       ])
     })
@@ -108,7 +108,7 @@ describe('Storey traversed by ThreeOutputScene', function () {
 
     beforeEach(function () {
       threeOutputScene._traverse(storey, spy)
-      vertices = spy.getAllAddedVertices()
+      vertices = spy.getAllAddedVerticesAfterTransform()
     })
 
     it('should have the expected number of vertices for a rectangular floor and four walls.', function () {
@@ -138,7 +138,7 @@ describe('Storey traversed by ThreeOutputScene', function () {
 
     beforeEach(function () {
       threeOutputScene._traverse(storey, spy)
-      vertices = spy.getAllAddedVertices()
+      vertices = spy.getAllAddedVerticesAfterTransform()
     })
 
     it('should have the expected number of vertices for a rectangular floor and four walls.', function () {
@@ -168,7 +168,7 @@ describe('Storey traversed by ThreeOutputScene', function () {
     it('should have z-coordinates with min = -1 and max = Z, when depth = -1.', function () {
       const storey = new Storey(new Ray(Facing.NORTH), Use.BARE, widdershins, { depth: -1, wall: Z })
       threeOutputScene._traverse(storey, spy)
-      vertices = spy.getAllAddedVertices()
+      vertices = spy.getAllAddedVerticesAfterTransform()
 
       Math.min(...vertices.map(v => v.z)).should.equal(-1)
       Math.max(...vertices.map(v => v.z)).should.equal(Z)
@@ -177,7 +177,7 @@ describe('Storey traversed by ThreeOutputScene', function () {
     it('should have z-coordinates of bounding box exactly matching wall, when depth = 1, i.e. bottom of floor is not below bottom of wall.', function () {
       const storey = new Storey(new Ray(Facing.NORTH), Use.BARE, widdershins, { depth: 1, wall: Z })
       threeOutputScene._traverse(storey, spy)
-      vertices = spy.getAllAddedVertices()
+      vertices = spy.getAllAddedVerticesAfterTransform()
 
       Math.min(...vertices.map(v => v.z)).should.equal(0)
       Math.max(...vertices.map(v => v.z)).should.equal(Z)
@@ -190,7 +190,7 @@ describe('Storey traversed by ThreeOutputScene', function () {
     it('should have z-coordinates with min = -1 and max = Z, when depth = -1.', function () {
       const storey = new Storey(new Ray(Facing.NORTH), Use.BARE, clockwise, { depth: -1, wall: Z })
       threeOutputScene._traverse(storey, spy)
-      vertices = spy.getAllAddedVertices()
+      vertices = spy.getAllAddedVerticesAfterTransform()
 
       Math.min(...vertices.map(v => v.z)).should.equal(-1)
       Math.max(...vertices.map(v => v.z)).should.equal(Z)
@@ -199,7 +199,7 @@ describe('Storey traversed by ThreeOutputScene', function () {
     it('should have z-coordinates of bounding box exactly matching wall, when depth = 1, i.e. bottom of floor is not below bottom of wall.', function () {
       const storey = new Storey(new Ray(Facing.NORTH), Use.BARE, clockwise, { depth: 1, wall: Z })
       threeOutputScene._traverse(storey, spy)
-      vertices = spy.getAllAddedVertices()
+      vertices = spy.getAllAddedVerticesAfterTransform()
 
       Math.min(...vertices.map(v => v.z)).should.equal(0)
       Math.max(...vertices.map(v => v.z)).should.equal(Z)
@@ -227,7 +227,7 @@ describe('Building traversed by ThreeOutputScene', function () {
 
     beforeEach(function () {
       threeOutputScene._traverse(building, spy)
-      vertices = spy.getAllAddedVertices()
+      vertices = spy.getAllAddedVerticesAfterTransform()
     })
 
     it('should have the expected number of vertices for a rectangular floor, four walls and a flat roof.', function () {
@@ -259,21 +259,21 @@ class ThreeObjectSpy {
     this.thingsAdded.push(thing)
   }
 
-  getAllAddedVertices () {
+  getAllAddedVerticesAfterTransform () {
     const vertices = []
     for (const obj of this.thingsAdded) {
-      this._collectVerticesFromObject(obj, vertices)
+      this._transformAndCollectVerticesFromObject(obj, vertices)
     }
     return vertices
   }
 
-  _collectVerticesFromObject (obj, vertices) {
+  _transformAndCollectVerticesFromObject (obj, vertices) {
     for (const child of obj.children) {
-      this._collectVerticesFromObject(child, vertices)
+      this._transformAndCollectVerticesFromObject(child, vertices)
       if (obj.type === 'LOD') break // skip remaining children, i.e. lower resolution levels of detail
     }
-    if (obj.geometry) {
-      vertices.push(...obj.geometry.vertices.map(roundXYZ))
+    if (obj.geometry && obj.matrix) {
+      vertices.push(...obj.geometry.vertices.map(v => roundXYZ(v.applyMatrix4(obj.matrix))))
     }
   }
 }

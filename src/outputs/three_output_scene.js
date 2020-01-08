@@ -175,9 +175,6 @@ class ThreeOutputScene extends THREE.Scene {
     if (instanceGeometry instanceof Geometry.ThickPolygon) {
       return this.makeThickPolygonMesh(instanceGeometry, material, p0)
     }
-    if (instanceGeometry instanceof Geometry.ThickPolygon2) {
-      return this.makeThickPolygon2Mesh(instanceGeometry, material, p0)
-    }
     if (instanceGeometry instanceof Geometry.TriangularPolyhedron) {
       return this.makeTriangularPolyhedronMesh(instanceGeometry, material, p0)
     }
@@ -223,14 +220,19 @@ class ThreeOutputScene extends THREE.Scene {
     const shape = new THREE.Shape(xyPolygon)
     shape.closePath()
 
+    for (const opening of thickPolygon.openings) {
+      const points = opening.map(xy => new THREE.Vector2(xy.x, xy.y))
+      const path = new THREE.Path(points)
+      shape.holes.push(path)
+    }
+
     const geometry = new THREE.ExtrudeGeometry(shape, {
       depth: thickPolygon.depth,
       bevelEnabled: false
     })
-
     geometry.translate(-x0, -y0, 0)
+
     const mesh = new THREE.Mesh(geometry, material)
-    mesh.castShadow = true
     if (thickPolygon.incline) {
       const x1 = xyPolygon[1].x
       const y1 = xyPolygon[1].y
@@ -244,34 +246,12 @@ class ThreeOutputScene extends THREE.Scene {
       const R = new THREE.Matrix4().makeRotationAxis(axis, angle)
       mesh.applyMatrix(R)
     }
+    if (thickPolygon.zRotation) {
+      const R2 = new THREE.Matrix4().makeRotationZ(thickPolygon.zRotation)
+      mesh.applyMatrix(R2)
+    }
     const T = new THREE.Matrix4().setPosition(p0.x, p0.y, p0.z)
     mesh.applyMatrix(T)
-    return mesh
-  }
-
-  makeThickPolygon2Mesh (thickPolygon, material, p0 = { x: 0, y: 0, z: 0 }) {
-    const xyPolygon = thickPolygon.xyPolygon
-    const x0 = xyPolygon[0].x
-    const y0 = xyPolygon[0].y
-    const shape = new THREE.Shape(xyPolygon)
-    shape.closePath()
-
-    for (const opening of thickPolygon.openings) {
-      const points = opening.map(xy => new THREE.Vector2(xy.x, xy.y))
-      const path = new THREE.Path(points)
-      shape.holes.push(path)
-    }
-
-    const geometry = new THREE.ExtrudeGeometry(shape, {
-      depth: thickPolygon.depth,
-      bevelEnabled: false
-    })
-    geometry.translate(-x0, -y0, 0)
-    geometry.rotateX(thickPolygon.xRotation)
-    geometry.rotateZ(thickPolygon.zRotation)
-    geometry.translate(p0.x, p0.y, p0.z)
-
-    const mesh = new THREE.Mesh(geometry, material)
     mesh.castShadow = true
     return mesh
   }

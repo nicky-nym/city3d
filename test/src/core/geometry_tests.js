@@ -53,13 +53,13 @@ describe('Geometry', function () {
     })
   })
 
-  describe('ThickPolygon2', function () {
+  describe('ThickPolygon', function () {
     describe('constructed with a rectangle', function () {
       const rectangle = new Geometry.XYPolygon([{ x: 0, y: 0 }, { x: 0, y: 6 }, { x: 8, y: 6 }, { x: 8, y: 0 }])
 
       describe('#area()', function () {
         it('should return the correct area', function () {
-          const poly = new Geometry.ThickPolygon2(rectangle)
+          const poly = new Geometry.ThickPolygon(rectangle)
 
           poly.area().should.equal(48)
         })
@@ -67,7 +67,7 @@ describe('Geometry', function () {
 
       describe('#areaOfOpenings()', function () {
         it('should return the correct area', function () {
-          const poly = new Geometry.ThickPolygon2(rectangle, { openings: [[xy(4, 3), xy(6, 3), xy(6, 5), xy(4, 5)]] })
+          const poly = new Geometry.ThickPolygon(rectangle, { openings: [[xy(4, 3), xy(6, 3), xy(6, 5), xy(4, 5)]] })
           poly.areaOfOpenings().should.equal(4)
         })
       })

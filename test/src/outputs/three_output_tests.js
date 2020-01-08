@@ -44,8 +44,20 @@ describe('ThreeOutputScene', function () {
           xyz(0, 0, D), xyz(0, Y, D), xyz(X, Y, D), xyz(X, 0, D)
         ])
       })
+      it('should return expected vertices with specified depth', function () {
+        const D = 1
+        const poly = new Geometry.ThickPolygon(rectangle, { depth: D })
+        const mesh = threeOutputScene.makeThickPolygonMesh(poly, null)
+
+        const actualVertices = mesh.geometry.vertices.map(roundXYZ)
+        actualVertices.should.include.deep.members([
+          xyz(0, 0, 0), xyz(0, Y, 0), xyz(X, Y, 0), xyz(X, 0, 0),
+          xyz(0, 0, D), xyz(0, Y, D), xyz(X, Y, D), xyz(X, 0, D)
+        ])
+      })
       it('should return same vertices even with non-zero incline', function () {
-        const poly = new Geometry.ThickPolygon(rectangle, { incline: 3, depth: 1 })
+        const D = 1
+        const poly = new Geometry.ThickPolygon(rectangle, { incline: 3, depth: D })
         const mesh = threeOutputScene.makeThickPolygonMesh(poly, null)
 
         const actualVertices = mesh.geometry.vertices.map(roundXYZ)
@@ -91,7 +103,7 @@ describe('ThreeOutputScene', function () {
         transformedVertices.should.include.deep.members(expectedVerticesOfBottomFace)
         transformedVertices.should.include.deep.members(expectedVerticesOfTopFace)
       })
-      it('should return a mesh with a matrix that transforms its vertices to the expected values, with depth < 0', function () {
+      it('should result in expected transformed vertices, with depth < 0', function () {
         const poly = new Geometry.ThickPolygon(rectangle, { incline: Y / 2, depth: -1 })
         const mesh = threeOutputScene.makeThickPolygonMesh(poly, null)
 
@@ -105,6 +117,16 @@ describe('ThreeOutputScene', function () {
         const expectedVerticesOfBottomFace = expectedVerticesOfTopFace.map(v => roundXYZ(xyzAdd(v, xyz(0, B, C))))
         transformedVertices.should.include.deep.members(expectedVerticesOfBottomFace)
         transformedVertices.should.include.deep.members(expectedVerticesOfTopFace)
+      })
+      it('should result in transformed vertices rotated 90 deg around x-axis when incline = length of first edge', function () {
+        const poly = new Geometry.ThickPolygon(rectangle, { depth: 1, incline: Y })
+        const mesh = threeOutputScene.makeThickPolygonMesh(poly, null)
+
+        const transformedVertices = mesh.geometry.vertices.map(v => roundXYZ(v.applyMatrix4(mesh.matrix)))
+        transformedVertices.should.include.deep.members([
+          xyz(0, 0, 0), xyz(X, 0, 0), xyz(X, -1, 0), xyz(0, -1, 0),
+          xyz(0, 0, Y), xyz(X, 0, Y), xyz(X, -1, Y), xyz(0, -1, Y)
+        ])
       })
       it('should return a mesh with a matrix that transforms its vertices so the specified incline is achieved', function () {
         const INC = 3
@@ -185,6 +207,54 @@ describe('ThreeOutputScene', function () {
         zCoordsOfBackEdge.should.have.length(4)
         zCoordsOfBackEdge.forEach((z, i) => z.should.be.closeTo(zCoordsOfFrontEdge[i] + INC, 0.00001))
       })
+
+      describe('checking one face only', function () {
+        it('should result in expected transformed vertices, with rotation of 30 degrees around z-axis', function () {
+          const poly = new Geometry.ThickPolygon(rectangle, { zRotation: Math.PI / 6 })
+          const mesh = threeOutputScene.makeThickPolygonMesh(poly, null)
+
+          const transformedVertices = mesh.geometry.vertices.map(v => roundXYZ(v.applyMatrix4(mesh.matrix)))
+          const expectedVerticesOneFace = [
+            xyz(0, 0, 0), xyz(X / 2 * SQRT3, X / 2, 0),
+            xyz(X / 2 * SQRT3 - Y / 2, X / 2 + Y / 2 * SQRT3, 0), xyz(-Y / 2, Y / 2 * SQRT3, 0)
+          ]
+          transformedVertices.should.include.deep.members(expectedVerticesOneFace.map(roundXYZ))
+        })
+        it('should result in expected transformed vertices, with max incline and rotation around z-axis', function () {
+          const poly = new Geometry.ThickPolygon(rectangle, { incline: Y, zRotation: Math.PI / 6 })
+          const mesh = threeOutputScene.makeThickPolygonMesh(poly, null)
+
+          const transformedVertices = mesh.geometry.vertices.map(v => roundXYZ(v.applyMatrix4(mesh.matrix)))
+          const expectedVerticesOneFace = [
+            xyz(0, 0, 0), xyz(X / 2 * SQRT3, X / 2, 0),
+            xyz(0, 0, Y), xyz(X / 2 * SQRT3, X / 2, Y)
+          ]
+          transformedVertices.should.include.deep.members(expectedVerticesOneFace.map(roundXYZ))
+        })
+        it('should result in expected transformed vertices, with specified offset', function () {
+          const poly = new Geometry.ThickPolygon(rectangle)
+          const [X0, Y0, Z0] = [20, 30, 40]
+          const mesh = threeOutputScene.makeThickPolygonMesh(poly, null, { x: X0, y: Y0, z: Z0 })
+
+          const transformedVertices = mesh.geometry.vertices.map(v => roundXYZ(v.applyMatrix4(mesh.matrix)))
+          const expectedVerticesOneFace = [
+            xyz(X0, Y0, Z0), xyz(X0 + X, Y0, Z0), xyz(X0 + X, Y0 + Y, Z0), xyz(X0, Y0 + Y, Z0)
+          ]
+          transformedVertices.should.include.deep.members(expectedVerticesOneFace)
+        })
+        it('should result in expected transformed vertices, with specified offset and off-origin rectangle', function () {
+          const translatedRectangle = rectangle.map(v => xyzAdd(v, { x: 3, y: -4 }))
+          const poly = new Geometry.ThickPolygon(new Geometry.XYPolygon(translatedRectangle))
+          const [X0, Y0, Z0] = [20, 30, 40]
+          const mesh = threeOutputScene.makeThickPolygonMesh(poly, null, { x: X0, y: Y0, z: Z0 })
+
+          const transformedVertices = mesh.geometry.vertices.map(v => roundXYZ(v.applyMatrix4(mesh.matrix)))
+          const expectedVerticesOneFace = [
+            xyz(X0, Y0, Z0), xyz(X0 + X, Y0, Z0), xyz(X0 + X, Y0 + Y, Z0), xyz(X0, Y0 + Y, Z0)
+          ]
+          transformedVertices.should.include.deep.members(expectedVerticesOneFace)
+        })
+      })
     })
 
     describe('with ThickPolygon constructed with offset rectangle and incline', function () {
@@ -229,13 +299,13 @@ describe('ThreeOutputScene', function () {
         zCoordsOfBackEdge.should.have.length(4)
         zCoordsOfBackEdge.forEach((z, i) => z.should.be.closeTo(zCoordsOfFrontEdge[i] + INC, 0.00001))
       })
-      it('should result in vertices with minimum z-coordinate close to 0, if zOffset = 0', function () {
+      it('should result in transformed vertices with minimum z-coordinate close to 0, if zOffset = 0', function () {
         const mesh = threeOutputScene.makeThickPolygonMesh(poly, null, { x: X0, y: Y0, z: 0 })
 
         const transformedVertices = mesh.geometry.vertices.map(v => roundXYZ(v.applyMatrix4(mesh.matrix)))
         Math.min(...transformedVertices.map(v => v.z)).should.be.closeTo(0, D)
       })
-      it('should result in vertices with minimum z-coordinate close to specified non-zero zOffset', function () {
+      it('should result in transformed vertices with minimum z-coordinate close to specified non-zero zOffset', function () {
         const mesh = threeOutputScene.makeThickPolygonMesh(poly, null, { x: X0, y: Y0, z: Z0 })
 
         const transformedVertices = mesh.geometry.vertices.map(v => roundXYZ(v.applyMatrix4(mesh.matrix)))
@@ -283,97 +353,11 @@ describe('ThreeOutputScene', function () {
         zCoordsOfBackHalf.should.have.length(6)
         zCoordsOfBackHalf.forEach((z, i) => z.should.be.closeTo(zCoordsOfFrontHalf[i] + INC, 0.00001))
       })
-      it('should result in vertices with minimum z-coordinate close to specified non-zero zOffset', function () {
+      it('should result in transformed vertices with minimum z-coordinate close to specified non-zero zOffset', function () {
         const mesh = threeOutputScene.makeThickPolygonMesh(poly, null, { x: 0, y: 0, z: Z0 })
 
         const transformedVertices = mesh.geometry.vertices.map(v => roundXYZ(v.applyMatrix4(mesh.matrix)))
         Math.min(...transformedVertices.map(v => v.z)).should.be.closeTo(Z0, D)
-      })
-    })
-  })
-
-  describe('#makeThickPolygon2Mesh', function () {
-    describe('with input geometry constructed with a rectangle', function () {
-      const X = 2
-      const Y = 6
-      const rectangle = new Geometry.XYPolygon([{ x: 0, y: 0 }, { x: 0, y: Y }, { x: X, y: Y }, { x: X, y: 0 }])
-
-      it('should return a mesh containing a geometry containing eight vertices', function () {
-        const poly = new Geometry.ThickPolygon2(rectangle)
-        const mesh = threeOutputScene.makeThickPolygon2Mesh(poly, null)
-
-        mesh.geometry.should.exist
-        mesh.geometry.vertices.should.exist
-        mesh.geometry.vertices.should.have.length(8)
-      })
-      it('should return expected vertices with defaults', function () {
-        const poly = new Geometry.ThickPolygon2(rectangle)
-        const mesh = threeOutputScene.makeThickPolygon2Mesh(poly, null)
-
-        const actualVertices = mesh.geometry.vertices.map(roundXYZ)
-        const D = 0.5
-        actualVertices.should.include.deep.members([
-          xyz(0, 0, 0), xyz(0, Y, 0), xyz(X, Y, 0), xyz(X, 0, 0),
-          xyz(0, 0, D), xyz(0, Y, D), xyz(X, Y, D), xyz(X, 0, D)
-        ])
-      })
-      it('should return expected vertices with rotation of 90 degrees around x-axis', function () {
-        const poly = new Geometry.ThickPolygon2(rectangle, { depth: 1, xRotation: Math.PI / 2 })
-        const mesh = threeOutputScene.makeThickPolygon2Mesh(poly, null)
-
-        const actualVertices = mesh.geometry.vertices.map(roundXYZ)
-        actualVertices.should.include.deep.members([
-          xyz(0, 0, 0), xyz(X, 0, 0), xyz(X, -1, 0), xyz(0, -1, 0),
-          xyz(0, 0, Y), xyz(X, 0, Y), xyz(X, -1, Y), xyz(0, -1, Y)
-        ])
-      })
-
-      describe('checking one face only', function () {
-        it('should return expected vertices with rotation of 30 degrees around z-axis', function () {
-          const poly = new Geometry.ThickPolygon2(rectangle, { zRotation: Math.PI / 6 })
-          const mesh = threeOutputScene.makeThickPolygon2Mesh(poly, null)
-
-          const actualVertices = mesh.geometry.vertices.map(roundXYZ)
-          const expectedVerticesOneFace = [
-            xyz(0, 0, 0), xyz(X / 2 * SQRT3, X / 2, 0),
-            xyz(X / 2 * SQRT3 - Y / 2, X / 2 + Y / 2 * SQRT3, 0), xyz(-Y / 2, Y / 2 * SQRT3, 0)
-          ]
-          actualVertices.should.include.deep.members(expectedVerticesOneFace.map(roundXYZ))
-        })
-        it('should return expected vertices with rotations around x-axis and z-axis', function () {
-          const poly = new Geometry.ThickPolygon2(rectangle, { xRotation: Math.PI / 2, zRotation: Math.PI / 6 })
-          const mesh = threeOutputScene.makeThickPolygon2Mesh(poly, null)
-
-          const actualVertices = mesh.geometry.vertices.map(roundXYZ)
-          const expectedVerticesOneFace = [
-            xyz(0, 0, 0), xyz(X / 2 * SQRT3, X / 2, 0),
-            xyz(0, 0, Y), xyz(X / 2 * SQRT3, X / 2, Y)
-          ]
-          actualVertices.should.include.deep.members(expectedVerticesOneFace.map(roundXYZ))
-        })
-        it('should return expected vertices with specified offset', function () {
-          const poly = new Geometry.ThickPolygon2(rectangle)
-          const [X0, Y0, Z0] = [20, 30, 40]
-          const mesh = threeOutputScene.makeThickPolygon2Mesh(poly, null, { x: X0, y: Y0, z: Z0 })
-
-          const actualVertices = mesh.geometry.vertices.map(roundXYZ)
-          const expectedVerticesOneFace = [
-            xyz(X0, Y0, Z0), xyz(X0 + X, Y0, Z0), xyz(X0 + X, Y0 + Y, Z0), xyz(X0, Y0 + Y, Z0)
-          ]
-          actualVertices.should.include.deep.members(expectedVerticesOneFace)
-        })
-        it('should return expected vertices with specified offset, and off-origin rectangle', function () {
-          const translatedRectangle = rectangle.map(v => xyzAdd(v, { x: 3, y: -4 }))
-          const poly = new Geometry.ThickPolygon2(new Geometry.XYPolygon(translatedRectangle))
-          const [X0, Y0, Z0] = [20, 30, 40]
-          const mesh = threeOutputScene.makeThickPolygon2Mesh(poly, null, { x: X0, y: Y0, z: Z0 })
-
-          const actualVertices = mesh.geometry.vertices.map(roundXYZ)
-          const expectedVerticesOneFace = [
-            xyz(X0, Y0, Z0), xyz(X0 + X, Y0, Z0), xyz(X0 + X, Y0 + Y, Z0), xyz(X0, Y0 + Y, Z0)
-          ]
-          actualVertices.should.include.deep.members(expectedVerticesOneFace)
-        })
       })
     })
   })

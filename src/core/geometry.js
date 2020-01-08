@@ -37,14 +37,6 @@ class OutlinePolygon {
   }
 }
 
-class ThickPolygon {
-  constructor (xyPolygon, { incline = 0, depth = -0.5 } = {}) {
-    this.xyPolygon = xyPolygon
-    this.incline = incline
-    this.depth = depth
-  }
-}
-
 class TriangularPolyhedron {
   constructor (vertices, indicesOfFaces) {
     this.vertices = vertices
@@ -52,24 +44,22 @@ class TriangularPolyhedron {
   }
 }
 
-const DEFAULT_THICKNESS = 0.5
+const DEFAULT_THICKNESS = -0.5
 
 /**
- * ThickPolygon2 is currently used for building Walls.
- * TODO: merge with ThickPolygon
+ * ThickPolygon is a class for representing a polygon with some thickness (or depth) and
+ * with a possible incline relative to the XY plane.
  *
  * @param {XYPolygon} xyPolygon
- * @param {Number} [xRotation=0] - rotation around x-axis in radians
+ * @param {number} [incline=0] - z-offset of second vertex relative to first
  * @param {Number} [zRotation=0] - rotation around z-axis in radians
- * @param {Number} [depth=DEFAULT_THICKNESS]
+ * @param {Number} [depth=DEFAULT_THICKNESS] - volume extends between z = 0 and z = depth
  * @param {xy[][]} [openings] - array of openings, where each is specified by an array of xy values
  */
-class ThickPolygon2 {
-  constructor (xyPolygon, {
-    xRotation = 0, zRotation = 0, depth = DEFAULT_THICKNESS, openings = []
-  } = {}) {
+class ThickPolygon {
+  constructor (xyPolygon, { incline = 0, zRotation = 0, depth = DEFAULT_THICKNESS, openings = [] } = {}) {
     this.xyPolygon = xyPolygon
-    this.xRotation = xRotation
+    this.incline = incline
     this.zRotation = zRotation
     this.depth = depth
     this.openings = openings
@@ -107,4 +97,4 @@ class XYPolygon extends Array {
   }
 }
 
-export const Geometry = { Instance, Line, OutlinePolygon, ThickPolygon, ThickPolygon2, TriangularPolyhedron, XYPolygon }
+export const Geometry = { Instance, Line, OutlinePolygon, ThickPolygon, TriangularPolyhedron, XYPolygon }

@@ -35,10 +35,9 @@ class Wall extends Group {
     const dx = v2.x - v1.x
     const dy = v2.y - v1.y
     const length = hypotenuse(dx, dy)
-    const xyPolygon = new Geometry.XYPolygon([xy(0, 0), xy(length, 0), xy(length, height), xy(0, height)])
-    const xRotation = Math.PI / 2
+    const xyPolygon = new Geometry.XYPolygon([xy(0, 0), xy(0, height), xy(length, height), xy(length, 0)])
     const zRotation = Math.atan2(dy, dx)
-    const abstractWall = new Geometry.ThickPolygon2(xyPolygon, { xRotation, zRotation, depth, openings })
+    const abstractWall = new Geometry.ThickPolygon(xyPolygon, { incline: height, zRotation, depth, openings })
     const concreteWall = new Geometry.Instance(abstractWall, { ...v1, z }, ALMOST_WHITE)
     this.add(concreteWall)
 
