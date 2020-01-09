@@ -7,7 +7,8 @@
 
 import { Facing } from '../core/facing.js'
 import { Geometry } from '../core/geometry.js'
-import { Group, LODGroup } from './group.js'
+import { Group } from './group.js'
+import { Model } from './model.js'
 import { Ray } from '../core/ray.js'
 import { xyz, xyzAdd } from '../core/util.js'
 
@@ -41,7 +42,7 @@ const COLORS_BY_USE = {
 /**
  * Structure is an abstract superclass for buildings, city blocks, and other types of structures.
  */
-class Structure extends LODGroup {
+class Structure extends Model {
   constructor ({ city, ray, x0 = 0, y0 = 0, name, at = xyz(0, 0, 0) } = {}) {
     super(name)
     this._city = city

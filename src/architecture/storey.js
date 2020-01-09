@@ -6,8 +6,8 @@
  */
 
 import { Geometry } from '../core/geometry.js'
-import { Group } from './group.js'
 import { METRIC } from './metric.js'
+import { Model } from './model.js'
 import { Use } from './use.js'
 import { Wall } from './wall.js'
 
@@ -70,20 +70,22 @@ function _addWalls (group, xyPolygon, height, z, openingsByWall, cap) {
 
 /**
  * Storey is a class for representing one storey of a building.
- *
- * @param {Ray} ray - location and compass direction
- * @param {string} use - e.g. Use.ROOM
- * @param {xy[]} corners - vertices of floor, expected to be in counterclockwise order
- * @param {number} [z=0] - z-offset of the wall
- * @param {number} [incline=0] - z-offset of second corner relative to first
- * @param {number} [depth=-0.5] - floor is between z and z + depth, so positive means bottom of floor is at
- *                                z and negative means top of floor is at z.
- * @param {boolean} [cap=true] - whether to include floor
- * @param {number} [wall=0] - height of walls
- * @param {xy[][]} [openings=[]] - array of openings, where each is specified by an array of xy values
- * @param {string} [name] - name of the storey
  */
-class Storey extends Group {
+class Storey extends Model {
+  /**
+   * Creates an instance of a Storey, with walls and a floor.
+   * @param {Ray} ray - location and compass direction
+   * @param {string} use - e.g. Use.ROOM
+   * @param {xy[]} corners - vertices of floor, expected to be in counterclockwise order
+   * @param {number} [z=0] - z-offset of the wall
+   * @param {number} [incline=0] - z-offset of second corner relative to first
+   * @param {number} [depth=-0.5] - floor is between z and z + depth, so positive means bottom of floor is at
+   *                                z and negative means top of floor is at z.
+   * @param {boolean} [cap=true] - whether to include floor
+   * @param {number} [wall=0] - height of walls
+   * @param {xy[][]} [openings=[]] - array of openings, where each is specified by an array of xy values
+   * @param {string} [name] - name of the storey
+   */
   constructor (ray, use, corners, { z = 0, incline = 0, depth = -0.5, cap = true, wall = 0, openings = [], name } = {}) {
     super(name || use)
     this._depth = depth

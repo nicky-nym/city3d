@@ -5,12 +5,12 @@
  * For more information, please refer to <http://unlicense.org>
  */
 
-import { Group } from './group.js'
+import { Model } from './model.js'
 
 /**
 * Opening is an abstract superclass for Windows and Doors
 */
-class Opening extends Group {
+class Opening extends Model {
 }
 
 export { Opening }

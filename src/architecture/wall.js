@@ -6,8 +6,8 @@
  */
 
 import { Geometry } from '../core/geometry.js'
-import { Group } from './group.js'
 import { METRIC } from './metric.js'
+import { Model } from './model.js'
 import { xy, hypotenuse } from '../core/util.js'
 
 const ALMOST_WHITE = 0x999999
@@ -19,16 +19,18 @@ const DEFAULT_WALL_THICKNESS = 0.5
 * A one-storey house would have 4 instances of Wall, and a two-storey house would
 * have 8 instances of wall.
 * Walls can have Doors and Windows.
-*
-* @param {xy} v1 - first endpoint of the base of the wall, projected onto XY plane
-* @param {xy} v2 - second endpoint of the base of the wall, projected onto XY plane
-* @param {number} height - height of the wall
-* @param {number} [z=0] - z-offset of the wall
-* @param {number} [depth=DEFAULT_WALL_THICKNESS] - thickness of the wall
-* @param {xy[][]} [openings] - array of openings, where each is specified by an array of xy values
-* @param {string} [name]
 */
-class Wall extends Group {
+class Wall extends Model {
+  /**
+   * Creates an instance of a wall between two points.
+   * @param {xy} v1 - first endpoint of the base of the wall, projected onto XY plane
+   * @param {xy} v2 - second endpoint of the base of the wall, projected onto XY plane
+   * @param {number} height - height of the wall
+   * @param {number} [z=0] - z-offset of the wall
+   * @param {number} [depth=DEFAULT_WALL_THICKNESS] - thickness of the wall
+   * @param {xy[][]} [openings] - array of openings, where each is specified by an array of xy values
+   * @param {string} [name]
+   */
   constructor (v1, v2, height, { z = 0, depth = -DEFAULT_WALL_THICKNESS, openings = [], name } = {}) {
     super(name || 'Wall')
     this._height = height

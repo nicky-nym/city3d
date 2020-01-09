@@ -6,8 +6,8 @@
   */
 
 import { District } from './district.js'
-import { Group } from './group.js'
 import { Kayak } from '../../content/movers/kayak.js'
+import { Model } from './model.js'
 import { Route } from '../routes/route.js'
 import { Use } from './use.js'
 import { Vehicle } from '../../content/movers/vehicle.js'
@@ -16,7 +16,7 @@ import { randomInt } from '../../src/core/util.js'
 /**
  * City is a class for representing a hierarchical collection of 3D places.
  */
-class City extends Group {
+class City extends Model {
   getRoutes () {
     const routes = []
     this.accept(node => { if (node instanceof Route) routes.push(node) })

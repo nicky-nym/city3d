@@ -6,14 +6,14 @@
  */
 
 import { Geometry } from '../core/geometry.js'
-import { Group } from './group.js'
+import { Model } from './model.js'
 
 const LIGHT_GRAY = 0x808080
 
 /**
 * Roof is a class for representing the roof of a building.
 */
-class Roof extends Group {
+class Roof extends Model {
   constructor (spec, ray) {
     super('Roof')
     if (spec.custom) {

@@ -6,7 +6,7 @@
  */
 
 import { Geometry } from '../core/geometry.js'
-import { Group } from './group.js'
+import { Model } from './model.js'
 import { METRIC } from './metric.js'
 
 const MARTIAN_ORANGE = 0xdf4911
@@ -14,7 +14,7 @@ const MARTIAN_ORANGE = 0xdf4911
 /**
 * Parcel is a class for representing a parcel of land in a city.
 */
-class Parcel extends Group {
+class Parcel extends Model {
   constructor (corners, ray, name) {
     super(name || 'Parcel')
     const adjustedCorners = ray.applyRay(corners)

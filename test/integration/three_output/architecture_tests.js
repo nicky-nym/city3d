@@ -29,14 +29,16 @@ describe('Wall', function () {
       spy = new ThreeObjectSpy()
     })
 
-    it('should add one group containing one mesh', function () {
+    it('should add one LOD, containing one Group, containing one Mesh', function () {
       const wall = new Wall(xy(0, 0), xy(10, 0), 6)
       threeOutputScene._traverse(wall, spy)
 
       spy.thingsAdded.should.have.length(1)
-      spy.thingsAdded[0].type.should.equal('Group')
+      spy.thingsAdded[0].type.should.equal('LOD')
       spy.thingsAdded[0].children.should.have.length(1)
-      spy.thingsAdded[0].children[0].type.should.equal('Mesh')
+      spy.thingsAdded[0].children[0].type.should.equal('Group')
+      spy.thingsAdded[0].children[0].children.should.have.length(1)
+      spy.thingsAdded[0].children[0].children[0].type.should.equal('Mesh')
     })
     it('should add a mesh with 8 vertices', function () {
       const wall = new Wall(xy(0, 0), xy(10, 0), 6)

@@ -8,8 +8,8 @@
 import { countTo, xyz } from '../core/util.js'
 import { Facing } from '../core/facing.js'
 import { Geometry } from '../core/geometry.js'
-import { Group } from './group.js'
 import { METRIC } from './metric.js'
+import { Model } from './model.js'
 import { Ray } from '../core/ray.js'
 
 const MARTIAN_ORANGE = 0xdf4911
@@ -18,7 +18,7 @@ const MARTIAN_ORANGE = 0xdf4911
  * District is a class for representing structure and metrics for a district of a city.
  * A district can have land, parcels, buildings, and structures.
  */
-class District extends Group {
+class District extends Model {
   constructor (corners = [xyz(0, 0, 0)], ray = new Ray(), name) {
     super(name || 'District')
     this._ray = ray
