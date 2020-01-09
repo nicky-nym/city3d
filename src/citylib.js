@@ -11,8 +11,8 @@ import { Byway } from './architecture/byway.js'
 import { City } from './architecture/city.js'
 import { District } from './architecture/district.js'
 import { Door } from './architecture/door.js'
-import { Formation } from './architecture/formation.js'
 import { Group } from './architecture/group.js'
+import { Model } from './architecture/model.js'
 import { Opening } from './architecture/opening.js'
 import { Parcel } from './architecture/parcel.js'
 import { Roof } from './architecture/roof.js'
@@ -78,7 +78,6 @@ export const CITY = {
   District,
   Door,
   EiffelTower,
-  Formation,
   Kalpana,
   Kayak,
   Garage,
@@ -90,6 +89,7 @@ export const CITY = {
   MemoryOutput,
   MidriseComplex,
   MetricsOutput,
+  Model,
   Opening,
   Output,
   Parcel,

@@ -7,13 +7,13 @@
 
 import { xy, xyz, xyzAdd } from '../../src/core/util.js'
 import { Geometry } from '../../src/core/geometry.js'
-import { Formation } from '../../src/architecture/formation.js'
+import { Model } from '../../src/architecture/model.js'
 import { UNIT } from '../../src/core/unit.js'
 
 const TRUNK_HEIGHT = UNIT.feet(8)
 const CROWN_HEIGHT = UNIT.feet(9)
 
-class Tree extends Formation {
+class Tree extends Model {
   constructor ({ at = xyz(0, 0, 0), crownHeight = 10, name = 'Tree' } = {}) {
     super(name)
     this.add(this.makeTrunk(at))

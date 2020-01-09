@@ -7,8 +7,8 @@
 
 import { xyz, xywh2rect, xyzAdd } from '../../src/core/util.js'
 import { Facing } from '../../src/core/facing.js'
-import { Formation } from '../../src/architecture/formation.js'
 import { Geometry } from '../../src/core/geometry.js'
+import { Model } from '../../src/architecture/model.js'
 import { Ray } from '../../src/core/ray.js'
 import { UNIT } from '../../src/core/unit.js'
 
@@ -43,7 +43,7 @@ const TURF = {
 /**
  * SoccerField represents a standard full professional-size U.S. soccer field or British football pitch.
  */
-class SoccerField extends Formation {
+class SoccerField extends Model {
   constructor ({ at = xyz(0, 0, 0), name = 'Soccer field' } = {}) {
     super(name)
     this.addTurf(at)

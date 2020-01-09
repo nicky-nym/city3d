@@ -6,8 +6,8 @@
  */
 
 import { xyz, countTo } from '../../src/core/util.js'
-import { Formation } from '../../src/architecture/formation.js'
 import { Geometry } from '../../src/core/geometry.js'
+import { Model } from '../../src/architecture/model.js'
 import { Route } from '../../src/routes/route.js'
 import { UNIT } from '../../src/core/unit.js'
 import { Use } from '../../src/architecture/use.js'
@@ -19,7 +19,7 @@ const LENGTH = NUM_SECTIONS * SECTION_LENGTH
 const X_OFFSET = -LENGTH / 2
 const CREEK_DEPTH = 0.1
 
-class Creek extends Formation {
+class Creek extends Model {
   constructor (name = 'Creek') {
     super(name)
   }
