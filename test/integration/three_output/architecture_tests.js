@@ -257,8 +257,8 @@ class ThreeObjectSpy {
     this.thingsAdded = []
   }
 
-  add (thing) {
-    this.thingsAdded.push(thing)
+  add (object) {
+    this.thingsAdded.push(object)
   }
 
   getAllAddedVerticesAfterTransform () {

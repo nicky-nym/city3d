@@ -7,6 +7,7 @@
 
 import { xyz, xywh2rect, xyzAdd } from '../../src/core/util.js'
 import { Facing } from '../../src/core/facing.js'
+import { FeatureInstance } from '../../src/core/feature.js'
 import { Geometry } from '../../src/core/geometry.js'
 import { Model } from '../../src/architecture/model.js'
 import { Ray } from '../../src/core/ray.js'
@@ -56,7 +57,7 @@ class SoccerField extends Model {
     const rect = xywh2rect(0, 0, TURF.x, TURF.y)
     const xyPolygon = new Geometry.XYPolygon(rect)
     const abstractThickPolygon = new Geometry.ThickPolygon(xyPolygon, { depth: TURF.z })
-    const concreteThickPolygon = new Geometry.Instance(abstractThickPolygon, atXyz, GREEN)
+    const concreteThickPolygon = new FeatureInstance(abstractThickPolygon, atXyz, GREEN)
     this.add(concreteThickPolygon)
   }
 

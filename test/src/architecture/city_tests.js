@@ -6,7 +6,7 @@
   */
 
 import { City } from '../../../src/architecture/city.js'
-import { Group } from '../../../src/architecture/group.js'
+import { FeatureGroup } from '../../../src/core/feature.js'
 import { Route } from '../../../src/routes/route.js'
 import { Use } from '../../../src/architecture/use.js'
 
@@ -33,13 +33,13 @@ describe('City', function () {
     })
     it('should return the Routes added indirectly to it', function () {
       const city = new City('Testopia')
-      const someRegion = new Group()
+      const someRegion = new FeatureGroup()
       city.add(someRegion)
-      const watercraftLanes = new Group()
+      const watercraftLanes = new FeatureGroup()
       someRegion.add(watercraftLanes)
-      const vehicleLanes = new Group()
+      const vehicleLanes = new FeatureGroup()
       someRegion.add(vehicleLanes)
-      const bicycleLanes = new Group()
+      const bicycleLanes = new FeatureGroup()
       vehicleLanes.add(bicycleLanes)
       const kayakRoute = new Route([[0, 0, 0], [100, 200, 0]], Use.CANAL)
       watercraftLanes.add(kayakRoute)

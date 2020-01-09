@@ -15,11 +15,35 @@ import { Vehicle } from '../../../content/movers/vehicle.js'
 
 describe('Vehicle', function () {
   describe('#constructor', function () {
+    it('should create a ThreeOutput plugin', function () {
+      const v = new Vehicle(new Route([[0, 0, 0], [500, 0, 0]]), 0.5, 'unicycle')
+
+      v.threeComponent.should.exist
+      v.threeComponent.should.be.instanceof(Function)
+    })
     it('should create a Vehicle of the specified type', function () {
       const v = new Vehicle(new Route([[0, 0, 0], [500, 0, 0]]), 0.5, 'unicycle')
 
-      v.threeComponent.name.should.equal('unicycle')
-      v.threeComponent.userData.spinningWheels.should.have.length(1)
+      v.name.should.equal('unicycle')
+      v.threeComponent().userData.spinningWheels.should.have.length(1)
+    })
+    it('should create a Vehicle with the specified name, if present', function () {
+      const v = new Vehicle(new Route([[0, 0, 0], [500, 0, 0]]), 0.5, 'unicycle', "Jane's unicycle")
+
+      v.name.should.equal("Jane's unicycle")
+    })
+
+    describe('With no name specified in constructor', function () {
+      it('should create a Vehicle with the name specified in the spec, if present', function () {
+        const v = new Vehicle(new Route([[0, 0, 0], [500, 0, 0]]), 0.5, 'pedicab')
+
+        v.name.should.equal('Pedicab (bicycle rickshaw)')
+      })
+      it('should create a Vehicle named by its type, if no name is specified in the spec', function () {
+        const v = new Vehicle(new Route([[0, 0, 0], [500, 0, 0]]), 0.5, 'bicycle')
+
+        v.name.should.equal('bicycle')
+      })
     })
   })
   describe('#update()', function () {

@@ -22,7 +22,6 @@ function _newLine (start, end, material) {
 class KayakFactory {
   _newKayakObject () {
     const kayak = new THREE.Group()
-    kayak.name = 'kayak'
 
     const shellMaterial = new THREE.MeshLambertMaterial({ color: 0x999999 })
     const shell = new THREE.Mesh(new THREE.SphereGeometry(), shellMaterial)
@@ -82,10 +81,9 @@ const kayakFactory = new KayakFactory()
 class Kayak extends Mover {
   // new Kayak([[0, 0, 0], [0, 200, 10], [100, 200, 10], [0, 0, 0]], 0.8)
   // For a stationary kayak, use speed = 0, and path[0] and path[1] to specify location and orientation.
-  constructor (route, speed = 0.1) {
+  constructor (route, speed = 0.1, name) {
     route = route || kayakFactory.randomRoute()
-    super(route, speed, kayakFactory.makeKayak(route, speed))
-    this.threeComponent.update = this.update.bind(this)
+    super(route, speed, kayakFactory.makeKayak(route, speed), name || 'kayak')
   }
 }
 

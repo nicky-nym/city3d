@@ -18,8 +18,7 @@ import { xyz } from '../../src/core/util.js'
 class Kalpana extends Mover {
   constructor (route, speed = 100) {
     route = route || Kalpana.leoRoute()
-    super(route, speed, Kalpana.makeStation(route, speed))
-    this.threeComponent.update = this.update.bind(this)
+    super(route, speed, Kalpana.makeStation(route, speed), 'Kalpana One Orbital')
   }
 
   /**
@@ -39,7 +38,6 @@ class Kalpana extends Mover {
    */
   static makeStation (route, speed = 1) {
     const kalpana = new THREE.Group()
-    kalpana.name = 'Kalpana One Orbital'
 
     const rotatingStructure = new THREE.Group()
 

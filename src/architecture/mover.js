@@ -6,6 +6,7 @@
  */
 
 import * as THREE from '../../node_modules/three/build/three.module.js'
+import { Feature } from '../core/feature.js'
 import { xyzAdd } from '../core/util.js'
 
 const UP = new THREE.Vector3(0, 0, 1)
@@ -37,18 +38,19 @@ function lookAt (obj, focus, up = UP) {
 /**
  * Mover is an abstract superclass for objects that follow a Route.
  */
-class Mover {
+class Mover extends Feature {
   /**
    * @param {Route} route - specifies a sequence of waypoints to travel between
    * @param {number} speed - for now, speed is in units of unit vectors per frame
    * @param {THREE.Object3D} [threeComponent] - three.js representation of the Mover
    */
-  constructor (route, speed, threeComponent) {
+  constructor (route, speed, threeComponent, name) {
+    super(name || (threeComponent && threeComponent.name))
     this.route = route
     const waypoints = route.waypoints()
     this.speed = speed
     this.moving = speed > 0 && waypoints.length > 1
-    this.threeComponent = threeComponent
+    this._threeComponent = threeComponent
     this.position = waypoints[0]
     this.routeIndex = 0
     this.delta = speed
@@ -59,9 +61,11 @@ class Mover {
       this.currSegment = segments[0]
     }
 
-    if (this.threeComponent) {
-      this.threeComponent.position.set(waypoints[0].x, waypoints[0].y, waypoints[0].z)
-      lookAt(this.threeComponent, waypoints[1])
+    if (this._threeComponent) {
+      this._threeComponent.feature = this
+      this._threeComponent.update = this.update.bind(this)
+      this._threeComponent.position.set(waypoints[0].x, waypoints[0].y, waypoints[0].z)
+      lookAt(this._threeComponent, waypoints[1])
     }
   }
 
@@ -87,12 +91,12 @@ class Mover {
       this._addScaledVectorToPosition(this.currSegment.vNorm, this.delta)
     }
 
-    if (this.threeComponent) {
-      this.threeComponent.position.set(this.position.x, this.position.y, this.position.z)
+    if (this._threeComponent) {
+      this._threeComponent.position.set(this.position.x, this.position.y, this.position.z)
       if (newTarget) {
-        lookAt(this.threeComponent, newTarget)
+        lookAt(this._threeComponent, newTarget)
       }
-      for (const wheel of this.threeComponent.userData.spinningWheels) {
+      for (const wheel of this._threeComponent.userData.spinningWheels) {
         wheel.rotation.y += this.speed / Math.PI
       }
     }
@@ -100,7 +104,7 @@ class Mover {
 
   // This makes Mover a ThreeOutput plugin.
   threeComponent () {
-    return this.threeComponent
+    return this._threeComponent
   }
 }
 

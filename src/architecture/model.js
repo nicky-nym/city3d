@@ -5,19 +5,19 @@
  * For more information, please refer to <http://unlicense.org>
  */
 
+import { FeatureInstance, FeatureLODGroup } from '../core/feature.js'
 import { Geometry } from '../core/geometry.js'
-import { LODGroup } from './group.js'
 import { Route } from '../routes/route.js'
 
 /**
  * Model is an abstract superclass for models that aren't buildings or structures.
  * Examples include: trees, soccer fields, stars in the sky, etc.
  */
-class Model extends LODGroup {
+class Model extends FeatureLODGroup {
   addLine (waypoints, ray, color) {
     const adjustedWaypoints = ray.applyRay(waypoints)
     const line = new Geometry.Line(adjustedWaypoints)
-    const instance = new Geometry.Instance(line, adjustedWaypoints[0], color)
+    const instance = new FeatureInstance(line, adjustedWaypoints[0], color)
     this.add(instance)
   }
 

@@ -11,7 +11,6 @@ import { METRIC } from '../../../src/architecture/metric.js'
 import { MidriseComplex } from '../../../content/buildings/midrise_complex.js'
 import { Storey } from '../../../src/architecture/storey.js'
 import { Roof } from '../../../src/architecture/roof.js'
-import { fullName } from '../../../src/core/util.js'
 
 /* global describe, it, beforeEach */
 
@@ -38,7 +37,7 @@ describe('MidriseComplex', function () {
       const complex = new MidriseComplex({ name: 'Napoleon Complex' })
       city.add(complex)
 
-      fullName(complex).should.equal('Napoleon Complex of Testopia')
+      complex.fullName().should.equal('Napoleon Complex of Testopia')
     })
     it('should result in at least four Roofs for a 1 x 1 pattern', function () {
       const complex = new MidriseComplex({ numRowPairs: 1, numColPairs: 1 })

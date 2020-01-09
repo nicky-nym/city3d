@@ -11,7 +11,6 @@ import { Byway } from './architecture/byway.js'
 import { City } from './architecture/city.js'
 import { District } from './architecture/district.js'
 import { Door } from './architecture/door.js'
-import { Group } from './architecture/group.js'
 import { Model } from './architecture/model.js'
 import { Opening } from './architecture/opening.js'
 import { Parcel } from './architecture/parcel.js'
@@ -20,6 +19,9 @@ import { Storey } from './architecture/storey.js'
 import { Wall } from './architecture/wall.js'
 import { Window } from './architecture/window.js'
 import { Use } from './architecture/use.js'
+
+// core
+import { FeatureGroup } from './core/feature.js'
 
 // outputs
 import { Output } from './outputs/output.js'
@@ -78,10 +80,10 @@ export const CITY = {
   District,
   Door,
   EiffelTower,
+  FeatureGroup,
   Kalpana,
   Kayak,
   Garage,
-  Group,
   Highrise,
   House,
   LatticeDistrict,

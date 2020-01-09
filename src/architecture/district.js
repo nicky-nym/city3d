@@ -7,6 +7,7 @@
 
 import { countTo, xyz } from '../core/util.js'
 import { Facing } from '../core/facing.js'
+import { FeatureInstance } from '../core/feature.js'
 import { Geometry } from '../core/geometry.js'
 import { METRIC } from './metric.js'
 import { Model } from './model.js'
@@ -30,7 +31,7 @@ class District extends Model {
     const abstractOutlinePolygon = new Geometry.OutlinePolygon(xyPolygon)
     const [{ x, y }, z] = [adjustedCorners[0], ray.xyz.z]
     for (const i of countTo(3)) {
-      const concreteOutlinePolygon = new Geometry.Instance(abstractOutlinePolygon, { x, y, z: z + (i * 3) }, MARTIAN_ORANGE)
+      const concreteOutlinePolygon = new FeatureInstance(abstractOutlinePolygon, { x, y, z: z + (i * 3) }, MARTIAN_ORANGE)
       this.add(concreteOutlinePolygon)
     }
 

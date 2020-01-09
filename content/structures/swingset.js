@@ -8,6 +8,7 @@
 import { UNIT } from '../../src/core/unit.js'
 import { xyz } from '../../src/core/util.js'
 import { Facing } from '../../src/core/facing.js'
+import { FeatureInstance } from '../../src/core/feature.js'
 import { Geometry } from '../../src/core/geometry.js'
 import { Ray } from '../../src/core/ray.js'
 import { Structure } from '../../src/architecture/structure.js'
@@ -18,7 +19,7 @@ const STEEL = 0x404040
 function _makeLine (waypoints, ray, color) {
   const adjustedWaypoints = ray.applyRay(waypoints)
   const line = new Geometry.Line(adjustedWaypoints)
-  return new Geometry.Instance(line, adjustedWaypoints[0], color)
+  return new FeatureInstance(line, adjustedWaypoints[0], color)
 }
 
 /**

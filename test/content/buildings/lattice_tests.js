@@ -7,7 +7,6 @@
 
 import { Lattice } from '../../../content/buildings/lattice.js'
 import { City } from '../../../src/architecture/city.js'
-import { fullName } from '../../../src/core/util.js'
 
 /* global describe, it, beforeEach */
 
@@ -35,7 +34,7 @@ describe('Lattice', function () {
         const lattice = new Lattice({ name: 'Veloplex' })
         city.add(lattice)
 
-        fullName(lattice).should.equal('Veloplex of Velotopia')
+        lattice.fullName().should.equal('Veloplex of Velotopia')
       })
       it('should result in the expected number of Routes for a 1 x 1 pattern', function () {
         city.add(new Lattice({ numRows: 1, numCols: 1 }))

@@ -5,6 +5,7 @@
  * For more information, please refer to <http://unlicense.org>
  */
 
+import { FeatureInstance } from '../core/feature.js'
 import { Geometry } from '../core/geometry.js'
 import { METRIC } from './metric.js'
 import { Model } from './model.js'
@@ -96,7 +97,7 @@ class Storey extends Model {
     if (cap) {
       const color = COLORS_BY_USE[use]
       const abstractThickPolygon = new Geometry.ThickPolygon(xyPolygon, { incline: incline, depth: depth })
-      const concreteThickPolygon = new Geometry.Instance(abstractThickPolygon, { ...xyPolygon[0], z }, color)
+      const concreteThickPolygon = new FeatureInstance(abstractThickPolygon, { ...xyPolygon[0], z }, color)
       this.add(concreteThickPolygon)
       const squareFeet = xyPolygon.area()
 

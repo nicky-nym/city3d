@@ -48,7 +48,7 @@ function addCreek (district) {
 
   // There are several possibilities here:
   // 1) Explicitly construct a Kayak and add it to the city. The Route will not be added to the city.
-  const kayaks = new CITY.Group('kayaks')
+  const kayaks = new CITY.FeatureGroup('kayaks')
   kayaks.add(new CITY.Kayak(creek.creekRoute(), 0.13))
   district.add(kayaks)
 
@@ -91,7 +91,7 @@ function addKalpanaOrbital (district) {
 }
 
 function addMovers (district) {
-  const parkedVehicles = new CITY.Group('parked vehicles')
+  const parkedVehicles = new CITY.FeatureGroup('parked vehicles')
   for (let i = -50; i > -200; i -= 10) {
     parkedVehicles.add(new CITY.Vehicle(new CITY.Route([xyz(-50, i, 0), xyz(0, 0, 0)]), 0))
   }

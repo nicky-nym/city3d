@@ -763,10 +763,9 @@ function makeVehicle (typename) {
 class Vehicle extends Mover {
   // new Vehicle([[0, 0, 0], [0, 200, 10], [100, 200, 10], [0, 0, 0]], 0.8)
   // For a parked vehicle, use speed = 0, and path[0] and path[1] to specify location and orientation.
-  constructor (route, speed = 0.5, typename) {
+  constructor (route, speed = 0.5, typename, name) {
     route = route || randomRoute()
-    super(route, speed, makeVehicle(typename))
-    this.threeComponent.update = this.update.bind(this)
+    super(route, speed, makeVehicle(typename), name)
   }
 }
 

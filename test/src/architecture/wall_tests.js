@@ -5,7 +5,7 @@
  * For more information, please refer to <http://unlicense.org>
  */
 
-import { Geometry } from '../../../src/core/geometry.js'
+import { FeatureInstance } from '../../../src/core/feature.js'
 import { METRIC } from '../../../src/architecture/metric.js'
 import { UNIT } from '../../../src/core/unit.js'
 import { Wall } from '../../../src/architecture/wall.js'
@@ -32,7 +32,7 @@ describe('Wall', function () {
       const wall = new Wall(xy(0, 0), xy(UNIT.km(117.5), 0), UNIT.meters(6))
 
       let count = 0
-      wall.accept(node => { count += node instanceof Geometry.Instance ? 1 : 0 })
+      wall.accept(node => { count += node instanceof FeatureInstance ? 1 : 0 })
       count.should.equal(1)
     })
     it('should return a Wall with the expected metrics for a wall with no openings', function () {

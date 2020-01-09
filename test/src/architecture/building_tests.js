@@ -7,11 +7,10 @@
  */
 
 import { Building } from '../../../src/architecture/building.js'
-import { Geometry } from '../../../src/core/geometry.js'
-import { Group } from '../../../src/architecture/group.js'
+import { FeatureGroup, FeatureInstance } from '../../../src/core/feature.js'
 import { Storey } from '../../../src/architecture/storey.js'
 import { Wall } from '../../../src/architecture/wall.js'
-import { xy, xyz, fullName } from '../../../src/core/util.js'
+import { xy, xyz } from '../../../src/core/util.js'
 
 /* global describe, it, beforeEach */
 
@@ -70,31 +69,31 @@ describe('Building', function () {
 
         const storeys = []
         building.accept(node => { if (node instanceof Storey) storeys.push(node) })
-        fullName(storeys[0]).toLowerCase().should.equal('floor 0 of hut')
-        fullName(storeys[1]).toLowerCase().should.equal('roof of hut')
+        storeys[0].fullName().toLowerCase().should.equal('floor 0 of hut')
+        storeys[1].fullName().toLowerCase().should.equal('roof of hut')
       })
       it('should return a Building with two lower resolution levels of detail', function () {
         const building = new Building(minimalSpec)
 
         building.getLevelsOfDetail().should.have.length(2)
       })
-      it('should create levels with property "instance" with value of type Group', function () {
+      it('should create levels with property "feature" with value of type FeatureGroup', function () {
         const building = new Building(minimalSpec)
 
         const lods = building.getLevelsOfDetail()
-        lods[0].should.have.property('instance')
-        lods[0].instance.should.be.an.instanceof(Group)
-        lods[1].should.have.property('instance')
-        lods[1].instance.should.be.an.instanceof(Group)
+        lods[0].should.have.property('feature')
+        lods[0].feature.should.be.an.instanceof(FeatureGroup)
+        lods[1].should.have.property('feature')
+        lods[1].feature.should.be.an.instanceof(FeatureGroup)
       })
       it('should create levels of detail with exactly one Geometry Instance', function () {
         const building = new Building(minimalSpec)
 
         const lods = building.getLevelsOfDetail()
-        lods[0].instance.accept(node => { count += node instanceof Geometry.Instance ? 1 : 0 })
+        lods[0].feature.accept(node => { count += node instanceof FeatureInstance ? 1 : 0 })
         count.should.equal(1)
         count = 0
-        lods[1].instance.accept(node => { count += node instanceof Geometry.Instance ? 1 : 0 })
+        lods[1].feature.accept(node => { count += node instanceof FeatureInstance ? 1 : 0 })
         count.should.equal(1)
       })
     })
@@ -122,22 +121,22 @@ describe('Building', function () {
         const storeys = []
         building.accept(node => { if (node instanceof Storey) storeys.push(node) })
         storeys.should.have.length(4)
-        fullName(storeys[0]).toLowerCase().should.equal('floor 0 of 123 main st.')
-        fullName(storeys[1]).toLowerCase().should.equal('floor 1 of 123 main st.')
-        fullName(storeys[2]).toLowerCase().should.equal('floor 2 of 123 main st.')
-        fullName(storeys[3]).toLowerCase().should.equal('roof of 123 main st.')
+        storeys[0].fullName().toLowerCase().should.equal('floor 0 of 123 main st.')
+        storeys[1].fullName().toLowerCase().should.equal('floor 1 of 123 main st.')
+        storeys[2].fullName().toLowerCase().should.equal('floor 2 of 123 main st.')
+        storeys[3].fullName().toLowerCase().should.equal('roof of 123 main st.')
       })
       it('should return a Building with two lower resolution levels of detail', function () {
         const building = new Building(simpleThreeStoreySpec)
 
         building.getLevelsOfDetail().should.have.length(2)
       })
-      it('should create levels with property "instance" with value of type Group', function () {
+      it('should create levels with property "feature" with value of type FeatureGroup', function () {
         const building = new Building(simpleThreeStoreySpec)
 
         building.getLevelsOfDetail().forEach(lod => {
-          lod.should.have.property('instance')
-          lod.instance.should.be.an.instanceof(Group)
+          lod.should.have.property('feature')
+          lod.feature.should.be.an.instanceof(FeatureGroup)
         })
       })
       it('should create levels of detail with exactly one Geometry Instance', function () {
@@ -145,7 +144,7 @@ describe('Building', function () {
 
         building.getLevelsOfDetail().forEach(lod => {
           let count = 0
-          lod.instance.accept(node => { count += node instanceof Geometry.Instance ? 1 : 0 })
+          lod.feature.accept(node => { count += node instanceof FeatureInstance ? 1 : 0 })
           count.should.equal(1)
         })
       })
@@ -192,12 +191,12 @@ describe('Building', function () {
 
         building.getLevelsOfDetail().should.have.length(2)
       })
-      it('should create levels with property "instance" with value of type Group', function () {
+      it('should create levels with property "feature" with value of type FeatureGroup', function () {
         const building = new Building(randomSpec)
 
         building.getLevelsOfDetail().forEach(lod => {
-          lod.should.have.property('instance')
-          lod.instance.should.be.an.instanceof(Group)
+          lod.should.have.property('feature')
+          lod.feature.should.be.an.instanceof(FeatureGroup)
         })
       })
       it('should create levels of detail with exactly one Geometry Instance', function () {
@@ -205,7 +204,7 @@ describe('Building', function () {
 
         building.getLevelsOfDetail().forEach(lod => {
           let count = 0
-          lod.instance.accept(node => { count += node instanceof Geometry.Instance ? 1 : 0 })
+          lod.feature.accept(node => { count += node instanceof FeatureInstance ? 1 : 0 })
           count.should.equal(1)
         })
       })
@@ -218,7 +217,7 @@ describe('Building', function () {
         const fullResTotalHeight = storeyHeight * walls.length / 4
         building.getLevelsOfDetail().forEach(lod => {
           let geometryInstance
-          lod.instance.accept(node => { if (node instanceof Geometry.Instance) geometryInstance = node })
+          lod.feature.accept(node => { if (node instanceof FeatureInstance) geometryInstance = node })
           geometryInstance.geometry.depth.should.equal(fullResTotalHeight)
         })
       })
@@ -261,13 +260,13 @@ describe('Building', function () {
         building.accept(node => { count += node instanceof Storey ? 1 : 0 })
         count.should.equal(numStoreysInSouthWing + 1 + numStoreysInTower + 1 + numStoreysInNorthWing + 1)
       })
-      it('should create two levels of detail with property "instance" with value of type Group', function () {
+      it('should create two levels of detail with property "feature" with value of type FeatureGroup', function () {
         const building = new Building(nestedSpec)
 
         building.getLevelsOfDetail().should.have.length(2)
         building.getLevelsOfDetail().forEach(lod => {
-          lod.should.have.property('instance')
-          lod.instance.should.be.an.instanceof(Group)
+          lod.should.have.property('feature')
+          lod.feature.should.be.an.instanceof(FeatureGroup)
         })
       })
       it('should create levels of detail with exactly three Geometry Instances', function () {
@@ -275,7 +274,7 @@ describe('Building', function () {
 
         building.getLevelsOfDetail().forEach(lod => {
           let count = 0
-          lod.instance.accept(node => { count += node instanceof Geometry.Instance ? 1 : 0 })
+          lod.feature.accept(node => { count += node instanceof FeatureInstance ? 1 : 0 })
           count.should.equal(3)
         })
       })
@@ -283,9 +282,9 @@ describe('Building', function () {
         const building = new Building(nestedSpec)
 
         building.getLevelsOfDetail().forEach(lod => {
-          fullName(lod.instance.children[0]).should.equal('South Wing of Three Part Building')
-          fullName(lod.instance.children[1]).should.equal('Tower of Three Part Building')
-          fullName(lod.instance.children[2]).should.equal('North Wing of Three Part Building')
+          lod.feature.children[0].fullName().should.equal('South Wing of Three Part Building')
+          lod.feature.children[1].fullName().should.equal('Tower of Three Part Building')
+          lod.feature.children[2].fullName().should.equal('North Wing of Three Part Building')
         })
       })
       it('should create levels of detail with each Instance height equal to the corresponding part of the full resolution building', function () {
@@ -293,7 +292,7 @@ describe('Building', function () {
 
         building.getLevelsOfDetail().forEach(lod => {
           const geometryInstances = []
-          lod.instance.accept(node => { if (node instanceof Geometry.Instance) { geometryInstances.push(node) } })
+          lod.feature.accept(node => { if (node instanceof FeatureInstance) { geometryInstances.push(node) } })
           geometryInstances[0].geometry.depth.should.equal(numStoreysInSouthWing * storeyHeight)
           geometryInstances[1].geometry.depth.should.equal(numStoreysInTower * storeyHeight)
           geometryInstances[2].geometry.depth.should.equal(numStoreysInNorthWing * storeyHeight)

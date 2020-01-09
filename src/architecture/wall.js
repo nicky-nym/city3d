@@ -5,6 +5,7 @@
  * For more information, please refer to <http://unlicense.org>
  */
 
+import { FeatureInstance } from '../core/feature.js'
 import { Geometry } from '../core/geometry.js'
 import { METRIC } from './metric.js'
 import { Model } from './model.js'
@@ -40,7 +41,7 @@ class Wall extends Model {
     const xyPolygon = new Geometry.XYPolygon([xy(0, 0), xy(0, height), xy(length, height), xy(length, 0)])
     const zRotation = Math.atan2(dy, dx)
     const abstractWall = new Geometry.ThickPolygon(xyPolygon, { incline: height, zRotation, depth, openings })
-    const concreteWall = new Geometry.Instance(abstractWall, { ...v1, z }, ALMOST_WHITE)
+    const concreteWall = new FeatureInstance(abstractWall, { ...v1, z }, ALMOST_WHITE)
     this.add(concreteWall)
 
     this.setValueForMetric(METRIC.WALL_AREA, abstractWall.area())

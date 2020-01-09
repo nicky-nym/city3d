@@ -1,14 +1,14 @@
 /** @file three_output_scene.js
- * @author Authored in 2019, 2020 at <https://github.com/nicky-nym/city3d>
+ * @author Authored in 2020 at <https://github.com/nicky-nym/city3d>
  * @license UNLICENSE
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
  */
 
 import * as THREE from '../../node_modules/three/build/three.module.js'
+import { FeatureGroup, FeatureInstance, FeatureLODGroup } from '../core/feature.js'
 import { Geometry } from '../core/geometry.js'
 import { xyzSubtract } from '../core/util.js'
-import { Group, LODGroup } from '../architecture/group.js'
 
 const ONE_MILE = 5280
 const FIXME_FUCHSIA = 0xff00ff // used as a default so it's obvious when a color is missing
@@ -83,8 +83,8 @@ class ThreeOutputScene extends THREE.Scene {
     this.add(meshY)
   }
 
-  buildFrom (model) {
-    this._traverse(model, this)
+  buildFrom (feature) {
+    this._traverse(feature, this)
   }
 
   addPaths (model) {
@@ -97,28 +97,28 @@ class ThreeOutputScene extends THREE.Scene {
     }
   }
 
-  _traverse (thing, threeObject) {
-    if (thing instanceof Group) {
-      if (thing instanceof LODGroup) {
-        const lod = this.makeLODFromLODGroup(thing)
+  _traverse (feature, threeObject) {
+    if (feature instanceof FeatureGroup) {
+      if (feature instanceof FeatureLODGroup) {
+        const lod = this.makeLODFromLODGroup(feature)
         threeObject.add(lod)
       } else {
         const group = new THREE.Group()
-        group.name = thing.name
+        group.feature = feature
         threeObject.add(group)
-        for (const child of thing.children) {
+        for (const child of feature.children) {
           this._traverse(child, group)
         }
       }
-    } else if (thing.threeComponent) {
-      threeObject.add(thing.threeComponent)
-      if (thing.threeComponent.update) {
-        this._animatedComponents.push(thing.threeComponent)
+    } else if (feature.threeComponent) {
+      threeObject.add(feature.threeComponent())
+      if (feature.threeComponent().update) {
+        this._animatedComponents.push(feature.threeComponent())
       }
-    } else if (thing instanceof Geometry.Instance) {
-      const material = this._material('high', thing.hexColor, true)
-      const mesh = this.makeMeshFromInstanceGeometry(thing.geometry, material, thing.hexColor, thing.p0)
-      mesh.name = thing.name
+    } else if (feature instanceof FeatureInstance) {
+      const material = this._material('high', feature.hexColor, true)
+      const mesh = this.makeMeshFromInstanceGeometry(feature.geometry, material, feature.hexColor, feature.p0)
+      mesh.feature = feature
       threeObject.add(mesh)
     } else {
       // TODO
@@ -133,7 +133,7 @@ class ThreeOutputScene extends THREE.Scene {
       lod.translateZ(lodGroup.offset.z)
     }
     const group = new THREE.Group()
-    group.name = lodGroup.name
+    group.feature = lodGroup
     for (const child of lodGroup.children) {
       this._traverse(child, group)
     }
@@ -146,29 +146,30 @@ class ThreeOutputScene extends THREE.Scene {
 
     let materialCost = 'lowest'
     for (const level of levels) {
-      const object = this.makeLowResObject(level.instance, materialCost)
+      const object = this.makeLowResObject(level.feature, materialCost)
       lod.addLevel(object, level.distanceThreshold)
       materialCost = 'medium'
     }
     return lod
   }
 
-  makeLowResObject (instance, materialCost) {
-    if (instance instanceof Group) {
+  makeLowResObject (feature, materialCost) {
+    if (feature instanceof FeatureGroup) {
       const group = new THREE.Group()
-      group.name = instance.name
-      for (const child of instance.children) {
+      group.feature = feature
+      for (const child of feature.children) {
         group.add(this.makeLowResObject(child, materialCost))
       }
       return group
     }
-    if (!instance.geometry) {
-      console.error('Error: instance must either be an instance of Group or have a property "geometry"')
-      return
+    if (feature instanceof FeatureInstance) {
+      const material = this._material(materialCost, feature.hexColor, true)
+      return this.makeMeshFromInstanceGeometry(feature.geometry, material, feature.hexColor, feature.p0)
     }
-
-    const material = this._material(materialCost, instance.hexColor, true)
-    return this.makeMeshFromInstanceGeometry(instance.geometry, material, instance.hexColor, instance.p0)
+    console.warn('Warning: feature is neither a FeatureGroup nor a FeatureInstance, so an empty Group will be returned.')
+    const group = new THREE.Group()
+    group.feature = feature
+    return group
   }
 
   makeMeshFromInstanceGeometry (instanceGeometry, material, color, p0) {

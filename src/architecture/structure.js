@@ -6,8 +6,8 @@
   */
 
 import { Facing } from '../core/facing.js'
+import { FeatureGroup, FeatureInstance } from '../core/feature.js'
 import { Geometry } from '../core/geometry.js'
-import { Group } from './group.js'
 import { Model } from './model.js'
 import { Ray } from '../core/ray.js'
 import { xyz, xyzAdd } from '../core/util.js'
@@ -56,13 +56,13 @@ class Structure extends Model {
 
   makePlaceholder (use, corners, depth, { z = 0, name } = {}) {
     z = z + this._ray.xyz.z
-    const group = new Group(name)
+    const group = new FeatureGroup(name)
     const adjustedCorners = this._ray.applyRay(corners)
     const xyPolygon = new Geometry.XYPolygon(adjustedCorners)
     const color = COLORS_BY_USE[use]
     const abstractThickPolygon = new Geometry.ThickPolygon(xyPolygon, { depth })
     const p0 = { ...adjustedCorners[0], z }
-    const concreteThickPolygon = new Geometry.Instance(abstractThickPolygon, p0, color)
+    const concreteThickPolygon = new FeatureInstance(abstractThickPolygon, p0, color)
     group.add(concreteThickPolygon)
     return group
   }

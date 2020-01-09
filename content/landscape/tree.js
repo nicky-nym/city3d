@@ -6,6 +6,7 @@
  */
 
 import { xy, xyz, xyzAdd } from '../../src/core/util.js'
+import { FeatureInstance } from '../../src/core/feature.js'
 import { Geometry } from '../../src/core/geometry.js'
 import { Model } from '../../src/architecture/model.js'
 import { UNIT } from '../../src/core/unit.js'
@@ -33,7 +34,7 @@ class Tree extends Model {
     xyVertices = xyVertices.map(xy => xyzAdd(xy, atXy))
     const xyPolygon = new Geometry.XYPolygon(xyVertices)
     const abstractThickPolygon = new Geometry.ThickPolygon(xyPolygon, { depth: TRUNK_HEIGHT })
-    const concreteThickPolygon = new Geometry.Instance(abstractThickPolygon, xyVertices[0], BROWN)
+    const concreteThickPolygon = new FeatureInstance(abstractThickPolygon, xyVertices[0], BROWN)
     return concreteThickPolygon
   }
 
@@ -51,7 +52,7 @@ class Tree extends Model {
     xyVertices = xyVertices.map(xy => xyzAdd(xy, atXy))
     const xyPolygon = new Geometry.XYPolygon(xyVertices)
     const abstractThickPolygon = new Geometry.ThickPolygon(xyPolygon, { depth: CROWN_HEIGHT })
-    const concreteThickPolygon = new Geometry.Instance(abstractThickPolygon, { ...xyVertices[0], z: TRUNK_HEIGHT }, GREEN)
+    const concreteThickPolygon = new FeatureInstance(abstractThickPolygon, { ...xyVertices[0], z: TRUNK_HEIGHT }, GREEN)
     return concreteThickPolygon
   }
 }

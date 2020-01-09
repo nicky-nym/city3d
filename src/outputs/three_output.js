@@ -9,7 +9,7 @@ import * as THREE from '../../node_modules/three/build/three.module.js'
 import Stats from '../../node_modules/stats.js/src/Stats.js'
 import { GUI } from '../../node_modules/dat.gui/build/dat.gui.module.js'
 
-import { fullName, xyz } from '../core/util.js'
+import { xyz } from '../core/util.js'
 import { Output } from './output.js'
 import { OrbitControls } from '../../node_modules/three/examples/jsm/controls/OrbitControls.js'
 import { ThreeOutputScene } from './three_output_scene.js'
@@ -218,8 +218,8 @@ class ThreeOutput extends Output {
     }
   }
 
-  add (thing) {
-    this._scene.buildFrom(thing)
+  add (feature) {
+    this._scene.buildFrom(feature)
   }
 
   _addClippingPlane (name, xyzVal, distance) {
@@ -596,7 +596,10 @@ class ThreeOutput extends Output {
   }
 
   highlight (obj) {
-    const label = fullName(obj)
+    let label
+    for (let p = obj; (!label) && p; p = p.parent) {
+      label = p.feature ? p.feature.fullName() : p.name
+    }
     console.log(obj.uuid, label)
     this._tooltipDiv.textContent = label
 

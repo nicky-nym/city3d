@@ -165,15 +165,4 @@ function rectangleOfSize (sizeXY, at = { x: 0, y: 0 }) {
   ]
 }
 
-// TODO: if we create a class named Feature, we should move this to be feature.fullName()
-function fullName (feature) {
-  const names = []
-  let f
-  for (f = feature; f.parent; f = f.parent) {
-    if (f.name) names.push(f.name)
-  }
-  if (f.name) names.push(f.name)
-  return names.join(' of ')
-}
-
-export { array, cornersFromShape, count, countTo, hypotenuse, length, randomInt, randomPseudoGaussian, x, xy, xyz, xyzAdd, xyzSubtract, xyRotate, xywh2rect, rectangleOfSize, fullName }
+export { array, cornersFromShape, count, countTo, hypotenuse, length, randomInt, randomPseudoGaussian, x, xy, xyz, xyzAdd, xyzSubtract, xyRotate, xywh2rect, rectangleOfSize }

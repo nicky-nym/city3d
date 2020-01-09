@@ -5,7 +5,7 @@
  * For more information, please refer to <http://unlicense.org>
  */
 
-import { Geometry } from '../../../src/core/geometry.js'
+import { FeatureInstance } from '../../../src/core/feature.js'
 import { Ray } from '../../../src/core/ray.js'
 import { Storey } from '../../../src/architecture/storey.js'
 import { Use } from '../../../src/architecture/use.js'
@@ -37,13 +37,13 @@ describe('Storey', function () {
     it('should return a Group with one Instance when called with a rectangle and no wall value', function () {
       const room = new Storey(ray, Use.ROOM, rectangle)
 
-      room.accept(node => { count += node instanceof Geometry.Instance ? 1 : 0 })
+      room.accept(node => { count += node instanceof FeatureInstance ? 1 : 0 })
       count.should.equal(1)
     })
     it('should return a Group with five Instances when called with a rectangle and a wall value', function () {
       const room = new Storey(ray, Use.ROOM, rectangle, { wall: 12 })
 
-      room.accept(node => { count += node instanceof Geometry.Instance ? 1 : 0 })
+      room.accept(node => { count += node instanceof FeatureInstance ? 1 : 0 })
       count.should.equal(5)
     })
   })

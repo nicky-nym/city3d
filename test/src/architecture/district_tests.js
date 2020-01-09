@@ -8,7 +8,7 @@
 import { Byway } from '../../../src/architecture/byway.js'
 import { City } from '../../../src/architecture/city.js'
 import { District } from '../../../src/architecture/district.js'
-import { Group } from '../../../src/architecture/group.js'
+import { FeatureGroup } from '../../../src/core/feature.js'
 import { METRIC } from '../../../src/architecture/metric.js'
 import { Parcel } from '../../../src/architecture/parcel.js'
 import { Facing } from '../../../src/core/facing.js'
@@ -42,7 +42,7 @@ describe('District', function () {
     it('should return the correct floor area for a house with nested rectangular rooms', function () {
       const house = new District()
       house.add(new Storey(ray, Use.ROOM, rect1))
-      const wing = new Group()
+      const wing = new FeatureGroup()
       wing.add(new Storey(ray, Use.ROOM, rect2))
       wing.add(new Storey(ray, Use.ROOM, rect2))
       house.add(wing)

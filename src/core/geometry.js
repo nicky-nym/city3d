@@ -5,26 +5,6 @@
   * For more information, please refer to <http://unlicense.org>
   */
 
-/**
- * Instance is a class for specifying an instance of a geometrical template.
- * The vertices are obtained by translating the template so that the first vertex has the specified coordinates.
- *
- * @param {Object} geometry - a template such as ThickPolygon or TriangularPolyhedron
- * @param {Number} [x=0] - desired x-coordinate of first vertex
- * @param {Number} [y=0] - desired y-coordinate of first vertex
- * @param {Number} [z=0] - desired z-coordinate of first vertex
- * @param {Number} hexColor - rgb color, e.g. 0x0000ff
- * @param {string} [name]
- */
-class Instance {
-  constructor (geometry, { x = 0, y = 0, z = 0 }, hexColor, name) {
-    this.geometry = geometry
-    this.p0 = { x, y, z }
-    this.hexColor = hexColor
-    this.name = name
-  }
-}
-
 class Line {
   constructor (xyzWaypoints) {
     this.xyzWaypoints = xyzWaypoints
@@ -97,4 +77,4 @@ class XYPolygon extends Array {
   }
 }
 
-export const Geometry = { Instance, Line, OutlinePolygon, ThickPolygon, TriangularPolyhedron, XYPolygon }
+export const Geometry = { Line, OutlinePolygon, ThickPolygon, TriangularPolyhedron, XYPolygon }

@@ -5,6 +5,7 @@
  * For more information, please refer to <http://unlicense.org>
  */
 
+import { FeatureInstance } from '../core/feature.js'
 import { Geometry } from '../core/geometry.js'
 import { Model } from './model.js'
 
@@ -20,14 +21,14 @@ class Roof extends Model {
       let { vertices, indices } = spec.custom
       vertices = ray.applyRay(vertices)
       const abstractRoof = new Geometry.TriangularPolyhedron(vertices, indices)
-      const concreteRoof = new Geometry.Instance(abstractRoof, { ...vertices[0] }, LIGHT_GRAY)
+      const concreteRoof = new FeatureInstance(abstractRoof, { ...vertices[0] }, LIGHT_GRAY)
       this.add(concreteRoof)
     } else if (spec.flat) {
       const adjustedCorners = ray.applyRay(spec.flat)
       const xyPolygon = new Geometry.XYPolygon(adjustedCorners)
       const abstractThickPolygon = new Geometry.ThickPolygon(xyPolygon, { depth: 0.5 })
       const p0 = { ...adjustedCorners[0], z: ray.xyz.z }
-      const concreteThickPolygon = new Geometry.Instance(abstractThickPolygon, p0, LIGHT_GRAY)
+      const concreteThickPolygon = new FeatureInstance(abstractThickPolygon, p0, LIGHT_GRAY)
       this.add(concreteThickPolygon)
     } else {
       throw new Error('bad roof type in spec for new Roof()')

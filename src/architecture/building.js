@@ -6,7 +6,7 @@
  */
 
 import { array, cornersFromShape, countTo, randomInt, xyz, xyzAdd } from '../core/util.js'
-import { Group } from './group.js'
+import { FeatureGroup } from '../core/feature.js'
 import { Ray } from '../core/ray.js'
 import { Roof } from './roof.js'
 import { Storey } from './storey.js'
@@ -110,7 +110,7 @@ class Building extends Structure {
       group.add(box)
     }
     for (const childSpec of array(children)) {
-      const subgroup = new Group(childSpec.name)
+      const subgroup = new FeatureGroup(childSpec.name)
       group.add(subgroup)
       this._makeLowResGroupFromSpec(childSpec, subgroup, parentOffset)
     }
@@ -148,11 +148,11 @@ class Building extends Structure {
 
     // TODO: The medium and low resolution instances constructed here are currently
     // identical, so the only difference will be in the material.
-    const mediumGroup = new Group(this.name)
+    const mediumGroup = new FeatureGroup(this.name)
     this._makeLowResGroupFromSpec(resolvedSpec, mediumGroup, at)
     this.addLevelOfDetail(mediumGroup, 1000)
 
-    const lowGroup = new Group(this.name)
+    const lowGroup = new FeatureGroup(this.name)
     this._makeLowResGroupFromSpec(resolvedSpec, lowGroup, at)
     this.addLevelOfDetail(lowGroup, 2000)
   }

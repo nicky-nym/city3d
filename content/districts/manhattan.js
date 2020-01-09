@@ -9,6 +9,7 @@ import { UNIT } from '../../src/core/unit.js'
 import { xy, xyz, countTo, rectangleOfSize } from '../../src/core/util.js'
 import { Byway } from '../../src/architecture/byway.js'
 import { District } from '../../src/architecture/district.js'
+import { FeatureInstance } from '../../src/core/feature.js'
 import { Geometry } from '../../src/core/geometry.js'
 import { Highrise } from '../buildings/highrise.js'
 import { METRIC } from '../../src/architecture/metric.js'
@@ -65,7 +66,7 @@ const REPEAT_DY = BLOCK_DY + STREET_WIDTH + (SIDEWALK_WIDTH_STREETS * 2)
 function _makeLine (waypoints, ray, color) {
   const adjustedWaypoints = ray.applyRay(waypoints)
   const line = new Geometry.Line(adjustedWaypoints)
-  return new Geometry.Instance(line, adjustedWaypoints[0], color)
+  return new FeatureInstance(line, adjustedWaypoints[0], color)
 }
 
 /**
