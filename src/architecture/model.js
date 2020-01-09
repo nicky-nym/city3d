@@ -5,8 +5,9 @@
  * For more information, please refer to <http://unlicense.org>
  */
 
-import { LODGroup } from './group.js'
 import { Geometry } from '../core/geometry.js'
+import { LODGroup } from './group.js'
+import { Route } from '../routes/route.js'
 
 /**
  * Model is an abstract superclass for models that aren't buildings or structures.
@@ -18,6 +19,12 @@ class Model extends LODGroup {
     const line = new Geometry.Line(adjustedWaypoints)
     const instance = new Geometry.Instance(line, adjustedWaypoints[0], color)
     this.add(instance)
+  }
+
+  getRoutes () {
+    const routes = []
+    this.accept(node => { if (node instanceof Route) routes.push(node) })
+    return routes
   }
 }
 

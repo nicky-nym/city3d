@@ -31,6 +31,7 @@ function addBuildings (city) {
   corners = rectangleOfSize(xy(2000, 2000))
   const latticeburg = new CITY.LatticeDistrict(corners, ray, 'Latticeburg')
   latticeburg.makeFeatures()
+  latticeburg.add(new CITY.SoccerField({ at: { x: 920, y: 315, z: 0 } }))
   city.add(latticeburg)
 
   ray = new Ray(Facing.NORTH, xyz(100, -600, 0))
@@ -40,90 +41,88 @@ function addBuildings (city) {
   city.add(campus)
 }
 
-function addCreek (city) {
+function addCreek (district) {
   const creek = new CITY.Creek()
   const creekObject = creek.makeCreek('River Tethys')
-  city.add(creekObject)
+  district.add(creekObject)
 
   // There are several possibilities here:
   // 1) Explicitly construct a Kayak and add it to the city. The Route will not be added to the city.
   const kayaks = new CITY.Group('kayaks')
   kayaks.add(new CITY.Kayak(creek.creekRoute(), 0.13))
-  city.add(kayaks)
+  district.add(kayaks)
 
   // 2) Add a Route to the city. creekRoute() creates a Route with use = CANAL by default, so
   // city.populateRoutes() will construct a Kayak and add it.
-  city.add(creek.creekRoute(4))
+  district.add(creek.creekRoute(4))
 
   // 3) Create a Route (in this case with use = BIKEPATH). Add it to the city, so that city.populateRoutes()
   // will construct a Vehicle and add it. Then explicitly add additional Vehicles, using the same Route.
   const creekBikePath = creek.creekRoute(7, CITY.Use.BIKEPATH)
-  city.add(creekBikePath)
-  city.add(new CITY.Vehicle(creekBikePath, 0.18, 'bicycle'))
-  city.add(new CITY.Vehicle(creekBikePath, 0.15, 'pedicab'))
+  district.add(creekBikePath)
+  district.add(new CITY.Vehicle(creekBikePath, 0.18, 'bicycle'))
+  district.add(new CITY.Vehicle(creekBikePath, 0.15, 'pedicab'))
 }
 
-function addTree (city) {
-  city.add(new CITY.Tree({ at: { x: 28, y: 52, z: 0 }, crownHeight: 8, name: 'Topiary Tree' }))
+function addTree (district) {
+  district.add(new CITY.Tree({ at: { x: 28, y: 52, z: 0 }, crownHeight: 8, name: 'Topiary Tree' }))
 }
 
-function addSwingset (city) {
-  city.add(new CITY.Swingset({ at: { x: 60, y: 52, z: 0 } }))
+function addSwingset (district) {
+  district.add(new CITY.Swingset({ at: { x: 60, y: 52, z: 0 } }))
 }
 
-function addUtilityPoles (city) {
+function addUtilityPoles (district) {
   for (let y = -40; y < 800; y += 120) {
-    city.add(new CITY.UtilityPole({ at: { x: -96, y: y, z: 0 } }))
+    district.add(new CITY.UtilityPole({ at: { x: -96, y: y, z: 0 } }))
   }
 }
 
-function addEiffelTower (city) {
-  city.add(new CITY.EiffelTower({ at: { x: 1090, y: 1090, z: 0 } }))
+function addEiffelTower (district) {
+  district.add(new CITY.EiffelTower({ at: { x: 1090, y: 1090, z: 0 } }))
 }
 
-function addPyramid (city) {
-  city.add(new CITY.PyramidOfKhufu({ at: { x: -600, y: -600, z: 0 } }))
+function addPyramid (district) {
+  district.add(new CITY.PyramidOfKhufu({ at: { x: -600, y: -600, z: 0 } }))
 }
 
-function addSoccerField (city) {
-  city.add(new CITY.SoccerField({ at: { x: 920, y: 315, z: 0 } }))
+function addKalpanaOrbital (district) {
+  district.add(new CITY.Kalpana())
 }
 
-function addKalpanaOrbital (city) {
-  city.add(new CITY.Kalpana())
-}
-
-function addMovers (city) {
+function addMovers (district) {
   const parkedVehicles = new CITY.Group('parked vehicles')
   for (let i = -50; i > -200; i -= 10) {
     parkedVehicles.add(new CITY.Vehicle(new CITY.Route([xyz(-50, i, 0), xyz(0, 0, 0)]), 0))
   }
-  city.add(parkedVehicles)
+  district.add(parkedVehicles)
 
-  city.add(new CITY.Route([xyz(-150, -10, 0), xyz(-200, -120, 0), xyz(-80, -50, 0), xyz(-150, -10, 0)]))
-  city.add(new CITY.Route([xyz(-150, -100, 0), xyz(-100, -200, 0), xyz(-80, -150, 0), xyz(-150, -100, 0)]))
-
-  // Populates all Routes that have been added to the city, including those in the Lattice.
-  city.populateRoutes()
+  district.add(new CITY.Route([xyz(-150, -10, 0), xyz(-200, -120, 0), xyz(-80, -50, 0), xyz(-150, -10, 0)]))
+  district.add(new CITY.Route([xyz(-150, -100, 0), xyz(-100, -200, 0), xyz(-80, -150, 0), xyz(-150, -100, 0)]))
 }
 
 function main () {
+  const extras = new CITY.Model('extras')
+  addCreek(extras)
+  addTree(extras)
+  addSwingset(extras)
+  addUtilityPoles(extras)
+  addEiffelTower(extras)
+  addPyramid(extras)
+  addKalpanaOrbital(extras)
+  addMovers(extras)
+
   const city = new CITY.City('Paracosm')
-  addCreek(city)
-  addTree(city)
-  addSwingset(city)
-  addUtilityPoles(city)
-  addEiffelTower(city)
-  addPyramid(city)
-  addSoccerField(city)
   addBuildings(city)
-  addKalpanaOrbital(city)
-  addMovers(city)
+  city.add(extras)
+  city.populateRoutes() // Populates all Routes that have been added to the city, including those in the Lattice.
 
   // display the city on the web page
-  CITY.Output.addOutput(new CITY.ThreeOutput(city))
+  const districts = city.getDistricts()
+  districts.push(extras)
+  CITY.Output.addOutput(new CITY.ThreeOutput(districts))
   CITY.Output.addOutput(new CITY.MetricsOutput(
-    city,
+    [city],
     'City size information',
     [
       METRIC.POPULATION,
@@ -133,9 +132,9 @@ function main () {
       METRIC.TRANSPORTATION_AREA
     ]
   ))
-  CITY.Output.addOutput(new CITY.SummaryOutput(city))
+  CITY.Output.addOutput(new CITY.SummaryOutput(districts))
   CITY.Output.addOutput(new CITY.MetricsOutput(
-    city,
+    districts,
     'Building floor area information',
     [
       METRIC.GROSS_FLOOR_AREA,
@@ -149,7 +148,7 @@ function main () {
     ]
   ))
   CITY.Output.addOutput(new CITY.MetricsOutput(
-    city,
+    districts,
     'Wall and roof surface area information',
     [
       METRIC.ROOF_AREA,
@@ -160,7 +159,7 @@ function main () {
     ]
   ))
   CITY.Output.addOutput(new CITY.MetricsOutput(
-    city,
+    districts,
     'City metrics',
     [
       METRIC.POPULATION_DENSITY,

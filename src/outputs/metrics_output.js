@@ -1,5 +1,5 @@
 /** @file metrics_output.js
- * @author Authored in 2019 at <https://github.com/nicky-nym/city3d>
+ * @author Authored in 2019, 2020 at <https://github.com/nicky-nym/city3d>
  * @license UNLICENSE
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -17,8 +17,8 @@ class MetricsOutput extends TableOutput {
   }
 
   render () {
-    const districts = this._city.getDistricts()
-    const headers = ['District']
+    const models = this._models
+    const headers = ['Models']
     for (const metric of this._metrics) {
       const units = metric.unit.displayName || metric.unit.name
       const columnHeader = `${metric.displayName}  (${units}) &nbsp;`.replace(/ /g, '<br>')
@@ -26,10 +26,10 @@ class MetricsOutput extends TableOutput {
     }
     this.renderHeaderRow(headers)
 
-    for (const district of districts) {
-      const stringValues = [district.name]
+    for (const model of models) {
+      const stringValues = [model.name]
       for (const metric of this._metrics) {
-        const value = district.getValueForMetric(metric)
+        const value = model.getValueForMetric(metric)
         if (value > 10 || value === 0) { // TODO: this is a hack, figure out a better way to determine number format based on metric
           stringValues.push(TableOutput.toStringWithCommas(value))
         } else {

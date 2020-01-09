@@ -1,5 +1,5 @@
 /** @file three_output_scene.js
- * @author Authored in 2019 at <https://github.com/nicky-nym/city3d>
+ * @author Authored in 2019, 2020 at <https://github.com/nicky-nym/city3d>
  * @license UNLICENSE
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -83,13 +83,13 @@ class ThreeOutputScene extends THREE.Scene {
     this.add(meshY)
   }
 
-  buildFrom (city) {
-    this._traverse(city, this)
+  buildFrom (model) {
+    this._traverse(model, this)
   }
 
-  addPaths (city) {
+  addPaths (model) {
     const material = new THREE.LineBasicMaterial({ color: 0xFF00FF })
-    for (const route of city.getRoutes()) {
+    for (const route of model.getRoutes()) {
       const geometry = new THREE.Geometry()
       geometry.vertices.push(...route.waypoints().map(p => new THREE.Vector3(p.x, p.y, p.z)))
       const line = new THREE.Line(geometry, material)

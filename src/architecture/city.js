@@ -1,14 +1,13 @@
 /** @file city.js
-  * @author Authored in 2019 at <https://github.com/nicky-nym/city3d>
-  * @license UNLICENSE
-  * This is free and unencumbered software released into the public domain.
-  * For more information, please refer to <http://unlicense.org>
-  */
+ * @author Authored in 2019, 2020 at <https://github.com/nicky-nym/city3d>
+ * @license UNLICENSE
+ * This is free and unencumbered software released into the public domain.
+ * For more information, please refer to <http://unlicense.org>
+ */
 
 import { District } from './district.js'
 import { Kayak } from '../../content/movers/kayak.js'
 import { Model } from './model.js'
-import { Route } from '../routes/route.js'
 import { Use } from './use.js'
 import { Vehicle } from '../../content/movers/vehicle.js'
 import { randomInt } from '../../src/core/util.js'
@@ -17,12 +16,6 @@ import { randomInt } from '../../src/core/util.js'
  * City is a class for representing a hierarchical collection of 3D places.
  */
 class City extends Model {
-  getRoutes () {
-    const routes = []
-    this.accept(node => { if (node instanceof Route) routes.push(node) })
-    return routes
-  }
-
   populateRoutes () {
     for (const route of this.getRoutes()) {
       // TODO: use route.speedLimit(), maybe by having a maxSpeed option for Movers.

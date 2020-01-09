@@ -1,5 +1,5 @@
 /** @file three_output.js
- * @author Authored in 2019 at <https://github.com/nicky-nym/city3d>
+ * @author Authored in 2019, 2020 at <https://github.com/nicky-nym/city3d>
  * @license UNLICENSE
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -25,6 +25,22 @@ const CLIPPING_PLANES = []
  * ThreeOutput can render faces in three.js.
  */
 class ThreeOutput extends Output {
+  /**
+   * Creates an output instance to view the given Models.
+   * @param {City.Model[]} models - an list of CITY.Model instances
+   */
+  constructor (models) {
+    super(models)
+
+    this._modelByName = {}
+    for (const model of models) {
+      this._modelByName[model.name] = model
+    }
+
+    this._selectedModel = models[0]
+    this._modelsInScene = []
+  }
+
   setDisplayDiv (outputDivElement) {
     this.stats = new Stats()
     this.stats.showPanel(0) // 0: fps, 1: ms, 2: mb, 3+: custom
@@ -186,10 +202,17 @@ class ThreeOutput extends Output {
 
     this._animationOn = true
 
-    this._scene.buildFrom(this._city)
-    const SHOW_PATH = true
-    if (SHOW_PATH) {
-      this._scene.addPaths(this._city)
+    this._buildSceneFrom(this._selectedModel)
+  }
+
+  _buildSceneFrom (model) {
+    if (!this._modelsInScene.includes(model)) {
+      this._scene.buildFrom(model)
+      const SHOW_PATH = true
+      if (SHOW_PATH) {
+        this._scene.addPaths(model)
+      }
+      this._modelsInScene.push(model)
     }
   }
 
@@ -221,7 +244,13 @@ class ThreeOutput extends Output {
     const _this = this
     const ui = {
       start: {
-        city: 'Manhattan',
+        get model () {
+          return _this._selectedModel.name
+        },
+        set model (value) {
+          _this._selectedModel = _this._modelByName[value]
+          _this._buildSceneFrom(_this._selectedModel)
+        },
         'play / pause animation': this._onToggleAnimation.bind(this),
         'save location': this._onSaveOrbitControlsState.bind(this),
         'restore location': this._onRestoreOrbitControlsState.bind(this),
@@ -322,7 +351,7 @@ class ThreeOutput extends Output {
 
       const startFolder = gui.addFolder('Start')
 
-      startFolder.add(ui.start, 'city', ['Manhattan', 'Suburbia', 'College Campus', 'Kinematic City'])
+      startFolder.add(ui.start, 'model', this._models.map(model => model.name))
       startFolder.add(ui.start, 'play / pause animation')
       startFolder.add(ui.start, 'save location')
       startFolder.add(ui.start, 'restore location')

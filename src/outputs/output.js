@@ -1,20 +1,22 @@
 /** @file output.js
-  * @author Authored in 2019 at <https://github.com/nicky-nym/city3d>
-  * @license UNLICENSE
-  * This is free and unencumbered software released into the public domain.
-  * For more information, please refer to <http://unlicense.org>
-  */
+ * @author Authored in 2019, 2020 at <https://github.com/nicky-nym/city3d>
+ * @license UNLICENSE
+ * This is free and unencumbered software released into the public domain.
+ * For more information, please refer to <http://unlicense.org>
+ */
+
+// import { Model } from '../architecture/model'
 
 /**
- * Output is an abstract superclass for displaying some view of a City in some way.
+ * Output is an abstract superclass for displaying some view a set of Models in some way.
  */
 class Output {
   /**
-   * Creates an output instance to view a given City.
-   * @param {CITY.City} city - an instance of CITY.City
+   * Creates an output instance to view the given Models.
+   * @param {City.Model[]} models - an list of CITY.Model instances
    */
-  constructor (city) {
-    this._city = city
+  constructor (models) {
+    this._models = models
   }
 
   /**

@@ -1,5 +1,5 @@
 /** @file summary_output.js
- * @author Authored in 2019 at <https://github.com/nicky-nym/city3d>
+ * @author Authored in 2019, 2020 at <https://github.com/nicky-nym/city3d>
  * @license UNLICENSE
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -14,8 +14,10 @@ import { Vehicle } from '../../content/movers/vehicle.js'
  */
 class SummaryOutput extends TextOutput {
   render () {
-    this.print(`There are ${this.count(this._city, Vehicle)} vehicles in the city.`)
-    this.print(`There are ${this.count(this._city, Kayak)} kayaks in the city.`)
+    for (const model of this._models) {
+      this.print(`There are ${this.count(model, Vehicle)} vehicles in ${model.name}.`)
+      this.print(`There are ${this.count(model, Kayak)} kayaks in ${model.name}.`)
+    }
   }
 
   count (node, _class) {
