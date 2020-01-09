@@ -317,8 +317,8 @@ class ThreeOutput extends Output {
       }
     }
 
-    if (window && typeof GUI !== 'undefined') { // eslint-disable-line no-undef
-      const gui = new GUI() // eslint-disable-line no-undef
+    if (window && typeof GUI !== 'undefined') {
+      const gui = new GUI()
 
       const startFolder = gui.addFolder('Start')
 
