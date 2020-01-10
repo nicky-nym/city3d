@@ -43,7 +43,7 @@ async function addBuildings (city, threeOutput, memoryOutput) {
 
 function main () {
   const city = new CITY.City('Paracosm')
-  const threeOutput = new CITY.ThreeOutput(city)
+  const threeOutput = new CITY.ThreeOutput([city])
   CITY.Output.addOutput(threeOutput)
   const memoryOutput = new CITY.MemoryOutput(city)
   CITY.Output.addOutput(memoryOutput)
