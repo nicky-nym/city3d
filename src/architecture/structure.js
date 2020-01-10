@@ -43,9 +43,8 @@ const COLORS_BY_USE = {
  * Structure is an abstract superclass for buildings, city blocks, and other types of structures.
  */
 class Structure extends Model {
-  constructor ({ city, ray, x0 = 0, y0 = 0, name, at = xyz(0, 0, 0) } = {}) {
+  constructor ({ ray, x0 = 0, y0 = 0, name, at = xyz(0, 0, 0) } = {}) {
     super(name)
-    this._city = city
     this._ray = ray || new Ray()
     this.offset = xyzAdd({ x: x0, y: y0 }, at)
   }
