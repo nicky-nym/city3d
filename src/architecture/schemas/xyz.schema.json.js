@@ -1,8 +1,9 @@
+export default /* eslint-disable */
 {
-  "$id": "../schemas/xy.schema.json",
+  "$id": "../schemas/xyz.schema.json",
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "A point (or vector) in a 2D space",
-  "title": "xy",
+  "title": "xyz",
+  "description": "A point (or vector) in a 3D space",
   "type": "object",
   "required": [],
   "properties": {
@@ -13,6 +14,11 @@
     },
     "y": {
       "description": "a y-axis distance, in the default unit of measure",
+      "default": 0,
+      "type": "number"
+    },
+    "z": {
+      "description": "a z-axis distance, in the default unit of measure",
       "default": 0,
       "type": "number"
     }

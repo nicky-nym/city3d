@@ -213,6 +213,8 @@ class ThreeOutput extends Output {
         this._scene.addPaths(model)
       }
       this._modelsInScene.push(model)
+    } else {
+      window.alert(`${model.name} is already included`)
     }
   }
 

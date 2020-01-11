@@ -1,3 +1,4 @@
+export default /* eslint-disable */
 {
   "$id": "../schemas/xyzaz.schema.json",
   "$schema": "http://json-schema.org/draft-07/schema#",
