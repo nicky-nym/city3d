@@ -7,6 +7,7 @@
 
 import Ajv from '../../../../node_modules/ajv/dist/ajv.min.js'
 import xySchema from '../../../../src/architecture/schemas/xy.schema.json.js'
+import pitchSchema from '../../../../src/architecture/schemas/pitch.schema.json.js'
 import outlineSchema from '../../../../src/architecture/schemas/outline.schema.json.js'
 
 /* global describe, it */
@@ -15,16 +16,9 @@ describe('schemas', function () {
   describe('outline.schema', function () {
     const ajv = new Ajv()
     ajv.addSchema(xySchema, 'xy.schema.json')
+    ajv.addSchema(pitchSchema, 'pitch.schema.json')
     ajv.addSchema(outlineSchema, 'outline.schema.json')
     const outlineValidator = ajv.compile(outlineSchema)
-
-    it('should accept a simple valid rectangle spec', function () {
-      const goodOutline = {
-        shape: 'rectangle',
-        size: { x: 1, y: 2 }
-      }
-      outlineValidator(goodOutline).should.equal(true)
-    })
 
     it('should accept a simple valid polygon spec', function () {
       const goodOutline = {
@@ -45,6 +39,68 @@ describe('schemas', function () {
           { x: 1, y: 1 },
           { x: 2, y: 2 }
         ]
+      }
+      outlineValidator(badOutline).should.equal(false)
+    })
+
+    it('should accept a simple valid rectangle spec', function () {
+      const goodOutline = {
+        shape: 'rectangle',
+        size: { x: 1, y: 2 }
+      }
+      outlineValidator(goodOutline).should.equal(true)
+    })
+
+    it('should accept a rectangle with a gabled top', function () {
+      const goodOutline = {
+        shape: 'rectangle',
+        size: { x: 1, y: 2 },
+        top: { style: 'gabled', pitch: { rise: 4, run: 12 } }
+      }
+      outlineValidator(goodOutline).should.equal(true)
+    })
+
+    it('should reject a gabled top with an invalid pitch', function () {
+      const badOutline = {
+        shape: 'rectangle',
+        size: { x: 1, y: 2 },
+        top: { style: 'gabled', pitch: { rise: 4, run: 0 } }
+      }
+      outlineValidator(badOutline).should.equal(false)
+    })
+
+    it('should accept a rectangle with a arched top', function () {
+      const goodOutline = {
+        shape: 'rectangle',
+        size: { x: 1, y: 2 },
+        top: { style: 'arched', curvature: 0.4 }
+      }
+      outlineValidator(goodOutline).should.equal(true)
+    })
+
+    it('should accept an arched top with no curvature', function () {
+      const goodOutline = {
+        shape: 'rectangle',
+        size: { x: 1, y: 2 },
+        top: { style: 'arched', curvature: 0 }
+      }
+      outlineValidator(goodOutline).should.equal(true)
+    })
+
+    it('should reject an arched top with negative curvature', function () {
+      const badOutline = {
+        shape: 'rectangle',
+        size: { x: 1, y: 2 },
+        top: { style: 'arched', curvature: -0.1 }
+      }
+      outlineValidator(badOutline).should.equal(false)
+    })
+
+    it('should reject an arched top with more than 100% curvature', function () {
+      const badOutline = {
+        shape: 'rectangle',
+        size: { x: 1, y: 2 },
+        top: { style: 'arched', curvature: 1.01 }
       }
       outlineValidator(badOutline).should.equal(false)
     })
