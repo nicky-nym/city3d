@@ -38,17 +38,25 @@ class Feature {
 }
 
 /**
+ * A point (or vector) in a 3D space
+ * @typedef {object} xyz
+ * @property {number} [x=0] - distance on x-axis
+ * @property {number} [y=0] - distance on y-axis
+ * @property {number} [z=0] - distance on z-axis
+ */
+
+/**
  * FeatureInstance is a class for specifying an instance of a geometrical template.
  * The vertices are obtained by translating the template so that the first vertex has the specified coordinates.
- *
- * @param {Object} geometry - a template such as Geometry.ThickPolygon or Geometry.TriangularPolyhedron
- * @param {Number} [x=0] - desired x-coordinate of first vertex
- * @param {Number} [y=0] - desired y-coordinate of first vertex
- * @param {Number} [z=0] - desired z-coordinate of first vertex
- * @param {Number} hexColor - rgb color, e.g. 0x0000ff
- * @param {string} [name]
  */
 class FeatureInstance extends Feature {
+  /**
+   * Creates a new instance of a geometry at a given placement.
+   * @param {object} geometry - a template such as Geometry.ThickPolygon or Geometry.TriangularPolyhedron
+   * @param {xyz} [xyz] - desired xyz-coordinates of first vertex
+   * @param {number} hexColor - rgb color, e.g. 0x0000ff
+   * @param {string} [name]
+   */
   constructor (geometry, { x = 0, y = 0, z = 0 }, hexColor, name) {
     super(name)
     this.geometry = geometry
