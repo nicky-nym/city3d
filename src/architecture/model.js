@@ -7,7 +7,11 @@
 
 import { FeatureInstance, FeatureLODGroup } from '../core/feature.js'
 import { Geometry } from '../core/geometry.js'
+import { Kayak } from '../../content/movers/kayak.js'
 import { Route } from '../routes/route.js'
+import { Use } from './use.js'
+import { Vehicle } from '../../content/movers/vehicle.js'
+import { randomInt } from '../../src/core/util.js'
 
 /**
  * Model is an abstract superclass for models that aren't buildings or structures.
@@ -25,6 +29,18 @@ class Model extends FeatureLODGroup {
     const routes = []
     this.accept(node => { if (node instanceof Route) routes.push(node) })
     return routes
+  }
+
+  populateRoutes () {
+    const routes = this.getRoutes()
+    for (const route of routes) {
+      // TODO: use route.speedLimit(), maybe by having a maxSpeed option for Movers.
+      if (route.use === Use.CANAL) {
+        this.add(new Kayak(route))
+      } else {
+        this.add(new Vehicle(route, randomInt(3, 10) * 0.04))
+      }
+    }
   }
 }
 

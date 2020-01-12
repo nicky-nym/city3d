@@ -115,7 +115,6 @@ function main () {
   const city = new CITY.City('Paracosm')
   addBuildings(city)
   city.add(extras)
-  city.populateRoutes() // Populates all Routes that have been added to the city, including those in the Lattice.
 
   // display the city on the web page
   const districts = city.getDistricts()

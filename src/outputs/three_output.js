@@ -207,6 +207,7 @@ class ThreeOutput extends Output {
 
   _buildSceneFrom (model) {
     if (!this._modelsInScene.includes(model)) {
+      model.populateRoutes()
       this._scene.buildFrom(model)
       const SHOW_PATH = true
       if (SHOW_PATH) {
