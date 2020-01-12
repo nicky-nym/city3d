@@ -598,7 +598,7 @@ class ThreeOutput extends Output {
   highlight (obj) {
     let label
     for (let p = obj; (!label) && p; p = p.parent) {
-      label = p.feature ? p.feature.fullName() : p.name
+      label = p.userData.feature ? p.userData.feature.fullName() : p.name
     }
     console.log(obj.uuid, label)
     this._tooltipDiv.textContent = label

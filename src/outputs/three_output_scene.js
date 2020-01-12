@@ -104,7 +104,7 @@ class ThreeOutputScene extends THREE.Scene {
         threeObject.add(lod)
       } else {
         const group = new THREE.Group()
-        group.feature = feature
+        group.userData.feature = feature
         threeObject.add(group)
         for (const child of feature.children) {
           this._traverse(child, group)
@@ -118,7 +118,7 @@ class ThreeOutputScene extends THREE.Scene {
     } else if (feature instanceof FeatureInstance) {
       const material = this._material('high', feature.hexColor, true)
       const mesh = this.makeMeshFromInstanceGeometry(feature.geometry, material, feature.hexColor, feature.p0)
-      mesh.feature = feature
+      mesh.userData.feature = feature
       threeObject.add(mesh)
     } else {
       // TODO
@@ -133,7 +133,7 @@ class ThreeOutputScene extends THREE.Scene {
       lod.translateZ(lodGroup.offset.z)
     }
     const group = new THREE.Group()
-    group.feature = lodGroup
+    group.userData.feature = lodGroup
     for (const child of lodGroup.children) {
       this._traverse(child, group)
     }
@@ -156,7 +156,7 @@ class ThreeOutputScene extends THREE.Scene {
   makeLowResObject (feature, materialCost) {
     if (feature instanceof FeatureGroup) {
       const group = new THREE.Group()
-      group.feature = feature
+      group.userData.feature = feature
       for (const child of feature.children) {
         group.add(this.makeLowResObject(child, materialCost))
       }
@@ -168,7 +168,7 @@ class ThreeOutputScene extends THREE.Scene {
     }
     console.warn('Warning: feature is neither a FeatureGroup nor a FeatureInstance, so an empty Group will be returned.')
     const group = new THREE.Group()
-    group.feature = feature
+    group.userData.feature = feature
     return group
   }
 
