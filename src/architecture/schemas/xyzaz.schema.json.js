@@ -1,6 +1,6 @@
 export default /* eslint-disable */
 {
-  "$id": "../schemas/xyzaz.schema.json",
+  "$id": "xyzaz.schema.json",
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "xyzaz",
   "description": "A point (or vector) in a 3D space",

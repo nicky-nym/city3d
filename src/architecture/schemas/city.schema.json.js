@@ -1,6 +1,6 @@
 export default /* eslint-disable */
 {
-  "$id": "../schemas/city.schema.json",
+  "$id": "city.schema.json",
   "$schema": "http://json-schema.org/draft-07/schema#",
   "description": "A city full of buildings, people, streets, and vehicles",
   "type": "object",
@@ -10,7 +10,7 @@ export default /* eslint-disable */
       "type": "string"
     },
     "border": {
-      "$ref": "../schemas/shape.schema.json"
+      "$ref": "outline.schema.json"
     },
     "unit": {
       "type": "string",
@@ -19,13 +19,13 @@ export default /* eslint-disable */
     "vehicles": {
       "type": "array",
       "items": {
-        "$ref": "../schemas/vehicle.schema.json"
+        "$ref": "vehicle.schema.json"
       }
     },
     "districts": {
       "type": "array",
       "items": {
-        "$ref": "../schemas/district.schema.json"
+        "$ref": "district.schema.json"
       }
     }
   }

@@ -56,6 +56,7 @@ describe('schemas', function () {
       xyValidator(alsoBad).should.equal(false)
       xyValidator(worse).should.equal(false)
       xyValidator(omg).should.equal(false)
+      xyValidator().should.equal(false)
     })
   })
 })
