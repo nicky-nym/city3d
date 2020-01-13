@@ -9,7 +9,9 @@ import * as THREE from '../../node_modules/three/build/three.module.js'
 import { xyz, countTo, randomInt } from '../../src/core/util.js'
 import { Mover } from '../../src/architecture/mover.js'
 import { Route } from '../../src/routes/route.js'
+import VEHICLE_SPECS from './vehicles.json.js'
 
+/*
 const VEHICLE_SPECS = {
 
   // "pedicab" becomes the tooltip display name of the vehicle
@@ -370,6 +372,8 @@ const VEHICLE_SPECS = {
   // + "EAV model p1" (Electric Assisted Vehciles)
   // + "Doohan gotcha"
 }
+*/
+
 const VEHICLE_TYPE_NAMES = Object.keys(VEHICLE_SPECS)
 const FIXME_FUCHSIA = 0xff00ff
 const TIRE_COLOR = 0x202020

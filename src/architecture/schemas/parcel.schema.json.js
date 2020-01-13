@@ -1,33 +1,24 @@
 export default /* eslint-disable */
 {
-  "$id": "city.schema.json",
+  "$id": "parcel.schema.json",
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "City",
-  "description": "A city full of buildings, people, streets, and vehicles",
+  "description": "A parcel of land in a city district",
   "type": "object",
   "examples": [
     {
       context: 'city3d',
-      type: 'city.schema.json',
-      name: 'New York City',
-      unit: 'miles',
+      type: 'parcel.schema.json',
+      name: '#032-203-060',
+      unit: 'feet',
       border: {
         shape: 'rectangle',
-        size: { x: 18, y: 26 }
+        size: { x: 50, y: 211 }
       },
-      districts: [
-        { $id: 'The Bronx' },
-        { $id: 'Brooklyn' },
-        { $id: 'Manhattan' },
-        { $id: 'Queens' },
-        { $id: 'Staten Island' }
+      buildings: [
+        { "$ref": "garage" },
+        { "$ref": "cottage" },
+        { "$ref": "house" },
       ]
-    },
-    {
-      name: 'London'
-    },
-    { 
-      districts: [{}]
     },
     { }
   ],
@@ -49,16 +40,10 @@ export default /* eslint-disable */
       "type": "string",
       "description": "the name of default unit of measure for distances"
     },
-    "vehicles": {
+    "buildings": {
       "type": "array",
       "items": {
-        "$ref": "vehicle.schema.json"
-      }
-    },
-    "districts": {
-      "type": "array",
-      "items": {
-        "$ref": "district.schema.json"
+        "$ref": "building.schema.json"
       }
     }
   }

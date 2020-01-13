@@ -2,8 +2,8 @@ export default /* eslint-disable */
 {
   "$id": "pitch.schema.json",
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "A ratio of rise-to-run, to specify a roof pitch",
   "title": "pitch",
+  "description": "A ratio of rise-to-run, to specify a roof pitch",
   "type": "object",
   "examples": [
     { rise: 4, run: 12 },
