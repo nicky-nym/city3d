@@ -7,7 +7,7 @@
 
 import { countTo, xyz } from '../core/util.js'
 import { Facing } from '../core/facing.js'
-import { FeatureInstance } from '../core/feature.js'
+import { Feature, FeatureInstance } from '../core/feature.js'
 import { Geometry } from '../core/geometry.js'
 import { METRIC } from './metric.js'
 import { Model } from './model.js'
@@ -31,7 +31,7 @@ class District extends Model {
     const abstractOutlinePolygon = new Geometry.OutlinePolygon(xyPolygon)
     const [{ x, y }, z] = [adjustedCorners[0], ray.xyz.z]
     for (const i of countTo(3)) {
-      const concreteOutlinePolygon = new FeatureInstance(abstractOutlinePolygon, { x, y, z: z + (i * 3) }, MARTIAN_ORANGE)
+      const concreteOutlinePolygon = new FeatureInstance(abstractOutlinePolygon, { x, y, z: z + (i * 3) }, MARTIAN_ORANGE, { layer: DistrictBoundary.layer })
       this.add(concreteOutlinePolygon)
     }
 
@@ -43,5 +43,8 @@ class District extends Model {
     return this._ray
   }
 }
+
+class DistrictBoundary {}
+DistrictBoundary.layer = Feature.registerLayer(DistrictBoundary, 'district boundary', { category: 'Abstract' })
 
 export { District }

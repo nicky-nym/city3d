@@ -45,7 +45,7 @@ class Mover extends Feature {
    * @param {THREE.Object3D} [threeComponent] - three.js representation of the Mover
    */
   constructor (route, speed, threeComponent, name) {
-    super(name || (threeComponent && threeComponent.name))
+    super(name || (threeComponent && threeComponent.name), { layer: Mover.layer })
     this.route = route
     const waypoints = route.waypoints()
     this.speed = speed
@@ -107,5 +107,7 @@ class Mover extends Feature {
     return this._threeComponent
   }
 }
+
+Mover.layer = Feature.registerLayer(Mover, 'movers & vehicles', { category: 'Entourage' })
 
 export { Mover }

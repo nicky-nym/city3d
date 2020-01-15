@@ -6,7 +6,7 @@
  */
 
 import * as THREE from '../../node_modules/three/build/three.module.js'
-import { FeatureGroup, FeatureInstance, FeatureLODGroup } from '../core/feature.js'
+import { Feature, FeatureGroup, FeatureInstance, FeatureLODGroup } from '../core/feature.js'
 import { Geometry } from '../core/geometry.js'
 import { xyzSubtract } from '../core/util.js'
 
@@ -98,10 +98,18 @@ class ThreeOutputScene extends THREE.Scene {
   }
 
   _traverse (feature, threeObject) {
+    if (!(feature instanceof Feature)) {
+      // TODO: should Routes also be Features?
+      return
+    }
+
+    let object
+
     if (feature instanceof FeatureGroup) {
       if (feature instanceof FeatureLODGroup) {
         const lod = this.makeLODFromLODGroup(feature)
         threeObject.add(lod)
+        object = lod
       } else {
         const group = new THREE.Group()
         group.userData.feature = feature
@@ -109,19 +117,33 @@ class ThreeOutputScene extends THREE.Scene {
         for (const child of feature.children) {
           this._traverse(child, group)
         }
+        object = group
       }
     } else if (feature.threeComponent) {
-      threeObject.add(feature.threeComponent())
-      if (feature.threeComponent().update) {
-        this._animatedComponents.push(feature.threeComponent())
+      object = feature.threeComponent()
+      threeObject.add(object)
+      if (object.update) {
+        this._animatedComponents.push(object)
       }
     } else if (feature instanceof FeatureInstance) {
       const material = this._material('high', feature.hexColor, true)
       const mesh = this.makeMeshFromInstanceGeometry(feature.geometry, material, feature.hexColor, feature.p0)
       mesh.userData.feature = feature
       threeObject.add(mesh)
+      object = mesh
     } else {
       // TODO
+    }
+
+    const layer = feature.layerIndex()
+    if (layer > 0) {
+      // NOTE: Object3D.layers does not apply to the object's children, so we must traverse
+      // the children here.
+      // TODO: could use enable() instead of set() to allow multiple layers to be set
+      // in the case where feature is in Layer B but has an ancestor in Layer A.
+      // Alternatively, set(layer) could be called only if the current Layer is 0;
+      // that would mean that object would end up in Layer B (instead of Layer A).
+      object.traverseVisible(node => node.layers.set(layer))
     }
   }
 

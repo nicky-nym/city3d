@@ -17,7 +17,7 @@ import { Structure } from '../../src/architecture/structure.js'
 function _makeLine (waypoints, ray, color) {
   const adjustedWaypoints = ray.applyRay(waypoints)
   const line = new Geometry.Line(adjustedWaypoints)
-  return new FeatureInstance(line, adjustedWaypoints[0], color)
+  return new FeatureInstance(line, adjustedWaypoints[0], color, { layer: Structure.layer })
 }
 
 const mastHeight = UNIT.feet(1063)

@@ -82,6 +82,10 @@ class Building extends Structure {
         this.add(new Roof(roof, new Ray(this._ray.az)))
       } else {
         const roofPlace = new Storey(this._ray, Use.ROOF, corners, { wall: roof.parapetHeight })
+
+        // TODO: This is a hack.  Should probably use Roof class here.
+        roofPlace._layer = Roof.layer
+
         this.add(roofPlace)
       }
     }

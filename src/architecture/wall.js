@@ -5,7 +5,7 @@
  * For more information, please refer to <http://unlicense.org>
  */
 
-import { FeatureInstance } from '../core/feature.js'
+import { Feature, FeatureInstance } from '../core/feature.js'
 import { Geometry } from '../core/geometry.js'
 import { METRIC } from './metric.js'
 import { Model } from './model.js'
@@ -33,7 +33,7 @@ class Wall extends Model {
    * @param {string} [name]
    */
   constructor (v1, v2, height, { z = 0, depth = -DEFAULT_WALL_THICKNESS, openings = [], name } = {}) {
-    super(name || 'Wall')
+    super(name || 'Wall', { layer: Wall.layer })
     this._height = height
     const dx = v2.x - v1.x
     const dy = v2.y - v1.y
@@ -53,5 +53,7 @@ class Wall extends Model {
     return this._height
   }
 }
+
+Wall.layer = Feature.registerLayer(Wall, 'walls', { category: 'Buildings' })
 
 export { Wall }

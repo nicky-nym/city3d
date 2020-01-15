@@ -5,7 +5,7 @@
  * For more information, please refer to <http://unlicense.org>
  */
 
-import { FeatureInstance } from '../core/feature.js'
+import { Feature, FeatureInstance } from '../core/feature.js'
 import { Geometry } from '../core/geometry.js'
 import { Model } from './model.js'
 
@@ -16,7 +16,7 @@ const LIGHT_GRAY = 0x808080
 */
 class Roof extends Model {
   constructor (spec, ray) {
-    super('Roof')
+    super('Roof', { layer: Roof.layer })
     if (spec.custom) {
       let { vertices, indices } = spec.custom
       vertices = ray.applyRay(vertices)
@@ -35,5 +35,7 @@ class Roof extends Model {
     }
   }
 }
+
+Roof.layer = Feature.registerLayer(Roof, 'roofs', { category: 'Buildings' })
 
 export { Roof }

@@ -6,7 +6,7 @@
   */
 
 import { Facing } from '../core/facing.js'
-import { FeatureGroup, FeatureInstance } from '../core/feature.js'
+import { Feature, FeatureGroup, FeatureInstance } from '../core/feature.js'
 import { Geometry } from '../core/geometry.js'
 import { Model } from './model.js'
 import { Ray } from '../core/ray.js'
@@ -67,5 +67,7 @@ class Structure extends Model {
     return group
   }
 }
+
+Structure.layer = Feature.registerLayer(Structure, 'structures', { category: 'Other' })
 
 export { Structure }

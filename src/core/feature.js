@@ -5,9 +5,17 @@
  * For more information, please refer to <http://unlicense.org>
  */
 
+import { Layer } from './layer.js'
+
 class Feature {
-  constructor (name) {
+  /**
+   * Creates a Feature.
+   * @param {string} name - can be an empty string, null, or undefined, in which case it will be skipped over by fullName()
+   * @param {Layer} [layer]
+   */
+  constructor (name, { layer = DEFAULT_LAYER } = {}) {
     this.name = name
+    this._layer = layer
     this._valuesByMetric = new Map()
   }
 
@@ -35,7 +43,32 @@ class Feature {
     }
     return names.join(' of ')
   }
+
+  layerIndex () {
+    return this._layer.index
+  }
+
+  static registerLayer (definingClass, displayName, { description, category } = {}) {
+    return Layer.register(definingClass, displayName, { description, category })
+  }
+
+  static getRegisteredLayers () {
+    return Layer.getLayers()
+  }
+
+  static getRegisteredLayersByCategory () {
+    const map = new Map()
+
+    Layer.getLayers().forEach(layer => {
+      if (!map.has(layer.category)) map.set(layer.category, [])
+      map.get(layer.category).push(layer)
+    })
+    return map
+  }
 }
+
+const DEFAULT_LAYER = Feature.registerLayer(Feature, 'layer 0',
+  { description: 'Default layer for Features', category: 'Abstract' })
 
 /**
  * A point (or vector) in a 3D space
@@ -55,10 +88,10 @@ class FeatureInstance extends Feature {
    * @param {object} geometry - a template such as Geometry.ThickPolygon or Geometry.TriangularPolyhedron
    * @param {xyz} [xyz] - desired xyz-coordinates of first vertex
    * @param {number} hexColor - rgb color, e.g. 0x0000ff
-   * @param {string} [name]
+   * @param {object} [options]
    */
-  constructor (geometry, { x = 0, y = 0, z = 0 }, hexColor, name) {
-    super(name)
+  constructor (geometry, { x = 0, y = 0, z = 0 }, hexColor, options = {}) {
+    super(options.name, options)
     this.geometry = geometry
     this.p0 = { x, y, z }
     this.hexColor = hexColor
@@ -66,8 +99,13 @@ class FeatureInstance extends Feature {
 }
 
 class FeatureGroup extends Feature {
-  constructor (name) {
-    super(name)
+  /**
+   * Creates a FeatureGroup.
+   * @param {string} [name]
+   * @param {object} [options]
+   */
+  constructor (name, options) {
+    super(name, options)
     this.children = []
   }
 
@@ -111,9 +149,10 @@ class FeatureLODGroup extends FeatureGroup {
   /**
    * Creates a FeatureLODGroup.
    * @param {string} [name]
+   * @param {object} [options]
    */
-  constructor (name) {
-    super(name)
+  constructor (name, options) {
+    super(name, options)
     this._levels = []
   }
 

@@ -9,6 +9,7 @@ import * as THREE from '../../node_modules/three/build/three.module.js'
 import Stats from '../../node_modules/stats.js/src/Stats.js'
 import { GUI } from '../../node_modules/dat.gui/build/dat.gui.module.js'
 
+import { Feature } from '../core/feature.js'
 import { xyz } from '../core/util.js'
 import { Output } from './output.js'
 import { OrbitControls } from '../../node_modules/three/examples/jsm/controls/OrbitControls.js'
@@ -311,6 +312,8 @@ class ThreeOutput extends Output {
         }
       },
       layers: {
+        // Keep these for reference until all these layers are registered somewhere, and
+        // there's a way to configure a layer to be off by default.
         building: {
           'walls & floors': true,
           'doors & windows': true,
@@ -386,33 +389,46 @@ class ThreeOutput extends Output {
 
       const layersFolder = gui.addFolder('Layers')
 
-      const buildings = layersFolder.addFolder('Buildings')
-      buildings.add(ui.layers.building, 'walls & floors')
-      buildings.add(ui.layers.building, 'doors & windows')
-      buildings.add(ui.layers.building, 'roofs')
+      const layerMap = Feature.getRegisteredLayersByCategory()
+      for (const [category, layers] of layerMap) {
+        const obj = {}
+        layers.forEach(layer => { obj[layer.displayName] = true })
 
-      const pavement = layersFolder.addFolder('Pavement')
+        const categoryFolder = layersFolder.addFolder(category)
+        layers.forEach(layer => {
+          const controller = categoryFolder.add(obj, layer.displayName)
+          this._camera.layers.enable(layer.index)
+          controller.onChange(b => {
+            const action = b ? 'enable' : 'disable'
+            this._camera.layers[action](layer.index)
+          })
+        })
+        ui.layers[category] = obj
+      }
+
+      const todoFolder = layersFolder.addFolder('TODO')
+
+      const buildings = todoFolder.addFolder('Buildings')
+      buildings.add(ui.layers.building, 'doors & windows')
+
+      const pavement = todoFolder.addFolder('Pavement')
       pavement.add(ui.layers.pavement, 'streets, etc.')
 
-      const landscape = layersFolder.addFolder('Landscape')
-      landscape.add(ui.layers.landscape, 'trees & plants')
+      const landscape = todoFolder.addFolder('Landscape')
       landscape.add(ui.layers.landscape, 'ground surface')
-      landscape.add(ui.layers.landscape, 'water')
 
-      const entourage = layersFolder.addFolder('Entourage')
+      const entourage = todoFolder.addFolder('Entourage')
       entourage.add(ui.layers.entourage, 'people')
       entourage.add(ui.layers.entourage, 'animals')
-      entourage.add(ui.layers.entourage, 'vehicles & movers')
       entourage.add(ui.layers.entourage, 'furniture')
 
-      const weather = layersFolder.addFolder('Weather')
+      const weather = todoFolder.addFolder('Weather')
       weather.add(ui.layers.weather, 'clouds')
       weather.add(ui.layers.weather, 'fog')
       weather.add(ui.layers.weather, 'lightning')
 
-      const abstractions = layersFolder.addFolder('Abstract')
+      const abstractions = todoFolder.addFolder('Abstract')
       abstractions.add(ui.layers.abstract, 'vehicle route lines')
-      abstractions.add(ui.layers.abstract, 'parcel boundary lines')
       abstractions.add(ui.layers.abstract, 'tooltips')
       abstractions.add(ui.layers.abstract, 'grid')
       abstractions.add(ui.layers.abstract, 'sun path & day arcs')
@@ -585,6 +601,8 @@ class ThreeOutput extends Output {
         if (this._intersected) this.unhighlight(this._intersected)
         this._intersected = intersects[0].object
         if (this._intersected.userData.noHighlight) {
+          this._intersected = null
+        } else if (!this._intersected.layers.test(this._camera.layers)) {
           this._intersected = null
         } else {
           this.highlight(this._intersected)

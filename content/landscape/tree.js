@@ -6,7 +6,7 @@
  */
 
 import { xy, xyz, xyzAdd } from '../../src/core/util.js'
-import { FeatureInstance } from '../../src/core/feature.js'
+import { Feature, FeatureInstance } from '../../src/core/feature.js'
 import { Geometry } from '../../src/core/geometry.js'
 import { Model } from '../../src/architecture/model.js'
 import { UNIT } from '../../src/core/unit.js'
@@ -16,7 +16,7 @@ const CROWN_HEIGHT = UNIT.feet(9)
 
 class Tree extends Model {
   constructor ({ at = xyz(0, 0, 0), crownHeight = 10, name = 'Tree' } = {}) {
-    super(name)
+    super(name, { layer: Tree.layer })
     this.add(this.makeTrunk(at))
     at.z += crownHeight
     this.add(this.makeCrown(at))
@@ -56,5 +56,7 @@ class Tree extends Model {
     return concreteThickPolygon
   }
 }
+
+Tree.layer = Feature.registerLayer(Tree, 'trees & plants', { category: 'Landscape' })
 
 export { Tree }
