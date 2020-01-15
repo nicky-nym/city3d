@@ -11,8 +11,8 @@ import VEHICLE_SPECS from '../../../../content/movers/vehicles.json.js'
 
 /* global describe, it */
 
-describe('schemas', function () {
-  describe('vehicle.schema', function () {
+describe('SCHEMA', function () {
+  describe('SCHEMA.VEHICLE', function () {
     const ajv = new Ajv()
     const validator = ajv.compile(SCHEMA.VEHICLE)
 

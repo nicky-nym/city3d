@@ -10,8 +10,8 @@ import { SCHEMA } from '../../../../src/architecture/schemas/schema.js'
 
 /* global describe, it */
 
-describe('schemas', function () {
-  describe('pitch.schema', function () {
+describe('SCHEMA', function () {
+  describe('SCHEMA.PITCH', function () {
     const ajv = new Ajv()
     const validator = ajv.compile(SCHEMA.PITCH)
 

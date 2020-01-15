@@ -11,8 +11,8 @@ import { xy } from '../../../../src/core/util.js'
 
 /* global describe, it */
 
-describe('schemas', function () {
-  describe('xy.schema', function () {
+describe('SCHEMA', function () {
+  describe('SCHEMA.XY', function () {
     const ajv = new Ajv()
     const validator = ajv.compile(SCHEMA.XY)
 

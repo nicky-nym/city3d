@@ -96,7 +96,7 @@ describe('SCHEMA', function () {
       validator(badJSON).should.equal(false)
     })
 
-    it('should reject any non-object substitute for the outline', function () {
+    it('should reject any non-object substitute for the wall spec', function () {
       const badJSON = true
       const alsoBad = 88
       const worse = []
