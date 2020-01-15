@@ -1,4 +1,4 @@
-/** @file pitch.schema_tests.js
+/** @file grid.schema_tests.js
  * @author Authored in 2020 at <https://github.com/nicky-nym/city3d>
  * @license UNLICENSE
  * This is free and unencumbered software released into the public domain.
@@ -10,57 +10,59 @@ import { SCHEMA } from '../../../../src/architecture/schemas/schema.js'
 
 /* global describe, it */
 
-describe('schemas', function () {
-  describe('pitch.schema', function () {
+describe('SCHEMA', function () {
+  describe('SCHEMA.GRID', function () {
     const ajv = new Ajv()
-    const validator = ajv.compile(SCHEMA.PITCH)
+    const validator = ajv.compile(SCHEMA.GRID)
 
-    it('should accept a simple valid {rise:, run:} object', function () {
-      const goodJSON = { rise: 4, run: 12 }
+    it('should accept a simple valid grid object', function () {
+      const goodJSON = { rows: 3, cols: 8 }
+
       validator(goodJSON).should.equal(true)
     })
 
-    it('should accept floating point numbers', function () {
-      const goodJSON = { rise: 4.4, run: 12.2 }
+    it('should accept a grid of size zero', function () {
+      const goodJSON = { rows: 0, cols: 0 }
+
       validator(goodJSON).should.equal(true)
     })
 
-    it('should accept a flat pitch', function () {
-      const goodJSON = { rise: 0, run: 12 }
+    it('should treat both rows: and cols: as optional', function () {
+      const goodJSON = { }
       validator(goodJSON).should.equal(true)
     })
 
-    it('should accept a steep pitch', function () {
-      const goodJSON = { rise: 144, run: 12 }
+    it('should ignore unrecognized additional optional properties', function () {
+      const goodJSON = { iggyPop: { no: 'fun' } }
       validator(goodJSON).should.equal(true)
     })
 
-    it('should reject any negative rise values', function () {
-      const badJSON = { rise: -1, run: 12 }
+    it('should reject a non-integer rows: value', function () {
+      const badJSON = { rows: 3.3 }
       validator(badJSON).should.equal(false)
     })
 
-    it('should reject any negative run values', function () {
-      const badJSON = { rise: 1, run: -12 }
+    it('should reject a non-integer cols: value', function () {
+      const badJSON = { cols: 2 / 3 }
       validator(badJSON).should.equal(false)
     })
 
-    it('should reject a zero run values', function () {
-      const badJSON = { rise: 1, run: 0 }
+    it('should reject a negative rows: value', function () {
+      const badJSON = { rows: -3 }
       validator(badJSON).should.equal(false)
     })
 
-    it('should reject any non-numeric pitch values', function () {
-      const badJSON = { rise: false, run: 12 }
+    it('should reject a negative cols: value', function () {
+      const badJSON = { cols: -2 }
       validator(badJSON).should.equal(false)
     })
 
-    it('should reject any string {rise:, run:} values', function () {
-      const badJSON = { rise: 0, run: '33' }
+    it('should reject an string cols: value', function () {
+      const badJSON = { cols: '33' }
       validator(badJSON).should.equal(false)
     })
 
-    it('should reject any non-object substitute for {rise:, run:}', function () {
+    it('should reject any non-object substitute for a grid object', function () {
       const badJSON = true
       const alsoBad = 88
       const worse = []

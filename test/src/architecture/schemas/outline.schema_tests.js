@@ -10,16 +10,16 @@ import { SCHEMA } from '../../../../src/architecture/schemas/schema.js'
 
 /* global describe, it */
 
-describe('schemas', function () {
-  describe('outline.schema', function () {
+describe('SCHEMA', function () {
+  describe('SCHEMA.OUTLINE', function () {
     const ajv = new Ajv()
     ajv.addSchema(SCHEMA.XY, SCHEMA.XY.$id)
     ajv.addSchema(SCHEMA.PITCH, SCHEMA.PITCH.$id)
     ajv.addSchema(SCHEMA.OUTLINE, SCHEMA.OUTLINE.$id)
-    const outlineValidator = ajv.compile(SCHEMA.OUTLINE)
+    const validator = ajv.compile(SCHEMA.OUTLINE)
 
     it('should accept a simple valid polygon spec', function () {
-      const goodOutline = {
+      const goodJSON = {
         shape: 'polygon',
         corners: [
           { x: 1, y: 1 },
@@ -27,100 +27,100 @@ describe('schemas', function () {
           { x: 3, y: 3 }
         ]
       }
-      outlineValidator(goodOutline).should.equal(true)
+      validator(goodJSON).should.equal(true)
     })
 
     it('should reject polygons with only two corners', function () {
-      const badOutline = {
+      const badJSON = {
         shape: 'polygon',
         corners: [
           { x: 1, y: 1 },
           { x: 2, y: 2 }
         ]
       }
-      outlineValidator(badOutline).should.equal(false)
+      validator(badJSON).should.equal(false)
     })
 
     it('should accept a simple valid rectangle spec', function () {
-      const goodOutline = {
+      const goodJSON = {
         shape: 'rectangle',
         size: { x: 1, y: 2 }
       }
-      outlineValidator(goodOutline).should.equal(true)
+      validator(goodJSON).should.equal(true)
     })
 
     it('should accept a rectangle with a gabled top', function () {
-      const goodOutline = {
+      const goodJSON = {
         shape: 'rectangle',
         size: { x: 1, y: 2 },
         top: { style: 'gabled', pitch: { rise: 4, run: 12 } }
       }
-      outlineValidator(goodOutline).should.equal(true)
+      validator(goodJSON).should.equal(true)
     })
 
     it('should reject a gabled top with an invalid pitch', function () {
-      const badOutline = {
+      const badJSON = {
         shape: 'rectangle',
         size: { x: 1, y: 2 },
         top: { style: 'gabled', pitch: { rise: 4, run: 0 } }
       }
-      outlineValidator(badOutline).should.equal(false)
+      validator(badJSON).should.equal(false)
     })
 
     it('should accept a rectangle with a arched top', function () {
-      const goodOutline = {
+      const goodJSON = {
         shape: 'rectangle',
         size: { x: 1, y: 2 },
         top: { style: 'arched', curvature: 0.4 }
       }
-      outlineValidator(goodOutline).should.equal(true)
+      validator(goodJSON).should.equal(true)
     })
 
     it('should accept an arched top with no curvature', function () {
-      const goodOutline = {
+      const goodJSON = {
         shape: 'rectangle',
         size: { x: 1, y: 2 },
         top: { style: 'arched', curvature: 0 }
       }
-      outlineValidator(goodOutline).should.equal(true)
+      validator(goodJSON).should.equal(true)
     })
 
     it('should reject an arched top with negative curvature', function () {
-      const badOutline = {
+      const badJSON = {
         shape: 'rectangle',
         size: { x: 1, y: 2 },
         top: { style: 'arched', curvature: -0.1 }
       }
-      outlineValidator(badOutline).should.equal(false)
+      validator(badJSON).should.equal(false)
     })
 
     it('should reject an arched top with more than 100% curvature', function () {
-      const badOutline = {
+      const badJSON = {
         shape: 'rectangle',
         size: { x: 1, y: 2 },
         top: { style: 'arched', curvature: 1.01 }
       }
-      outlineValidator(badOutline).should.equal(false)
+      validator(badJSON).should.equal(false)
     })
 
     it('should reject unrecognized shapes', function () {
-      const badOutline = {
+      const badJSON = {
         shape: 'triangle'
       }
-      outlineValidator(badOutline).should.equal(false)
+      validator(badJSON).should.equal(false)
     })
 
     it('should reject any non-object substitute for the outline', function () {
-      const badOutline = true
+      const badJSON = true
       const alsoBad = 88
       const worse = []
       const omg = null
 
-      outlineValidator(badOutline).should.equal(false)
-      outlineValidator(alsoBad).should.equal(false)
-      outlineValidator(worse).should.equal(false)
-      outlineValidator(omg).should.equal(false)
-      outlineValidator().should.equal(false)
+      validator(badJSON).should.equal(false)
+      validator(alsoBad).should.equal(false)
+      validator(worse).should.equal(false)
+      validator(omg).should.equal(false)
+      validator().should.equal(false)
     })
   })
 })

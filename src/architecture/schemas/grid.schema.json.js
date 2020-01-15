@@ -17,12 +17,14 @@ export default /* eslint-disable */
     "rows": {
       "description": "the number of rows in the grid",
       "default": 0,
-      "type": "integer"
+      "type": "integer",
+      "minimum": 0
     },
     "cols": {
       "description": "the number of columns in the grid",
       "default": 0,
-      "type": "integer"
+      "type": "integer",
+      "minimum": 0
     }
   }
 }
