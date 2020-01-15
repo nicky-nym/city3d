@@ -26,13 +26,16 @@ export default /* eslint-disable */
           casing: { width: { x:0.5 } }
         }],
         windows: [],
-        fixtures: [
-          { at: { x: +2, y: 6 }, type: 'sconce' },
-          { at: { x: -2, y: 6 }, type: 'sconce' }
-        ],
+        fixtures: [{
+          at: { x: +2, y: 6 },
+          copy: { $ref: 'CITY.fixtures.sconce' }
+        }, {
+          at: { x: -2, y: 6 },
+          copy: { $ref: 'CITY.fixtures.sconce' }
+        }],
         downspouts: [
-          { at: { x:+0.25 } },
-          { at: { x:-0.25 } }
+          { at: { x: +0.25 } },
+          { at: { x: -0.25 } }
         ]
       },
       interior: {
@@ -79,11 +82,15 @@ export default /* eslint-disable */
         },
         "fixtures": {
           "type": "array",
-          "items": { "$ref": "fixture.schema.json" }
+          "items": { "$ref": "copy.schema.json" }
         },
         "downspouts": {
           "type": "array",
-          "items": { "$ref": "downspout.schema.json" }
+          "items": { 
+            "type": "object",
+            "required": [  ],
+            "properties": {  }
+          }
         }
       }
     },
@@ -96,7 +103,7 @@ export default /* eslint-disable */
         },
         "fixtures": {
           "type": "array",
-          "items": { "$ref": "fixture.schema.json" }
+          "items": { "$ref": "copy.schema.json" }
         }
       }
     }
