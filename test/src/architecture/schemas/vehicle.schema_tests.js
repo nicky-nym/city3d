@@ -6,7 +6,7 @@
  */
 
 import Ajv from '../../../../node_modules/ajv/dist/ajv.min.js'
-import vehicleSchema from '../../../../src/architecture/schemas/vehicle.schema.json.js'
+import { SCHEMA } from '../../../../src/architecture/schemas/schema.js'
 import VEHICLE_SPECS from '../../../../content/movers/vehicles.json.js'
 
 /* global describe, it */
@@ -14,7 +14,7 @@ import VEHICLE_SPECS from '../../../../content/movers/vehicles.json.js'
 describe('schemas', function () {
   describe('vehicle.schema', function () {
     const ajv = new Ajv()
-    const vehicleValidator = ajv.compile(vehicleSchema)
+    const vehicleValidator = ajv.compile(SCHEMA.VEHICLE)
 
     it('should accept a simple valid vehicle(s) object', function () {
       const goodVehicle = {

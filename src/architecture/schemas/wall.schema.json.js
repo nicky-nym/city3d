@@ -21,18 +21,18 @@ export default /* eslint-disable */
           name: 'garage door',
           yLeafCount: 5,
           motion: 'overhead',
-          shape: { shape: 'rectangle', data: xy(16, 7) },
-          center: x(12),
-          casing: { width: x(0.5) }
+          shape: { shape: 'rectangle', data: { x: 16, y: 7 } },
+          center: { x:12 },
+          casing: { width: { x:0.5 } }
         }],
         windows: [],
         fixtures: [
-          { at: xy(+2, 6), type: 'sconce' },
-          { at: xy(-2, 6), type: 'sconce' }
+          { at: { x: +2, y: 6 }, type: 'sconce' },
+          { at: { x: -2, y: 6 }, type: 'sconce' }
         ],
         downspouts: [
-          { at: x(+0.25) },
-          { at: x(-0.25) }
+          { at: { x:+0.25 } },
+          { at: { x:-0.25 } }
         ]
       },
       interior: {

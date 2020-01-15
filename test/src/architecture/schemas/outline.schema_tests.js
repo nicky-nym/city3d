@@ -6,19 +6,17 @@
  */
 
 import Ajv from '../../../../node_modules/ajv/dist/ajv.min.js'
-import xySchema from '../../../../src/architecture/schemas/xy.schema.json.js'
-import pitchSchema from '../../../../src/architecture/schemas/pitch.schema.json.js'
-import outlineSchema from '../../../../src/architecture/schemas/outline.schema.json.js'
+import { SCHEMA } from '../../../../src/architecture/schemas/schema.js'
 
 /* global describe, it */
 
 describe('schemas', function () {
   describe('outline.schema', function () {
     const ajv = new Ajv()
-    ajv.addSchema(xySchema, 'xy.schema.json')
-    ajv.addSchema(pitchSchema, 'pitch.schema.json')
-    ajv.addSchema(outlineSchema, 'outline.schema.json')
-    const outlineValidator = ajv.compile(outlineSchema)
+    ajv.addSchema(SCHEMA.XY, SCHEMA.XY.$id)
+    ajv.addSchema(SCHEMA.PITCH, SCHEMA.PITCH.$id)
+    ajv.addSchema(SCHEMA.OUTLINE, SCHEMA.OUTLINE.$id)
+    const outlineValidator = ajv.compile(SCHEMA.OUTLINE)
 
     it('should accept a simple valid polygon spec', function () {
       const goodOutline = {

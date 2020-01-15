@@ -6,14 +6,14 @@
  */
 
 import Ajv from '../../../../node_modules/ajv/dist/ajv.min.js'
-import pitchSchema from '../../../../src/architecture/schemas/pitch.schema.json.js'
+import { SCHEMA } from '../../../../src/architecture/schemas/schema.js'
 
 /* global describe, it */
 
 describe('schemas', function () {
   describe('pitch.schema', function () {
     const ajv = new Ajv()
-    const pitchValidator = ajv.compile(pitchSchema)
+    const pitchValidator = ajv.compile(SCHEMA.PITCH)
 
     it('should accept a simple valid {rise:, run:} object', function () {
       const goodPitch = { rise: 4, run: 12 }

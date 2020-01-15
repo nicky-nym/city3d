@@ -18,7 +18,7 @@ export default /* eslint-disable */
     },
     {
       height: 8,
-      floor: { shape: 'rectangle', data: xy(24, 21) },
+      floor: { shape: 'rectangle', data: { x: 24, y: 21 } },
       rooms: [],
       roof: { form: 'pitched', pitch: { rise: 8, run: 12 } },
       ceiling: {},

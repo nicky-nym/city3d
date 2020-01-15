@@ -6,15 +6,15 @@
  */
 
 import Ajv from '../../../../node_modules/ajv/dist/ajv.min.js'
+import { SCHEMA } from '../../../../src/architecture/schemas/schema.js'
 import { xy } from '../../../../src/core/util.js'
-import xySchema from '../../../../src/architecture/schemas/xy.schema.json.js'
 
 /* global describe, it */
 
 describe('schemas', function () {
   describe('xy.schema', function () {
     const ajv = new Ajv()
-    const xyValidator = ajv.compile(xySchema)
+    const xyValidator = ajv.compile(SCHEMA.XY)
 
     it('should accept a simple valid {xy} object', function () {
       const goodXY = { x: 0, y: 0 }
