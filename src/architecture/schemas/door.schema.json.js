@@ -35,7 +35,7 @@ export default /* eslint-disable */
       "description": "the name of default unit of measure for distances"
     },
     "motion": {
-      "enum": ["overhead", "swinging", "sliding", "revolving"]
+      "enum": ["overhead", "swinging", "sliding", "pocket", "folding", "revolving"]
     },
     "outline": {
       "$ref": "outline.schema.json"

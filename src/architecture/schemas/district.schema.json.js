@@ -46,7 +46,13 @@ export default /* eslint-disable */
     "parcels": {
       "type": "array",
       "items": {
-        "$ref": "parcel.schema.json"
+        "$ref": "copy.schema.json"
+      }
+    },
+    "contents": {
+      "type": "array",
+      "items": {
+        "$ref": "copy.schema.json"
       }
     }
   }

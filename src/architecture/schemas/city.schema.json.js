@@ -49,16 +49,16 @@ export default /* eslint-disable */
       "type": "string",
       "description": "the name of default unit of measure for distances"
     },
-    "vehicles": {
-      "type": "array",
-      "items": {
-        "$ref": "vehicle.schema.json"
-      }
-    },
     "districts": {
       "type": "array",
       "items": {
-        "$ref": "district.schema.json"
+        "$ref": "copy.schema.json"
+      }
+    },
+    "contents": {
+      "type": "array",
+      "items": {
+        "$ref": "copy.schema.json"
       }
     }
   }

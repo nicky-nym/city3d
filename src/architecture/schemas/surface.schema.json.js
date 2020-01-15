@@ -38,7 +38,8 @@ export default /* eslint-disable */
         "clapboard",
         "shingled",
         "standing seam",
-        "parquet"
+        "parquet",
+        "batten"
       ]
     },
     "material": {

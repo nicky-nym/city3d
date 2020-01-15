@@ -40,10 +40,10 @@ export default /* eslint-disable */
       "type": "string",
       "description": "the name of default unit of measure for distances"
     },
-    "buildings": {
+    "contents": {
       "type": "array",
       "items": {
-        "$ref": "building.schema.json"
+        "$ref": "copy.schema.json"
       }
     }
   }

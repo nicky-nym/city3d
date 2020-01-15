@@ -7,17 +7,18 @@ export default /* eslint-disable */
   "type": "object",
   "examples": [
     {
-      xyz: { x: 1, y: 2, z: 0 }
+      x: 1, y: 2, z: 0
     },
     {
-      xyz: { x: 1 }
+      x: 1
     },
     {
-      xyz: { x: 1, y: 2, z: 0 },
-      rotated: 90
+      x: 1, y: 2, z: 0, rotated: 90
     },
     {
-      xyz: { x: 1, y: 2, z: 0 },
+      x: 1,
+      y: 2,
+      z: 0,
       rotated: 90,
       mirrored: true
     },
@@ -35,9 +36,20 @@ export default /* eslint-disable */
   ],
   "required": [],
   "properties": {
-    "xyz": { 
-      "description": "the location of the center of the object, relative to the absolute xyz origin (or to a parent/host object)",
-      "$ref": "xyz.schema.json" 
+    "x": {
+      "description": "an x-axis distance, in the default unit of measure",
+      "default": 0,
+      "type": "number"
+    },
+    "y": {
+      "description": "a y-axis distance, in the default unit of measure",
+      "default": 0,
+      "type": "number"
+    },
+    "z": {
+      "description": "a z-axis distance, in the default unit of measure",
+      "default": 0,
+      "type": "number"
     },
     "rotated": {
       "description": "a compass bearing in degrees (0 to 360)",

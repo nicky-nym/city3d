@@ -38,6 +38,12 @@ export default /* eslint-disable */
     },
     "use": {
       "enum": ["circulation", "building service", "mechanical", "assignable"]
+    },
+    "contents": {
+      "type": "array",
+      "items": {
+        "$ref": "copy.schema.json"
+      }
     }
   }
 }
