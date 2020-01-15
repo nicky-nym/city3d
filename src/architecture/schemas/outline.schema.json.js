@@ -69,7 +69,7 @@ export default /* eslint-disable */
           "type": "number",
           "minimum": 0,
           "maximum": 1
-        },
+        }
       }
     },
   },

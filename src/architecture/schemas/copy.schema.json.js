@@ -49,7 +49,13 @@ export default /* eslint-disable */
     },
     "copy": { 
       "description": "an identifier that specifies what model this is a copy of",
-      "type": "string"
+      "type": "object",
+      "required": [ "$ref" ],
+      "properties": {
+        "$ref": {
+          "type": "string"
+        }
+      }
     },
     "settings": {
       "description": "override settings for any property values specific to this copy",
