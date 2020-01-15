@@ -13,7 +13,7 @@ export default /* eslint-disable */
       unit: 'feet',
       motion: 'casement',
       outline: { shape: 'rectangle', data: { x: 16, y: 7 } },
-      xLeafCount: 2,
+      leafCount: { cols: 2 },
       lites: { rows: 2, cols: 1 },
       center: { x: 4, y: 3 },
       casing: { width: 0.5 }
@@ -40,11 +40,8 @@ export default /* eslint-disable */
     "outline": {
       "$ref": "outline.schema.json"
     },
-    "xLeafCount": {
-      "type": "number"
-    },
-    "yLeafCount": {
-      "type": "number"
+    "leafCount": {
+      "$ref": "grid.schema.json"
     },
     "lites": {
       "$ref": "grid.schema.json"

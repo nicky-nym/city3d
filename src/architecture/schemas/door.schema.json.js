@@ -13,7 +13,7 @@ export default /* eslint-disable */
       unit: 'feet',
       motion: 'overhead',
       outline: { shape: 'rectangle', data: { x: 16, y: 7 } },
-      yLeafCount: 5,
+      leafCount: { rows: 5 },
       handleSide: 'left',
       center: 12,
       casing: { width: 0.5 }
@@ -40,11 +40,8 @@ export default /* eslint-disable */
     "outline": {
       "$ref": "outline.schema.json"
     },
-    "xLeafCount": {
-      "type": "number"
-    },
-    "yLeafCount": {
-      "type": "number"
+    "leafCount": {
+      "$ref": "grid.schema.json"
     },
     "handleSide": {
       "enum": ["left", "center", "right"]
