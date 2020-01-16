@@ -12,13 +12,15 @@ export default /* eslint-disable */
       name: 'Third floor',
       unit: 'feet',
       floor: {
-        shape: 'rectangle',
-        size: { x: 200, y: 200 }  
+        outline: {
+          shape: 'rectangle',
+          size: { x: 200, y: 200 }
+        }
       }
     },
     {
       height: 8,
-      floor: { shape: 'rectangle', data: { x: 24, y: 21 } },
+      floor: {  },
       rooms: [],
       roof: { form: 'pitched', pitch: { rise: 8, run: 12 } },
       ceiling: {},

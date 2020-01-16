@@ -45,7 +45,7 @@ export default /* eslint-disable */
     },
     "fixtures": {
       "type": "array",
-      "items": { "$ref": "fixture.schema.json" }
+      "items": { "$ref": "copy.schema.json" }
     }
   }
 }
