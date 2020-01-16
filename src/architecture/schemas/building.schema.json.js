@@ -14,7 +14,7 @@ export default /* eslint-disable */
       storeys: [{
         floor: {
           shape: 'rectangle',
-          size: { x: 200, y: 200 }  
+          size: { x: 200, y: 200 }
         }
       }]
     },
@@ -23,7 +23,7 @@ export default /* eslint-disable */
       unit: 'feet',
       storeys: [{
         height: 8,
-        floor: { shape: 'rectangle', data: { x: 24, y: 21 } },
+        floor: { shape: 'rectangle', size: { x: 24, y: 21 } },
         rooms: [],
         roof: { form: 'pitched', pitch: { rise: 8, run: 12 } },
         ceiling: {},
