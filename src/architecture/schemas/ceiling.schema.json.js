@@ -13,13 +13,16 @@ export default /* eslint-disable */
       unit: 'feet',
       outline: {
         shape: 'rectangle',
-        size: { x: 14, y: 16 }  
+        size: { x: 14, y: 16 }
       },
       surface: {
         style: 'flat',
         material: 'stucco'
       },
-      fixtures: [] // TODO: add light fixture example
+      fixtures: [{
+        copy: { $ref: 'CITY.fixtures.ceiling_fan' },
+        at: { x: 0, y: 0 }
+      }]
     }
   ],
   "required": [],

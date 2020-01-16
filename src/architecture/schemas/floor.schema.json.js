@@ -13,7 +13,7 @@ export default /* eslint-disable */
       unit: 'feet',
       outline: {
         shape: 'rectangle',
-        size: { x: 100, y: 100 }  
+        size: { x: 100, y: 100 }
       },
       surface: {
         style: 'parquet',
