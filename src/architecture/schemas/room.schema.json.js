@@ -13,9 +13,13 @@ export default /* eslint-disable */
       unit: 'feet',
       outline: {
         shape: 'rectangle',
-        size: { x: 12, y: 14 }  
+        size: { x: 12, y: 14 }
       },
-      use: 'circulation'
+      use: 'circulation',
+      contents: [{
+        copy: { $ref: 'CITY.furniture.sofa' },
+        at: { x: 6, y: 0 }
+      }]
     }
   ],
   "required": [],
