@@ -16,12 +16,13 @@ export default /* eslint-disable */
         size: { x: 18, y: 26 }
       },
       districts: [
-        { $id: 'The Bronx' },
-        { $id: 'Brooklyn' },
-        { $id: 'Manhattan' },
-        { $id: 'Queens' },
-        { $id: 'Staten Island' }
-      ]
+        { copy: { $ref: 'CITY.districts.The_Bronx' } },
+        { copy: { $ref: 'CITY.districts.Brooklyn' } },
+        { copy: { $ref: 'CITY.districts.Manhattan' } },
+        { copy: { $ref: 'CITY.districts.Queens' } },
+        { copy: { $ref: 'CITY.districts.Staten_Island' } }
+      ],
+      contents: []
     },
     {
       name: 'London'
@@ -42,12 +43,12 @@ export default /* eslint-disable */
     "name": {
       "type": "string"
     },
-    "border": {
-      "$ref": "outline.schema.json"
-    },
     "unit": {
       "type": "string",
       "description": "the name of default unit of measure for distances"
+    },
+    "border": {
+      "$ref": "outline.schema.json"
     },
     "districts": {
       "type": "array",

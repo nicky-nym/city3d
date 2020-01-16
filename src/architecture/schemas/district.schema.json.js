@@ -15,7 +15,8 @@ export default /* eslint-disable */
         shape: 'rectangle',
         size: { x: 2.3, y: 13.4 }
       },
-      parcels: []
+      parcels: [],
+      contents: []
     },
     {
       name: 'Manhattan'
@@ -36,12 +37,12 @@ export default /* eslint-disable */
     "name": {
       "type": "string"
     },
-    "border": {
-      "$ref": "outline.schema.json"
-    },
     "unit": {
       "type": "string",
       "description": "the name of default unit of measure for distances"
+    },
+    "border": {
+      "$ref": "outline.schema.json"
     },
     "parcels": {
       "type": "array",
