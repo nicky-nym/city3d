@@ -24,10 +24,10 @@ export default /* eslint-disable */
   "required": [],
   "properties": {
     "context": {
-      "type": "string"
+      "const": "city3d"
     },
     "type": {
-      "type": "string"
+      "const": "floor.schema.json"
     },
     "name": {
       "type": "string"

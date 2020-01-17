@@ -30,10 +30,10 @@ export default /* eslint-disable */
   "required": [],
   "properties": {
     "context": {
-      "type": "string"
+      "const": "city3d"
     },
     "type": {
-      "type": "string"
+      "const": "parcel.schema.json"
     },
     "name": {
       "type": "string"

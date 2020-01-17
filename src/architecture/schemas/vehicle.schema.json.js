@@ -35,10 +35,10 @@ export default /* eslint-disable */
     "required": [  ],
     "properties": {
       "context": {
-        "type": "string"
+        "const": "city3d"
       },
       "type": {
-        "type": "string"
+        "const": "vehicle.schema.json"
       },
       "name": {
         "type": "string"

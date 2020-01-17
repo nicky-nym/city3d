@@ -31,7 +31,7 @@ describe('SCHEMA', function () {
         name: '2nd floor, south wall',
         unit: 'feet',
         roofline: 'gabled',
-        exterior: {
+        outside: {
           surface: {
             style: 'clapboard',
             material: 'fiber-cement'
@@ -57,7 +57,7 @@ describe('SCHEMA', function () {
             { at: { x: -0.25 } }
           ]
         },
-        interior: {
+        inside: {
           surface: {
             style: 'flat',
             material: 'drywall'
@@ -87,7 +87,7 @@ describe('SCHEMA', function () {
 
     it('should reject door specs with nested invalid values', function () {
       const badJSON = {
-        exterior: {
+        outside: {
           doors: [{
             leafCount: { rows: -5 }
           }]

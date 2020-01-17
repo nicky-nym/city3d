@@ -35,11 +35,11 @@ export default /* eslint-disable */
   ],
   "required": [ "copy" ],
   "properties": {
-    "name": { 
+    "name": {
       "description": "the name of this particular copy, if this copy has it's own name",
       "type": "string",
     },
-    "at": { 
+    "at": {
       "description": "where the copy goes, and the direction it is oriented in",
       "$ref": "placement.schema.json"
     },
@@ -47,7 +47,7 @@ export default /* eslint-disable */
       "description": "to make multiple copies at once, set the number of rows and columns",
       "$ref": "grid.schema.json"
     },
-    "copy": { 
+    "copy": {
       "description": "an identifier that specifies what model this is a copy of",
       "type": "object",
       "required": [ "$ref" ],

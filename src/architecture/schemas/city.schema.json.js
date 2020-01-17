@@ -35,17 +35,17 @@ export default /* eslint-disable */
   "required": [],
   "properties": {
     "context": {
-      "type": "string"
+      "const": "city3d"
     },
     "type": {
-      "type": "string"
+      "const": "city.schema.json"
     },
     "name": {
       "type": "string"
     },
     "unit": {
-      "type": "string",
-      "description": "the name of default unit of measure for distances"
+      "description": "the name of default unit of measure for distances",
+      "type": "string"
     },
     "border": {
       "$ref": "outline.schema.json"

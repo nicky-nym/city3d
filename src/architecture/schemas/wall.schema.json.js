@@ -12,7 +12,7 @@ export default /* eslint-disable */
       name: '2nd floor, south wall',
       unit: 'feet',
       roofline: 'gabled',
-      exterior: {
+      outside: {
         surface: {
           style: 'clapboard',
           material: 'fiber-cement'
@@ -38,7 +38,7 @@ export default /* eslint-disable */
           { at: { x: -0.25 } }
         ]
       },
-      interior: {
+      inside: {
         surface: {
           style: 'flat',
           material: 'drywall'
@@ -50,10 +50,10 @@ export default /* eslint-disable */
   "required": [  ],
   "properties": {
     "context": {
-      "type": "string"
+      "const": "city3d"
     },
     "type": {
-      "type": "string"
+      "const": "wall.schema.json"
     },
     "name": {
       "type": "string"
@@ -65,7 +65,7 @@ export default /* eslint-disable */
     "roofline": {
       "enum": ["gabled", "pitched"]
     },
-    "exterior": { 
+    "outside": { 
       "type": "object",
       "required": [  ],
       "properties": {
@@ -94,7 +94,7 @@ export default /* eslint-disable */
         }
       }
     },
-    "interior": { 
+    "inside": { 
       "type": "object",
       "required": [  ],
       "properties": {

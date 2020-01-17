@@ -1,123 +1,179 @@
 export default /* eslint-disable */
 {
+  context: 'city3d',
+  type: 'building.schema.json',
   name: 'Garage',
   unit: 'feet',
-  storeyHeight: 8,
-  offset: xyz(0, 0, 0),
-  numStoreys: 1,
-  shape: { type: 'rectangle', data: xy(24, 21) },
-  roof: {
-    type: 'pitched',
-    pitch: { rise: 8, run: 12 },
-    eaves: x(1),
-    surface: {
-      style: 'shingles',
-      material: 'asphalt composition'
+  anchorPoint: { x: 12, y: 10.5, z: 0 },
+  def: {
+    SW: { x: 0, y: 0 },
+    S1: { x: 2, y: 0 },
+    S2: { x: 22, y: 0 },
+    SE: { x: 24, y: 0 },
+    NE: { x: 24, y: 21 },
+    NW: { x: 0, y: 21 },
+    RECT: {
+      shape: 'polygon',
+      corners: [
+        { "$ref": "#/def/SW" },
+        { "$ref": "#/def/SE" },
+        { "$ref": "#/def/NE" },
+        { "$ref": "#/def/NW" }
+      ]
     }
   },
-  ceiling: {
-    fixtures: [
-      { at: xy(12, 9), type: 'power outlet, duplex' },
-      { at: xy(6, 14), type: 'light fixture' }, // TODO: 6'x6" fluorescent
-      { at: xy(12, 14), type: 'light fixture' }, // TODO: 6'x6" fluorescent
-      { at: xy(18, 14), type: 'light fixture' } // TODO: 6'x6" fluorescent
-    ]
-  },
-  walls: [{
-    name: 'front wall',
-    exterior: {
-      surface: {
-        style: 'clapboard',
-        material: 'fiber-cement'
-      },
+  storeys: [{
+    name: 'ground storey',
+    height: 8,
+    floor: {
+      outline: { "$ref": "#/def/RECT" },
+      surface: { material: 'concrete' }
+    },
+    ceiling: {
       fixtures: [
-        { at: xy(+2, 6), type: 'sconce' },
-        { at: xy(-2, 6), type: 'sconce' }
-      ],
-      downspouts: [
-        { at: x(+0.25) },
-        { at: x(-0.25) }
-      ],
-      doors: [{
-        name: 'garage door',
-        yLeafCount: 5,
-        motion: 'overhead',
-        shape: { type: 'rectangle', data: xy(16, 7) },
-        center: x(12),
-        casing: { width: x(0.5) }
+        { at: { x: 12, y: 9 }, copy: { $ref: 'power outlet, duplex' } },
+        { at: { x: 6, y: 14 }, copy: { $ref: 'light fixture' } }, // TODO: 6'x6" fluorescent
+        { at: { x: 12, y: 14 }, copy: { $ref: 'light fixture' } }, // TODO: 6'x6" fluorescent
+        { at: { x: 18, y: 14 }, copy: { $ref: 'light fixture' } } // TODO: 6'x6" fluorescent
+      ]
+    },
+    walls: {
+      exterior: [{
+        name: 'front wall',
+        begin: { $ref: '#/def/SW' },
+        end: { $ref: '#/def/SE' },
+        outside: {
+          surface: {
+            style: 'clapboard',
+            material: 'fiber-cement'
+          },
+          fixtures: [
+            { at: { x: +2, y: 6 }, copy: { $ref: 'sconce' } },
+            { at: { x: -2, y: 6 }, copy: { $ref: 'sconce' } }
+          ],
+          downspouts: [
+            { at: { x: +0.25 } },
+            { at: { x: -0.25 } }
+          ],
+          doors: [{
+            name: 'garage door',
+            leafCount: { rows: 5 },
+            motion: 'overhead',
+            shape: { type: 'rectangle', size: { x: 16, y: 7 } },
+            center: { x: 12 },
+            casing: { width: 0.5 }
+          }]
+        },
+        inside: {
+          surface: {
+            style: 'flat', /* default */
+            material: 'drywall' /* default */
+          }
+        }
+      }, {
+        name: 'right wall',
+        end: { $ref: '#/def/NE' },
+        outside: {
+          doors: [{
+            name: 'side door',
+            motion: 'swinging',
+            knobSide: 'left',
+            shape: { type: 'rectangle', size: { x: 3, y: 6 + 8 / 12 } },
+            center: { x: 10.5 },
+            casing: { width: 0.5 }
+          }],
+          fixtures: [
+            { at: { x: 8, y: 6 }, copy: { $ref: 'sconce' } }
+          ]
+        },
+        inside: {
+          fixtures: [
+            { at: { x: +5, y: 4 }, copy: { $ref: 'power outlet, duplex' } },
+            { at: { x: 13, y: 4 }, copy: { $ref: 'light switch', n: 2 } }, // TODO: controls what?
+            { at: { x: -5, y: 4 }, copy: { $ref: 'power outlet, duplex' } }
+          ]
+        }
+      }, {
+        name: 'back wall',
+        end: { $ref: '#/def/NW' },
+        outside: {
+          downspouts: [
+            { at: { x: +0.25 } },
+            { at: { x: -0.25 } }
+          ]
+        },
+        inside: {
+          fixtures: [
+            { at: { x: +6, y: 4 }, copy: { $ref: 'power outlet, duplex' } },
+            { at: { x: -6, y: 4 }, copy: { $ref: 'power outlet, duplex' } }
+          ]
+        }
+      }, {
+        name: 'left wall',
+        end: { $ref: '#/def/SW' },
+        inside: {
+          fixtures: [
+            { at: { x: +1, y: 4 }, copy: { $ref: 'light switch' } }, // TODO: controls what?
+            { at: { x: +5, y: 4 }, copy: { $ref: 'power outlet, duplex' } },
+            { at: { x: -5, y: 4 }, copy: { $ref: 'power outlet, duplex' } }
+          ]
+        }
       }]
     },
-    interior: {
-      surface: {
-        style: 'flat', // default
-        material: 'drywall' // default
+    rooms: [{
+      outline: {
+        shape: 'rectangle',
+        size: { x: 23, y: 20 }
       },
-      fixtures: [
-
-      ]
-    },
-    roofline: {
-      type: 'mixed',
-      mix: [{
-        type: 'pitched',
-        distance: x(2)
-      }, {
-        type: 'gabled',
-        distance: x(22)
-      }, {
-        type: 'pitched',
-        distance: x(2)
+      use: 'circulation',
+      contents: [{
+        copy: { $ref: 'CITY.vehicle.car' },
+        at: { x: 17, y: 10 }
       }]
-    }
+    }]
   }, {
-    name: 'right wall',
-    exterior: {
-      roofline: { type: 'gabled' },
-      doors: [{
-        name: 'side door',
-        motion: 'swinging',
-        knobSide: 'left',
-        shape: { type: 'rectangle', data: xy(3, 6 + 8 / 12) },
-        center: x(10.5),
-        casing: { width: x(0.5) }
-      }],
-      fixtures: [
-        { at: xy(8, 6), type: 'sconce' }
-      ]
+    name: 'attic',
+    height: 0,
+    floor: {
+      outline: { "$ref": "#/def/RECT" },
+      surface: { material: 'wood' }
     },
-    interior: {
-      fixtures: [
-        { at: xy(+5, 4), type: 'power outlet, duplex' },
-        { at: xy(13, 4), type: 'light switch', n: 2 }, // TODO: controls what?
-        { at: xy(-5, 4), type: 'power outlet, duplex' }
-      ]
-    }
-  }, {
-    name: 'back wall',
-    exterior: {
-      roofline: { type: 'pitched' },
-      downspouts: [
-        { at: x(+0.25) },
-        { at: x(-0.25) }
-      ]
+    roof: {
+      type: 'pitched',
+      pitch: { rise: 8, run: 12 },
+      eaves: 1,
+      surface: {
+        style: 'shingles',
+        material: 'asphalt composition'
+      }
     },
-    interior: {
-      fixtures: [
-        { at: xy(+6, 4), type: 'power outlet, duplex' },
-        { at: xy(-6, 4), type: 'power outlet, duplex' }
-      ]
-    }
-  }, {
-    name: 'left wall',
-    exterior: {
-      roofline: { type: 'gabled' }
-    },
-    interior: {
-      fixtures: [
-        { at: xy(+1, 4), type: 'light switch' }, // TODO: controls what?
-        { at: xy(+5, 4), type: 'power outlet, duplex' },
-        { at: xy(-5, 4), type: 'power outlet, duplex' }
-      ]
+    walls: {
+      exterior: [{
+        name: 'front wall (left)',
+        begin: { $ref: '#/def/SW' },
+        end: { $ref: '#/def/S1' },
+        roofline: 'pitched'
+      }, {
+        name: 'front wall (center)',
+        end: { $ref: '#/def/S2' },
+        roofline: 'gabled'
+      }, {
+        name: 'front wall (right)',
+        end: { $ref: '#/def/SE' },
+        roofline: 'pitched'
+      }, {
+        name: 'right wall',
+        end: { $ref: '#/def/NE' },
+        roofline: 'gabled'
+      }, {
+        name: 'back wall',
+        end: { $ref: '#/def/NW' },
+        roofline: 'pitched'
+      }, {
+        name: 'left wall',
+        end: { $ref: '#/def/SW' },
+        roofline: 'gabled'
+      }]
     }
   }]
 }

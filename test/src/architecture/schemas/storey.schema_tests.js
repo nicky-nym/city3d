@@ -32,7 +32,9 @@ describe('SCHEMA', function () {
         rooms: [],
         roof: { form: 'pitched', pitch: { rise: 8, run: 12 } },
         ceiling: {},
-        walls: []
+        walls: {
+          exterior: []
+        }
       }
       validator(goodJSON).should.equal(true)
     })
@@ -53,46 +55,48 @@ describe('SCHEMA', function () {
         rooms: [],
         roof: { form: 'pitched', pitch: { rise: 8, run: 12 } },
         ceiling: {},
-        walls: [{
-          context: 'city3d',
-          type: 'wall.schema.json',
-          name: '2nd floor, south wall',
-          unit: 'feet',
-          roofline: 'gabled',
-          exterior: {
-            surface: {
-              style: 'clapboard',
-              material: 'fiber-cement'
+        walls: {
+          exterior: [{
+            context: 'city3d',
+            type: 'wall.schema.json',
+            name: '2nd floor, south wall',
+            unit: 'feet',
+            roofline: 'gabled',
+            outside: {
+              surface: {
+                style: 'clapboard',
+                material: 'fiber-cement'
+              },
+              doors: [{
+                name: 'garage door',
+                leafCount: { rows: 5 },
+                motion: 'overhead',
+                outline: { shape: 'rectangle', size: { x: 16, y: 7 } },
+                center: 12,
+                casing: { width: 0.5 }
+              }],
+              windows: [],
+              fixtures: [{
+                at: { x: +2, y: 6 },
+                copy: { $ref: 'CITY.fixtures.sconce' }
+              }, {
+                at: { x: -2, y: 6 },
+                copy: { $ref: 'CITY.fixtures.sconce' }
+              }],
+              downspouts: [
+                { at: { x: +0.25 } },
+                { at: { x: -0.25 } }
+              ]
             },
-            doors: [{
-              name: 'garage door',
-              leafCount: { rows: 5 },
-              motion: 'overhead',
-              outline: { shape: 'rectangle', size: { x: 16, y: 7 } },
-              center: 12,
-              casing: { width: 0.5 }
-            }],
-            windows: [],
-            fixtures: [{
-              at: { x: +2, y: 6 },
-              copy: { $ref: 'CITY.fixtures.sconce' }
-            }, {
-              at: { x: -2, y: 6 },
-              copy: { $ref: 'CITY.fixtures.sconce' }
-            }],
-            downspouts: [
-              { at: { x: +0.25 } },
-              { at: { x: -0.25 } }
-            ]
-          },
-          interior: {
-            surface: {
-              style: 'flat',
-              material: 'drywall'
-            },
-            fixtures: []
-          }
-        }]
+            inside: {
+              surface: {
+                style: 'flat',
+                material: 'drywall'
+              },
+              fixtures: []
+            }
+          }]
+        }
       }
       validator(goodJSON).should.equal(true)
     })

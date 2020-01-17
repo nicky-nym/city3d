@@ -24,16 +24,19 @@ export default /* eslint-disable */
       rooms: [],
       roof: { form: 'pitched', pitch: { rise: 8, run: 12 } },
       ceiling: {},
-      walls: []
+      walls: {
+        exterior: [],
+        interior: []
+      }
     }
   ],
   "required": [],
   "properties": {
     "context": {
-      "type": "string"
+      "const": "city3d"
     },
     "type": {
-      "type": "string"
+      "const": "storey.schema.json"
     },
     "name": {
       "type": "string"
@@ -55,9 +58,21 @@ export default /* eslint-disable */
       "$ref": "ceiling.schema.json"
     },
     "walls": {
-      "type": "array",
-      "items": {
-        "$ref": "wall.schema.json"
+      "type": "object",
+      "required": [  ],
+      "properties": {
+        "exterior": {
+          "type": "array",
+          "items": {
+            "$ref": "wall.schema.json"
+          }
+        },
+        "interior": {
+          "type": "array",
+          "items": {
+            "$ref": "wall.schema.json"
+          }
+        }
       }
     },
     "rooms": {

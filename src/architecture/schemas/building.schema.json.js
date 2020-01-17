@@ -11,10 +11,13 @@ export default /* eslint-disable */
       type: 'building.schema.json',
       name: 'Empire State Building',
       unit: 'feet',
+      anchorPoint: { x: 0, y: 0, z: 0 },
       storeys: [{
         floor: {
-          shape: 'rectangle',
-          size: { x: 200, y: 200 }
+          outline: {
+            shape: 'rectangle',
+            size: { x: 200, y: 200 }  
+          }
         }
       }]
     },
@@ -23,22 +26,23 @@ export default /* eslint-disable */
       unit: 'feet',
       storeys: [{
         height: 8,
-        floor: { shape: 'rectangle', size: { x: 24, y: 21 } },
+        floor: { 
+          outline: { shape: 'rectangle', size: { x: 24, y: 21 } },
+        },
         rooms: [],
         roof: { form: 'pitched', pitch: { rise: 8, run: 12 } },
         ceiling: {},
         walls: []
       }]
-
     }
   ],
   "required": [],
   "properties": {
     "context": {
-      "type": "string"
+      "const": "city3d"
     },
     "type": {
-      "type": "string"
+      "const": "building.schema.json"
     },
     "name": {
       "type": "string"
@@ -46,6 +50,10 @@ export default /* eslint-disable */
     "unit": {
       "type": "string",
       "description": "the name of default unit of measure for distances"
+    },
+    "anchorPoint": {
+      "description": "the point that serves as the center of the building when the building is place on a parcel",
+      "$ref": "xy.schema.json"
     },
     "storeys": {
       "type": "array",

@@ -22,10 +22,13 @@ describe('SCHEMA', function () {
         type: 'building.schema.json',
         name: 'Empire State Building',
         unit: 'feet',
+        anchorPoint: { x: 0, y: 0, z: 0 },
         storeys: [{
           floor: {
-            shape: 'rectangle',
-            size: { x: 200, y: 200 }
+            outline: {
+              shape: 'rectangle',
+              size: { x: 200, y: 200 }
+            }
           }
         }, {
           height: 8,
@@ -33,7 +36,10 @@ describe('SCHEMA', function () {
           rooms: [],
           roof: { form: 'pitched', pitch: { rise: 8, run: 12 } },
           ceiling: {},
-          walls: []
+          walls: {
+            exterior: [],
+            interior: []
+          }
         }]
       }
       validator(goodJSON).should.equal(true)
