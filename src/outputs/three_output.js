@@ -208,8 +208,10 @@ class ThreeOutput extends Output {
 
   _buildSceneFrom (model) {
     if (!this._modelsInScene.includes(model)) {
-      model.populateRoutes()
+      model.populateRoutes(this.add.bind(this))
+      if (window.DEBUG) var t0 = Date.now()
       this._scene.buildFrom(model)
+      if (window.DEBUG) this.print(`time for this._scene.buildFrom(model) was ${Date.now() - t0} msec`)
       const SHOW_PATH = true
       if (SHOW_PATH) {
         this._scene.addPaths(model)

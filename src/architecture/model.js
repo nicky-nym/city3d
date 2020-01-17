@@ -5,7 +5,7 @@
  * For more information, please refer to <http://unlicense.org>
  */
 
-import { FeatureInstance, FeatureLODGroup } from '../core/feature.js'
+import { FeatureGroup, FeatureInstance, FeatureLODGroup } from '../core/feature.js'
 import { Geometry } from '../core/geometry.js'
 import { Kayak } from '../../content/movers/kayak.js'
 import { Route } from '../routes/route.js'
@@ -31,16 +31,46 @@ class Model extends FeatureLODGroup {
     return routes
   }
 
-  populateRoutes () {
+  populateRoutes (callback) {
+    const MAX_MSEC_FOR_CHUNK = 100
     const routes = this.getRoutes()
-    for (const route of routes) {
-      // TODO: use route.speedLimit(), maybe by having a maxSpeed option for Movers.
-      if (route.use === Use.CANAL) {
-        this.add(new Kayak(route))
+    const movers = new FeatureGroup()
+    if (window.DEBUG) {
+      var t0 = Date.now()
+      var selfTime = 0
+      var numChunks = 0
+    }
+
+    const doChunk = () => {
+      const t1 = Date.now()
+      do {
+        const route = routes.pop()
+        if (!route) break
+
+        // TODO: use route.speedLimit(), maybe by having a maxSpeed option for Movers.
+        if (route.use === Use.CANAL) {
+          movers.add(new Kayak(route))
+        } else {
+          movers.add(new Vehicle(route, randomInt(3, 10) * 0.04))
+        }
+      } while (Date.now() - t1 < MAX_MSEC_FOR_CHUNK)
+
+      if (window.DEBUG) {
+        selfTime += Date.now() - t1
+        numChunks++
+        if (routes.length === 0) {
+          console.log(`elapsed time to create Movers = ${Date.now() - t0} msec, self time = ${selfTime}, num chunks = ${numChunks}`)
+        }
+      }
+      if (routes.length === 0) {
+        this.add(movers)
+        callback(movers)
       } else {
-        this.add(new Vehicle(route, randomInt(3, 10) * 0.04))
+        setTimeout(doChunk, 0)
       }
     }
+
+    setTimeout(doChunk, 0)
   }
 }
 

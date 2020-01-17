@@ -11,6 +11,8 @@ import { METRIC } from '../src/architecture/metric.js'
 import { Ray } from '../src/core/ray.js'
 import { xy, xyz, rectangleOfSize } from '../src/core/util.js'
 
+window.DEBUG = true
+
 function addBuildings (city) {
   let ray
   let corners
