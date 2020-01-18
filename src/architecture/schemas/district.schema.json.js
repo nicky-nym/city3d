@@ -16,7 +16,8 @@ export default /* eslint-disable */
         size: { x: 2.3, y: 13.4 }
       },
       parcels: [],
-      contents: []
+      contents: [],
+      extras: { budget: {}, authors: {} }
     },
     {
       name: 'Manhattan'
@@ -27,6 +28,7 @@ export default /* eslint-disable */
     { }
   ],
   "required": [],
+  "additionalProperties": false,
   "properties": {
     "context": {
       "const": "city3d"
@@ -55,6 +57,10 @@ export default /* eslint-disable */
       "items": {
         "$ref": "copy.schema.json"
       }
+    },
+    "extras": {
+      "description": "any additional data to keep track of",
+      "type": "object"
     }
   }
 }

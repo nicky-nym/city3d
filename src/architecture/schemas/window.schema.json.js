@@ -16,10 +16,12 @@ export default /* eslint-disable */
       leafCount: { cols: 2 },
       lites: { rows: 2, cols: 1 },
       center: { x: 4, y: 3 },
-      casing: { width: 0.5 }
+      casing: { width: 0.5 },
+      extras: { budget: {}, authors: {} }
     }
   ],
   "required": [  ],
+  "additionalProperties": false,
   "properties": {
     "context": {
       "const": "city3d"
@@ -57,6 +59,10 @@ export default /* eslint-disable */
           "type": "number"
         }
       }
+    },
+    "extras": {
+      "description": "any additional data to keep track of",
+      "type": "object"
     }
   }
 }

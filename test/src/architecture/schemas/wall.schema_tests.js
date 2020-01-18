@@ -73,8 +73,13 @@ describe('SCHEMA', function () {
       validator(goodJSON).should.equal(true)
     })
 
-    it('should ignore unrecognized additional optional properties', function () {
-      const goodJSON = { iggyPop: { no: 'fun' } }
+    it('should reject unrecognized additional optional properties', function () {
+      const badJSON = { iggyPop: { no: 'fun' } }
+      validator(badJSON).should.equal(false)
+    })
+
+    it('should allow for unrecognized properties in extras:', function () {
+      const goodJSON = { extras: { iggyPop: { no: 'fun' } } }
       validator(goodJSON).should.equal(true)
     })
 

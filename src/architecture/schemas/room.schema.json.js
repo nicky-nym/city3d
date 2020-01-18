@@ -19,10 +19,12 @@ export default /* eslint-disable */
       contents: [{
         copy: { $ref: 'CITY.furniture.sofa' },
         at: { x: 6, y: 0 }
-      }]
+      }],
+      extras: { budget: {}, authors: {} }
     }
   ],
   "required": [],
+  "additionalProperties": false,
   "properties": {
     "context": {
       "const": "city3d"
@@ -48,6 +50,10 @@ export default /* eslint-disable */
       "items": {
         "$ref": "copy.schema.json"
       }
+    },
+    "extras": {
+      "description": "any additional data to keep track of",
+      "type": "object"
     }
   }
 }

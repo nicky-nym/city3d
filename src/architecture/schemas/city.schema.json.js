@@ -22,7 +22,8 @@ export default /* eslint-disable */
         { copy: { $ref: 'CITY.districts.Queens' } },
         { copy: { $ref: 'CITY.districts.Staten_Island' } }
       ],
-      contents: []
+      contents: [],
+      extras: { budget: {}, authors: {} }
     },
     {
       name: 'London'
@@ -33,6 +34,7 @@ export default /* eslint-disable */
     { }
   ],
   "required": [],
+  "additionalProperties": false,
   "properties": {
     "context": {
       "const": "city3d"
@@ -61,6 +63,10 @@ export default /* eslint-disable */
       "items": {
         "$ref": "copy.schema.json"
       }
+    },
+    "extras": {
+      "description": "any additional data to keep track of",
+      "type": "object"
     }
   }
 }

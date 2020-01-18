@@ -16,7 +16,8 @@ export default /* eslint-disable */
           shape: 'rectangle',
           size: { x: 200, y: 200 }
         }
-      }
+      },
+      extras: { budget: {}, authors: {} }
     },
     {
       height: 8,
@@ -31,6 +32,7 @@ export default /* eslint-disable */
     }
   ],
   "required": [],
+  "additionalProperties": false,
   "properties": {
     "context": {
       "const": "city3d"
@@ -80,6 +82,10 @@ export default /* eslint-disable */
       "items": {
         "$ref": "room.schema.json"
       }
+    },
+    "extras": {
+      "description": "any additional data to keep track of",
+      "type": "object"
     }
   }
 }

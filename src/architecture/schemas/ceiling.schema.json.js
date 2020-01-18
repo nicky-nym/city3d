@@ -22,10 +22,12 @@ export default /* eslint-disable */
       fixtures: [{
         copy: { $ref: 'CITY.fixtures.ceiling_fan' },
         at: { x: 0, y: 0 }
-      }]
+      }],
+      extras: { budget: {}, authors: {} }
     }
   ],
   "required": [],
+  "additionalProperties": false,
   "properties": {
     "context": {
       "const": "city3d"
@@ -49,6 +51,10 @@ export default /* eslint-disable */
     "fixtures": {
       "type": "array",
       "items": { "$ref": "copy.schema.json" }
+    },
+    "extras": {
+      "description": "any additional data to keep track of",
+      "type": "object"
     }
   }
 }

@@ -23,11 +23,13 @@ export default /* eslint-disable */
       }, {
         copy: { $ref: 'CITY.buildings.house' },
         at: { x: 30, y: 40 }
-      }]
+      }],
+      extras: { budget: {}, authors: {} }
     },
     { }
   ],
   "required": [],
+  "additionalProperties": false,
   "properties": {
     "context": {
       "const": "city3d"
@@ -50,6 +52,10 @@ export default /* eslint-disable */
       "items": {
         "$ref": "copy.schema.json"
       }
+    },
+    "extras": {
+      "description": "any additional data to keep track of",
+      "type": "object"
     }
   }
 }

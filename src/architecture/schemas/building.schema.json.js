@@ -19,7 +19,8 @@ export default /* eslint-disable */
             size: { x: 200, y: 200 }  
           }
         }
-      }]
+      }],
+      extras: { permitInfo: {}, budget: {}, authors: {} }
     },
     {
       name: 'Garage',
@@ -33,10 +34,12 @@ export default /* eslint-disable */
         roof: { form: 'pitched', pitch: { rise: 8, run: 12 } },
         ceiling: {},
         walls: []
-      }]
+      }],
+      extras: { permitInfo: {}, budget: {}, authors: {} }
     }
   ],
   "required": [],
+  "additionalProperties": false,
   "properties": {
     "context": {
       "const": "city3d"
@@ -48,8 +51,8 @@ export default /* eslint-disable */
       "type": "string"
     },
     "unit": {
-      "type": "string",
-      "description": "the name of default unit of measure for distances"
+      "description": "the name of default unit of measure for distances",
+      "type": "string"
     },
     "anchorPoint": {
       "description": "the point that serves as the center of the building when the building is place on a parcel",
@@ -60,6 +63,10 @@ export default /* eslint-disable */
       "items": {
         "$ref": "storey.schema.json"
       }
+    },
+    "extras": {
+      "description": "any additional data to keep track of",
+      "type": "object"
     }
   }
 }

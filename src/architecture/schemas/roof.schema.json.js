@@ -21,10 +21,12 @@ export default /* eslint-disable */
       surface: {
         style: 'shingles',
         material: 'asphalt composition'
-      }
+      },
+      extras: { budget: {}, authors: {} }
     }
   ],
   "required": [],
+  "additionalProperties": false,
   "properties": {
     "context": {
       "const": "city3d"
@@ -53,6 +55,10 @@ export default /* eslint-disable */
     },
     "surface": {
       "$ref": "surface.schema.json"
+    },
+    "extras": {
+      "description": "any additional data to keep track of",
+      "type": "object"
     }
   }
 }

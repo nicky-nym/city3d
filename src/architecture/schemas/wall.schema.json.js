@@ -44,10 +44,12 @@ export default /* eslint-disable */
           material: 'drywall'
         },
         fixtures: []
-      }
+      },
+      extras: { budget: {}, authors: {} }
     }
   ],
   "required": [  ],
+  "additionalProperties": false,
   "properties": {
     "context": {
       "const": "city3d"
@@ -106,6 +108,10 @@ export default /* eslint-disable */
           "items": { "$ref": "copy.schema.json" }
         }
       }
+    },
+    "extras": {
+      "description": "any additional data to keep track of",
+      "type": "object"
     }
   }
 }

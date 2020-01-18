@@ -18,10 +18,12 @@ export default /* eslint-disable */
       surface: {
         style: 'parquet',
         material: 'wood'
-      }
+      },
+      extras: { budget: {}, authors: {} }
     }
   ],
   "required": [],
+  "additionalProperties": false,
   "properties": {
     "context": {
       "const": "city3d"
@@ -41,6 +43,10 @@ export default /* eslint-disable */
     },
     "surface": {
       "$ref": "surface.schema.json"
+    },
+    "extras": {
+      "description": "any additional data to keep track of",
+      "type": "object"
     }
   }
 }
