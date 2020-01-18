@@ -37,6 +37,27 @@ export default /* eslint-disable */
         }
       }
     },
+    "beginOrEnd": {
+      /* TODO: fix me!  this definition is not DRY */
+      "type": "object",
+      "required": [  ],
+      "properties": {
+        "ref": {
+          "type": "string",
+          "format": "uri-reference"
+        },
+        "x": {
+          "description": "an x-axis distance, in the default unit of measure",
+          "default": 0,
+          "type": "number"
+        },
+        "y": {
+          "description": "a y-axis distance, in the default unit of measure",
+          "default": 0,
+          "type": "number"
+        }
+      }
+    },
     "extras": {
       "description": "any additional data to keep track of",
       "type": "object"

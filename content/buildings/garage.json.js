@@ -59,7 +59,7 @@ export default /* eslint-disable */
             name: 'garage door',
             leafCount: { rows: 5 },
             motion: 'overhead',
-            outline: { type: 'rectangle', size: { x: 16, y: 7 } },
+            outline: { shape: 'rectangle', size: { x: 16, y: 7 } },
             center: { x: 12 },
             casing: { width: 0.5 }
           }]
@@ -78,7 +78,7 @@ export default /* eslint-disable */
             name: 'side door',
             motion: 'swinging',
             handleSide: 'left',
-            outline: { type: 'rectangle', size: { x: 3, y: 6 + 8 / 12 } },
+            outline: { shape: 'rectangle', size: { x: 3, y: 6 + 8 / 12 } },
             center: { x: 10.5 },
             casing: { width: 0.5 }
           }],

@@ -55,8 +55,8 @@ export default /* eslint-disable */
     "type": { "const": "wall.schema.json" },
     "name": { "$ref": "definitions.json#/def/name" },
     "unit": { "$ref": "definitions.json#/def/unit" },
-    "begin": { "$ref": "definitions.json#/def/ref" },
-    "end": { "$ref": "definitions.json#/def/ref" },
+    "begin": { "$ref": "definitions.json#/def/beginOrEnd" },
+    "end": { "$ref": "definitions.json#/def/beginOrEnd" },
     "roofline": {
       "enum": ["gabled", "pitched"]
     },
