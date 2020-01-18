@@ -23,6 +23,20 @@ export default /* eslint-disable */
         "$ref": "copy.schema.json"
       }
     },
+    "def": {
+      "description": "schema definitions for property values that are shared across schemas",
+      "type": "object"
+    },
+    "ref": { 
+      "type": "object",
+      "required": [ "$ref" ],
+      "properties": {
+        "ref": {
+          "type": "string",
+          "format": "uri-reference"
+        }
+      }
+    },
     "extras": {
       "description": "any additional data to keep track of",
       "type": "object"

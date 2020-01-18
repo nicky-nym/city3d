@@ -45,6 +45,7 @@ export default /* eslint-disable */
     "type": { "const": "building.schema.json" },
     "name": { "$ref": "definitions.json#/def/name" },
     "unit": { "$ref": "definitions.json#/def/unit" },
+    "def": { "$ref": "definitions.json#/def/def" },
     "anchorPoint": {
       "description": "the point that serves as the center of the building when the building is place on a parcel",
       "$ref": "xy.schema.json"

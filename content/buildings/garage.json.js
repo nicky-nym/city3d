@@ -12,7 +12,7 @@ export default /* eslint-disable */
     SE: { x: 24, y: 0 },
     NE: { x: 24, y: 21 },
     NW: { x: 0, y: 21 },
-    RECT: {
+    RECTANGLE: {
       shape: 'polygon',
       corners: [
         { "$ref": "#/def/SW" },
@@ -26,7 +26,7 @@ export default /* eslint-disable */
     name: 'ground storey',
     height: 8,
     floor: {
-      outline: { "$ref": "#/def/RECT" },
+      outline: { "$ref": "#/def/RECTANGLE" },
       surface: { material: 'concrete' }
     },
     ceiling: {
@@ -59,15 +59,15 @@ export default /* eslint-disable */
             name: 'garage door',
             leafCount: { rows: 5 },
             motion: 'overhead',
-            shape: { type: 'rectangle', size: { x: 16, y: 7 } },
+            outline: { type: 'rectangle', size: { x: 16, y: 7 } },
             center: { x: 12 },
             casing: { width: 0.5 }
           }]
         },
         inside: {
           surface: {
-            style: 'flat', /* default */
-            material: 'drywall' /* default */
+            style: 'flat',
+            material: 'drywall'
           }
         }
       }, {
@@ -77,8 +77,8 @@ export default /* eslint-disable */
           doors: [{
             name: 'side door',
             motion: 'swinging',
-            knobSide: 'left',
-            shape: { type: 'rectangle', size: { x: 3, y: 6 + 8 / 12 } },
+            handleSide: 'left',
+            outline: { type: 'rectangle', size: { x: 3, y: 6 + 8 / 12 } },
             center: { x: 10.5 },
             casing: { width: 0.5 }
           }],
@@ -135,15 +135,15 @@ export default /* eslint-disable */
     name: 'attic',
     height: 0,
     floor: {
-      outline: { "$ref": "#/def/RECT" },
+      outline: { "$ref": "#/def/RECTANGLE" },
       surface: { material: 'wood' }
     },
     roof: {
-      type: 'pitched',
+      form: 'pitched',
       pitch: { rise: 8, run: 12 },
       eaves: 1,
       surface: {
-        style: 'shingles',
+        style: 'shingled',
         material: 'asphalt composition'
       }
     },
@@ -175,5 +175,6 @@ export default /* eslint-disable */
         roofline: 'gabled'
       }]
     }
-  }]
+   }]
+
 }

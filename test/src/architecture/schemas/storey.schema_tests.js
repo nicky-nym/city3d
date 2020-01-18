@@ -72,7 +72,7 @@ describe('SCHEMA', function () {
                 leafCount: { rows: 5 },
                 motion: 'overhead',
                 outline: { shape: 'rectangle', size: { x: 16, y: 7 } },
-                center: 12,
+                center: { x: 12 },
                 casing: { width: 0.5 }
               }],
               windows: [],

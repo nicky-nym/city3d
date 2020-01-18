@@ -15,7 +15,7 @@ export default /* eslint-disable */
       outline: { shape: 'rectangle', data: { x: 16, y: 7 } },
       leafCount: { rows: 5 },
       handleSide: 'left',
-      center: 12,
+      center: { x: 12 },
       casing: { width: 0.5 },
       extras: { budget: {}, authors: {} }
     }
@@ -40,7 +40,7 @@ export default /* eslint-disable */
       "enum": ["left", "center", "right"]
     },
     "center": {
-      "type": "number"
+      "$ref": "xy.schema.json"
     },
     "casing": { 
       "type": "object",

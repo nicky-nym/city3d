@@ -22,8 +22,8 @@ export default /* eslint-disable */
           yLeafCount: 5,
           motion: 'overhead',
           shape: { shape: 'rectangle', data: { x: 16, y: 7 } },
-          center: { x:12 },
-          casing: { width: { x:0.5 } }
+          center: { x: 12 },
+          casing: { width: { x: 0.5 } }
         }],
         windows: [],
         fixtures: [{
@@ -55,6 +55,8 @@ export default /* eslint-disable */
     "type": { "const": "wall.schema.json" },
     "name": { "$ref": "definitions.json#/def/name" },
     "unit": { "$ref": "definitions.json#/def/unit" },
+    "begin": { "$ref": "definitions.json#/def/ref" },
+    "end": { "$ref": "definitions.json#/def/ref" },
     "roofline": {
       "enum": ["gabled", "pitched"]
     },

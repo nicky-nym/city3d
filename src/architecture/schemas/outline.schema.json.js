@@ -38,8 +38,11 @@ export default /* eslint-disable */
       size: { x: 4, y: 8 },
       top: { style: 'arched', curvature: 0.4 }
     },
+    { 
+      $ref: '#/def/RECTANGLE'
+    }
   ],
-  "required": [ "shape" ],
+  "required": [  ],
   "properties": {
     "shape": {
       "enum": [ "polygon", "rectangle" ]
@@ -71,6 +74,10 @@ export default /* eslint-disable */
           "maximum": 1
         }
       }
+    },
+    "$ref": {
+      "type": "string",
+      "format": "uri-reference"
     },
   },
   "definitions": {
