@@ -17,6 +17,7 @@ describe('SCHEMA', function () {
     ajv.addSchema(SCHEMA.GRID, SCHEMA.GRID.$id)
     ajv.addSchema(SCHEMA.PITCH, SCHEMA.PITCH.$id)
     ajv.addSchema(SCHEMA.OUTLINE, SCHEMA.OUTLINE.$id)
+    ajv.addSchema(SCHEMA.DEFINITIONS, SCHEMA.DEFINITIONS.$id)
     const validator = ajv.compile(SCHEMA.WINDOW)
 
     it('should accept a simple valid window spec', function () {

@@ -14,6 +14,7 @@ describe('SCHEMA', function () {
   describe('SCHEMA.WALL', function () {
     const ajv = new Ajv()
     ajv.addSchema(SCHEMA.COPY, SCHEMA.COPY.$id)
+    ajv.addSchema(SCHEMA.DEFINITIONS, SCHEMA.DEFINITIONS.$id)
     ajv.addSchema(SCHEMA.DOOR, SCHEMA.DOOR.$id)
     ajv.addSchema(SCHEMA.GRID, SCHEMA.GRID.$id)
     ajv.addSchema(SCHEMA.OUTLINE, SCHEMA.OUTLINE.$id)

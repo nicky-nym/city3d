@@ -41,19 +41,10 @@ export default /* eslint-disable */
   "required": [],
   "additionalProperties": false,
   "properties": {
-    "context": {
-      "const": "city3d"
-    },
-    "type": {
-      "const": "building.schema.json"
-    },
-    "name": {
-      "type": "string"
-    },
-    "unit": {
-      "description": "the name of default unit of measure for distances",
-      "type": "string"
-    },
+    "context": { "$ref": "definitions.json#/def/context" },
+    "type": { "const": "building.schema.json" },
+    "name": { "$ref": "definitions.json#/def/name" },
+    "unit": { "$ref": "definitions.json#/def/unit" },
     "anchorPoint": {
       "description": "the point that serves as the center of the building when the building is place on a parcel",
       "$ref": "xy.schema.json"
@@ -64,9 +55,6 @@ export default /* eslint-disable */
         "$ref": "storey.schema.json"
       }
     },
-    "extras": {
-      "description": "any additional data to keep track of",
-      "type": "object"
-    }
+    "extras": { "$ref": "definitions.json#/def/extras" }
   }
 }

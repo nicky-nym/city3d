@@ -20,6 +20,7 @@ describe('SCHEMA', function () {
     ajv.addSchema(SCHEMA.SURFACE, SCHEMA.SURFACE.$id)
     ajv.addSchema(SCHEMA.OUTLINE, SCHEMA.OUTLINE.$id)
     ajv.addSchema(SCHEMA.PLACEMENT, SCHEMA.PLACEMENT.$id)
+    ajv.addSchema(SCHEMA.DEFINITIONS, SCHEMA.DEFINITIONS.$id)
     const validator = ajv.compile(SCHEMA.CEILING)
 
     it('should accept a simple valid ceiling spec', function () {

@@ -36,19 +36,10 @@ export default /* eslint-disable */
   "required": [],
   "additionalProperties": false,
   "properties": {
-    "context": {
-      "const": "city3d"
-    },
-    "type": {
-      "const": "city.schema.json"
-    },
-    "name": {
-      "type": "string"
-    },
-    "unit": {
-      "description": "the name of default unit of measure for distances",
-      "type": "string"
-    },
+    "context": { "$ref": "definitions.json#/def/context" },
+    "type": { "const": "city.schema.json" },
+    "name": { "$ref": "definitions.json#/def/name" },
+    "unit": { "$ref": "definitions.json#/def/unit" },
     "border": {
       "$ref": "outline.schema.json"
     },
@@ -58,15 +49,7 @@ export default /* eslint-disable */
         "$ref": "copy.schema.json"
       }
     },
-    "contents": {
-      "type": "array",
-      "items": {
-        "$ref": "copy.schema.json"
-      }
-    },
-    "extras": {
-      "description": "any additional data to keep track of",
-      "type": "object"
-    }
+    "contents": { "$ref": "definitions.json#/def/contents" },
+    "extras": { "$ref": "definitions.json#/def/extras" }
   }
 }

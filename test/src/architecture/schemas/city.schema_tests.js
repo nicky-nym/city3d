@@ -19,6 +19,7 @@ describe('SCHEMA', function () {
     ajv.addSchema(SCHEMA.PITCH, SCHEMA.PITCH.$id)
     ajv.addSchema(SCHEMA.OUTLINE, SCHEMA.OUTLINE.$id)
     ajv.addSchema(SCHEMA.PLACEMENT, SCHEMA.PLACEMENT.$id)
+    ajv.addSchema(SCHEMA.DEFINITIONS, SCHEMA.DEFINITIONS.$id)
     const validator = ajv.compile(SCHEMA.CITY)
 
     it('should accept a simple valid city spec', function () {

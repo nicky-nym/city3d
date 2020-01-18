@@ -34,19 +34,10 @@ export default /* eslint-disable */
   "required": [],
   "additionalProperties": false,
   "properties": {
-    "context": {
-      "const": "city3d"
-    },
-    "type": {
-      "const": "storey.schema.json"
-    },
-    "name": {
-      "type": "string"
-    },
-    "unit": {
-      "type": "string",
-      "description": "the name of default unit of measure for distances"
-    },
+    "context": { "$ref": "definitions.json#/def/context" },
+    "type": { "const": "storey.schema.json" },
+    "name": { "$ref": "definitions.json#/def/name" },
+    "unit": { "$ref": "definitions.json#/def/unit" },
     "height": {
       "type": "number"
     },
@@ -83,9 +74,6 @@ export default /* eslint-disable */
         "$ref": "room.schema.json"
       }
     },
-    "extras": {
-      "description": "any additional data to keep track of",
-      "type": "object"
-    }
+    "extras": { "$ref": "definitions.json#/def/extras" }
   }
 }

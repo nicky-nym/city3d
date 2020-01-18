@@ -26,34 +26,17 @@ export default /* eslint-disable */
   "required": [],
   "additionalProperties": false,
   "properties": {
-    "context": {
-      "const": "city3d"
-    },
-    "type": {
-      "const": "room.schema.json"
-    },
-    "name": {
-      "type": "string"
-    },
-    "unit": {
-      "type": "string",
-      "description": "the name of default unit of measure for distances"
-    },
+    "context": { "$ref": "definitions.json#/def/context" },
+    "type": { "const": "room.schema.json" },
+    "name": { "$ref": "definitions.json#/def/name" },
+    "unit": { "$ref": "definitions.json#/def/unit" },
     "outline": {
       "$ref": "outline.schema.json"
     },
     "use": {
       "enum": ["circulation", "building service", "mechanical", "assignable"]
     },
-    "contents": {
-      "type": "array",
-      "items": {
-        "$ref": "copy.schema.json"
-      }
-    },
-    "extras": {
-      "description": "any additional data to keep track of",
-      "type": "object"
-    }
+    "contents": { "$ref": "definitions.json#/def/contents" },
+    "extras": { "$ref": "definitions.json#/def/extras" }
   }
 }

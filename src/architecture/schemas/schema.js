@@ -5,6 +5,8 @@
  * For more information, please refer to <http://unlicense.org>
  */
 
+import DEFINITIONS from './definitions.json.js'
+
 import BUILDING from './building.schema.json.js'
 import CEILING from './ceiling.schema.json.js'
 import CITY from './city.schema.json.js'
@@ -28,6 +30,8 @@ import XY from './xy.schema.json.js'
 import XYZ from './xyz.schema.json.js'
 
 const SCHEMA = {
+  DEFINITIONS,
+
   BUILDING,
   CEILING,
   CITY,
