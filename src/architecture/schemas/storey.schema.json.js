@@ -40,9 +40,8 @@ export default /* eslint-disable */
     "metadata": { "$ref": "metadata.schema.json" },
     "comments": { "$ref": "definitions.json#/def/comments" },
     "unit": { "$ref": "definitions.json#/def/unit" },
-    "height": {
-      "type": "number"
-    },
+    "repeat": { "$ref": "definitions.json#/def/number" },
+    "height": { "$ref": "definitions.json#/def/number" },
     "floor": {
       "$ref": "floor.schema.json"
     },

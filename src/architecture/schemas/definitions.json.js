@@ -34,36 +34,56 @@ export default /* eslint-disable */
       "description": "schema definitions for property values that are shared across schemas",
       "type": "object"
     },
-    "ref": { 
-      "type": "object",
-      "required": [ "$ref" ],
-      "properties": {
-        "ref": {
-          "type": "string",
-          "format": "uri-reference"
+    "$$ref": {
+      "type": "string",
+      "format": "uri-reference"
+    },
+    "number": {
+      "description": "a number literal, or a specification for a random number",
+      "oneOf": [{
+        "type": "number"
+      }, { 
+        "type": "object",
+        "required": [ "type" ],
+        "properties": {
+          "type": {
+            "const": "randomInt"
+          },
+          "min": {
+            "type": "number"
+          },
+          "max": {
+            "type": "number"
+          }
         }
-      }
+      }]
     },
     "beginOrEnd": {
-      /* TODO: fix me!  this definition is not DRY */
-      "type": "object",
-      "required": [  ],
-      "properties": {
-        "ref": {
-          "type": "string",
-          "format": "uri-reference"
-        },
-        "x": {
-          "description": "an x-axis distance, in the default unit of measure",
-          "default": 0,
-          "type": "number"
-        },
-        "y": {
-          "description": "a y-axis distance, in the default unit of measure",
-          "default": 0,
-          "type": "number"
+      "anyOf": [{
+        "type": "object",
+        "required": [ "$ref" ],
+        "properties": {
+          "$ref": {
+            "type": "string",
+            "format": "uri-reference"
+          }
         }
-      }
+      }, {
+        "type": "object",
+        "required": [  ],
+        "properties": {
+          "x": {
+            "description": "an x-axis distance, in the default unit of measure",
+            "default": 0,
+            "type": "number"
+          },
+          "y": {
+            "description": "a y-axis distance, in the default unit of measure",
+            "default": 0,
+            "type": "number"
+          }
+        }
+      }]
     },
     "extras": {
       "description": "any additional data to keep track of",

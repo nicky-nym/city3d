@@ -32,7 +32,18 @@ export default /* eslint-disable */
     }
   },
   storeys: [{
+    comments: [
+      'TODO: This building definition always has windows on three sides (front,',
+      'left, right). If this building is in a row of identical buildings',
+      'that are directly adjacent to each other, then the windows in front',
+      'are fine, but the side windows will be abutting the neighboring',
+      'windows. It would be good to have a way to only include the windows',
+      'on the walls that are unobstructured, which may vary by floor,',
+      'and by whether this building is on a corner parcel.'
+    ],
+    repeat: { type: 'randomInt', min: 4, max: 60 },
     height: { type: 'randomInt', min: 9, max: 14 },
+    height: 88,
     floor: {
       outline: { "$ref": "#/def/RECTANGLE" },
       surface: { material: 'concrete' }
@@ -75,6 +86,13 @@ export default /* eslint-disable */
       }]
     },
     rooms: [{
+      comments: [
+        'TODO: Right now the entire storey only has a single big empty room,',
+        'which will get tallied as 2,400 square feet of 100% "Assignable area".',
+        'We should instead be dividing the storey into a number of rooms,',
+        'so that ab out two-thirds of the space is "Assignable area", and the rest is',
+        'a mix of "Circulation area", "Building service area", and "Mechanical area".'
+      ],
       outline: {
         shape: 'rectangle',
         size: { x: 49, y: 49 }
@@ -85,8 +103,6 @@ export default /* eslint-disable */
         at: { x: 17, y: 10 }
       }]
     }]
-  }, {
-    repeat: { type: 'randomInt', min: 4, max: 60 }
   }, {
     name: 'attic',
     height: 0,

@@ -18,11 +18,15 @@ export default /* eslint-disable */
       center: { x: 4, y: 3 },
       casing: { width: 0.5 },
       extras: { budget: {}, authors: {} }
+    },
+    {
+      $ref: '#/def/WINDOW'
     }
   ],
   "required": [  ],
   "additionalProperties": false,
   "properties": {
+    "$ref": { "$ref": "definitions.json#/def/$$ref" },
     "context": { "$ref": "definitions.json#/def/context" },
     "type": { "const": "window.schema.json" },
     "name": { "$ref": "definitions.json#/def/name" },

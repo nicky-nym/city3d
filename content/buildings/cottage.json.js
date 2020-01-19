@@ -27,14 +27,6 @@ export default /* eslint-disable */
       ]
     }
   },
-  /*
-  TODO: add half-wall behind kitchen sink
-  TODO: add kitchen cupboards, countertops, sink, stove, fridge
-  TODO: add bathroom cupboard, countertop, sink, toilet, shower
-  TODO: add laundry room washer & dryer
-  TODO: add laundry room coat closet walls & door
-  TODO: add overhead light fixtures
-  */
   storeys: [{
     name: 'ground storey',
     height: 8,
@@ -52,7 +44,14 @@ export default /* eslint-disable */
       '  W1-----A--B       |   F------E2  ',
       '  |                 |           |  ',
       '  |                 |           |  ',
-      '  SW---------------S1----------SE  ',
+      '  SW-S1---------S2-S3----------SE  ',
+      '                                   ',
+      'TODO: add half-wall behind kitchen sink',
+      'TODO: add kitchen cupboards, countertops, sink, stove, fridge',
+      'TODO: add bathroom cupboard, countertop, sink, toilet, shower',
+      'TODO: add laundry room washer & dryer',
+      'TODO: add laundry room coat closet walls & door',
+      'TODO: add overhead light fixtures'
     ],
     walls: {
       exterior: [{
@@ -83,12 +82,12 @@ export default /* eslint-disable */
             casing: { width: 0.5 }
           }],
           fixtures: [
-            { at: { x: +3 + 2 / 12, y: 6 }, copy: { $ref: 'sconce' } },
-            { at: { x: 16 + 2 / 12, y: 6 }, copy: { $ref: 'sconce' } }
+            { at: { x: +3 + 2 / 12, y: 6, from: 'left' }, copy: { $ref: 'sconce' } },
+            { at: { x: 16 + 2 / 12, y: 6, from: 'left' }, copy: { $ref: 'sconce' } }
           ],
           downspouts: [
-            { at: { x: +0.25 } },
-            { at: { x: -0.25 } }
+            { at: { x: +0.25, from: 'left' } },
+            { at: { x: -0.25, from: 'right' } }
           ]
         },
         inside: {
