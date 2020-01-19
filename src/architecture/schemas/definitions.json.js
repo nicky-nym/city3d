@@ -12,6 +12,13 @@ export default /* eslint-disable */
       "description": "a display name for users to see",
       "type": "string"
     },
+    "comments": {
+      "description": "just a space for any notes the author wants to include",
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
     "unit": {
       "description": "the name of default unit of measure for distances",
       "type": "string"

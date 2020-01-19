@@ -34,6 +34,8 @@ export default /* eslint-disable */
     "context": { "$ref": "definitions.json#/def/context" },
     "type": { "const": "parcel.schema.json" },
     "name": { "$ref": "definitions.json#/def/name" },
+    "metadata": { "$ref": "metadata.schema.json" },
+    "comments": { "$ref": "definitions.json#/def/comments" },
     "unit": { "$ref": "definitions.json#/def/unit" },
     "border": {
       "$ref": "outline.schema.json"

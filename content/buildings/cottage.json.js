@@ -43,6 +43,17 @@ export default /* eslint-disable */
       surface: { material: 'carpet' }
     },
     ceiling: {},
+    comments: [
+      '  NW----N2---------N1----------NE  ',
+      '  |      |          |           |  ',
+      '  |      |          |           |  ',
+      '  |      |          C---D------E1  ',
+      '  |      |          |   |       |  ',
+      '  W1-----A--B       |   F------E2  ',
+      '  |                 |           |  ',
+      '  |                 |           |  ',
+      '  SW---------------S1----------SE  ',
+    ],
     walls: {
       exterior: [{
         name: 'front wall',

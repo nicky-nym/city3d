@@ -13,13 +13,7 @@ import { SCHEMA } from '../../../../src/architecture/schemas/schema.js'
 describe('SCHEMA', function () {
   describe('SCHEMA.DISTRICT', function () {
     const ajv = new Ajv()
-    ajv.addSchema(SCHEMA.XY, SCHEMA.XY.$id)
-    ajv.addSchema(SCHEMA.COPY, SCHEMA.COPY.$id)
-    ajv.addSchema(SCHEMA.GRID, SCHEMA.GRID.$id)
-    ajv.addSchema(SCHEMA.PITCH, SCHEMA.PITCH.$id)
-    ajv.addSchema(SCHEMA.OUTLINE, SCHEMA.OUTLINE.$id)
-    ajv.addSchema(SCHEMA.PLACEMENT, SCHEMA.PLACEMENT.$id)
-    ajv.addSchema(SCHEMA.DEFINITIONS, SCHEMA.DEFINITIONS.$id)
+    Object.keys(SCHEMA).forEach(item => ajv.addSchema(SCHEMA[item], SCHEMA[item].$id))
     const validator = ajv.compile(SCHEMA.DISTRICT)
 
     it('should accept a simple valid district spec', function () {
