@@ -6,6 +6,7 @@
  */
 
 import DEFINITIONS from './definitions.json.js'
+import METADATA from './metadata.schema.json.js'
 
 import BUILDING from './building.schema.json.js'
 import CEILING from './ceiling.schema.json.js'
@@ -31,6 +32,7 @@ import XYZ from './xyz.schema.json.js'
 
 const SCHEMA = {
   DEFINITIONS,
+  METADATA,
 
   BUILDING,
   CEILING,

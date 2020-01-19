@@ -3,6 +3,11 @@ export default /* eslint-disable */
   context: 'city3d',
   type: 'building.schema.json',
   name: 'Cottage',
+  metadata: {
+    license: 'UNLICENSE: This is free and unencumbered software released into the public domain. For more information, please refer to <http://unlicense.org>',
+    creator: 'Authored at <https://github.com/nicky-nym/city3d>',
+    date: '2020'
+  },
   unit: 'feet',
   anchorPoint: { x: 15 + 2 / 12, y: 10.5, z: 0 },
   def: {

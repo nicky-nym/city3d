@@ -44,6 +44,7 @@ export default /* eslint-disable */
     "context": { "$ref": "definitions.json#/def/context" },
     "type": { "const": "building.schema.json" },
     "name": { "$ref": "definitions.json#/def/name" },
+    "metadata": { "$ref": "metadata.schema.json" },
     "unit": { "$ref": "definitions.json#/def/unit" },
     "def": { "$ref": "definitions.json#/def/def" },
     "anchorPoint": {
