@@ -9,12 +9,12 @@ export default /* eslint-disable */
     date: '2020'
   },
   unit: 'feet',
-  anchorPoint: { x: 25, y: 25, z: 0 },
+  anchorPoint: { x: 50, y: 50, z: 0 },
   def: {
     SW: { x: 0, y: 0 },
-    SE: { x: 50, y: 0 },
-    NE: { x: 50, y: 50 },
-    NW: { x: 0, y: 50 },
+    SE: { x: 100, y: 0 },
+    NE: { x: 100, y: 100 },
+    NW: { x: 0, y: 100 },
     RECTANGLE: {
       shape: 'polygon',
       corners: [
@@ -25,9 +25,9 @@ export default /* eslint-disable */
       ]
     },
     WINDOWS: {
-      leafCount: { cols: 9 },
+      leafCount: { cols: 24 },
       motion: 'picture',
-      outline: { shape: 'rectangle', size: { x: 45, y: 6 } },
+      outline: { shape: 'rectangle', size: { x: 96, y: 6 } },
       center: { x: 0, y: 6 }
     }
   },
@@ -43,7 +43,6 @@ export default /* eslint-disable */
     ],
     repeat: { type: 'randomInt', min: 4, max: 60 },
     height: { type: 'randomInt', min: 9, max: 14 },
-    height: 88,
     floor: {
       outline: { "$ref": "#/def/RECTANGLE" },
       surface: { material: 'concrete' }
@@ -95,7 +94,7 @@ export default /* eslint-disable */
       ],
       outline: {
         shape: 'rectangle',
-        size: { x: 49, y: 49 }
+        size: { x: 99, y: 99 }
       },
       use: 'assignable',
       contents: [{
