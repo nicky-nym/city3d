@@ -43,10 +43,10 @@ export default /* eslint-disable */
     ],
     repeat: { type: 'randomInt', min: 4, max: 60 },
     height: { type: 'randomInt', min: 9, max: 14 },
-    floor: {
+    floors: [{
       outline: { "$ref": "#/def/RECTANGLE" },
       surface: { material: 'concrete' }
-    },
+    }],
     ceiling: {},
     walls: {
       exterior: [{

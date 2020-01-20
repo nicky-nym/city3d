@@ -30,10 +30,10 @@ export default /* eslint-disable */
   storeys: [{
     name: 'ground storey',
     height: 8,
-    floor: {
+    floors: [{
       outline: { "$ref": "#/def/RECTANGLE" },
       surface: { material: 'carpet' }
-    },
+    }],
     ceiling: {},
     comments: [
       '  NW----N2---------N1----------NE  ',
@@ -272,10 +272,10 @@ export default /* eslint-disable */
   }, {
     name: 'attic',
     height: 0,
-    floor: {
+    floors: [{
       outline: { "$ref": "#/def/RECTANGLE" },
       surface: { material: 'wood' }
-    },
+    }],
     roof: {
       form: 'pitched',
       pitch: { rise: 8, run: 12 },

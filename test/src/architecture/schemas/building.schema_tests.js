@@ -24,15 +24,20 @@ describe('SCHEMA', function () {
         unit: 'feet',
         anchorPoint: { x: 0, y: 0, z: 0 },
         storeys: [{
-          floor: {
+          floors: [{
             outline: {
               shape: 'rectangle',
               size: { x: 200, y: 200 }
             }
-          }
+          }]
         }, {
           height: 8,
-          floor: { outline: { shape: 'rectangle', size: { x: 24, y: 21 } } },
+          floors: [{
+            outline: {
+              shape: 'rectangle',
+              size: { x: 24, y: 21 }
+            }
+          }],
           rooms: [],
           roof: { form: 'pitched', pitch: { rise: 8, run: 12 } },
           ceiling: {},
@@ -70,7 +75,7 @@ describe('SCHEMA', function () {
     it('should reject specs with nested invalid values', function () {
       const badJSON = {
         storeys: [{
-          floor: { outline: { shape: 'egg-and-dart' } }
+          floors: [{ outline: { shape: 'egg-and-dart' } }]
         }]
       }
       validator(badJSON).should.equal(false)

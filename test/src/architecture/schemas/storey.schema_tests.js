@@ -23,12 +23,12 @@ describe('SCHEMA', function () {
         name: 'Third floor',
         unit: 'feet',
         height: 8,
-        floor: {
+        floors: [{
           outline: {
             shape: 'rectangle',
             size: { x: 200, y: 200 }
           }
-        },
+        }],
         rooms: [],
         roof: { form: 'pitched', pitch: { rise: 8, run: 12 } },
         ceiling: {},
@@ -46,12 +46,12 @@ describe('SCHEMA', function () {
         name: 'Third floor',
         unit: 'feet',
         height: 8,
-        floor: {
+        floors: [{
           outline: {
             shape: 'rectangle',
             size: { x: 200, y: 200 }
           }
-        },
+        }],
         rooms: [],
         roof: { form: 'pitched', pitch: { rise: 8, run: 12 } },
         ceiling: {},
@@ -125,11 +125,11 @@ describe('SCHEMA', function () {
 
     it('should reject specs with nested invalid values', function () {
       const badJSON = {
-        floor: {
+        floors: [{
           outline: [{
             leafCount: { rows: -5 }
           }]
-        }
+        }]
       }
       validator(badJSON).should.equal(false)
     })

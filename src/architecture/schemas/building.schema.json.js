@@ -13,12 +13,12 @@ export default /* eslint-disable */
       unit: 'feet',
       anchorPoint: { x: 0, y: 0, z: 0 },
       storeys: [{
-        floor: {
+        floors: [{
           outline: {
             shape: 'rectangle',
             size: { x: 200, y: 200 }  
           }
-        }
+        }]
       }],
       extras: { permitInfo: {}, budget: {}, authors: {} }
     },
@@ -27,9 +27,9 @@ export default /* eslint-disable */
       unit: 'feet',
       storeys: [{
         height: 8,
-        floor: { 
+        floors: [{ 
           outline: { shape: 'rectangle', size: { x: 24, y: 21 } },
-        },
+        }],
         rooms: [],
         roof: { form: 'pitched', pitch: { rise: 8, run: 12 } },
         ceiling: {},

@@ -11,17 +11,17 @@ export default /* eslint-disable */
       type: 'storey.schema.json',
       name: 'Third floor',
       unit: 'feet',
-      floor: {
+      floors: [{
         outline: {
           shape: 'rectangle',
           size: { x: 200, y: 200 }
         }
-      },
+      }],
       extras: { budget: {}, authors: {} }
     },
     {
       height: 8,
-      floor: {  },
+      floors: [{  }],
       rooms: [],
       roof: { form: 'pitched', pitch: { rise: 8, run: 12 } },
       ceiling: {},
@@ -42,8 +42,11 @@ export default /* eslint-disable */
     "unit": { "$ref": "definitions.json#/def/unit" },
     "repeat": { "$ref": "definitions.json#/def/number" },
     "height": { "$ref": "definitions.json#/def/number" },
-    "floor": {
-      "$ref": "floor.schema.json"
+    "floors": {
+      "type": "array",
+      "items": {
+        "$ref": "floor.schema.json"
+      }
     },
     "roof": {
       "$ref": "roof.schema.json"
