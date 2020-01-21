@@ -23,20 +23,20 @@ describe('SCHEMA', function () {
         name: '2nd floor, south wall',
         unit: 'feet',
         roofline: 'gabled',
+        doors: [{
+          name: 'garage door',
+          leafCount: { rows: 5 },
+          motion: 'overhead',
+          outline: { shape: 'rectangle', size: { x: 16, y: 7 } },
+          center: { x: 12 },
+          casing: { width: 0.5 }
+        }],
+        windows: [],
         outside: {
           surface: {
             style: 'clapboard',
             material: 'fiber-cement'
           },
-          doors: [{
-            name: 'garage door',
-            leafCount: { rows: 5 },
-            motion: 'overhead',
-            outline: { shape: 'rectangle', size: { x: 16, y: 7 } },
-            center: { x: 12 },
-            casing: { width: 0.5 }
-          }],
-          windows: [],
           fixtures: [{
             at: { x: +2, y: 6 },
             copy: { $ref: 'CITY.fixtures.sconce' }
@@ -84,11 +84,9 @@ describe('SCHEMA', function () {
 
     it('should reject door specs with nested invalid values', function () {
       const badJSON = {
-        outside: {
-          doors: [{
-            leafCount: { rows: -5 }
-          }]
-        }
+        doors: [{
+          leafCount: { rows: -5 }
+        }]
       }
       validator(badJSON).should.equal(false)
     })

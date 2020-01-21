@@ -58,29 +58,29 @@ export default /* eslint-disable */
         name: 'front wall',
         begin: { $ref: '#/def/SW' },
         end: { $ref: '#/def/SE' },
+        doors: [{
+          name: 'patio doors',
+          leafCount: { cols: 3 },
+          motion: 'sliding',
+          outline: { shape: 'rectangle', size: { x: 9, y: 6 + 8 / 12 } },
+          /* lites: { cols: 2, rows: 5 }, */
+          center: { x: 9 + 8 / 12 },
+          casing: { width: 0.5 }
+        }],
+        windows: [{
+          name: 'bedroom windows',
+          leafCount: { cols: 2 },
+          motion: 'hung',
+          outline: { shape: 'rectangle', size: { x: 5, y: 4 } },
+          lites: { cols: 2, rows: 4 },
+          center: { x: -6, y: 5 },
+          casing: { width: 0.5 }
+        }],
         outside: {
           surface: {
             style: 'clapboard',
             material: 'fiber-cement'
           },
-          doors: [{
-            name: 'patio doors',
-            leafCount: { cols: 3 },
-            motion: 'sliding',
-            outline: { shape: 'rectangle', size: { x: 9, y: 6 + 8 / 12 } },
-            /* lites: { cols: 2, rows: 5 }, */
-            center: { x: 9 + 8 / 12 },
-            casing: { width: 0.5 }
-          }],
-          windows: [{
-            name: 'bedroom windows',
-            leafCount: { cols: 2 },
-            motion: 'hung',
-            outline: { shape: 'rectangle', size: { x: 5, y: 4 } },
-            lites: { cols: 2, rows: 4 },
-            center: { x: -6, y: 5 },
-            casing: { width: 0.5 }
-          }],
           fixtures: [
             { at: { x: +3 + 2 / 12, y: 6, from: 'left' }, copy: { $ref: 'sconce' } },
             { at: { x: 16 + 2 / 12, y: 6, from: 'left' }, copy: { $ref: 'sconce' } }
@@ -101,16 +101,14 @@ export default /* eslint-disable */
       }, {
         name: 'right wall',
         end: { $ref: '#/def/NE' },
-        outside: {
-          windows: [{
-            name: 'bedroom window',
-            motion: 'casement',
-            outline: { shape: 'rectangle', size: { x: 2.5, y: 4 } },
-            lites: { rows:4, cols: 2 },
-            center: { x: 2 + 4 / 12, y: 5 },
-            casing: { width: 0.5 }
-          }],
-        },
+        windows: [{
+          name: 'bedroom window',
+          motion: 'casement',
+          outline: { shape: 'rectangle', size: { x: 2.5, y: 4 } },
+          lites: { rows:4, cols: 2 },
+          center: { x: 2 + 4 / 12, y: 5 },
+          casing: { width: 0.5 }
+        }],
         inside: {
           fixtures: [
             { at: { x: 11, y: 1 }, copy: { $ref: 'power outlet, duplex' } },
@@ -120,26 +118,26 @@ export default /* eslint-disable */
       }, {
         name: 'back wall',
         end: { $ref: '#/def/NW' },
+        windows: [{
+          name: 'bathroom window',
+          motion: 'hung',
+          outline: { shape: 'rectangle', size: { x: 2, y: 3 } },
+          lites: { cols: 1, rows: 2 },
+          center: { x: 4 + 6 / 12, y: 5 + 6 / 12 },
+          casing: { width: 0.5 }
+        }, {
+          name: 'laundry room window',
+          motion: 'hung',
+          outline: { shape: 'rectangle', size: { x: 2, y: 3 } },
+          lites: { cols: 1, rows: 2 },
+          center: { x: -2, y: 5 + 6 / 12 },
+          casing: { width: 0.5 }
+        }],
         outside: {
           downspouts: [
             { at: { x: +0.25 } },
             { at: { x: -0.25 } }
-          ],
-          windows: [{
-            name: 'bathroom window',
-            motion: 'hung',
-            outline: { shape: 'rectangle', size: { x: 2, y: 3 } },
-            lites: { cols: 1, rows: 2 },
-            center: { x: 4 + 6 / 12, y: 5 + 6 / 12 },
-            casing: { width: 0.5 }
-          }, {
-            name: 'laundry room window',
-            motion: 'hung',
-            outline: { shape: 'rectangle', size: { x: 2, y: 3 } },
-            lites: { cols: 1, rows: 2 },
-            center: { x: -2, y: 5 + 6 / 12 },
-            casing: { width: 0.5 }
-          }]
+          ]
         },
         inside: {
           fixtures: [
@@ -152,15 +150,15 @@ export default /* eslint-disable */
       }, {
         name: 'left wall',
         end: { $ref: '#/def/SW' },
+        doors: [{
+          name: 'side door',
+          motion: 'swinging',
+          handleSide: 'right',
+          outline: { shape: 'rectangle', size: { x: 3, y: 6 + 8 / 12 } },
+          center: { x: 10.5 },
+          casing: { width: 0.5 }
+        }],
         outside: {
-          doors: [{
-            name: 'side door',
-            motion: 'swinging',
-            handleSide: 'right',
-            outline: { shape: 'rectangle', size: { x: 3, y: 6 + 8 / 12 } },
-            center: { x: 10.5 },
-            casing: { width: 0.5 }
-          }],
           fixtures: [
             { at: { x: 13 + 6 / 12, y: 6 }, copy: { $ref: 'sconce' } }
           ],
@@ -177,15 +175,15 @@ export default /* eslint-disable */
         name: 'bedroom wall',
         begin: { x: -11 + 6 / 12, y: 21 },
         end: { x: -11 + 6 / 12, y: 0 },
+        doors: [{
+          name: 'bedroom door',
+          motion: 'swinging',
+          handleSide: 'right',
+          outline: { shape: 'rectangle', size: { x: 2 + 8 / 12, y: 6 + 8 / 12 } },
+          center: { x: 10 + 10 / 12 },
+          casing: { width: 0.5 }
+        }],
         outside: {
-          doors: [{
-            name: 'bedroom door',
-            motion: 'swinging',
-            handleSide: 'right',
-            outline: { shape: 'rectangle', size: { x: 2 + 8 / 12, y: 6 + 8 / 12 } },
-            center: { x: 10 + 10 / 12 },
-            casing: { width: 0.5 }
-          }],
           fixtures: [
             { at: { x: 3, y: 4 }, copy: { $ref: 'power outlet, duplex' } },
             { at: { x: 6, y: 4 }, copy: { $ref: 'power outlet, duplex' } },
@@ -203,16 +201,14 @@ export default /* eslint-disable */
         name: 'bathroom wall',
         begin: { x: -11, y: -(5 + 8 / 12) },
         end: { x: 0, y: -(5 + 8 / 12) },
-        outside: {
-          doors: [{
-            name: 'bathroom door',
-            motion: 'swinging',
-            handleSide: 'right',
-            outline: { shape: 'rectangle', size: { x: 2 + 6 / 12, y: 6 + 8 / 12 } },
-            center: { x: 3 },
-            casing: { width: 0.5 }
-          }]
-        },
+        doors: [{
+          name: 'bathroom door',
+          motion: 'swinging',
+          handleSide: 'right',
+          outline: { shape: 'rectangle', size: { x: 2 + 6 / 12, y: 6 + 8 / 12 } },
+          center: { x: 3 },
+          casing: { width: 0.5 }
+        }],
         inside: {
           fixtures: [
             { at: { x: 7.5, y: 4 }, copy: { $ref: 'light switch' }, n: 3 }
@@ -222,16 +218,14 @@ export default /* eslint-disable */
         name: 'closet wall',
         begin: { x: -8, y: -8 },
         end: { x: 0, y: -8 },
-        outside: {
-          doors: [{
-            name: 'closet doors',
-            motion: 'sliding',
-            leafCount: { cols: 2 },
-            outline: { shape: 'rectangle', size: { x: 6, y: 6 + 8 / 12 } },
-            center: { x: 4 },
-            casing: { width: 0.5 }
-          }]
-        }
+        doors: [{
+          name: 'closet doors',
+          motion: 'sliding',
+          leafCount: { cols: 2 },
+          outline: { shape: 'rectangle', size: { x: 6, y: 6 + 8 / 12 } },
+          center: { x: 4 },
+          casing: { width: 0.5 }
+        }]
       }, {
         name: 'wall toward bathroom',
         begin: { x: -8, y: -(5 + 8 / 12) },
@@ -240,16 +234,14 @@ export default /* eslint-disable */
         name: 'laundry room wall',
         begin: { x: 0, y: -(7 + 8 / 12) },
         end: { x: 10 + 6 / 12, y: -(7 + 8 / 12) },
-        outside: {
-          doors: [{
-            name: 'laundry room door',
-            motion: 'swinging',
-            handleSide: 'right',
-            outline: { shape: 'rectangle', size: { x: 2 + 6 / 12, y: 6 + 8 / 12 } },
-            center: { x: 3 },
-            casing: { width: 0.5 }
-          }]
-        },
+        doors: [{
+          name: 'laundry room door',
+          motion: 'swinging',
+          handleSide: 'right',
+          outline: { shape: 'rectangle', size: { x: 2 + 6 / 12, y: 6 + 8 / 12 } },
+          center: { x: 3 },
+          casing: { width: 0.5 }
+        }],
         inside: {
           fixtures: [
             { at: { x: 5, y: 4 }, copy: { $ref: 'light switch' } },

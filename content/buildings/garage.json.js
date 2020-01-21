@@ -47,6 +47,14 @@ export default /* eslint-disable */
         name: 'front wall',
         begin: { $ref: '#/def/SW' },
         end: { $ref: '#/def/SE' },
+        doors: [{
+          name: 'garage door',
+          leafCount: { rows: 5 },
+          motion: 'overhead',
+          outline: { shape: 'rectangle', size: { x: 16, y: 7 } },
+          center: { x: 12 },
+          casing: { width: 0.5 }
+        }],
         outside: {
           surface: {
             style: 'clapboard',
@@ -59,15 +67,7 @@ export default /* eslint-disable */
           downspouts: [
             { at: { x: +0.25 } },
             { at: { x: -0.25 } }
-          ],
-          doors: [{
-            name: 'garage door',
-            leafCount: { rows: 5 },
-            motion: 'overhead',
-            outline: { shape: 'rectangle', size: { x: 16, y: 7 } },
-            center: { x: 12 },
-            casing: { width: 0.5 }
-          }]
+          ]
         },
         inside: {
           surface: {
@@ -78,15 +78,15 @@ export default /* eslint-disable */
       }, {
         name: 'right wall',
         end: { $ref: '#/def/NE' },
+        doors: [{
+          name: 'side door',
+          motion: 'swinging',
+          handleSide: 'left',
+          outline: { shape: 'rectangle', size: { x: 3, y: 6 + 8 / 12 } },
+          center: { x: 10.5 },
+          casing: { width: 0.5 }
+        }],
         outside: {
-          doors: [{
-            name: 'side door',
-            motion: 'swinging',
-            handleSide: 'left',
-            outline: { shape: 'rectangle', size: { x: 3, y: 6 + 8 / 12 } },
-            center: { x: 10.5 },
-            casing: { width: 0.5 }
-          }],
           fixtures: [
             { at: { x: 8, y: 6 }, copy: { $ref: 'sconce' } }
           ]

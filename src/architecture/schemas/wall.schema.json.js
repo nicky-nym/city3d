@@ -12,20 +12,20 @@ export default /* eslint-disable */
       name: '2nd floor, south wall',
       unit: 'feet',
       roofline: 'gabled',
+      doors: [{
+        name: 'garage door',
+        yLeafCount: 5,
+        motion: 'overhead',
+        shape: { shape: 'rectangle', data: { x: 16, y: 7 } },
+        center: { x: 12 },
+        casing: { width: { x: 0.5 } }
+      }],
+      windows: [],
       outside: {
         surface: {
           style: 'clapboard',
           material: 'fiber-cement'
         },
-        doors: [{
-          name: 'garage door',
-          yLeafCount: 5,
-          motion: 'overhead',
-          shape: { shape: 'rectangle', data: { x: 16, y: 7 } },
-          center: { x: 12 },
-          casing: { width: { x: 0.5 } }
-        }],
-        windows: [],
         fixtures: [{
           at: { x: +2, y: 6 },
           copy: { $ref: 'CITY.fixtures.sconce' }
@@ -62,20 +62,20 @@ export default /* eslint-disable */
     "roofline": {
       "enum": ["gabled", "pitched"]
     },
+    "doors": {
+      "type": "array",
+      "items": { "$ref": "door.schema.json" }
+    },
+    "windows": {
+      "type": "array",
+      "items": { "$ref": "window.schema.json" }
+    },
     "outside": { 
       "type": "object",
       "required": [  ],
       "properties": {
         "surface": {
           "$ref": "surface.schema.json"
-        },
-        "doors": {
-          "type": "array",
-          "items": { "$ref": "door.schema.json" }
-        },
-        "windows": {
-          "type": "array",
-          "items": { "$ref": "window.schema.json" }
         },
         "fixtures": {
           "type": "array",

@@ -53,22 +53,22 @@ export default /* eslint-disable */
         name: 'front wall',
         begin: { $ref: '#/def/SW' },
         end: { $ref: '#/def/SE' },
+        doors: [],
+        windows: [{ $ref: '#/def/WINDOWS' }],
         outside: {
           surface: {
             style: 'clapboard',
             material: 'fiber-cement'
           },
-          fixtures: [],
-          doors: [],
-          windows: [{ $ref: '#/def/WINDOWS' }]
+          fixtures: []
         }
       }, {
         name: 'right wall',
         end: { $ref: '#/def/NE' },
+        doors: [],
+        windows: [{ $ref: '#/def/WINDOWS' }],
         outside: {
-          doors: [],
-          fixtures: [],
-          windows: [{ $ref: '#/def/WINDOWS' }]
+          fixtures: []
         }
       }, {
         name: 'back wall',
@@ -77,10 +77,10 @@ export default /* eslint-disable */
       }, {
         name: 'left wall',
         end: { $ref: '#/def/SW' },
+        doors: [],
+        windows: [{ $ref: '#/def/WINDOWS' }],
         outside: {
-          doors: [],
-          fixtures: [],
-          windows: [{ $ref: '#/def/WINDOWS' }]
+          fixtures: []
         }
       }]
     },

@@ -8,34 +8,35 @@ export default /* eslint-disable */
     creator: 'Authored at <https://github.com/nicky-nym/city3d>',
     date: '2020'
   },
-  unit: 'feet',
   comments: [
     '                                                              ',
     '           O----------N                                       ',
     '           |          |                                       ',
     '           |          |                                       ',
-    '  R-----Q--P- - - - - ML                    H--------------G  ',
-    '  |     |              |                    |              |  ',
-    '  |     |              |                    |              |  ',
-    '  |     |              |                    |              |  ',
-    '  |     |              |                    |              |  ',
-    '  |     |              |                    |              |  ',
-    '  |     |              |                    |              |  ',
-    '  |     |              |                    |              |  ',
-    '  |     U-V- - - - -Y--K                    |              |  ',
-    '  |       |         |  J--------------------I              |  ',
-    '  |       |         |                       |              |  ',
-    '  |       W---------X                                      |  ',
-    '  |                                                        |  ',
+    '  R------Q-P- - - - - ML                    H--------------G  ',
+    '  |      |             |                    |              |  ',
+    '  |      |             |                    |              |  ',
+    '  |      |             |                    |              |  ',
+    '  |      |             |                    |              |  ',
+    '  |      |             |                    |              |  ',
+    '  |      |             |                    |              |  ',
+    '  |      |             |                    |              |  ',
+    '  |      |             |                    |              |  ',
+    '  |      V-W - - - -Z--K                    |              |  ',
+    '  |        |        |  J--------------------I              |  ',
+    '  |        |        |                       |              |  ',
+    '  |        X--------Y                       |              |  ',
+    '  |                                         |              |  ',
     '  |                    B----C               |              |  ',
     '  |                    A -- D---------------E--------------F  ',
     '  |                    |                                      ',
-    '  |                    |                                      ',
+    '  |                    U                                      ',
     '  |                    |                                      ',
     '  S--------------------T                                      ',
     '                                                              ',
   ],
-anchorPoint: { x: 50, y: 50, z: 0 },
+  unit: 'feet',
+  anchorPoint: { x: 153, y: 110, z: 0 },
   def: {
     A: { x: 110, y: 55 },
     B: { x: 110, y: 65 },
@@ -57,13 +58,14 @@ anchorPoint: { x: 50, y: 50, z: 0 },
     R: { x: 0, y: 220 },
     S: { x: 0, y: 0 },
     T: { x: 110, y: 0 },
-    U: { x: 40, y: 110 },
-    V: { x: 50, y: 110 },
-    W: { x: 50, y: 80 },
-    X: { x: 95, y: 80 },
-    Y: { x: 95, y: 110 },
+    U: { x: 110, y: 27.5 },
+    V: { x: 40, y: 110 },
+    W: { x: 50, y: 110 },
+    X: { x: 50, y: 80 },
+    Y: { x: 95, y: 80 },
+    Z: { x: 95, y: 110 },
 
-    LEVEL1: {
+    LEVEL1: { // see alternative syntax ideas below...
       shape: 'polygon',
       corners: [
         { $ref: '#/def/A' },
@@ -85,16 +87,26 @@ anchorPoint: { x: 50, y: 50, z: 0 },
         { $ref: '#/def/Q' },
         { $ref: '#/def/R' },
         { $ref: '#/def/S' },
-        { $ref: '#/def/T' }
+        { $ref: '#/def/T' },
+        { $ref: '#/def/U' }
       ]
     },
-    LEVEL1_CONCISE_SYNTAX_ALTERNATIVE_A: {
+    // Concise syntax (brainstorming about alternatives)
+    LEVEL1_OPTION_A: {
       shape: 'polygon',
-      corners: { '[$ref]': '#/def/[A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T]' }
+      corners: { '[$ref]': '#/def/[A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U]' }
     },
-    LEVEL1_CONCISE_SYNTAX_ALTERNATIVE_B: {
+    LEVEL1_OPTION_B: {
       shape: 'polygon',
-      corners: { '$ref[]': '#/def/[A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T]' }
+      corners: { '$ref[]': '#/def/[A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U]' }
+    },
+    LEVEL1_OPTION_C: {
+      shape: 'polygon',
+      corners: { $refs: '#/def/[A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U]' }
+    },
+    LEVEL1_OPTION_D: {
+      shape: 'polygon',
+      corners: { $ref: '#/def/[A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U]' }
     },
     LEVELS2AND3: {
       shape: 'polygon',
@@ -116,7 +128,8 @@ anchorPoint: { x: 50, y: 50, z: 0 },
         { $ref: '#/def/Q' },
         { $ref: '#/def/R' },
         { $ref: '#/def/S' },
-        { $ref: '#/def/T' }
+        { $ref: '#/def/T' },
+        { $ref: '#/def/U' }
       ]
     },
     LEVEL4A: {
@@ -164,10 +177,15 @@ anchorPoint: { x: 50, y: 50, z: 0 },
         { $ref: '#/def/V' }
       ]
     },
-    WINDOW: {
-      motion: 'awning',
-      outline: { shape: 'rectangle', size: { x: 8, y: 9 } },
-      awning: { shape: 'flat', size: { x: 8, y: 5 } }
+    WINDOWS: {
+      repeat: {
+        spacing: 9 + 2 / 12,
+        feature: {
+          motion: 'awning',
+          outline: { shape: 'rectangle', size: { x: 8, y: 9 } },
+          awning: { size: { x: 8, y: 5, z: 0 } }
+        }
+      }
     }
   },
   storeys: [{
@@ -198,6 +216,7 @@ anchorPoint: { x: 50, y: 50, z: 0 },
         { end: { $ref: '#/def/R' } },
         { end: { $ref: '#/def/S' } },
         { end: { $ref: '#/def/T' } },
+        { end: { $ref: '#/def/U' } },
         { end: { $ref: '#/def/A' } }
       ]
     }
@@ -207,27 +226,61 @@ anchorPoint: { x: 50, y: 50, z: 0 },
     height: 13,
     floors: [{ outline: { $ref: '#/def/LEVELS2AND3' } }],
     walls: {
-      exterior: [
-        /* TODO: add windows on almost all of these walls */
-        { begin: { $ref: '#/def/A' }, end: { $ref: '#/def/D' } },
-        { end: { $ref: '#/def/E' } },
-        { end: { $ref: '#/def/F' } },
-        { end: { $ref: '#/def/G' } },
-        { end: { $ref: '#/def/H' } },
-        { end: { $ref: '#/def/I' } },
-        { end: { $ref: '#/def/J' } },
-        { end: { $ref: '#/def/K' } },
-        { end: { $ref: '#/def/L' } },
-        { end: { $ref: '#/def/M' } },
-        { end: { $ref: '#/def/N' } },
-        { end: { $ref: '#/def/O' } },
-        { end: { $ref: '#/def/P' } },
-        { end: { $ref: '#/def/Q' } },
-        { end: { $ref: '#/def/R' } },
-        { end: { $ref: '#/def/S' } },
-        { end: { $ref: '#/def/T' } },
-        { end: { $ref: '#/def/A' } }
-      ]
+      /* TODO: add windows on almost all of these walls */
+      exterior: [{
+        begin: { $ref: '#/def/A' },
+        end: { $ref: '#/def/D' },
+        windows: [{ $ref: '#/def/WINDOWS' }]
+      }, {
+        end: { $ref: '#/def/E' },
+        windows: [{ $ref: '#/def/WINDOWS' }]
+      }, {
+        end: { $ref: '#/def/F' },
+        windows: [{ $ref: '#/def/WINDOWS' }]
+      }, {
+        end: { $ref: '#/def/G' },
+        windows: [{ $ref: '#/def/WINDOWS' }]
+      }, {
+        end: { $ref: '#/def/H' }
+      }, {
+        end: { $ref: '#/def/I' },
+        windows: [{ $ref: '#/def/WINDOWS' }]
+      }, {
+        end: { $ref: '#/def/J' },
+        windows: [{ $ref: '#/def/WINDOWS' }]
+      }, {
+        end: { $ref: '#/def/K' }
+      }, {
+        end: { $ref: '#/def/L' },
+        windows: [{ $ref: '#/def/WINDOWS' }]
+      }, {
+        end: { $ref: '#/def/M' },
+      }, {
+        end: { $ref: '#/def/N' },
+        windows: [ /* TODO: add small centered window */ ]
+      }, {
+        end: { $ref: '#/def/O' },
+        windows: [ /* TODO: add large window */ ]
+      }, {
+        end: { $ref: '#/def/P' },
+        windows: [ /* TODO: add small centered window */ ]
+      }, {
+        end: { $ref: '#/def/Q' }
+      }, {
+        end: { $ref: '#/def/R' },
+        windows: [{ $ref: '#/def/WINDOWS' }]
+      }, {
+        end: { $ref: '#/def/S' },
+        windows: [{ $ref: '#/def/WINDOWS' }]
+      }, {
+        end: { $ref: '#/def/T' },
+        windows: [{ $ref: '#/def/WINDOWS' }]
+      }, {
+        end: { $ref: '#/def/U' },
+        windows: [{ $ref: '#/def/WINDOWS' }]
+      }, {
+        end: { $ref: '#/def/A' }
+      }]
     }
   }, {
     name: 'floor 4',
@@ -241,39 +294,15 @@ anchorPoint: { x: 50, y: 50, z: 0 },
       exterior: [{
           begin: { $ref: '#/def/E' },
           end: { $ref: '#/def/F' },
-          outside: {
-            windows: [{
-              repeat: {
-                count: 9,
-                spacing: 9 + 2 / 12,
-                feature: { $ref: '#/def/WINDOW' }
-              }
-            }]
-          }
+          windows: [{ $ref: '#/def/WINDOWS' }]
         }, {
           end: { $ref: '#/def/G' },
-          outside: {
-            windows: [{
-              repeat: {
-                count: 18,
-                spacing: 9 + 2 / 12,
-                feature: { $ref: '#/def/WINDOW' }
-              }
-            }]
-          }
+          windows: [{ $ref: '#/def/WINDOWS' }]
         }, {
           end: { $ref: '#/def/H' }
         }, {
           end: { $ref: '#/def/E' },
-          outside: {
-            windows: [{
-              repeat: {
-                count: 18,
-                spacing: 9 + 2 / 12,
-                feature: { $ref: '#/def/WINDOW' }
-              }
-            }]
-          }
+          windows: [{ $ref: '#/def/WINDOWS' }]
         },
 
         /* TODO: this has all the same windows as the tower 
@@ -302,90 +331,45 @@ anchorPoint: { x: 50, y: 50, z: 0 },
       { outline: { $ref: '#/def/LEVELS4TO9' } }
     ],
     walls: {
-      exterior: [ {
-          begin: { $ref: '#/def/K' },
-          end: { $ref: '#/def/L' },
-          outside: {
-            windows: [{
-              repeat: {
-                count: 12,
-                spacing: 9 + 2 / 12,
-                feature: { $ref: '#/def/WINDOW' }
-              }
-            }]
-          }
-        }, {
-          end: { $ref: '#/def/M' }
-        }, {
-          end: { $ref: '#/def/N' },
-          outside: {
-            windows: [
-              /* TODO: add small centered window */
-            ]
-          }
-        }, {
-          end: { $ref: '#/def/O' },
-          outside: {
-            windows: [
-              /* TODO: add long row of windows */
-            ]
-          }
-        }, {
-          end: { $ref: '#/def/P' },
-          outside: {
-            windows: [
-              /* TODO: add small centered window */
-            ]
-          }
-        }, {
-          end: { $ref: '#/def/Q' }
-        }, {
-          end: { $ref: '#/def/U' },
-          outside: {
-            windows: [{
-              repeat: {
-                count: 12,
-                spacing: 9 + 2 / 12,
-                feature: { $ref: '#/def/WINDOW' }
-              }
-            }]
-          }
-        }, {
-          end: { $ref: '#/def/V' }
-        }, {
-          end: { $ref: '#/def/W' },
-          outside: {
-            windows: [
-              /* TODO: add small bathroom window */
-              /* TODO: add wide stairway window */
-            ]
-          }
-        }, {
-          end: { $ref: '#/def/X' },
-          outside: {
-            windows: [
-              /* TODO: add narrow stairway window */
-            ],
-            doors: [
-              /* TODO: add sliding glass balony door */
-            ]
-          }
-        }, {
-          end: { $ref: '#/def/Y' },
-          outside: {
-            windows: [
-              /* TODO: add office window */
-            ]
-          }
-        }, {
-          end: { $ref: '#/def/K' },
-          outside: {
-            windows: [
-              /* TODO: add single window */
-            ]
-          }
-        }
-      ]
+      exterior: [{
+        begin: { $ref: '#/def/K' },
+        end: { $ref: '#/def/L' },
+        windows: [{ $ref: '#/def/WINDOWS' }]
+      }, {
+        end: { $ref: '#/def/M' }
+      }, {
+        end: { $ref: '#/def/N' },
+        windows: [ /* TODO: add small centered window */ ]
+      }, {
+        end: { $ref: '#/def/O' },
+        windows: [ /* TODO: add long row of windows */ ]
+      }, {
+        end: { $ref: '#/def/P' },
+        windows: [ /* TODO: add small centered window */ ]
+      }, {
+        end: { $ref: '#/def/Q' }
+      }, {
+        end: { $ref: '#/def/U' },
+        windows: [{ $ref: '#/def/WINDOWS' }]
+      }, {
+        end: { $ref: '#/def/V' }
+      }, {
+        end: { $ref: '#/def/W' },
+        windows: [
+          /* TODO: add small bathroom window */
+          /* TODO: add wide stairway window */
+        ]
+    }, {
+        end: { $ref: '#/def/X' },
+        windows: [ /* TODO: add narrow stairway window */ ],
+        doors: [ /* TODO: add sliding glass balony door */ ]
+    }, {
+        end: { $ref: '#/def/Y' },
+        windows: [ /* TODO: add office window */ ]
+      }, {
+        end: { $ref: '#/def/K' },
+        windows: [ /* TODO: add single window */ ]
+      }]
     }
   }, {
     name: 'floor 10',
