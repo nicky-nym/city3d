@@ -60,7 +60,7 @@ export default /* eslint-disable */
     "begin": { "$ref": "definitions.json#/def/beginOrEnd" },
     "end": { "$ref": "definitions.json#/def/beginOrEnd" },
     "roofline": {
-      "enum": ["gabled", "pitched"]
+      "enum": ["gabled", "pitched", "shed"]
     },
     "doors": {
       "type": "array",
