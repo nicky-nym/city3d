@@ -15,11 +15,12 @@ describe('SCHEMA', function () {
     const ajv = new Ajv()
     const validator = ajv.compile(SCHEMA.PLACEMENT)
 
-    it('should accept a simple valid surface object', function () {
+    it('should accept a simple valid placement object', function () {
       const goodJSON = {
         x: 1,
         y: 2,
         z: 0,
+        from: 'center',
         rotated: 90,
         mirrored: true
       }
@@ -49,6 +50,11 @@ describe('SCHEMA', function () {
 
     it('should reject an invalid z: value', function () {
       const badJSON = { z: { } }
+      validator(badJSON).should.equal(false)
+    })
+
+    it('should reject an invalid from: value', function () {
+      const badJSON = { from: 'midpoint' }
       validator(badJSON).should.equal(false)
     })
 

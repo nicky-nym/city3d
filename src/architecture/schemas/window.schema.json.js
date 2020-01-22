@@ -15,7 +15,7 @@ export default /* eslint-disable */
       outline: { shape: 'rectangle', data: { x: 16, y: 7 } },
       leafCount: { cols: 2 },
       lites: { rows: 2, cols: 1 },
-      center: { x: 4, y: 3 },
+      at: { x: 4, y: 3, from: 'left' },
       casing: { width: 0.5 },
       extras: { budget: {}, authors: {} }
     },
@@ -45,8 +45,8 @@ export default /* eslint-disable */
     "lites": {
       "$ref": "grid.schema.json"
     },
-    "center": {
-      "$ref": "xy.schema.json"
+    "at": {
+      "$ref": "placement.schema.json"
     },
     "casing": { 
       "type": "object",

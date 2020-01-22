@@ -36,10 +36,10 @@ export default /* eslint-disable */
     }],
     ceiling: {
       fixtures: [
-        { at: { x: 12, y: 9 }, copy: { $ref: 'power outlet, duplex' } },
-        { at: { x: 6, y: 14 }, copy: { $ref: 'light fixture' } }, // TODO: 6'x6" fluorescent
-        { at: { x: 12, y: 14 }, copy: { $ref: 'light fixture' } }, // TODO: 6'x6" fluorescent
-        { at: { x: 18, y: 14 }, copy: { $ref: 'light fixture' } } // TODO: 6'x6" fluorescent
+        { at: { x: 0, y: -2, from: 'center' }, copy: { $ref: 'power outlet, duplex' } },
+        { at: { x: -6, y: 3, from: 'center' }, copy: { $ref: 'light fixture' } }, // TODO: 6'x6" fluorescent
+        { at: { x: 0, y: 3, from: 'center' }, copy: { $ref: 'light fixture' } }, // TODO: 6'x6" fluorescent
+        { at: { x: +6, y: 3, from: 'center' }, copy: { $ref: 'light fixture' } } // TODO: 6'x6" fluorescent
       ]
     },
     walls: {
@@ -52,7 +52,6 @@ export default /* eslint-disable */
           leafCount: { rows: 5 },
           motion: 'overhead',
           outline: { shape: 'rectangle', size: { x: 16, y: 7 } },
-          center: { x: 12 },
           casing: { width: 0.5 }
         }],
         outside: {
@@ -61,12 +60,12 @@ export default /* eslint-disable */
             material: 'fiber-cement'
           },
           fixtures: [
-            { at: { x: +2, y: 6 }, copy: { $ref: 'sconce' } },
-            { at: { x: -2, y: 6 }, copy: { $ref: 'sconce' } }
+            { at: { x: +2, y: 6, from: 'left' }, copy: { $ref: 'sconce' } },
+            { at: { x: -2, y: 6, from: 'right' }, copy: { $ref: 'sconce' } }
           ],
           downspouts: [
-            { at: { x: +0.25 } },
-            { at: { x: -0.25 } }
+            { at: { x: +0.25, from: 'left' } },
+            { at: { x: -0.25, from: 'right' } }
           ]
         },
         inside: {
@@ -83,19 +82,18 @@ export default /* eslint-disable */
           motion: 'swinging',
           handleSide: 'left',
           outline: { shape: 'rectangle', size: { x: 3, y: 6 + 8 / 12 } },
-          center: { x: 10.5 },
           casing: { width: 0.5 }
         }],
         outside: {
           fixtures: [
-            { at: { x: 8, y: 6 }, copy: { $ref: 'sconce' } }
+            { at: { x: 8, y: 6, from: 'left' }, copy: { $ref: 'sconce' } }
           ]
         },
         inside: {
           fixtures: [
-            { at: { x: +5, y: 4 }, copy: { $ref: 'power outlet, duplex' } },
-            { at: { x: 13, y: 4 }, copy: { $ref: 'light switch', n: 2 } }, // TODO: controls what?
-            { at: { x: -5, y: 4 }, copy: { $ref: 'power outlet, duplex' } }
+            { at: { x: +5, y: 4, from: 'left' }, copy: { $ref: 'power outlet, duplex' } },
+            { at: { x: 13, y: 4, from: 'left' }, copy: { $ref: 'light switch', n: 2 } }, // TODO: controls what?
+            { at: { x: -5, y: 4, from: 'right' }, copy: { $ref: 'power outlet, duplex' } }
           ]
         }
       }, {
@@ -103,14 +101,14 @@ export default /* eslint-disable */
         end: { $ref: '#/def/NW' },
         outside: {
           downspouts: [
-            { at: { x: +0.25 } },
-            { at: { x: -0.25 } }
+            { at: { x: +0.25, from: 'left' } },
+            { at: { x: -0.25, from: 'right' } }
           ]
         },
         inside: {
           fixtures: [
-            { at: { x: +6, y: 4 }, copy: { $ref: 'power outlet, duplex' } },
-            { at: { x: -6, y: 4 }, copy: { $ref: 'power outlet, duplex' } }
+            { at: { x: +6, y: 4, from: 'left' }, copy: { $ref: 'power outlet, duplex' } },
+            { at: { x: -6, y: 4, from: 'right' }, copy: { $ref: 'power outlet, duplex' } }
           ]
         }
       }, {
@@ -118,9 +116,9 @@ export default /* eslint-disable */
         end: { $ref: '#/def/SW' },
         inside: {
           fixtures: [
-            { at: { x: +1, y: 4 }, copy: { $ref: 'light switch' } }, // TODO: controls what?
-            { at: { x: +5, y: 4 }, copy: { $ref: 'power outlet, duplex' } },
-            { at: { x: -5, y: 4 }, copy: { $ref: 'power outlet, duplex' } }
+            { at: { x: +1, y: 4, from: 'left' }, copy: { $ref: 'light switch' } }, // TODO: controls what?
+            { at: { x: +5, y: 4, from: 'left' }, copy: { $ref: 'power outlet, duplex' } },
+            { at: { x: -5, y: 4, from: 'right' }, copy: { $ref: 'power outlet, duplex' } }
           ]
         }
       }]
@@ -133,7 +131,7 @@ export default /* eslint-disable */
       use: 'circulation',
       contents: [{
         copy: { $ref: 'CITY.vehicle.car' },
-        at: { x: 17, y: 10 }
+        at: { x: 17, y: 10, from: 'center' }
       }]
     }]
   }, {

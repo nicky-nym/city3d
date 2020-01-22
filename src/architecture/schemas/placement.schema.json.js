@@ -13,12 +13,23 @@ export default /* eslint-disable */
       x: 1
     },
     {
+      x: 1, y: -2, from: 'center'
+    },
+    {
       x: 1, y: 2, z: 0, rotated: 90
     },
     {
       x: 1,
       y: 2,
       z: 0,
+      rotated: 90,
+      mirrored: true
+    },
+    {
+      x: 1,
+      y: 2,
+      z: 0,
+      from: 'center',
       rotated: 90,
       mirrored: true
     },
@@ -50,6 +61,9 @@ export default /* eslint-disable */
       "description": "a z-axis distance, in the default unit of measure",
       "default": 0,
       "type": "number"
+    },
+    "from": {
+      "enum": ["left", "center", "right"]
     },
     "rotated": {
       "description": "a compass bearing in degrees (0 to 360)",

@@ -26,7 +26,7 @@ describe('SCHEMA', function () {
         outline: { shape: 'rectangle', data: { x: 16, y: 7 } },
         leafCount: { cols: 2 },
         lites: { rows: 2, cols: 1 },
-        center: { x: 4, y: 3 },
+        at: { x: 4, y: 3 },
         casing: { width: 0.5 }
       }
       validator(goodJSON).should.equal(true)
