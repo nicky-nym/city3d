@@ -295,7 +295,6 @@ export default /* eslint-disable */
     height: 13,
     floors: [{ outline: { $ref: '#/def/LEVELS2AND3' } }],
     walls: {
-      /* TODO: add windows on almost all of these walls */
       exterior: [{
         begin: { $ref: '#/def/ext/A' },
         end: { $ref: '#/def/ext/D' },
@@ -416,7 +415,7 @@ export default /* eslint-disable */
     }
   }, {
     name: 'tower floors, 4 to 9',
-    repeat: { count: 6 },
+    repeat: 6,
     altitude: 3 * 13,
     height: 13,
     floors: [
@@ -612,11 +611,11 @@ export default /* eslint-disable */
           /* TODO: add small bathroom window */
           /* TODO: add wide stairway window */
         ]
-    }, {
+      }, {
         end: { $ref: '#/def/ext/X' },
         windows: [ /* TODO: add narrow stairway window */ ],
         doors: [ /* TODO: add sliding glass balony door */ ]
-    }, {
+      }, {
         end: { $ref: '#/def/ext/Y' },
         windows: [ /* TODO: add office window */ ]
       }, {

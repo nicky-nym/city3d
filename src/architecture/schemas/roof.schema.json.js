@@ -40,6 +40,9 @@ export default /* eslint-disable */
     "form": {
       "enum": ["flat", "pitched", "living", "vaulted"]
     },
+    "parapetHeight": {
+      "type": "number"
+    },
     "pitch": {
       "$ref": "pitch.schema.json"
     },

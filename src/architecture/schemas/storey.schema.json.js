@@ -21,6 +21,7 @@ export default /* eslint-disable */
     },
     {
       height: 8,
+      altitude: 40,
       floors: [{  }],
       rooms: [],
       roof: { form: 'pitched', pitch: { rise: 8, run: 12 } },
@@ -41,6 +42,7 @@ export default /* eslint-disable */
     "comments": { "$ref": "definitions.json#/def/comments" },
     "unit": { "$ref": "definitions.json#/def/unit" },
     "repeat": { "$ref": "definitions.json#/def/number" },
+    "altitude": { "$ref": "definitions.json#/def/number" },
     "height": { "$ref": "definitions.json#/def/number" },
     "floors": {
       "type": "array",
