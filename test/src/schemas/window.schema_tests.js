@@ -1,39 +1,33 @@
-/** @file ceiling.schema_tests.js
+/** @file window.schema_tests.js
  * @author Authored in 2020 at <https://github.com/nicky-nym/city3d>
  * @license UNLICENSE
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
  */
 
-import Ajv from '../../../../node_modules/ajv/dist/ajv.min.js'
-import { SCHEMA } from '../../../../src/architecture/schemas/schema.js'
+import Ajv from '../../../node_modules/ajv/dist/ajv.min.js'
+import { SCHEMA } from '../../../src/schemas/schema.js'
 
 /* global describe, it */
 
 describe('SCHEMA', function () {
-  describe('SCHEMA.CEILING', function () {
+  describe('SCHEMA.WINDOW', function () {
     const ajv = new Ajv()
     Object.keys(SCHEMA).forEach(item => ajv.addSchema(SCHEMA[item], SCHEMA[item].$id))
-    const validator = ajv.compile(SCHEMA.CEILING)
+    const validator = ajv.compile(SCHEMA.WINDOW)
 
-    it('should accept a simple valid ceiling spec', function () {
+    it('should accept a simple valid window spec', function () {
       const goodJSON = {
         context: 'city3d',
-        type: 'ceiling.schema.json',
-        name: 'Living room ceiling',
+        type: 'window.schema.json',
+        name: 'kitchen window',
         unit: 'feet',
-        outline: {
-          shape: 'rectangle',
-          size: { x: 14, y: 16 }
-        },
-        surface: {
-          style: 'flat',
-          material: 'stucco'
-        },
-        fixtures: [{
-          copy: { $ref: 'CITY.fixtures.ceiling_fan' },
-          at: { x: 0, y: 0 }
-        }]
+        motion: 'casement',
+        outline: { shape: 'rectangle', data: { x: 16, y: 7 } },
+        leafCount: { cols: 2 },
+        lites: { rows: 2, cols: 1 },
+        at: { x: 4, y: 3 },
+        casing: { width: 0.5 }
       }
       validator(goodJSON).should.equal(true)
     })
@@ -53,25 +47,21 @@ describe('SCHEMA', function () {
       validator(goodJSON).should.equal(true)
     })
 
-    it('should reject specs with invalid values', function () {
+    it('should reject window specs with invalid motion types', function () {
       const badJSON = {
-        outline: 'polygon'
+        motion: 'polygon'
       }
       validator(badJSON).should.equal(false)
     })
 
-    it('should reject specs with nested invalid values', function () {
+    it('should reject door specs with nested invalid values', function () {
       const badJSON = {
-        surface: {
-          style: [{
-            leafCount: { rows: -5 }
-          }]
-        }
+        leafCount: { cols: -2 }
       }
       validator(badJSON).should.equal(false)
     })
 
-    it('should reject any non-object substitute for the roof spec', function () {
+    it('should reject any non-object substitute for the outline', function () {
       const badJSON = true
       const alsoBad = 88
       const worse = []

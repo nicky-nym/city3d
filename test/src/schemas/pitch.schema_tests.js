@@ -5,8 +5,8 @@
  * For more information, please refer to <http://unlicense.org>
  */
 
-import Ajv from '../../../../node_modules/ajv/dist/ajv.min.js'
-import { SCHEMA } from '../../../../src/architecture/schemas/schema.js'
+import Ajv from '../../../node_modules/ajv/dist/ajv.min.js'
+import { SCHEMA } from '../../../src/schemas/schema.js'
 
 /* global describe, it */
 

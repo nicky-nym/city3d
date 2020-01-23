@@ -1,30 +1,27 @@
-/** @file surface.schema_tests.js
+/** @file xy.schema_tests.js
  * @author Authored in 2020 at <https://github.com/nicky-nym/city3d>
  * @license UNLICENSE
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
  */
 
-import Ajv from '../../../../node_modules/ajv/dist/ajv.min.js'
-import { SCHEMA } from '../../../../src/architecture/schemas/schema.js'
+import Ajv from '../../../node_modules/ajv/dist/ajv.min.js'
+import { SCHEMA } from '../../../src/schemas/schema.js'
+import { xy } from '../../../src/core/util.js'
 
 /* global describe, it */
 
 describe('SCHEMA', function () {
-  describe('SCHEMA.SURFACE', function () {
+  describe('SCHEMA.XY', function () {
     const ajv = new Ajv()
-    const validator = ajv.compile(SCHEMA.SURFACE)
+    const validator = ajv.compile(SCHEMA.XY)
 
-    it('should accept a simple valid surface object', function () {
-      const goodJSON = {
-        style: 'flat',
-        material: 'drywall'
-      }
-
+    it('should accept a simple valid {xy} object', function () {
+      const goodJSON = { x: 0, y: 0 }
       validator(goodJSON).should.equal(true)
     })
 
-    it('should treat both style: and material: as optional', function () {
+    it('should treat both x: and y: as optional', function () {
       const goodJSON = { }
       validator(goodJSON).should.equal(true)
     })
@@ -34,13 +31,18 @@ describe('SCHEMA', function () {
       validator(goodJSON).should.equal(true)
     })
 
-    it('should reject an invalid style: value', function () {
-      const badJSON = { style: false }
+    it('should accept the output from xy()', function () {
+      const goodJSON = xy(22, 33)
+      validator(goodJSON).should.equal(true)
+    })
+
+    it('should reject any non-numeric {xy} values', function () {
+      const badJSON = { x: false, y: 0 }
       validator(badJSON).should.equal(false)
     })
 
-    it('should reject an string material: value', function () {
-      const badJSON = { material: '33' }
+    it('should reject any string {xy} values', function () {
+      const badJSON = { x: 0, y: '33' }
       validator(badJSON).should.equal(false)
     })
 

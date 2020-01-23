@@ -5,20 +5,20 @@
  * For more information, please refer to <http://unlicense.org>
  */
 
-import Ajv from '../../../../node_modules/ajv/dist/ajv.min.js'
-import { SCHEMA } from '../../../../src/architecture/schemas/schema.js'
-import HOUSE_SPEC from '../../../../content/buildings/house.json.js'
+import Ajv from '../../../node_modules/ajv/dist/ajv.min.js'
+import { SCHEMA } from '../../../src/schemas/schema.js'
+import COTTAGE_SPEC from '../../../content/buildings/cottage.json.js'
 
 /* global describe, it */
 
-describe('house.json.js', function () {
-  describe('house schema validation', function () {
+describe('cottage.json.js', function () {
+  describe('cottage schema validation', function () {
     const ajv = new Ajv()
     Object.keys(SCHEMA).forEach(item => ajv.addSchema(SCHEMA[item], SCHEMA[item].$id))
     const validator = ajv.compile(SCHEMA.BUILDING)
 
-    it('should accept all the entire house spec', function () {
-      const goodJSON = HOUSE_SPEC
+    it('should accept all the entire cottage spec', function () {
+      const goodJSON = COTTAGE_SPEC
       validator(goodJSON).should.equal(true)
     })
   })

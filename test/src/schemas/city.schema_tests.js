@@ -1,61 +1,39 @@
-/** @file wall.schema_tests.js
+/** @file city.schema_tests.js
  * @author Authored in 2020 at <https://github.com/nicky-nym/city3d>
  * @license UNLICENSE
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
  */
 
-import Ajv from '../../../../node_modules/ajv/dist/ajv.min.js'
-import { SCHEMA } from '../../../../src/architecture/schemas/schema.js'
+import Ajv from '../../../node_modules/ajv/dist/ajv.min.js'
+import { SCHEMA } from '../../../src/schemas/schema.js'
 
 /* global describe, it */
 
 describe('SCHEMA', function () {
-  describe('SCHEMA.WALL', function () {
+  describe('SCHEMA.CITY', function () {
     const ajv = new Ajv()
     Object.keys(SCHEMA).forEach(item => ajv.addSchema(SCHEMA[item], SCHEMA[item].$id))
-    const validator = ajv.compile(SCHEMA.WALL)
+    const validator = ajv.compile(SCHEMA.CITY)
 
-    it('should accept a simple valid wall spec', function () {
+    it('should accept a simple valid city spec', function () {
       const goodJSON = {
         context: 'city3d',
-        type: 'wall.schema.json',
-        name: '2nd floor, south wall',
-        unit: 'feet',
-        roofline: 'gabled',
-        doors: [{
-          name: 'garage door',
-          leafCount: { rows: 5 },
-          motion: 'overhead',
-          outline: { shape: 'rectangle', size: { x: 16, y: 7 } },
-          at: { x: 12, from: 'center' },
-          casing: { width: 0.5 }
-        }],
-        windows: [],
-        outside: {
-          surface: {
-            style: 'clapboard',
-            material: 'fiber-cement'
-          },
-          fixtures: [{
-            at: { x: +2, y: 6 },
-            copy: { $ref: 'CITY.fixtures.sconce' }
-          }, {
-            at: { x: -2, y: 6 },
-            copy: { $ref: 'CITY.fixtures.sconce' }
-          }],
-          downspouts: [
-            { at: { x: +0.25 } },
-            { at: { x: -0.25 } }
-          ]
+        type: 'city.schema.json',
+        name: 'New York City',
+        unit: 'miles',
+        border: {
+          shape: 'rectangle',
+          size: { x: 18, y: 26 }
         },
-        inside: {
-          surface: {
-            style: 'flat',
-            material: 'drywall'
-          },
-          fixtures: []
-        }
+        districts: [
+          { copy: { $ref: 'CITY.districts.The_Bronx' } },
+          { copy: { $ref: 'CITY.districts.Brooklyn' } },
+          { copy: { $ref: 'CITY.districts.Manhattan' } },
+          { copy: { $ref: 'CITY.districts.Queens' } },
+          { copy: { $ref: 'CITY.districts.Staten_Island' } }
+        ],
+        contents: []
       }
       validator(goodJSON).should.equal(true)
     })
@@ -75,23 +53,21 @@ describe('SCHEMA', function () {
       validator(goodJSON).should.equal(true)
     })
 
-    it('should reject wall specs with invalid roofline types', function () {
+    it('should reject specs with invalid values', function () {
       const badJSON = {
-        roofline: 'polygon'
+        contents: 'polygon'
       }
       validator(badJSON).should.equal(false)
     })
 
     it('should reject door specs with nested invalid values', function () {
       const badJSON = {
-        doors: [{
-          leafCount: { rows: -5 }
-        }]
+        border: { shape: -5 }
       }
       validator(badJSON).should.equal(false)
     })
 
-    it('should reject any non-object substitute for the wall spec', function () {
+    it('should reject any non-object substitute for the spec', function () {
       const badJSON = true
       const alsoBad = 88
       const worse = []

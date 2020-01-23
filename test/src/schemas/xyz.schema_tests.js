@@ -5,44 +5,44 @@
  * For more information, please refer to <http://unlicense.org>
  */
 
-import Ajv from '../../../../node_modules/ajv/dist/ajv.min.js'
-import { SCHEMA } from '../../../../src/architecture/schemas/schema.js'
-import { xy } from '../../../../src/core/util.js'
+import Ajv from '../../../node_modules/ajv/dist/ajv.min.js'
+import { SCHEMA } from '../../../src/schemas/schema.js'
+import { xyz } from '../../../src/core/util.js'
 
 /* global describe, it */
 
 describe('SCHEMA', function () {
-  describe('SCHEMA.XY', function () {
+  describe('SCHEMA.XYZ', function () {
     const ajv = new Ajv()
-    const validator = ajv.compile(SCHEMA.XY)
+    const validator = ajv.compile(SCHEMA.XYZ)
 
-    it('should accept a simple valid {xy} object', function () {
-      const goodJSON = { x: 0, y: 0 }
+    it('should accept a simple valid {xyz} object', function () {
+      const goodJSON = { x: 0, y: 0, z: 0 }
       validator(goodJSON).should.equal(true)
     })
 
-    it('should treat both x: and y: as optional', function () {
+    it('should treat x: y: and z: as all optional', function () {
       const goodJSON = { }
       validator(goodJSON).should.equal(true)
     })
 
     it('should ignore unrecognized additional optional properties', function () {
-      const goodJSON = { z: 0 }
+      const goodJSON = { q: 0 }
       validator(goodJSON).should.equal(true)
     })
 
-    it('should accept the output from xy()', function () {
-      const goodJSON = xy(22, 33)
+    it('should accept the output from xyz()', function () {
+      const goodJSON = xyz(22, 33, -44)
       validator(goodJSON).should.equal(true)
     })
 
-    it('should reject any non-numeric {xy} values', function () {
-      const badJSON = { x: false, y: 0 }
+    it('should reject any non-numeric {xyz} values', function () {
+      const badJSON = { x: false, y: 0, z: 0 }
       validator(badJSON).should.equal(false)
     })
 
     it('should reject any string {xy} values', function () {
-      const badJSON = { x: 0, y: '33' }
+      const badJSON = { x: 0, y: 0, z: '33' }
       validator(badJSON).should.equal(false)
     })
 

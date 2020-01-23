@@ -1,33 +1,41 @@
-/** @file door.schema_tests.js
+/** @file parcel.schema_tests.js
  * @author Authored in 2020 at <https://github.com/nicky-nym/city3d>
  * @license UNLICENSE
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
  */
 
-import Ajv from '../../../../node_modules/ajv/dist/ajv.min.js'
-import { SCHEMA } from '../../../../src/architecture/schemas/schema.js'
+import Ajv from '../../../node_modules/ajv/dist/ajv.min.js'
+import { SCHEMA } from '../../../src/schemas/schema.js'
 
 /* global describe, it */
 
 describe('SCHEMA', function () {
-  describe('SCHEMA.DOOR', function () {
+  describe('SCHEMA.PARCEL', function () {
     const ajv = new Ajv()
     Object.keys(SCHEMA).forEach(item => ajv.addSchema(SCHEMA[item], SCHEMA[item].$id))
-    const validator = ajv.compile(SCHEMA.DOOR)
+    const validator = ajv.compile(SCHEMA.PARCEL)
 
-    it('should accept a simple valid door spec', function () {
+    it('should accept a simple valid parcel spec', function () {
       const goodJSON = {
         context: 'city3d',
-        type: 'door.schema.json',
-        name: 'garage door',
+        type: 'parcel.schema.json',
+        name: '#032-203-060',
         unit: 'feet',
-        motion: 'overhead',
-        outline: { shape: 'rectangle', size: { x: 16, y: 7 } },
-        leafCount: { rows: 5 },
-        handleSide: 'left',
-        at: { x: 12 },
-        casing: { width: 0.5 }
+        border: {
+          shape: 'rectangle',
+          size: { x: 50, y: 211 }
+        },
+        contents: [{
+          copy: { $ref: 'CITY.buildings.garage' },
+          at: { x: 34, y: 152 }
+        }, {
+          copy: { $ref: 'CITY.buildings.cottage' },
+          at: { x: 34, y: 120 }
+        }, {
+          copy: { $ref: 'CITY.buildings.house' },
+          at: { x: 30, y: 40 }
+        }]
       }
       validator(goodJSON).should.equal(true)
     })
@@ -47,21 +55,21 @@ describe('SCHEMA', function () {
       validator(goodJSON).should.equal(true)
     })
 
-    it('should reject door specs with invalid motion types', function () {
+    it('should reject specs with invalid values', function () {
       const badJSON = {
-        motion: 'polygon'
+        contents: 'polygon'
       }
       validator(badJSON).should.equal(false)
     })
 
     it('should reject door specs with nested invalid values', function () {
       const badJSON = {
-        leafCount: { rows: -5 }
+        border: { shape: -5 }
       }
       validator(badJSON).should.equal(false)
     })
 
-    it('should reject any non-object substitute for the outline', function () {
+    it('should reject any non-object substitute for the spec', function () {
       const badJSON = true
       const alsoBad = 88
       const worse = []

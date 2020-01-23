@@ -1,39 +1,35 @@
-/** @file city.schema_tests.js
+/** @file floor.schema_tests.js
  * @author Authored in 2020 at <https://github.com/nicky-nym/city3d>
  * @license UNLICENSE
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
  */
 
-import Ajv from '../../../../node_modules/ajv/dist/ajv.min.js'
-import { SCHEMA } from '../../../../src/architecture/schemas/schema.js'
+import Ajv from '../../../node_modules/ajv/dist/ajv.min.js'
+import { SCHEMA } from '../../../src/schemas/schema.js'
 
 /* global describe, it */
 
 describe('SCHEMA', function () {
-  describe('SCHEMA.CITY', function () {
+  describe('SCHEMA.FLOOR', function () {
     const ajv = new Ajv()
     Object.keys(SCHEMA).forEach(item => ajv.addSchema(SCHEMA[item], SCHEMA[item].$id))
-    const validator = ajv.compile(SCHEMA.CITY)
+    const validator = ajv.compile(SCHEMA.FLOOR)
 
-    it('should accept a simple valid city spec', function () {
+    it('should accept a simple valid floor spec', function () {
       const goodJSON = {
         context: 'city3d',
-        type: 'city.schema.json',
-        name: 'New York City',
-        unit: 'miles',
-        border: {
+        type: 'floor.schema.json',
+        name: 'Expansive hardwood floor',
+        unit: 'feet',
+        outline: {
           shape: 'rectangle',
-          size: { x: 18, y: 26 }
+          size: { x: 100, y: 100 }
         },
-        districts: [
-          { copy: { $ref: 'CITY.districts.The_Bronx' } },
-          { copy: { $ref: 'CITY.districts.Brooklyn' } },
-          { copy: { $ref: 'CITY.districts.Manhattan' } },
-          { copy: { $ref: 'CITY.districts.Queens' } },
-          { copy: { $ref: 'CITY.districts.Staten_Island' } }
-        ],
-        contents: []
+        surface: {
+          style: 'parquet',
+          material: 'wood'
+        }
       }
       validator(goodJSON).should.equal(true)
     })
@@ -55,19 +51,23 @@ describe('SCHEMA', function () {
 
     it('should reject specs with invalid values', function () {
       const badJSON = {
-        contents: 'polygon'
+        outline: 'polygon'
       }
       validator(badJSON).should.equal(false)
     })
 
-    it('should reject door specs with nested invalid values', function () {
+    it('should reject specs with nested invalid values', function () {
       const badJSON = {
-        border: { shape: -5 }
+        surface: {
+          style: [{
+            leafCount: { rows: -5 }
+          }]
+        }
       }
       validator(badJSON).should.equal(false)
     })
 
-    it('should reject any non-object substitute for the spec', function () {
+    it('should reject any non-object substitute for the roof spec', function () {
       const badJSON = true
       const alsoBad = 88
       const worse = []

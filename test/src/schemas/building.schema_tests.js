@@ -1,35 +1,50 @@
-/** @file district.schema_tests.js
+/** @file building.schema_tests.js
  * @author Authored in 2020 at <https://github.com/nicky-nym/city3d>
  * @license UNLICENSE
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
  */
 
-import Ajv from '../../../../node_modules/ajv/dist/ajv.min.js'
-import { SCHEMA } from '../../../../src/architecture/schemas/schema.js'
+import Ajv from '../../../node_modules/ajv/dist/ajv.min.js'
+import { SCHEMA } from '../../../src/schemas/schema.js'
 
 /* global describe, it */
 
 describe('SCHEMA', function () {
-  describe('SCHEMA.DISTRICT', function () {
+  describe('SCHEMA.BUILDING', function () {
     const ajv = new Ajv()
     Object.keys(SCHEMA).forEach(item => ajv.addSchema(SCHEMA[item], SCHEMA[item].$id))
-    const validator = ajv.compile(SCHEMA.DISTRICT)
+    const validator = ajv.compile(SCHEMA.BUILDING)
 
-    it('should accept a simple valid district spec', function () {
+    it('should accept a simple valid building spec', function () {
       const goodJSON = {
         context: 'city3d',
-        type: 'district.schema.json',
-        name: 'Manhattan',
-        unit: 'miles',
-        border: {
-          shape: 'rectangle',
-          size: { x: 2.3, y: 13.4 }
-        },
-        parcels: [],
-        contents: [{
-          copy: { $ref: 'CITY.structures.eiffel_tower' },
-          at: { x: 0.2, y: 0.4 }
+        type: 'building.schema.json',
+        name: 'Empire State Building',
+        unit: 'feet',
+        anchorPoint: { x: 0, y: 0, z: 0 },
+        storeys: [{
+          floors: [{
+            outline: {
+              shape: 'rectangle',
+              size: { x: 200, y: 200 }
+            }
+          }]
+        }, {
+          height: 8,
+          floors: [{
+            outline: {
+              shape: 'rectangle',
+              size: { x: 24, y: 21 }
+            }
+          }],
+          rooms: [],
+          roof: { form: 'pitched', pitch: { rise: 8, run: 12 } },
+          ceiling: {},
+          walls: {
+            exterior: [],
+            interior: []
+          }
         }]
       }
       validator(goodJSON).should.equal(true)
@@ -52,14 +67,16 @@ describe('SCHEMA', function () {
 
     it('should reject specs with invalid values', function () {
       const badJSON = {
-        contents: 'polygon'
+        storeys: 'polygon'
       }
       validator(badJSON).should.equal(false)
     })
 
-    it('should reject door specs with nested invalid values', function () {
+    it('should reject specs with nested invalid values', function () {
       const badJSON = {
-        border: { shape: -5 }
+        storeys: [{
+          floors: [{ outline: { shape: 'egg-and-dart' } }]
+        }]
       }
       validator(badJSON).should.equal(false)
     })

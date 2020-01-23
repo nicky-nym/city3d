@@ -1,51 +1,61 @@
-/** @file building.schema_tests.js
+/** @file wall.schema_tests.js
  * @author Authored in 2020 at <https://github.com/nicky-nym/city3d>
  * @license UNLICENSE
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
  */
 
-import Ajv from '../../../../node_modules/ajv/dist/ajv.min.js'
-import { SCHEMA } from '../../../../src/architecture/schemas/schema.js'
+import Ajv from '../../../node_modules/ajv/dist/ajv.min.js'
+import { SCHEMA } from '../../../src/schemas/schema.js'
 
 /* global describe, it */
 
 describe('SCHEMA', function () {
-  describe('SCHEMA.BUILDING', function () {
+  describe('SCHEMA.WALL', function () {
     const ajv = new Ajv()
     Object.keys(SCHEMA).forEach(item => ajv.addSchema(SCHEMA[item], SCHEMA[item].$id))
-    const validator = ajv.compile(SCHEMA.BUILDING)
+    const validator = ajv.compile(SCHEMA.WALL)
 
-    it('should accept a simple valid building spec', function () {
+    it('should accept a simple valid wall spec', function () {
       const goodJSON = {
         context: 'city3d',
-        type: 'building.schema.json',
-        name: 'Empire State Building',
+        type: 'wall.schema.json',
+        name: '2nd floor, south wall',
         unit: 'feet',
-        anchorPoint: { x: 0, y: 0, z: 0 },
-        storeys: [{
-          floors: [{
-            outline: {
-              shape: 'rectangle',
-              size: { x: 200, y: 200 }
-            }
-          }]
-        }, {
-          height: 8,
-          floors: [{
-            outline: {
-              shape: 'rectangle',
-              size: { x: 24, y: 21 }
-            }
+        roofline: 'gabled',
+        doors: [{
+          name: 'garage door',
+          leafCount: { rows: 5 },
+          motion: 'overhead',
+          outline: { shape: 'rectangle', size: { x: 16, y: 7 } },
+          at: { x: 12, from: 'center' },
+          casing: { width: 0.5 }
+        }],
+        windows: [],
+        outside: {
+          surface: {
+            style: 'clapboard',
+            material: 'fiber-cement'
+          },
+          fixtures: [{
+            at: { x: +2, y: 6 },
+            copy: { $ref: 'CITY.fixtures.sconce' }
+          }, {
+            at: { x: -2, y: 6 },
+            copy: { $ref: 'CITY.fixtures.sconce' }
           }],
-          rooms: [],
-          roof: { form: 'pitched', pitch: { rise: 8, run: 12 } },
-          ceiling: {},
-          walls: {
-            exterior: [],
-            interior: []
-          }
-        }]
+          downspouts: [
+            { at: { x: +0.25 } },
+            { at: { x: -0.25 } }
+          ]
+        },
+        inside: {
+          surface: {
+            style: 'flat',
+            material: 'drywall'
+          },
+          fixtures: []
+        }
       }
       validator(goodJSON).should.equal(true)
     })
@@ -65,23 +75,23 @@ describe('SCHEMA', function () {
       validator(goodJSON).should.equal(true)
     })
 
-    it('should reject specs with invalid values', function () {
+    it('should reject wall specs with invalid roofline types', function () {
       const badJSON = {
-        storeys: 'polygon'
+        roofline: 'polygon'
       }
       validator(badJSON).should.equal(false)
     })
 
-    it('should reject specs with nested invalid values', function () {
+    it('should reject door specs with nested invalid values', function () {
       const badJSON = {
-        storeys: [{
-          floors: [{ outline: { shape: 'egg-and-dart' } }]
+        doors: [{
+          leafCount: { rows: -5 }
         }]
       }
       validator(badJSON).should.equal(false)
     })
 
-    it('should reject any non-object substitute for the spec', function () {
+    it('should reject any non-object substitute for the wall spec', function () {
       const badJSON = true
       const alsoBad = 88
       const worse = []
