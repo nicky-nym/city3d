@@ -20,16 +20,16 @@ const MARTIAN_ORANGE = 0xdf4911
  * A district can have land, parcels, buildings, and structures.
  */
 class District extends Model {
-  constructor (corners = [xyz(0, 0, 0)], ray = new Ray(), name) {
-    super(name || 'District')
-    this._ray = ray
-    this._x0 = ray.xyz.x
-    this._y0 = ray.xyz.y
-    const adjustedCorners = ray.applyRay(corners)
+  constructor ({ name = 'District', outline = [xyz(0, 0, 0)], placement = new Ray() } = {}) {
+    super(name)
+    this._ray = placement
+    this._x0 = placement.xyz.x
+    this._y0 = placement.xyz.y
+    const adjustedCorners = placement.applyRay(outline)
     adjustedCorners.push(adjustedCorners[0])
     const xyPolygon = new Geometry.XYPolygon(adjustedCorners)
     const abstractOutlinePolygon = new Geometry.OutlinePolygon(xyPolygon)
-    const [{ x, y }, z] = [adjustedCorners[0], ray.xyz.z]
+    const [{ x, y }, z] = [adjustedCorners[0], placement.xyz.z]
     for (const i of countTo(3)) {
       const concreteOutlinePolygon = new FeatureInstance(abstractOutlinePolygon, { x, y, z: z + (i * 3) }, MARTIAN_ORANGE, { layer: DistrictBoundary.layer })
       this.add(concreteOutlinePolygon)

@@ -62,10 +62,14 @@ describe('District', function () {
 
     beforeEach(function () {
       city = new City('Testopia')
-      ray = new Ray()
       corners = rectangleOfSize(xy(1000, 1000))
-      district = new District(corners, ray, 'test district')
+      district = new District({
+        name: 'test district',
+        outline: corners,
+        placement: ray
+      })
       city.add(district)
+      ray = new Ray()
     })
 
     it('should add the expected metrics when a Parcel and a room are created', function () {
@@ -117,7 +121,11 @@ describe('District', function () {
 
       beforeEach(function () {
         parcel = new Parcel(parcelRect, ray)
-        district = new District(corners, ray, 'test district')
+        district = new District({
+          name: 'test district',
+          outline: corners,
+          placement: ray
+        })
         city = new City('Testopia')
         ray = new Ray()
         district.add(parcel)

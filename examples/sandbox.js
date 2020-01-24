@@ -9,43 +9,50 @@ import { CITY } from '../src/citylib.js'
 import { Facing } from '../src/core/facing.js'
 import { METRIC } from '../src/architecture/metric.js'
 import { Ray } from '../src/core/ray.js'
+import { SpecReader } from '../src/architecture/spec_reader.js'
 import { xy, xyz, rectangleOfSize } from '../src/core/util.js'
 
 window.DEBUG = true
 
 function addBuildings (city) {
-  let ray
-  let corners
-
-  ray = new Ray(Facing.NORTH, xyz(-100, 100, 0))
-  corners = rectangleOfSize(xy(-250, 200))
-  const suburbia = new CITY.Suburbia(corners, ray, 'Suburbia')
+  const suburbia = new CITY.Suburbia({
+    name: 'Suburbia',
+    outline: rectangleOfSize(xy(-250, 200)),
+    placement: new Ray(Facing.NORTH, xyz(-100, 100, 0))
+  })
   suburbia.addStreet(2)
   city.add(suburbia)
 
   const CITY_SIZE = 1
-  ray = new Ray(Facing.NORTH, xyz(-13200, -5280, 0))
-  const nyc = new CITY.Manhattan(CITY.Manhattan.BOUNDARY, ray, 'Manhattan')
+  const nyc = new CITY.Manhattan({
+    name: 'Manhattan',
+    outline: CITY.Manhattan.BOUNDARY,
+    placement: new Ray(Facing.NORTH, xyz(-13200, -5280, 0))
+  })
   nyc.addBlocks(CITY_SIZE, CITY_SIZE * 2)
   city.add(nyc)
 
-  ray = new Ray(Facing.NORTH, xyz(238, 238, 0))
-  corners = rectangleOfSize(xy(2000, 2000))
-  const latticeburg = new CITY.LatticeDistrict(corners, ray, 'Latticeburg')
+  const latticeburg = new CITY.LatticeDistrict({
+    name: 'Latticeburg',
+    outline: rectangleOfSize(xy(2000, 2000)),
+    placement: new Ray(Facing.NORTH, xyz(238, 238, 0))
+  })
   latticeburg.makeFeatures()
   latticeburg.add(new CITY.SoccerField({ at: { x: 920, y: 315, z: 0 } }))
   city.add(latticeburg)
 
-  ray = new Ray(Facing.NORTH, xyz(100, -600, 0))
-  corners = rectangleOfSize(xy(1200, 550))
-  const campus = new CITY.Campus(corners, ray, 'Campus')
+  const campus = new CITY.Campus({
+    name: 'Campus',
+    outline: rectangleOfSize(xy(1200, 550)),
+    placement: new Ray(Facing.NORTH, xyz(100, -600, 0))
+  })
   campus.makeCampus(3)
   city.add(campus)
 }
 
 function addCreek (district) {
-  const creek = new CITY.Creek()
-  const creekObject = creek.makeCreek('River Tethys')
+  const creek = new CITY.Creek('River Tethys')
+  const creekObject = creek.makeCreek()
   district.add(creekObject)
 
   // There are several possibilities here:
@@ -76,7 +83,7 @@ function addSwingset (district) {
 
 function addUtilityPoles (district) {
   for (let y = -40; y < 800; y += 120) {
-    district.add(new CITY.UtilityPole({ at: { x: -96, y: y, z: 0 } }))
+    district.add(new CITY.UtilityPole({ at: { x: -96, y: y, z: 0 }, done: true }))
   }
 }
 
@@ -103,7 +110,13 @@ function addMovers (district) {
   district.add(new CITY.Route([xyz(-150, -100, 0), xyz(-100, -200, 0), xyz(-80, -150, 0), xyz(-150, -100, 0)]))
 }
 
+function addSpecObject (district, specReader, specName, at) {
+  const modelObject = specReader.modelFromSpecName(specName, at)
+  district.add(modelObject)
+}
+
 function main () {
+  const specReader = new SpecReader()
   const extras = new CITY.Model('extras')
   addCreek(extras)
   addTree(extras)
@@ -113,6 +126,9 @@ function main () {
   addPyramid(extras)
   addKalpanaOrbital(extras)
   addMovers(extras)
+  addSpecObject(extras, specReader, 'Garage', { x: -288, y: 60, z: 0 })
+  addSpecObject(extras, specReader, 'Cottage', { x: -252, y: 60, z: 0 })
+  addSpecObject(extras, specReader, 'House', { x: -160, y: 60, z: 0 })
 
   const city = new CITY.City('Paracosm')
   addBuildings(city)

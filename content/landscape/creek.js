@@ -43,7 +43,7 @@ class Creek extends Model {
     return new Route(route.slice(NUM_SECTIONS / 2), use)
   }
 
-  makeCreek (name) {
+  makeCreek () {
     const BLUE = 0x0000ff
     const xyPolygon = new Geometry.XYPolygon()
     for (const i of countTo(NUM_SECTIONS)) {
@@ -59,7 +59,7 @@ class Creek extends Model {
 
     const abstractThickPolygon = new Geometry.ThickPolygon(xyPolygon, { depth: CREEK_DEPTH })
     const concreteThickPolygon = new FeatureInstance(abstractThickPolygon, xyz(X_OFFSET, 0, 0), BLUE,
-      { name: name || 'Creek', layer: Creek.layer })
+      { name: this.name || 'Creek', layer: Creek.layer })
     return concreteThickPolygon
   }
 }
