@@ -110,8 +110,8 @@ function addMovers (district) {
   district.add(new CITY.Route([xyz(-150, -100, 0), xyz(-100, -200, 0), xyz(-80, -150, 0), xyz(-150, -100, 0)]))
 }
 
-function addSpecObject (district, specReader, specName, at) {
-  const modelObject = specReader.modelFromSpecName(specName, at)
+function addObjectFromSpec (district, specReader, specName, at) {
+  const modelObject = specReader.makeModelFromSpecName(specName, at)
   district.add(modelObject)
 }
 
@@ -126,9 +126,9 @@ function main () {
   addPyramid(extras)
   addKalpanaOrbital(extras)
   addMovers(extras)
-  addSpecObject(extras, specReader, 'Garage', { x: -288, y: 60, z: 0 })
-  addSpecObject(extras, specReader, 'Cottage', { x: -252, y: 60, z: 0 })
-  addSpecObject(extras, specReader, 'House', { x: -160, y: 60, z: 0 })
+  addObjectFromSpec(extras, specReader, 'Garage', { x: -288, y: 60, z: 0 })
+  addObjectFromSpec(extras, specReader, 'Cottage', { x: -252, y: 60, z: 0 })
+  addObjectFromSpec(extras, specReader, 'House', { x: -160, y: 60, z: 0 })
 
   const city = new CITY.City('Paracosm')
   addBuildings(city)
