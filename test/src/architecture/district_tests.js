@@ -73,7 +73,7 @@ describe('District', function () {
     })
 
     it('should add the expected metrics when a Parcel and a room are created', function () {
-      district.add(new Parcel(parcelRect, ray))
+      district.add(new Parcel({ outline: parcelRect, placement: ray }))
       district.add(new Storey(ray, Use.ROOM, roomRect))
 
       const floorArea = 40 * 10
@@ -94,7 +94,7 @@ describe('District', function () {
       district.getValueForMetric(METRIC.GROSS_FLOOR_AREA_RATIO).should.equal(expectedFAR)
     })
     it('should compute the correct values and units for FAR metrics for a rectangular Parcel and room', function () {
-      const parcel = new Parcel(parcelRect, ray)
+      const parcel = new Parcel({ outline: parcelRect, placement: ray })
       parcel.add(new Storey(ray, Use.ROOM, roomRect))
       district.add(parcel)
 
@@ -120,7 +120,7 @@ describe('District', function () {
       const storeyRect = [xyz(0, 0, 0), xyz(40, 0, 0), xyz(40, 10, 0), xyz(0, 10, 0)]
 
       beforeEach(function () {
-        parcel = new Parcel(parcelRect, ray)
+        parcel = new Parcel({ outline: parcelRect, placement: ray })
         district = new District({
           name: 'test district',
           outline: corners,

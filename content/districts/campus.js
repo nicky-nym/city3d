@@ -28,8 +28,10 @@ class Campus extends District {
     for (const i in countTo(numBuildings)) {
       offset.x = i * PARCEL.shape.data.x
       const ray = this.goto(offset)
-      const corners = cornersFromShape(PARCEL.shape)
-      const parcel = new Parcel(corners, ray)
+      const parcel = new Parcel({
+        outline: cornersFromShape(PARCEL.shape),
+        placement: ray
+      })
       this.add(parcel)
       parcel.add(new WursterHall({ ray, x0: this._x0, y0: this._y0, at: offset }))
     }

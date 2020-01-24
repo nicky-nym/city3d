@@ -131,8 +131,10 @@ class Manhattan extends District {
     this._ray.xyz.y += UNIT.feet(6000) //  TODO: someday we should adjust the location, and add more blocks
     this._ray.az = MANHATTEN_STREET_GRID_ORIENTATION
     this._addLowLevelOfDetailStreetsAndAvenues(this._ray)
-    const corners = rectangleOfSize(xy(REPEAT_DX * numRows, REPEAT_DY * numCols))
-    this._parcel = new Parcel(corners, this._ray)
+    this._parcel = new Parcel({
+      outline: rectangleOfSize(xy(REPEAT_DX * numRows, REPEAT_DY * numCols)),
+      placement: this._ray
+    })
     this.add(this._parcel)
     for (const row of countTo(numRows)) {
       for (const col of countTo(numCols)) {

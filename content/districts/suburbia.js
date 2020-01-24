@@ -39,8 +39,10 @@ class Suburbia extends District {
     for (const i in countTo(numParcels)) {
       offset.y = PARCEL.offset.y + i * PARCEL_DY
       this.goto(offset)
-      const corners = cornersFromShape(PARCEL.shape)
-      const parcel = new Parcel(corners, this._ray)
+      const parcel = new Parcel({
+        outline: cornersFromShape(PARCEL.shape),
+        placement: this._ray
+      })
       this.add(parcel)
 
       const STREET_DX = 15
