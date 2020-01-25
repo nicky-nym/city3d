@@ -1,5 +1,5 @@
 /** @file lattice.js
- * @author Authored in 2019 at <https://github.com/nicky-nym/city3d>
+ * @author Authored in 2019, 2020 at <https://github.com/nicky-nym/city3d>
  * @license UNLICENSE
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -176,8 +176,8 @@ const LOWER_PLAZA_WALKWAY_D = [
  * A Lattice is a repeating pattern of Kinematic city bikeways.
  */
 class Lattice extends Structure {
-  constructor ({ ray, x0, y0, numRows = 2, numCols = 2, name } = {}) {
-    super({ ray, x0, y0, name: name || 'Lattice' })
+  constructor ({ ray, at, numRows = 2, numCols = 2, name = 'Lattice' } = {}) {
+    super({ ray, at, name })
     this.addUnitCells(numRows, numCols)
   }
 

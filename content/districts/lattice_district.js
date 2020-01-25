@@ -1,5 +1,5 @@
 /** @file lattice_district.js
- * @author Authored in 2019 at <https://github.com/nicky-nym/city3d>
+ * @author Authored in 2019, 2020 at <https://github.com/nicky-nym/city3d>
  * @license UNLICENSE
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -16,8 +16,8 @@ import { MidriseComplex } from '../buildings/midrise_complex.js'
 class LatticeDistrict extends District {
   makeFeatures () {
     const POPULATION = 1000
-    this.add(new Lattice({ x0: 100, y0: 100, numRows: 3, numCols: 3, hideBuildings: false }))
-    this.add(new MidriseComplex({ x0: 238, y0: 238, numRowPairs: 4, numColPairs: 4, hideBuildings: false }))
+    this.add(new Lattice({ at: { x: 100, y: 100 }, numRows: 3, numCols: 3 }))
+    this.add(new MidriseComplex({ at: { x: 238, y: 238 }, numRowPairs: 4, numColPairs: 4 }))
     this.setValueForMetric(METRIC.POPULATION, POPULATION)
   }
 }

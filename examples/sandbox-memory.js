@@ -1,5 +1,5 @@
 /** @file sandbox-memory.js
- * @author Authored in 2019 at <https://github.com/nicky-nym/city3d>
+ * @author Authored in 2019, 2020 at <https://github.com/nicky-nym/city3d>
  * @license UNLICENSE
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -14,13 +14,13 @@ async function addBuildings (city, threeOutput, memoryOutput) {
 
   await memoryOutput.add('after initial render')
 
-  complex = new CITY.MidriseComplex({ x0: -1000, y0: 1000, numRowPairs: N, numColPairs: N })
+  complex = new CITY.MidriseComplex({ at: { x: -1000, y: 1000 }, numRowPairs: N, numColPairs: N })
   city.add(complex)
   await memoryOutput.add(`created ${N} x ${N} complex`)
   threeOutput.add(complex)
   await memoryOutput.add(`rendered ${N} x ${N} complex`)
 
-  complex = new CITY.MidriseComplex({ x0: -1000, y0: -1000, numRowPairs: N, numColPairs: N })
+  complex = new CITY.MidriseComplex({ at: { x: -1000, y: -1000 }, numRowPairs: N, numColPairs: N })
   city.add(complex)
   await memoryOutput.add(`created ${N} x ${N} complex`)
   threeOutput.add(complex)
@@ -28,13 +28,13 @@ async function addBuildings (city, threeOutput, memoryOutput) {
 
   N *= 2
 
-  complex = new CITY.MidriseComplex({ x0: 1000, y0: -1000, numRowPairs: N, numColPairs: N })
+  complex = new CITY.MidriseComplex({ at: { x: 1000, y: -1000 }, numRowPairs: N, numColPairs: N })
   city.add(complex)
   await memoryOutput.add(`created ${N} x ${N} complex`)
   threeOutput.add(complex)
   await memoryOutput.add(`rendered ${N} x ${N} complex`)
 
-  complex = new CITY.MidriseComplex({ x0: 1000, y0: 1000, numRowPairs: N, numColPairs: N })
+  complex = new CITY.MidriseComplex({ at: { x: 1000, y: 1000 }, numRowPairs: N, numColPairs: N })
   city.add(complex)
   await memoryOutput.add(`created ${N} x ${N} complex`)
   threeOutput.add(complex)

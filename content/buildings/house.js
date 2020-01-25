@@ -1,5 +1,5 @@
 /** @file house.js
- * @author Authored in 2019 at <https://github.com/nicky-nym/city3d>
+ * @author Authored in 2019, 2020 at <https://github.com/nicky-nym/city3d>
  * @license UNLICENSE
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -275,17 +275,14 @@ function face (a, b, c) {
 * House objects know how to describe a Queen Anne single-family house.
 */
 class House extends Structure {
-  constructor ({ ray, x0, y0, at = xyz(0, 0, 0), name = 'House' } = {}) {
-    super({ ray, x0, y0, name })
+  constructor ({ ray, at = xyz(0, 0, 0), name = 'House' } = {}) {
+    super({ ray, name })
     this.makeBuilding(at)
   }
 
   makeBuilding (at = { x: 0, y: 0 }) {
-    const y = at.y
-    const xNorth = 0
-
-    this.makeHouse(xNorth, y, Facing.NORTH)
-    this.addAppurtenances(xNorth, y, Facing.NORTH)
+    this.makeHouse(at.x, at.y, Facing.NORTH)
+    this.addAppurtenances(at.x, at.y, Facing.NORTH)
   }
 
   addStairs (x = 0, y = 0, facing = Facing.NORTH) {
@@ -300,7 +297,9 @@ class House extends Structure {
   addAppurtenances (x = 0, y = 0, facing = Facing.NORTH) {
     const ray = this.goto({ x: x, y: y, z: 0, facing: facing })
     for (const i of countTo(FENCE_LINE.length - 1)) {
-      this.add(new Wall(FENCE_LINE[i], FENCE_LINE[i + 1], FENCE_HEIGHT))
+      const a = xyzAdd(ray.xyz, FENCE_LINE[i])
+      const b = xyzAdd(ray.xyz, FENCE_LINE[i + 1])
+      this.add(new Wall(a, b, FENCE_HEIGHT))
     }
     this.add(new Byway(ray, Use.WALKWAY, DOORPATH))
     this.add(new Byway(ray, Use.STREET, DRIVEWAY, { name: 'Driveway' }))

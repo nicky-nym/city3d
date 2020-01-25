@@ -1,5 +1,5 @@
 /** @file building.js
- * @author Authored in 2019 at <https://github.com/nicky-nym/city3d>
+ * @author Authored in 2019, 2020 at <https://github.com/nicky-nym/city3d>
  * @license UNLICENSE
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -48,8 +48,8 @@ function _openingsFromWallsSpec (wallsSpec) {
  * Buildings can be made from declarative specifications in JSON format.
  */
 class Building extends Structure {
-  constructor (spec, { ray, x0, y0, name, at = xyz(0, 0, 0) } = {}) {
-    super({ ray, x0, y0, at, name: name || spec.name })
+  constructor (spec, { ray, name, at = xyz(0, 0, 0) } = {}) {
+    super({ ray, at, name: name || spec.name })
     this._makeBuildingFromSpec(spec)
   }
 

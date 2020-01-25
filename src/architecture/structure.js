@@ -1,5 +1,5 @@
 /** @file structure.js
-  * @author Authored in 2019 at <https://github.com/nicky-nym/city3d>
+  * @author Authored in 2019, 2020 at <https://github.com/nicky-nym/city3d>
   * @license UNLICENSE
   * This is free and unencumbered software released into the public domain.
   * For more information, please refer to <http://unlicense.org>
@@ -10,7 +10,7 @@ import { Feature, FeatureGroup, FeatureInstance } from '../core/feature.js'
 import { Geometry } from '../core/geometry.js'
 import { Model } from './model.js'
 import { Ray } from '../core/ray.js'
-import { xyz, xyzAdd } from '../core/util.js'
+import { xyz } from '../core/util.js'
 
 const WHITE = 0xffffff
 const RED = 0xcc0000 // eslint-disable-line no-unused-vars
@@ -19,7 +19,7 @@ const GREEN = 0x00ff00 // eslint-disable-line no-unused-vars
 const BLUE = 0x0000ff
 const YELLOW = 0xffff00
 
-const GREEN_GRASS = 0x00cc00
+const GREEN_GRASS = 0x003300
 const BROWN = 0x806633
 const DARK_GRAY = 0x404040
 const LIGHT_GRAY = 0xdddddd
@@ -43,10 +43,10 @@ const COLORS_BY_USE = {
  * Structure is an abstract superclass for buildings, city blocks, and other types of structures.
  */
 class Structure extends Model {
-  constructor ({ ray, x0 = 0, y0 = 0, name, at = xyz(0, 0, 0) } = {}) {
+  constructor ({ ray, name, at = xyz(0, 0, 0) } = {}) {
     super(name)
     this._ray = ray || new Ray()
-    this.offset = xyzAdd({ x: x0, y: y0 }, at)
+    this.offset = xyz(at.x, at.y) // xyzAdd({ x: 0, y: 0 }, at)
   }
 
   goto ({ x = 0, y = 0, z = 0, facing = Facing.NORTH } = {}) {

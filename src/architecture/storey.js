@@ -1,5 +1,5 @@
 /** @file storey.js
- * @author Authored in 2019 at <https://github.com/nicky-nym/city3d>
+ * @author Authored in 2019, 2020 at <https://github.com/nicky-nym/city3d>
  * @license UNLICENSE
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -19,7 +19,7 @@ const GREEN = 0x00ff00 // eslint-disable-line no-unused-vars
 const BLUE = 0x0000ff
 const YELLOW = 0xffff00
 
-const GREEN_GRASS = 0x00cc00
+const GREEN_GRASS = 0x003300
 const BROWN = 0x806633
 const DARK_GRAY = 0x404040
 const LIGHT_GRAY = 0xdddddd

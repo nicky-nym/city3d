@@ -1,5 +1,5 @@
 /** @file cottage.js
- * @author Authored in 2019 at <https://github.com/nicky-nym/city3d>
+ * @author Authored in 2019, 2020 at <https://github.com/nicky-nym/city3d>
  * @license UNLICENSE
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -24,8 +24,8 @@ const OLD_COTTAGE_BUILDING_SPEC = {
  * Class representing a back yard Accessory Dwelling Unit.
  */
 class Cottage extends Building {
-  constructor ({ ray, x0, y0, at = xyz(0, 0, 0), name } = {}) {
-    super(OLD_COTTAGE_BUILDING_SPEC, { ray, x0, y0, name, at })
+  constructor ({ ray, at = xyz(0, 0, 0), name } = {}) {
+    super(OLD_COTTAGE_BUILDING_SPEC, { ray, name, at })
   }
 }
 

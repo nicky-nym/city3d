@@ -1,5 +1,5 @@
 /** @file suburbiajs
- * @author Authored in 2019 at <https://github.com/nicky-nym/city3d>
+ * @author Authored in 2019, 2020 at <https://github.com/nicky-nym/city3d>
  * @license UNLICENSE
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -68,9 +68,9 @@ class Suburbia extends District {
       const x0 = ray.xyz.x
       const y0 = ray.xyz.y
 
-      parcel.add(new Cottage({ ray, x0, y0, at: xy(-154, 23) }))
-      parcel.add(new Garage({ ray, x0, y0, at: xy(-185, 23) }))
-      parcel.add(new House({ ray, x0, y0, at: xy(STREET_DX + SIDEWALK_WIDTH, 0) }))
+      parcel.add(new Cottage({ ray, at: xy(-154 + x0, 23 + y0) }))
+      parcel.add(new Garage({ ray, at: xy(-185 + x0, 23 + y0) }))
+      parcel.add(new House({ ray, at: xy(x0, y0) }))
 
       const PEOPLE_PER_PARCEL = 3
       this.setValueForMetric(METRIC.POPULATION, numParcels * PEOPLE_PER_PARCEL)

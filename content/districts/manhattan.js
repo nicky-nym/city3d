@@ -1,5 +1,5 @@
 /** @file manhattan.js
- * @author Authored in 2019 at <https://github.com/nicky-nym/city3d>
+ * @author Authored in 2019, 2020 at <https://github.com/nicky-nym/city3d>
  * @license UNLICENSE
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -84,14 +84,12 @@ class Manhattan extends District {
 
   addBuildingAt (x = 0, y = 0) {
     // TODO: This is messy. It needs some clean up.
-    const z = 0
-    const offset = { x, y, z }
     const size = { x: BUILDING_DX, y: BUILDING_DY }
     let ray = this._ray
     ray = new Ray(ray.az, xyz(ray.xyz.x, ray.xyz.y, 0))
     const x0 = ray.xyz.x
     const y0 = ray.xyz.y
-    this._parcel.add(new Highrise(size, { ray, x0, y0, at: offset }))
+    this._parcel.add(new Highrise(size, { ray, at: { x: x + x0, y: y + y0, z: 0 } }))
   }
 
   addBlock (row = 0, col = 0) {

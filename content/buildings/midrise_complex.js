@@ -1,5 +1,5 @@
 /** @file midrise_complex.js
- * @author Authored in 2019 at <https://github.com/nicky-nym/city3d>
+ * @author Authored in 2019, 2020 at <https://github.com/nicky-nym/city3d>
  * @license UNLICENSE
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -263,8 +263,8 @@ function _getLandingPattern (numRowPairs, numColPairs) {
 }
 
 class MidriseComplex extends Structure {
-  constructor ({ ray, x0, y0, numRowPairs = 1, numColPairs = 1, name = 'Midrise Complex' } = {}) {
-    super({ ray, x0, y0, name })
+  constructor ({ ray, at, numRowPairs = 1, numColPairs = 1, name = 'Midrise Complex' } = {}) {
+    super({ ray, at, name })
     this._addBuildings(numRowPairs, numColPairs)
   }
 
