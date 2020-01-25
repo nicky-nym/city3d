@@ -24,8 +24,8 @@ const OLD_COTTAGE_BUILDING_SPEC = {
  * Class representing a back yard Accessory Dwelling Unit.
  */
 class Cottage extends Building {
-  constructor ({ city, ray, x0, y0, at = xyz(0, 0, 0), name } = {}) {
-    super(OLD_COTTAGE_BUILDING_SPEC, { city, ray, x0, y0, name, at })
+  constructor ({ ray, x0, y0, at = xyz(0, 0, 0), name } = {}) {
+    super(OLD_COTTAGE_BUILDING_SPEC, { ray, x0, y0, name, at })
   }
 }
 

@@ -73,7 +73,7 @@ describe('MidriseComplex', function () {
     })
 
     it('should have the correct WALL_AREA', function () {
-      complex.getValueForMetric(METRIC.WALL_AREA).should.be.closeTo(21551, 1)
+      complex.getValueForMetric(METRIC.WALL_AREA).should.be.closeTo(21806, 1)
     })
 
     it('should have the correct WINDOW_AREA', function () {

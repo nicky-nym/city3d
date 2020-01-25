@@ -263,9 +263,9 @@ function _getLandingPattern (numRowPairs, numColPairs) {
 }
 
 class MidriseComplex extends Structure {
-  constructor ({ city, ray, x0, y0, numRowPairs = 1, numColPairs = 1, hideBuildings = false, name = 'Midrise Complex' } = {}) {
-    super({ city, ray, x0, y0, name })
-    this._addBuildings(numRowPairs, numColPairs, !hideBuildings)
+  constructor ({ ray, x0, y0, numRowPairs = 1, numColPairs = 1, name = 'Midrise Complex' } = {}) {
+    super({ ray, x0, y0, name })
+    this._addBuildings(numRowPairs, numColPairs)
   }
 
   _addRoofAroundFloor (shape, peakXyz) {
@@ -297,14 +297,14 @@ class MidriseComplex extends Structure {
     }
   }
 
-  _addFeaturesAtLanding (rampBearings, at, buildings = true) {
+  _addFeaturesAtLanding (rampBearings, at) {
     const [x, y, z] = at
     let ray
 
     // Landing
     ray = this.goto({ x: x, y: y, z: z, facing: Facing.NORTH })
     this.add(new Byway(ray, Use.WALKWAY, OCTAGONAL_LANDING))
-    if (!buildings && z % STOREY_HEIGHT === 0) {
+    if (z % STOREY_HEIGHT === 0) {
       this.add(new Storey(ray, Use.BARE, DIAMOND_CENTER, { wall: 3 }))
     }
 
@@ -315,7 +315,7 @@ class MidriseComplex extends Structure {
     }
 
     // Floors, Walls, and Roof
-    if (buildings && z % STOREY_HEIGHT === 0) {
+    if (z % STOREY_HEIGHT === 0) {
       for (const bearing of rampBearings) {
         // parcel
         ray = this.goto({ x: x, y: y, z: 0, facing: bearing })
@@ -342,7 +342,7 @@ class MidriseComplex extends Structure {
     }
   }
 
-  _addBuildings (numRowPairs = 1, numColPairs = 1, buildings = true) {
+  _addBuildings (numRowPairs = 1, numColPairs = 1) {
     let i = 0
     for (const row of _getLandingPattern(numRowPairs, numColPairs)) {
       let j = 0
@@ -352,7 +352,7 @@ class MidriseComplex extends Structure {
         for (const landingSpec of gridCell) {
           const z = landingSpec[0]
           const rampBearings = landingSpec[1]
-          this._addFeaturesAtLanding(rampBearings, [x, y, z], buildings)
+          this._addFeaturesAtLanding(rampBearings, [x, y, z])
         }
         j++
       }

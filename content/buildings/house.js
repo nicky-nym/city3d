@@ -275,8 +275,8 @@ function face (a, b, c) {
 * House objects know how to describe a Queen Anne single-family house.
 */
 class House extends Structure {
-  constructor ({ city, ray, x0, y0, at = xyz(0, 0, 0), name = 'House' } = {}) {
-    super({ city, ray, x0, y0, name })
+  constructor ({ ray, x0, y0, at = xyz(0, 0, 0), name = 'House' } = {}) {
+    super({ ray, x0, y0, name })
     this.makeBuilding(at)
   }
 

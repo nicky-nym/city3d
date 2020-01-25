@@ -176,9 +176,9 @@ const LOWER_PLAZA_WALKWAY_D = [
  * A Lattice is a repeating pattern of Kinematic city bikeways.
  */
 class Lattice extends Structure {
-  constructor ({ city, ray, x0, y0, numRows = 2, numCols = 2, hideBuildings = false, name } = {}) {
+  constructor ({ ray, x0, y0, numRows = 2, numCols = 2, name } = {}) {
     super({ ray, x0, y0, name: name || 'Lattice' })
-    this.addUnitCells(numRows, numCols, !hideBuildings)
+    this.addUnitCells(numRows, numCols)
   }
 
   addBoulevard ({ x = 0, y = 0, z = 0, facing = Facing.NORTH } = {}) {
@@ -296,7 +296,7 @@ class Lattice extends Structure {
     return this
   }
 
-  addBlock (row = 0, col = 0, buildings = true) {
+  addBlock (row = 0, col = 0) {
     const x = row * BLOCK_LENGTH
     const y = col * BLOCK_LENGTH
     const EAST_WEST_ALTITUDE = 7.5
@@ -307,46 +307,42 @@ class Lattice extends Structure {
     this.add(new Storey(ray, Use.PARCEL, PARCEL))
 
     this.addBoulevard({ x: x, y: y, z: NORTH_SOUTH_ALTITUDE, facing: Facing.NORTH })
-    if (buildings) {
-      this.addHighline({ x: x, y: y, z: HIGHLINE_ALTITUDE, facing: Facing.NORTH })
-      this.addLonghouse({ x: x, y: y, z: 0, height: 11.25, facing: Facing.NORTH })
-      this.addLonghouse({ x: x, y: y, z: 11.25, height: 11.25, facing: Facing.NORTH })
-    }
+    this.addHighline({ x: x, y: y, z: HIGHLINE_ALTITUDE, facing: Facing.NORTH })
+    this.addLonghouse({ x: x, y: y, z: 0, height: 11.25, facing: Facing.NORTH })
+    this.addLonghouse({ x: x, y: y, z: 11.25, height: 11.25, facing: Facing.NORTH })
+
     this.goto({ x: x, y: y, z: NORTH_SOUTH_ALTITUDE, facing: Facing.NORTH })
     this.addRamps()
 
     this.addBoulevard({ x: x + BLOCK_LENGTH, y: y + BLOCK_LENGTH, z: NORTH_SOUTH_ALTITUDE, facing: Facing.SOUTH })
-    if (buildings) {
-      this.addHighline({ x: x + BLOCK_LENGTH, y: y + BLOCK_LENGTH, z: HIGHLINE_ALTITUDE, facing: Facing.SOUTH })
-      this.addLonghouse({ x: x + BLOCK_LENGTH, y: y + BLOCK_LENGTH, z: 0, height: 11.25, facing: Facing.SOUTH })
-      this.addLonghouse({ x: x + BLOCK_LENGTH, y: y + BLOCK_LENGTH, z: 11.25, height: 11.25, facing: Facing.SOUTH })
-    }
+    this.addHighline({ x: x + BLOCK_LENGTH, y: y + BLOCK_LENGTH, z: HIGHLINE_ALTITUDE, facing: Facing.SOUTH })
+    this.addLonghouse({ x: x + BLOCK_LENGTH, y: y + BLOCK_LENGTH, z: 0, height: 11.25, facing: Facing.SOUTH })
+    this.addLonghouse({ x: x + BLOCK_LENGTH, y: y + BLOCK_LENGTH, z: 11.25, height: 11.25, facing: Facing.SOUTH })
+
     this.goto({ x: x + BLOCK_LENGTH, y: y + BLOCK_LENGTH, z: NORTH_SOUTH_ALTITUDE, facing: Facing.SOUTH })
     this.addRamps()
 
     this.addBoulevard({ x: x, y: y + BLOCK_LENGTH, z: EAST_WEST_ALTITUDE, facing: Facing.EAST })
-    if (buildings) {
-      this.addHighline({ x: x, y: y + BLOCK_LENGTH, z: HIGHLINE_ALTITUDE, facing: Facing.EAST })
-      this.addLonghouse({ x: x, y: y + BLOCK_LENGTH, z: 0, height: 7.5, facing: Facing.EAST })
-      this.addLonghouse({ x: x, y: y + BLOCK_LENGTH, z: NORTH_SOUTH_ALTITUDE, height: 15, facing: Facing.EAST })
-    }
+    this.addHighline({ x: x, y: y + BLOCK_LENGTH, z: HIGHLINE_ALTITUDE, facing: Facing.EAST })
+    this.addLonghouse({ x: x, y: y + BLOCK_LENGTH, z: 0, height: 7.5, facing: Facing.EAST })
+    this.addLonghouse({ x: x, y: y + BLOCK_LENGTH, z: NORTH_SOUTH_ALTITUDE, height: 15, facing: Facing.EAST })
+
     this.goto({ x: x, y: y, z: EAST_WEST_ALTITUDE, facing: Facing.EAST })
 
     this.addBoulevard({ x: x + BLOCK_LENGTH, y: y, z: EAST_WEST_ALTITUDE, facing: Facing.WEST })
-    if (buildings) {
-      this.addHighline({ x: x + BLOCK_LENGTH, y: y, z: HIGHLINE_ALTITUDE, facing: Facing.WEST })
-      this.addLonghouse({ x: x + BLOCK_LENGTH, y: y, z: 0, height: 7.5, facing: Facing.WEST })
-      this.addLonghouse({ x: x + BLOCK_LENGTH, y: y, z: NORTH_SOUTH_ALTITUDE, height: 15, facing: Facing.WEST })
-    }
+    this.addHighline({ x: x + BLOCK_LENGTH, y: y, z: HIGHLINE_ALTITUDE, facing: Facing.WEST })
+    this.addLonghouse({ x: x + BLOCK_LENGTH, y: y, z: 0, height: 7.5, facing: Facing.WEST })
+    this.addLonghouse({ x: x + BLOCK_LENGTH, y: y, z: NORTH_SOUTH_ALTITUDE, height: 15, facing: Facing.WEST })
+
     this.goto({ x: x + BLOCK_LENGTH, y: y + BLOCK_LENGTH, z: EAST_WEST_ALTITUDE, facing: Facing.WEST })
 
     return this
   }
 
-  addUnitCells (num_rows = 0, num_cols = 0, { buildings = true } = {}) {
+  addUnitCells (num_rows = 0, num_cols = 0) {
     for (const row of countTo(num_rows)) {
       for (const col of countTo(num_cols)) {
-        this.addBlock(row, col, buildings)
+        this.addBlock(row, col)
       }
     }
   }
