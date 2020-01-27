@@ -19,24 +19,24 @@ describe('Wall', function () {
 
   describe('#constructor', function () {
     it('should return a Wall with the right name if one was specified', function () {
-      const wall = new Wall(xy(0, 0), xy(UNIT.km(117.5), 0), UNIT.meters(6), { name: 'Hadrian\'s Wall' })
+      const wall = new Wall({ name: 'Hadrian\'s Wall', deprecatedSpec: { v1: xy(0, 0), v2: xy(UNIT.km(117.5), 0), height: UNIT.meters(6) } })
 
       wall.name.should.equal('Hadrian\'s Wall')
     })
     it('should return a Wall named "Wall" if no name was specified', function () {
-      const wall = new Wall(xy(0, 0), xy(UNIT.km(117.5), 0), UNIT.meters(6))
+      const wall = new Wall({ deprecatedSpec: { v1: xy(0, 0), v2: xy(UNIT.km(117.5), 0), height: UNIT.meters(6) } })
 
       wall.name.should.equal('Wall')
     })
     it('should return a Wall containing exactly one Instance', function () {
-      const wall = new Wall(xy(0, 0), xy(UNIT.km(117.5), 0), UNIT.meters(6))
+      const wall = new Wall({ deprecatedSpec: { v1: xy(0, 0), v2: xy(UNIT.km(117.5), 0), height: UNIT.meters(6) } })
 
       let count = 0
       wall.accept(node => { count += node instanceof FeatureInstance ? 1 : 0 })
       count.should.equal(1)
     })
     it('should return a Wall with the expected metrics for a wall with no openings', function () {
-      const wall = new Wall(xy(UNIT.km(3), 0), xy(0, UNIT.km(4)), UNIT.meters(6))
+      const wall = new Wall({ deprecatedSpec: { v1: xy(UNIT.km(3), 0), v2: xy(0, UNIT.km(4)), height: UNIT.meters(6) } })
 
       const expectedArea = 5 * FEET_PER_METER * 1000 * 6 * FEET_PER_METER
       wall._valuesByMetric.get(METRIC.WALL_AREA).should.be.closeTo(expectedArea, 0.1)
@@ -44,7 +44,7 @@ describe('Wall', function () {
     })
     it('should return a Wall with the expected metrics for a wall with one opening', function () {
       const openings = [[xy(4, 3), xy(6, 3), xy(6, 5), xy(4, 5)]]
-      const wall = new Wall(xy(0, 0), xy(10, 0), 6, { openings })
+      const wall = new Wall({ deprecatedSpec: { v1: xy(0, 0), v2: xy(10, 0), height: 6, openings } })
 
       wall._valuesByMetric.get(METRIC.WALL_AREA).should.equal(60)
       wall._valuesByMetric.get(METRIC.WINDOW_AREA).should.equal(4)
@@ -55,14 +55,14 @@ describe('Wall', function () {
         [xy(4, 3), xy(6, 3), xy(6, 5), xy(4, 5)],
         [xy(7, 3), xy(9, 3), xy(9, 5), xy(7, 5)]
       ]
-      const wall = new Wall(xy(0, 6), xy(8, 0), 6, { openings })
+      const wall = new Wall({ deprecatedSpec: { v1: xy(0, 6), v2: xy(8, 0), height: 6, openings } })
 
       wall._valuesByMetric.get(METRIC.WALL_AREA).should.equal(60)
       wall._valuesByMetric.get(METRIC.WINDOW_AREA).should.equal(12)
     })
     it('should return a Wall with the expected metrics for a wall with a non-rectangular opening', function () {
       const openings = [[xy(4, 3), xy(6, 3), xy(6, 5)]]
-      const wall = new Wall(xy(0, 0), xy(10, 0), 6, { openings })
+      const wall = new Wall({ deprecatedSpec: { v1: xy(0, 0), v2: xy(10, 0), height: 6, openings } })
 
       wall._valuesByMetric.get(METRIC.WALL_AREA).should.equal(60)
       wall._valuesByMetric.get(METRIC.WINDOW_AREA).should.equal(2)

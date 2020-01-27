@@ -299,7 +299,7 @@ class House extends Structure {
     for (const i of countTo(FENCE_LINE.length - 1)) {
       const a = xyzAdd(ray.xyz, FENCE_LINE[i])
       const b = xyzAdd(ray.xyz, FENCE_LINE[i + 1])
-      this.add(new Wall(a, b, FENCE_HEIGHT))
+      this.add(new Wall({ deprecatedSpec: { v1: a, v2: b, height: FENCE_HEIGHT } }))
     }
     this.add(new Byway({ placement: ray, outline: DOORPATH, deprecatedSpec: { use: Use.WALKWAY } }))
     this.add(new Byway({ placement: ray, outline: DRIVEWAY, deprecatedSpec: { use: Use.STREET, name: 'Driveway' } }))

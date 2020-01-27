@@ -30,7 +30,7 @@ describe('Wall', function () {
     })
 
     it('should add one LOD, containing one Group, containing one Mesh', function () {
-      const wall = new Wall(xy(0, 0), xy(10, 0), 6)
+      const wall = new Wall({ deprecatedSpec: { v1: xy(0, 0), v2: xy(10, 0), height: 6 } })
       threeOutputScene._traverse(wall, spy)
 
       spy.thingsAdded.should.have.length(1)
@@ -41,13 +41,13 @@ describe('Wall', function () {
       spy.thingsAdded[0].children[0].children[0].type.should.equal('Mesh')
     })
     it('should add a mesh with 8 vertices', function () {
-      const wall = new Wall(xy(0, 0), xy(10, 0), 6)
+      const wall = new Wall({ deprecatedSpec: { v1: xy(0, 0), v2: xy(10, 0), height: 6 } })
       threeOutputScene._traverse(wall, spy)
 
       spy.getAllAddedVerticesAfterTransform().should.have.length(8)
     })
     it('should have the expected vertices for v1 = (0, 0), v2 = (X, 0)', function () {
-      const wall = new Wall(xy(0, 0), xy(10, 0), 6, { depth: D })
+      const wall = new Wall({ deprecatedSpec: { v1: xy(0, 0), v2: xy(10, 0), height: 6, depth: D } })
       threeOutputScene._traverse(wall, spy)
 
       spy.getAllAddedVerticesAfterTransform().should.include.deep.members([
@@ -56,7 +56,7 @@ describe('Wall', function () {
       ])
     })
     it('should have the expected vertices for v1 = (X1, 0), v2 = (X2, 0)', function () {
-      const wall = new Wall(xy(2, 0), xy(10, 0), 6, { depth: D })
+      const wall = new Wall({ deprecatedSpec: { v1: xy(2, 0), v2: xy(10, 0), height: 6, depth: D } })
       threeOutputScene._traverse(wall, spy)
 
       spy.getAllAddedVerticesAfterTransform().should.include.deep.members([
@@ -65,7 +65,7 @@ describe('Wall', function () {
       ])
     })
     it('should have the expected vertices for v1 = (0, Y1), v2 = (0, Y2)', function () {
-      const wall = new Wall(xy(0, -5), xy(0, 15), 6, { depth: D })
+      const wall = new Wall({ deprecatedSpec: { v1: xy(0, -5), v2: xy(0, 15), height: 6, depth: D } })
       threeOutputScene._traverse(wall, spy)
 
       spy.getAllAddedVerticesAfterTransform().should.include.deep.members([
@@ -75,7 +75,7 @@ describe('Wall', function () {
     })
     // From here on we'll ignore the depth of the wall, and just check one face.
     it('should have the expected vertices for arbitrary v1 and v2', function () {
-      const wall = new Wall(xy(-3, -5), xy(13, 15), 6)
+      const wall = new Wall({ deprecatedSpec: { v1: xy(-3, -5), v2: xy(13, 15), height: 6 } })
       threeOutputScene._traverse(wall, spy)
 
       spy.getAllAddedVerticesAfterTransform().should.include.deep.members([
@@ -83,7 +83,7 @@ describe('Wall', function () {
       ])
     })
     it('should offset the vertices correctly when a value for z is specified', function () {
-      const wall = new Wall(xy(0, 0), xy(10, 0), 6, { z: 20 })
+      const wall = new Wall({ deprecatedSpec: { v1: xy(0, 0), v2: xy(10, 0), height: 6, z: 20 } })
       threeOutputScene._traverse(wall, spy)
 
       spy.getAllAddedVerticesAfterTransform().should.include.deep.members([

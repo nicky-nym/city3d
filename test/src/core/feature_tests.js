@@ -33,7 +33,7 @@ describe('Feature ', function () {
     })
     it('should return different values for a Wall and a Roof', function () {
       const roof = new Roof({ placement: ray, deprecatedSpec: roofSpec })
-      const wall = new Wall({}, new Ray())
+      const wall = new Wall({ deprecatedSpec: { v1: new Ray(), v2: new Ray() } })
 
       wall.layerIndex().should.be.within(1, 31)
       wall.layerIndex().should.not.equal(roof.layerIndex())

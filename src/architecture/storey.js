@@ -64,7 +64,7 @@ function _addWalls (group, xyPolygon, height, z, openingsByWall, cap) {
       const next = i % xyPolygon.length
       const near = v
       const far = xyPolygon[next]
-      group.add(new Wall(near, far, height, { z, openings, name: `Wall ${i}` }))
+      group.add(new Wall({ name: `Wall ${i}`, deprecatedSpec: { v1: near, v2: far, height, z, openings } }))
     }
   }
 }
