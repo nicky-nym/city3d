@@ -61,8 +61,8 @@ class Suburbia extends District {
         xy(SIDEWALK_WIDTH + STREET_DX, STREET_DY),
         xy(SIDEWALK_WIDTH + STREET_DX, 0)]
 
-      this.add(new Byway(this._ray, Use.WALKWAY, SIDEWALK))
-      this.add(new Byway(this._ray, Use.STREET, STREET))
+      this.add(new Byway({ placement: this._ray, outline: SIDEWALK, deprecatedSpec: { use: Use.WALKWAY } }))
+      this.add(new Byway({ placement: this._ray, outline: STREET, deprecatedSpec: { use: Use.STREET } }))
 
       const ray = this._ray
       const x0 = ray.xyz.x

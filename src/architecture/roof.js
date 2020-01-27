@@ -15,19 +15,19 @@ const LIGHT_GRAY = 0x808080
  * Roof is a class for representing the roof of a building.
  */
 class Roof extends Model {
-  constructor ({ ray, deprecatedSpec }) {
+  constructor ({ placement, deprecatedSpec }) {
     super({ name: 'Roof', layer: Roof.layer })
     if (deprecatedSpec.custom) {
       let { vertices, indices } = deprecatedSpec.custom
-      vertices = ray.applyRay(vertices)
+      vertices = placement.applyRay(vertices)
       const abstractRoof = new Geometry.TriangularPolyhedron(vertices, indices)
       const concreteRoof = new FeatureInstance(abstractRoof, { ...vertices[0] }, LIGHT_GRAY)
       this.add(concreteRoof)
     } else if (deprecatedSpec.flat) {
-      const adjustedCorners = ray.applyRay(deprecatedSpec.flat)
+      const adjustedCorners = placement.applyRay(deprecatedSpec.flat)
       const xyPolygon = new Geometry.XYPolygon(adjustedCorners)
       const abstractThickPolygon = new Geometry.ThickPolygon(xyPolygon, { depth: 0.5 })
-      const p0 = { ...adjustedCorners[0], z: ray.xyz.z }
+      const p0 = { ...adjustedCorners[0], z: placement.xyz.z }
       const concreteThickPolygon = new FeatureInstance(abstractThickPolygon, p0, LIGHT_GRAY)
       this.add(concreteThickPolygon)
     } else {

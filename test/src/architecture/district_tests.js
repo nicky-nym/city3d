@@ -28,23 +28,23 @@ describe('District', function () {
 
     it('should return the correct floor area for a room made from a single rectangle', function () {
       const house = new District()
-      house.add(new Storey(ray, Use.ROOM, rect1))
+      house.add(new Storey({ placement: ray, outline: rect1, deprecatedSpec: { use: Use.ROOM } }))
 
       house._aggregateValuesForMetric(METRIC.GROSS_FLOOR_AREA).should.equal(1000)
     })
     it('should return the correct floor area for a house made of two rectangular rooms', function () {
       const house = new District()
-      house.add(new Storey(ray, Use.ROOM, rect1))
-      house.add(new Storey(ray, Use.ROOM, rect2))
+      house.add(new Storey({ placement: ray, outline: rect1, deprecatedSpec: { use: Use.ROOM } }))
+      house.add(new Storey({ placement: ray, outline: rect2, deprecatedSpec: { use: Use.ROOM } }))
 
       house._aggregateValuesForMetric(METRIC.GROSS_FLOOR_AREA).should.equal(1800)
     })
     it('should return the correct floor area for a house with nested rectangular rooms', function () {
       const house = new District()
-      house.add(new Storey(ray, Use.ROOM, rect1))
+      house.add(new Storey({ placement: ray, outline: rect1, deprecatedSpec: { use: Use.ROOM } }))
       const wing = new FeatureGroup()
-      wing.add(new Storey(ray, Use.ROOM, rect2))
-      wing.add(new Storey(ray, Use.ROOM, rect2))
+      wing.add(new Storey({ placement: ray, outline: rect2, deprecatedSpec: { use: Use.ROOM } }))
+      wing.add(new Storey({ placement: ray, outline: rect2, deprecatedSpec: { use: Use.ROOM } }))
       house.add(wing)
 
       house._aggregateValuesForMetric(METRIC.GROSS_FLOOR_AREA).should.equal(2600)
@@ -74,7 +74,7 @@ describe('District', function () {
 
     it('should add the expected metrics when a Parcel and a room are created', function () {
       district.add(new Parcel({ outline: parcelRect, placement: ray }))
-      district.add(new Storey(ray, Use.ROOM, roomRect))
+      district.add(new Storey({ placement: ray, outline: roomRect, deprecatedSpec: { use: Use.ROOM } }))
 
       const floorArea = 40 * 10
       const districtArea = 1000 * 1000
@@ -84,7 +84,7 @@ describe('District', function () {
       district.getValueForMetric(METRIC.GROSS_FLOOR_AREA_RATIO).should.be.closeTo(expectedFAR, 0.0001)
     })
     it('should add Floor area metric and FAR metrics when a room but no Parcel is created', function () {
-      district.add(new Storey(ray, Use.ROOM, roomRect))
+      district.add(new Storey({ placement: ray, outline: roomRect, deprecatedSpec: { use: Use.ROOM } }))
 
       const floorArea = 40 * 10
       const districtArea = 1000 * 1000
@@ -95,7 +95,7 @@ describe('District', function () {
     })
     it('should compute the correct values and units for FAR metrics for a rectangular Parcel and room', function () {
       const parcel = new Parcel({ outline: parcelRect, placement: ray })
-      parcel.add(new Storey(ray, Use.ROOM, roomRect))
+      parcel.add(new Storey({ placement: ray, outline: roomRect, deprecatedSpec: { use: Use.ROOM } }))
       district.add(parcel)
 
       const floorArea = 40 * 10
@@ -108,7 +108,7 @@ describe('District', function () {
       district.getValueForMetric(METRIC.GROSS_FLOOR_AREA_RATIO).should.be.closeTo(districtFAR, 0.0001)
     })
     it('should compute the correct value and units for Wall area for one rectangular room with walls', function () {
-      district.add(new Storey(ray, Use.ROOM, roomRect, { wall: 10 }))
+      district.add(new Storey({ placement: ray, outline: roomRect, deprecatedSpec: { use: Use.ROOM, wall: 10 } }))
 
       const wallAreaMetric = district.getValueForMetric(METRIC.WALL_AREA)
       wallAreaMetric.should.equal(1000)
@@ -131,15 +131,15 @@ describe('District', function () {
         district.add(parcel)
         city.add(district)
         ray = new Ray(Facing.NORTH, xyz(5, 5, 0))
-        parcel.add(new Storey(ray, Use.ROOM, storeyRect, { wall: 10 }))
+        parcel.add(new Storey({ placement: ray, outline: storeyRect, deprecatedSpec: { use: Use.ROOM, wall: 10 } }))
         ray = new Ray(Facing.NORTH, xyz(5, 5, 10))
-        parcel.add(new Storey(ray, Use.ROOM, storeyRect, { wall: 10 }))
+        parcel.add(new Storey({ placement: ray, outline: storeyRect, deprecatedSpec: { use: Use.ROOM, wall: 10 } }))
         ray = new Ray(Facing.NORTH, xyz(5, 5, 20))
-        parcel.add(new Storey(ray, Use.ROOM, storeyRect, { wall: 10 }))
+        parcel.add(new Storey({ placement: ray, outline: storeyRect, deprecatedSpec: { use: Use.ROOM, wall: 10 } }))
         ray = new Ray(Facing.NORTH, xyz(0, 20, 0))
-        parcel.add(new Byway(ray, Use.STREET, streetRect))
+        parcel.add(new Byway({ placement: ray, outline: streetRect, deprecatedSpec: { use: Use.STREET } }))
         ray = new Ray(Facing.NORTH, xyz(0, -20, 0))
-        parcel.add(new Byway(ray, Use.STREET, streetRect))
+        parcel.add(new Byway({ placement: ray, outline: streetRect, deprecatedSpec: { use: Use.STREET } }))
       })
 
       it('should compute the correct values for different areas', function () {

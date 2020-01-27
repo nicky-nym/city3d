@@ -42,7 +42,7 @@ class PyramidOfKhufu extends Structure {
     const roofSpec = {
       custom: { vertices, indices }
     }
-    this.add(new Roof({ ray: this._ray, deprecatedSpec: roofSpec }))
+    this.add(new Roof({ placement: this._ray, deprecatedSpec: roofSpec }))
   }
 }
 

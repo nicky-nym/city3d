@@ -79,7 +79,7 @@ class Manhattan extends District {
     ray = new Ray(ray.az, xyz(ray.xyz.x, ray.xyz.y, z))
     const delta = new Ray(ray.az, ray.xyz)
     ray.xyz = delta.applyRay({ x: x + dx, y: y + dy })
-    this._parcel.add(new Byway(ray, use, area))
+    this._parcel.add(new Byway({ placement: ray, outline: area, deprecatedSpec: { use } }))
   }
 
   addBuildingAt (x = 0, y = 0) {

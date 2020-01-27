@@ -290,7 +290,7 @@ class House extends Structure {
       const z = CRAWL_SPACE_HEIGHT / NUM_STAIR_STEPS * i
       x -= 1
       const ray = this.goto({ x: x, y: y, z: z, facing: facing })
-      this.add(new Byway(ray, Use.WALKWAY, STAIR))
+      this.add(new Byway({ placement: ray, outline: STAIR, deprecatedSpec: { use: Use.WALKWAY } }))
     }
   }
 
@@ -301,9 +301,9 @@ class House extends Structure {
       const b = xyzAdd(ray.xyz, FENCE_LINE[i + 1])
       this.add(new Wall(a, b, FENCE_HEIGHT))
     }
-    this.add(new Byway(ray, Use.WALKWAY, DOORPATH))
-    this.add(new Byway(ray, Use.STREET, DRIVEWAY, { name: 'Driveway' }))
-    this.add(new Byway(ray, Use.WALKWAY, ADU_DOORPATH))
+    this.add(new Byway({ placement: ray, outline: DOORPATH, deprecatedSpec: { use: Use.WALKWAY } }))
+    this.add(new Byway({ placement: ray, outline: DRIVEWAY, deprecatedSpec: { use: Use.STREET, name: 'Driveway' } }))
+    this.add(new Byway({ placement: ray, outline: ADU_DOORPATH, deprecatedSpec: { use: Use.WALKWAY } }))
     this.addStairs(x, y, facing)
     return this
   }
@@ -312,27 +312,27 @@ class House extends Structure {
     const roofSpec = {
       custom: { vertices, indices }
     }
-    return new Roof({ ray: this._ray, deprecatedSpec: roofSpec })
+    return new Roof({ placement: this._ray, deprecatedSpec: roofSpec })
   }
 
   makeHouse (x = 0, y = 0, facing = Facing.NORTH) {
     // Crawl space
     this.goto({ x: x, y: y, z: 0, facing: facing })
-    this.add(new Storey(this._ray, Use.BARE, HOUSE, { wall: CRAWL_SPACE_HEIGHT }))
-    this.add(new Storey(this._ray, Use.BARE, ADDON, { wall: CRAWL_SPACE_HEIGHT }))
-    this.add(new Storey(this._ray, Use.BARE, PORCH, { wall: CRAWL_SPACE_HEIGHT }))
+    this.add(new Storey({ placement: this._ray, outline: HOUSE, deprecatedSpec: { use: Use.BARE, wall: CRAWL_SPACE_HEIGHT } }))
+    this.add(new Storey({ placement: this._ray, outline: ADDON, deprecatedSpec: { use: Use.BARE, wall: CRAWL_SPACE_HEIGHT } }))
+    this.add(new Storey({ placement: this._ray, outline: PORCH, deprecatedSpec: { use: Use.BARE, wall: CRAWL_SPACE_HEIGHT } }))
 
     // Main floor
     this.goto({ x: x, y: y, z: CRAWL_SPACE_HEIGHT, facing: facing })
-    this.add(new Storey(this._ray, Use.ROOM, HOUSE, { wall: GROUND_FLOOR_HEIGHT, openings: HOUSE_WINDOWS }))
-    this.add(new Storey(this._ray, Use.CIRCULATION, PORCH))
-    this.add(new Storey(this._ray, Use.ROOM, ADDON, { wall: ADDON_HEIGHT, openings: ADDON_WINDOWS }))
+    this.add(new Storey({ placement: this._ray, outline: HOUSE, deprecatedSpec: { use: Use.ROOM, wall: GROUND_FLOOR_HEIGHT, openings: HOUSE_WINDOWS } }))
+    this.add(new Storey({ placement: this._ray, outline: PORCH, deprecatedSpec: { use: Use.CIRCULATION } }))
+    this.add(new Storey({ placement: this._ray, outline: ADDON, deprecatedSpec: { use: Use.ROOM, wall: ADDON_HEIGHT, openings: ADDON_WINDOWS } }))
 
     // Attic
     const ATTIC_ELEVATION = GROUND_FLOOR_HEIGHT + CRAWL_SPACE_HEIGHT
     this.goto({ x: x, y: y, z: ATTIC_ELEVATION, facing: facing })
-    this.add(new Storey(this._ray, Use.UNFINISHED, CHIMNEY, { wall: CHIMNEY_HEIGHT }))
-    this.add(new Storey(this._ray, Use.UNFINISHED, ATTIC))
+    this.add(new Storey({ placement: this._ray, outline: CHIMNEY, deprecatedSpec: { use: Use.UNFINISHED, wall: CHIMNEY_HEIGHT } }))
+    this.add(new Storey({ placement: this._ray, outline: ATTIC, deprecatedSpec: { use: Use.UNFINISHED } }))
     this.add(this.makeRoof(VERTICES_OF_ROOF, INDICES_OF_ROOF_FACES))
     this.add(this.makeRoof(VERTICES_OF_DORMER_ROOF, INDICES_OF_DORMER_ROOF_FACES))
 

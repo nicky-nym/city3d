@@ -50,11 +50,11 @@ function _openingsFromWallsSpec (wallsSpec) {
 class Building extends Structure {
   constructor ({
     name,
-    ray,
+    placement,
     at = xyz(0, 0, 0),
     deprecatedSpec
   } = {}) {
-    super({ name: name || deprecatedSpec.name, ray, at })
+    super({ name: name || deprecatedSpec.name, placement, at })
     this._makeBuildingFromSpec(deprecatedSpec)
   }
 
@@ -76,7 +76,12 @@ class Building extends Structure {
         const floorName = `Floor ${i}`
         this.goto(point)
         this._ray.az = facing
-        const storey = new Storey(this._ray, Use.ROOM, corners, { name: floorName, wall: storeyHeight, openings: openings })
+        const storey = new Storey({
+          name: floorName,
+          placement: this._ray,
+          outline: corners,
+          deprecatedSpec: { use: Use.ROOM, wall: storeyHeight, openings: openings }
+        })
         this.add(storey)
         z = z + storeyHeight
       }
@@ -84,9 +89,13 @@ class Building extends Structure {
       this.goto(point)
       this._ray.az = facing
       if (roof.custom) {
-        this.add(new Roof({ ray: new Ray(this._ray.az), deprecatedSpec: roof }))
+        this.add(new Roof({ placement: new Ray(this._ray.az), deprecatedSpec: roof }))
       } else {
-        const roofPlace = new Storey(this._ray, Use.ROOF, corners, { wall: roof.parapetHeight })
+        const roofPlace = new Storey({
+          placement: this._ray,
+          outline: corners,
+          deprecatedSpec: { use: Use.ROOF, wall: roof.parapetHeight }
+        })
 
         // TODO: This is a hack.  Should probably use Roof class here.
         roofPlace._layer = Roof.layer
@@ -98,7 +107,7 @@ class Building extends Structure {
       if (!childSpec.roof) {
         childSpec.roof = roof
       }
-      const child = new Building({ ray: this._ray, at: parentOffset, deprecatedSpec: childSpec })
+      const child = new Building({ placement: this._ray, at: parentOffset, deprecatedSpec: childSpec })
       this.add(child)
     }
   }

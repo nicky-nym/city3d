@@ -181,6 +181,10 @@ class Lattice extends Structure {
     this.addUnitCells(numRows, numCols)
   }
 
+  addByway (placement, use, outline) {
+    this.add(new Byway({ placement, outline, deprecatedSpec: { use } }))
+  }
+
   addBoulevard ({ x = 0, y = 0, z = 0, facing = Facing.NORTH } = {}) {
     const NUM_LANES = 4
     const LANE_WIDTH = 5
@@ -191,13 +195,13 @@ class Lattice extends Structure {
       xy(0, BLOCK_LENGTH)]
     let ray
     ray = this.goto({ x: x, y: y, z: z, facing: facing })
-    this.add(new Byway(ray, Use.BARE, LANE)) // median strip
+    this.addByway(ray, Use.BARE, LANE) // median strip
     let delta = 0
     for (const i of countTo(NUM_LANES)) { // eslint-disable-line no-unused-vars
       delta += LANE_WIDTH
       const dxy = xyRotate(xy(delta, 0), facing)
       ray = this.goto({ x: x + dxy.x, y: y + dxy.y, z: z, facing: facing })
-      this.add(new Byway(ray, Use.BIKEPATH, LANE))
+      this.addByway(ray, Use.BIKEPATH, LANE)
       this.addRoute([
         xyz(LANE_WIDTH / 2, 0, 0),
         xyz(LANE_WIDTH / 2, BLOCK_LENGTH, 0)
@@ -206,7 +210,7 @@ class Lattice extends Structure {
     delta += LANE_WIDTH
     const dxy = xyRotate(xy(delta, 0), facing)
     ray = this.goto({ x: x + dxy.x, y: y + dxy.y, z: z, facing: facing })
-    this.add(new Byway(ray, Use.BARE, LANE)) // shoulder
+    this.addByway(ray, Use.BARE, LANE) // shoulder
     return this
   }
 
@@ -218,9 +222,9 @@ class Lattice extends Structure {
 
   addRamps (self) {
     const ray = this._ray
-    this.add(new Byway(ray, Use.BIKEPATH, EXIT_DOWN, { z: 0.1 }))
-    this.add(new Byway(ray, Use.BIKEPATH, RAMP_DOWN_TO_LANDING, { incline: -RAMP_RISE_HEIGHT }))
-    this.add(new Byway(ray, Use.BIKEPATH, LANDING, { z: -7.5 }))
+    this.addByway(ray, Use.BIKEPATH, EXIT_DOWN, { z: 0.1 })
+    this.addByway(ray, Use.BIKEPATH, RAMP_DOWN_TO_LANDING, { incline: -RAMP_RISE_HEIGHT })
+    this.addByway(ray, Use.BIKEPATH, LANDING, { z: -7.5 })
     this.addRoute([
       xyz(25, 0, 0.1), xyz(35, 90, 0.1), // start and end of EXIT_DOWN
       xyz(35, 270, -7.5), // landing
@@ -229,20 +233,20 @@ class Lattice extends Structure {
       xyz(170, 637.5, -14.9) // end of ENTRANCE_FROM_ABOVE
     ])
 
-    this.add(new Byway(ray, Use.BARE, LANDING_PARKING, { z: -7.5 }))
-    this.add(new Byway(ray, Use.WALKWAY, LANDING_PLAZA, { z: -7.5 }))
-    this.add(new Byway(ray, Use.WALKWAY, LANDING_NORTH_WALKWAY, { z: -7.5, incline: RISE_HEIGHT }))
-    this.add(new Byway(ray, Use.WALKWAY, LANDING_SOUTH_WALKWAY, { z: -7.5, incline: RISE_HEIGHT }))
+    this.addByway(ray, Use.BARE, LANDING_PARKING, { z: -7.5 })
+    this.addByway(ray, Use.WALKWAY, LANDING_PLAZA, { z: -7.5 })
+    this.addByway(ray, Use.WALKWAY, LANDING_NORTH_WALKWAY, { z: -7.5, incline: RISE_HEIGHT })
+    this.addByway(ray, Use.WALKWAY, LANDING_SOUTH_WALKWAY, { z: -7.5, incline: RISE_HEIGHT })
 
-    this.add(new Byway(ray, Use.BIKEPATH, RAMP_UP_FROM_LANDING, { z: -7.5, incline: RAMP_RISE_HEIGHT }))
-    this.add(new Byway(ray, Use.BIKEPATH, ENTRANCE_FROM_BELOW, { z: 0.1 }))
+    this.addByway(ray, Use.BIKEPATH, RAMP_UP_FROM_LANDING, { z: -7.5, incline: RAMP_RISE_HEIGHT })
+    this.addByway(ray, Use.BIKEPATH, ENTRANCE_FROM_BELOW, { z: 0.1 })
 
-    this.add(new Byway(ray, Use.BIKEPATH, RAMP_DOWN_FROM_LANDING, { z: -7.5, incline: -RAMP_RISE_HEIGHT }))
-    this.add(new Byway(ray, Use.BIKEPATH, RIGHT_TURN_TO_ENTER, { z: -14.9 }))
-    this.add(new Byway(ray, Use.BIKEPATH, ENTRANCE_FROM_ABOVE, { z: -14.9 }))
+    this.addByway(ray, Use.BIKEPATH, RAMP_DOWN_FROM_LANDING, { z: -7.5, incline: -RAMP_RISE_HEIGHT })
+    this.addByway(ray, Use.BIKEPATH, RIGHT_TURN_TO_ENTER, { z: -14.9 })
+    this.addByway(ray, Use.BIKEPATH, ENTRANCE_FROM_ABOVE, { z: -14.9 })
 
-    this.add(new Byway(ray, Use.BIKEPATH, EXIT_UP, { z: -14.9 }))
-    this.add(new Byway(ray, Use.BIKEPATH, RIGHT_TURN_FROM_EXIT, { z: -14.9 }))
+    this.addByway(ray, Use.BIKEPATH, EXIT_UP, { z: -14.9 })
+    this.addByway(ray, Use.BIKEPATH, RIGHT_TURN_FROM_EXIT, { z: -14.9 })
 
     this.addRoute([
       xyz(170, 22.5, -14.9), // start of EXIT_UP
@@ -251,13 +255,13 @@ class Lattice extends Structure {
       xyz(35, 390, -7.5),
       xyz(35, 570, 0.1), xyz(25, 660, 0.1) // start and end of ENTRANCE_FROM_BELOW
     ])
-    this.add(new Byway(ray, Use.BIKEPATH, RAMP_UP_TO_LANDING, { z: -15, incline: RAMP_RISE_HEIGHT }))
+    this.addByway(ray, Use.BIKEPATH, RAMP_UP_TO_LANDING, { z: -15, incline: RAMP_RISE_HEIGHT })
 
-    this.add(new Byway(ray, Use.WALKWAY, LOWER_PLAZA, { z: -14.9 }))
-    this.add(new Byway(ray, Use.WALKWAY, LOWER_PLAZA_WALKWAY_A, { z: -15 }))
-    this.add(new Byway(ray, Use.WALKWAY, LOWER_PLAZA_WALKWAY_B, { z: -15 }))
-    this.add(new Byway(ray, Use.WALKWAY, LOWER_PLAZA_WALKWAY_C, { z: -15 }))
-    this.add(new Byway(ray, Use.WALKWAY, LOWER_PLAZA_WALKWAY_D, { z: -15 }))
+    this.addByway(ray, Use.WALKWAY, LOWER_PLAZA, { z: -14.9 })
+    this.addByway(ray, Use.WALKWAY, LOWER_PLAZA_WALKWAY_A, { z: -15 })
+    this.addByway(ray, Use.WALKWAY, LOWER_PLAZA_WALKWAY_B, { z: -15 })
+    this.addByway(ray, Use.WALKWAY, LOWER_PLAZA_WALKWAY_C, { z: -15 })
+    this.addByway(ray, Use.WALKWAY, LOWER_PLAZA_WALKWAY_D, { z: -15 })
     return this
   }
 
@@ -275,8 +279,8 @@ class Lattice extends Structure {
     const HIGHLINE_SOIL_THICKNESS = 4
     const HIGHLINE_WALL_HEIGHT = 3 + HIGHLINE_SOIL_THICKNESS
     const ray = this.goto({ x: x, y: y, z: z, facing: facing })
-    this.add(new Storey(ray, Use.BARE, RETAINING_WALL, { wall: HIGHLINE_WALL_HEIGHT, cap: false }))
-    this.add(new Storey(ray, Use.PARCEL, HIGHLINE_SOIL, { depth: HIGHLINE_SOIL_THICKNESS }))
+    this.add(new Storey({ placement: ray, outline: RETAINING_WALL, deprecatedSpec: { use: Use.BARE, wall: HIGHLINE_WALL_HEIGHT, cap: false } }))
+    this.add(new Storey({ placement: ray, outline: HIGHLINE_SOIL, deprecatedSpec: { use: Use.PARCEL, depth: HIGHLINE_SOIL_THICKNESS } }))
     return this
   }
 
@@ -292,7 +296,7 @@ class Lattice extends Structure {
     const WINDOWS = [[2, WINDOW_RECTS]]
 
     const ray = this.goto({ x: x, y: y, z: z, facing: facing })
-    this.add(new Storey(ray, Use.ROOM, LONGHOUSE, { wall: height, openings: WINDOWS }))
+    this.add(new Storey({ placement: ray, outline: LONGHOUSE, deprecatedSpec: { use: Use.ROOM, wall: height, openings: WINDOWS } }))
     return this
   }
 
@@ -304,7 +308,7 @@ class Lattice extends Structure {
     const HIGHLINE_ALTITUDE = 37.5
 
     const ray = this.goto({ x: x, y: y, z: -0.1, facing: Facing.NORTH })
-    this.add(new Storey(ray, Use.PARCEL, PARCEL))
+    this.add(new Storey({ placement: ray, use: Use.PARCEL, outline: PARCEL }))
 
     this.addBoulevard({ x: x, y: y, z: NORTH_SOUTH_ALTITUDE, facing: Facing.NORTH })
     this.addHighline({ x: x, y: y, z: HIGHLINE_ALTITUDE, facing: Facing.NORTH })

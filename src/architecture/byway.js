@@ -11,13 +11,17 @@ import { Storey } from './storey.js'
 * Byway is a class for representing roads, sidewalks, bike paths, etc.
 */
 class Byway extends Storey {
-  constructor (ray, use, corners, {
+  constructor ({
     name,
-    z = 0,
-    incline = 0,
-    depth = -0.5
+    placement,
+    outline,
+    deprecatedSpec = {}
   } = {}) {
-    super(ray, use, corners, { z, incline, depth, name })
+    const use = deprecatedSpec.use
+    const z = deprecatedSpec.z || 0
+    const incline = deprecatedSpec.incline || 0
+    const depth = deprecatedSpec.depth || -0.5
+    super({ name, placement, outline, deprecatedSpec: { use, z, incline, depth } })
   }
 }
 

@@ -22,17 +22,17 @@ describe('Feature ', function () {
 
   describe('#layerIndex()', function () {
     it('should return valid value for a Roof', function () {
-      const roof = new Roof({ ray, deprecatedSpec: roofSpec })
+      const roof = new Roof({ placement: ray, deprecatedSpec: roofSpec })
       roof.layerIndex().should.be.within(1, 31)
     })
     it('should return same value for two different Roofs', function () {
-      const roof = new Roof({ ray, deprecatedSpec: roofSpec })
-      const roof2 = new Roof({ ray, deprecatedSpec: roofSpec })
+      const roof = new Roof({ placement: ray, deprecatedSpec: roofSpec })
+      const roof2 = new Roof({ placement: ray, deprecatedSpec: roofSpec })
 
       roof2.layerIndex().should.equal(roof.layerIndex())
     })
     it('should return different values for a Wall and a Roof', function () {
-      const roof = new Roof({ ray, deprecatedSpec: roofSpec })
+      const roof = new Roof({ placement: ray, deprecatedSpec: roofSpec })
       const wall = new Wall({}, new Ray())
 
       wall.layerIndex().should.be.within(1, 31)
@@ -122,7 +122,7 @@ describe('Feature ', function () {
     })
   })
 
-  const genericRoof = new Roof({ ray, deprecatedSpec: roofSpec })
+  const genericRoof = new Roof({ placement: ray, deprecatedSpec: roofSpec })
   const roofLayerIndex = genericRoof.layerIndex()
 
   describe('With new class extending Roof', function () {
@@ -131,7 +131,7 @@ describe('Feature ', function () {
 
     describe('#layerIndex()', function () {
       it('should return same value as for a Roof', function () {
-        const fancyRoof = new FancyRoof({ ray: new Ray(), deprecatedSpec: { flat: [] } })
+        const fancyRoof = new FancyRoof({ placement: new Ray(), deprecatedSpec: { flat: [] } })
 
         fancyRoof.layerIndex().should.equal(roofLayerIndex)
       })
@@ -140,8 +140,8 @@ describe('Feature ', function () {
 
   describe('With new class extending Roof and specifying a new layer', function () {
     class Dome extends Roof {
-      constructor (spec, ray, layer) {
-        super({ ray, layer, deprecatedSpec: spec })
+      constructor (spec, placement, layer) {
+        super({ placement, layer, deprecatedSpec: spec })
         this._layer = layer
       }
     }

@@ -106,7 +106,7 @@ describe('Storey traversed by ThreeOutputScene', function () {
 
   describe('Constructed with counterclockwise rectangle, walls of height Z, and no depth specified', function () {
     const widdershins = [xy(0, 0), xy(X, 0), xy(X, Y), xy(0, Y)]
-    const storey = new Storey(new Ray(Facing.NORTH), Use.BARE, widdershins, { wall: Z })
+    const storey = new Storey({ placement: new Ray(Facing.NORTH), outline: widdershins, deprecatedSpec: { use: Use.BARE, wall: Z } })
 
     beforeEach(function () {
       threeOutputScene._traverse(storey, spy)
@@ -136,7 +136,7 @@ describe('Storey traversed by ThreeOutputScene', function () {
 
   describe('Constructed with clockwise rectangle, walls of height Z, and no depth specified', function () {
     const clockwise = [xy(0, 0), xy(0, Y), xy(X, Y), xy(X, 0)]
-    const storey = new Storey(new Ray(Facing.NORTH), Use.BARE, clockwise, { wall: Z })
+    const storey = new Storey({ placement: new Ray(Facing.NORTH), outline: clockwise, deprecatedSpec: { use: Use.BARE, wall: Z } })
 
     beforeEach(function () {
       threeOutputScene._traverse(storey, spy)
@@ -168,7 +168,7 @@ describe('Storey traversed by ThreeOutputScene', function () {
     const widdershins = [xy(0, 0), xy(X, 0), xy(X, Y), xy(0, Y)]
 
     it('should have z-coordinates with min = -1 and max = Z, when depth = -1.', function () {
-      const storey = new Storey(new Ray(Facing.NORTH), Use.BARE, widdershins, { depth: -1, wall: Z })
+      const storey = new Storey({ placement: new Ray(Facing.NORTH), outline: widdershins, deprecatedSpec: { use: Use.BARE, depth: -1, wall: Z } })
       threeOutputScene._traverse(storey, spy)
       vertices = spy.getAllAddedVerticesAfterTransform()
 
@@ -177,7 +177,7 @@ describe('Storey traversed by ThreeOutputScene', function () {
     })
 
     it('should have z-coordinates of bounding box exactly matching wall, when depth = 1, i.e. bottom of floor is not below bottom of wall.', function () {
-      const storey = new Storey(new Ray(Facing.NORTH), Use.BARE, widdershins, { depth: 1, wall: Z })
+      const storey = new Storey({ placement: new Ray(Facing.NORTH), outline: widdershins, deprecatedSpec: { use: Use.BARE, depth: 1, wall: Z } })
       threeOutputScene._traverse(storey, spy)
       vertices = spy.getAllAddedVerticesAfterTransform()
 
@@ -190,7 +190,7 @@ describe('Storey traversed by ThreeOutputScene', function () {
     const clockwise = [xy(0, 0), xy(0, Y), xy(X, Y), xy(X, 0)]
 
     it('should have z-coordinates with min = -1 and max = Z, when depth = -1.', function () {
-      const storey = new Storey(new Ray(Facing.NORTH), Use.BARE, clockwise, { depth: -1, wall: Z })
+      const storey = new Storey({ placement: new Ray(Facing.NORTH), outline: clockwise, deprecatedSpec: { use: Use.BARE, depth: -1, wall: Z } })
       threeOutputScene._traverse(storey, spy)
       vertices = spy.getAllAddedVerticesAfterTransform()
 
@@ -199,7 +199,7 @@ describe('Storey traversed by ThreeOutputScene', function () {
     })
 
     it('should have z-coordinates of bounding box exactly matching wall, when depth = 1, i.e. bottom of floor is not below bottom of wall.', function () {
-      const storey = new Storey(new Ray(Facing.NORTH), Use.BARE, clockwise, { depth: 1, wall: Z })
+      const storey = new Storey({ placement: new Ray(Facing.NORTH), outline: clockwise, deprecatedSpec: { use: Use.BARE, depth: 1, wall: Z } })
       threeOutputScene._traverse(storey, spy)
       vertices = spy.getAllAddedVerticesAfterTransform()
 

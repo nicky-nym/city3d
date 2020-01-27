@@ -274,10 +274,10 @@ class MidriseComplex extends Structure {
       roofSpec = {
         flat: shape
       }
-      const roof = new Roof({ ray: this._ray, deprecatedSpec: roofSpec })
+      const roof = new Roof({ placement: this._ray, deprecatedSpec: roofSpec })
       this.add(roof)
     } else {
-      this.add(new Storey(this._ray, Use.BARE, shape))
+      this.add(new Storey({ placement: this._ray, outline: shape, deprecatedSpec: { use: Use.BARE } }))
       let i = 0
       for (const corner of shape) {
         const next = i + 1 < shape.length ? i + 1 : 0
@@ -291,7 +291,7 @@ class MidriseComplex extends Structure {
         roofSpec = {
           custom: { vertices, indices }
         }
-        const roof = new Roof({ ray: this._ray, deprecatedSpec: roofSpec })
+        const roof = new Roof({ placement: this._ray, deprecatedSpec: roofSpec })
         this.add(roof)
       }
     }
@@ -303,15 +303,15 @@ class MidriseComplex extends Structure {
 
     // Landing
     ray = this.goto({ x: x, y: y, z: z, facing: Facing.NORTH })
-    this.add(new Byway(ray, Use.WALKWAY, OCTAGONAL_LANDING))
+    this.add(new Byway({ placement: ray, outline: OCTAGONAL_LANDING, deprecatedSpec: { use: Use.WALKWAY } }))
     if (z % STOREY_HEIGHT === 0) {
-      this.add(new Storey(ray, Use.BARE, DIAMOND_CENTER, { wall: 3 }))
+      this.add(new Storey({ placement: ray, outline: DIAMOND_CENTER, deprecatedSpec: { use: Use.BARE, wall: 3 } }))
     }
 
     // Ramps
     for (const bearing of rampBearings) {
       ray = this.goto({ x: x, y: y, z: z, facing: bearing })
-      this.add(new Byway(ray, Use.WALKWAY, RAMP_CORNERS, { incline: RAMP_RISE_HEIGHT }))
+      this.add(new Byway({ placement: ray, outline: RAMP_CORNERS, deprecatedSpec: { use: Use.WALKWAY, incline: RAMP_RISE_HEIGHT } }))
     }
 
     // Floors, Walls, and Roof
@@ -319,18 +319,18 @@ class MidriseComplex extends Structure {
       for (const bearing of rampBearings) {
         // parcel
         ray = this.goto({ x: x, y: y, z: 0, facing: bearing })
-        this.add(new Storey(ray, Use.PARCEL, BASEMENT))
+        this.add(new Storey({ placement: ray, outline: BASEMENT, deprecatedSpec: { use: Use.PARCEL } }))
 
         // lower floors
         for (const altitude of count(0, z, STOREY_HEIGHT)) {
           ray = this.goto({ x: x, y: y, z: altitude, facing: bearing })
-          this.add(new Storey(ray, Use.ROOM, BASEMENT))
+          this.add(new Storey({ placement: ray, outline: BASEMENT, deprecatedSpec: { use: Use.ROOM } }))
         }
 
         // upper floors
         for (const altitude of count(z, ROOFLINE, STOREY_HEIGHT)) {
           ray = this.goto({ x: x, y: y, z: altitude, facing: bearing })
-          this.add(new Storey(ray, Use.ROOM, APARTMENT, { wall: STOREY_HEIGHT, openings: APARTMENT_WINDOWS }))
+          this.add(new Storey({ placement: ray, outline: APARTMENT, deprecatedSpec: { use: Use.ROOM, wall: STOREY_HEIGHT, openings: APARTMENT_WINDOWS } }))
         }
 
         // roof

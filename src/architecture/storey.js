@@ -75,9 +75,10 @@ function _addWalls (group, xyPolygon, height, z, openingsByWall, cap) {
 class Storey extends Model {
   /**
    * Creates an instance of a Storey, with walls and a floor.
-   * @param {Ray} ray - location and compass direction
+   * @param {string} [name] - name of the storey
+   * @param {xy[]} outline - vertices of floor, expected to be in counterclockwise order
+   * @param {Ray} placement - location and compass direction
    * @param {string} use - e.g. Use.ROOM
-   * @param {xy[]} corners - vertices of floor, expected to be in counterclockwise order
    * @param {number} [z=0] - z-offset of the wall
    * @param {number} [incline=0] - z-offset of second corner relative to first
    * @param {number} [depth=-0.5] - floor is between z and z + depth, so positive means bottom of floor is at
@@ -85,22 +86,25 @@ class Storey extends Model {
    * @param {boolean} [cap=true] - whether to include floor
    * @param {number} [wall=0] - height of walls
    * @param {xy[][]} [openings=[]] - array of openings, where each is specified by an array of xy values
-   * @param {string} [name] - name of the storey
    */
-  constructor (ray, use, corners, {
+  constructor ({
     name,
-    z = 0,
-    incline = 0,
-    depth = -0.5,
-    cap = true,
-    wall = 0,
-    openings = []
+    outline,
+    placement,
+    deprecatedSpec = {}
   } = {}) {
+    const use = deprecatedSpec.use
+    let z = deprecatedSpec.z || 0
+    const incline = deprecatedSpec.incline || 0
+    const depth = deprecatedSpec.depth || -0.5
+    const cap = deprecatedSpec.cap || true
+    const wall = deprecatedSpec.wall || 0
+    const openings = deprecatedSpec.openings || []
     super({ name: name || use })
     this._depth = depth
-    z = z + ray.xyz.z
-    name = name || `${Use[use]}${corners.name ? ` (${corners.name})` : ''}`
-    const adjustedCorners = ray.applyRay(corners)
+    z = z + placement.xyz.z
+    name = name || `${Use[use]}${outline.name ? ` (${outline.name})` : ''}`
+    const adjustedCorners = placement.applyRay(outline)
     const xyPolygon = new Geometry.XYPolygon(adjustedCorners)
     if (cap) {
       const color = COLORS_BY_USE[use]
