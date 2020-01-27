@@ -46,7 +46,7 @@ const TURF = {
  */
 class SoccerField extends Model {
   constructor ({ at = xyz(0, 0, 0), name = 'Soccer field' } = {}) {
-    super(name)
+    super({ name })
     this.addTurf(at)
     this.addMarkings(at)
     this.addGoals(at)

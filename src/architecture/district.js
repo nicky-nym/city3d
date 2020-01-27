@@ -20,8 +20,12 @@ const MARTIAN_ORANGE = 0xdf4911
  * A district can have land, parcels, buildings, and structures.
  */
 class District extends Model {
-  constructor ({ name = 'District', outline = [xyz(0, 0, 0)], placement = new Ray() } = {}) {
-    super(name)
+  constructor ({
+    name = 'District',
+    outline = [xyz(0, 0, 0)],
+    placement = new Ray()
+  } = {}) {
+    super({ name })
     this._ray = placement
     this._x0 = placement.xyz.x
     this._y0 = placement.xyz.y

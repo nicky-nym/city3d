@@ -117,7 +117,7 @@ function addObjectFromSpec (district, specReader, specName, at) {
 
 function main () {
   const specReader = new SpecReader()
-  const extras = new CITY.Model('extras')
+  const extras = new CITY.Model({ name: 'extras' })
   addCreek(extras)
   addTree(extras)
   addSwingset(extras)

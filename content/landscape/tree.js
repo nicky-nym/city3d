@@ -16,7 +16,7 @@ const CROWN_HEIGHT = UNIT.feet(9)
 
 class Tree extends Model {
   constructor ({ at = xyz(0, 0, 0), crownHeight = 10, name = 'Tree' } = {}) {
-    super(name, { layer: Tree.layer })
+    super({ name, layer: Tree.layer })
     this.add(this.makeTrunk(at))
     at.z += crownHeight
     this.add(this.makeCrown(at))

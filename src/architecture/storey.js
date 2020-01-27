@@ -87,8 +87,16 @@ class Storey extends Model {
    * @param {xy[][]} [openings=[]] - array of openings, where each is specified by an array of xy values
    * @param {string} [name] - name of the storey
    */
-  constructor (ray, use, corners, { z = 0, incline = 0, depth = -0.5, cap = true, wall = 0, openings = [], name } = {}) {
-    super(name || use)
+  constructor (ray, use, corners, {
+    name,
+    z = 0,
+    incline = 0,
+    depth = -0.5,
+    cap = true,
+    wall = 0,
+    openings = []
+  } = {}) {
+    super({ name: name || use })
     this._depth = depth
     z = z + ray.xyz.z
     name = name || `${Use[use]}${corners.name ? ` (${corners.name})` : ''}`

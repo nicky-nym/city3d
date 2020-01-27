@@ -22,7 +22,7 @@ const CREEK_DEPTH = 0.1
 
 class Creek extends Model {
   constructor (name = 'Creek') {
-    super(name)
+    super({ name })
   }
 
   /**

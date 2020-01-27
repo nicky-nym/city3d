@@ -15,13 +15,13 @@ import { Use } from '../../../src/architecture/use.js'
 describe('City', function () {
   describe('#constructor', function () {
     it('should create a City with the specified name', function () {
-      const city = new City('Testopia')
+      const city = new City({ name: 'Testopia' })
       city.name.should.equal('Testopia')
     })
   })
   describe('#getRoutes()', function () {
     it('should return the Routes added directly to it', function () {
-      const city = new City('Testopia')
+      const city = new City({ name: 'Testopia' })
       const vehicleRoute = new Route([[100, 0, 5], [100, 200, 10], [200, 200, 10]], Use.BIKEPATH)
       const kayakRoute = new Route([[0, 0, 0], [100, 200, 0]], Use.CANAL)
       city.add(vehicleRoute)
@@ -32,7 +32,7 @@ describe('City', function () {
       city.getRoutes().should.include(kayakRoute)
     })
     it('should return the Routes added indirectly to it', function () {
-      const city = new City('Testopia')
+      const city = new City({ name: 'Testopia' })
       const someRegion = new FeatureGroup()
       city.add(someRegion)
       const watercraftLanes = new FeatureGroup()

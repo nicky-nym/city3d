@@ -18,6 +18,16 @@ import { randomInt } from '../../src/core/util.js'
  * Examples include: trees, soccer fields, stars in the sky, etc.
  */
 class Model extends FeatureLODGroup {
+  /**
+   * Creates a Model instance.
+   * @param {object} [args] - an object with key-value arguments
+   * @param {string} [args.name] - optional name for this model instance
+   * @param {Layer} [args.layer] - optional instance of Layer
+   */
+  constructor ({ name, layer } = {}) {
+    super(name, { layer })
+  }
+
   addLine (waypoints, ray, color) {
     const adjustedWaypoints = ray.applyRay(waypoints)
     const line = new Geometry.Line(adjustedWaypoints)

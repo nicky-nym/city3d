@@ -32,8 +32,13 @@ class Wall extends Model {
    * @param {xy[][]} [openings] - array of openings, where each is specified by an array of xy values
    * @param {string} [name]
    */
-  constructor (v1, v2, height, { z = 0, depth = -DEFAULT_WALL_THICKNESS, openings = [], name } = {}) {
-    super(name || 'Wall', { layer: Wall.layer })
+  constructor (v1, v2, height, {
+    name = 'Wall',
+    z = 0,
+    depth = -DEFAULT_WALL_THICKNESS,
+    openings = []
+  } = {}) {
+    super({ name, layer: Wall.layer })
     this._height = height
     const dx = v2.x - v1.x
     const dy = v2.y - v1.y

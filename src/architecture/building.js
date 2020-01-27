@@ -48,8 +48,12 @@ function _openingsFromWallsSpec (wallsSpec) {
  * Buildings can be made from declarative specifications in JSON format.
  */
 class Building extends Structure {
-  constructor (spec, { ray, name, at = xyz(0, 0, 0) } = {}) {
-    super({ ray, at, name: name || spec.name })
+  constructor (spec, {
+    name,
+    ray,
+    at = xyz(0, 0, 0)
+  } = {}) {
+    super({ name: name || spec.name, ray, at })
     this._makeBuildingFromSpec(spec)
   }
 

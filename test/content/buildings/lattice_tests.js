@@ -27,7 +27,7 @@ describe('Lattice', function () {
       let city
 
       beforeEach(function () {
-        city = new City('Velotopia')
+        city = new City({ name: 'Velotopia' })
       })
 
       it('should return the correct full name', function () {

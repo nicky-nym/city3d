@@ -159,7 +159,7 @@ describe('Feature ', function () {
   describe('With new class ShadeStructure reusing Roof.layer', function () {
     class ShadeStructure extends Model {
       constructor () {
-        super('SS', { layer: Roof.layer })
+        super({ name: 'SS', layer: Roof.layer })
       }
     }
 

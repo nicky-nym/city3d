@@ -33,7 +33,7 @@ describe('MidriseComplex', function () {
       complex.name.should.equal('Napoleon Complex')
     })
     it('should return the correct full name when added to a city', function () {
-      const city = new City('Testopia')
+      const city = new City({ name: 'Testopia' })
       const complex = new MidriseComplex({ name: 'Napoleon Complex' })
       city.add(complex)
 

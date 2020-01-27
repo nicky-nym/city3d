@@ -1,5 +1,5 @@
 /** @file roof.js
- * @author Authored in 2019 at <https://github.com/nicky-nym/city3d>
+ * @author Authored in 2019, 2020 at <https://github.com/nicky-nym/city3d>
  * @license UNLICENSE
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -12,11 +12,11 @@ import { Model } from './model.js'
 const LIGHT_GRAY = 0x808080
 
 /**
-* Roof is a class for representing the roof of a building.
-*/
+ * Roof is a class for representing the roof of a building.
+ */
 class Roof extends Model {
   constructor (spec, ray) {
-    super('Roof', { layer: Roof.layer })
+    super({ name: 'Roof', layer: Roof.layer })
     if (spec.custom) {
       let { vertices, indices } = spec.custom
       vertices = ray.applyRay(vertices)
