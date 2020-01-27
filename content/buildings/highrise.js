@@ -33,14 +33,14 @@ const HIGHRISE_BUILDING_SPEC = {
  * Class representing a high-rise building.
  */
 class Highrise extends Building {
-  constructor (size, { ray, name, at } = {}) {
+  constructor ({ name, ray, at, size } = {}) {
     HIGHRISE_BUILDING_SPEC.shape.data = size
     for (const wallSpec of HIGHRISE_BUILDING_SPEC.walls) {
       for (const windowSpec of wallSpec.windows) {
         windowSpec.data = xy(size.x - 2, 5.5)
       }
     }
-    super(HIGHRISE_BUILDING_SPEC, { ray, name, at })
+    super({ name, ray, at, deprecatedSpec: HIGHRISE_BUILDING_SPEC })
   }
 }
 

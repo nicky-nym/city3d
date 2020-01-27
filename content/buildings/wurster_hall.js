@@ -342,8 +342,12 @@ const NUM_SOUTH_WING_CRENELS_Y = 9 // eslint-disable-line no-unused-vars
  * @see [Wikipedia photo]{@link https://en.wikipedia.org/wiki/UC_Berkeley_College_of_Environmental_Design#/media/File:UC_Berkeley_Wurster_Hall.jpg}
  */
 class WursterHall extends Building {
-  constructor ({ ray, at = xyz(0, 0, 0), name } = {}) {
-    super(WURSTER_BUILDING_SPEC, { ray, name, at })
+  constructor ({
+    name,
+    ray,
+    at = xyz(0, 0, 0)
+  } = {}) {
+    super({ name, ray, at, deprecatedSpec: WURSTER_BUILDING_SPEC })
   }
 }
 

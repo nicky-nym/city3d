@@ -48,13 +48,14 @@ function _openingsFromWallsSpec (wallsSpec) {
  * Buildings can be made from declarative specifications in JSON format.
  */
 class Building extends Structure {
-  constructor (spec, {
+  constructor ({
     name,
     ray,
-    at = xyz(0, 0, 0)
+    at = xyz(0, 0, 0),
+    deprecatedSpec
   } = {}) {
-    super({ name: name || spec.name, ray, at })
-    this._makeBuildingFromSpec(spec)
+    super({ name: name || deprecatedSpec.name, ray, at })
+    this._makeBuildingFromSpec(deprecatedSpec)
   }
 
   _makeHighResBuildingFromSpec (spec, parentOffset = { x: 0, y: 0, z: 0 }) {
@@ -97,7 +98,7 @@ class Building extends Structure {
       if (!childSpec.roof) {
         childSpec.roof = roof
       }
-      const child = new Building(childSpec, { ray: this._ray, at: parentOffset })
+      const child = new Building({ ray: this._ray, at: parentOffset, deprecatedSpec: childSpec })
       this.add(child)
     }
   }

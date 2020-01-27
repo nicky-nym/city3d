@@ -24,8 +24,12 @@ const GARAGE_BUILDING_SPEC = {
  * Class representing a suburban 2-car garage.
  */
 class Garage extends Building {
-  constructor ({ ray, at = xyz(0, 0, 0), name } = {}) {
-    super(GARAGE_BUILDING_SPEC, { ray, name, at })
+  constructor ({
+    name,
+    ray,
+    at = xyz(0, 0, 0)
+  } = {}) {
+    super({ name, ray, at, deprecatedSpec: GARAGE_BUILDING_SPEC })
   }
 }
 

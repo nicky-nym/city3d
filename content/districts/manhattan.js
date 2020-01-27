@@ -89,7 +89,7 @@ class Manhattan extends District {
     ray = new Ray(ray.az, xyz(ray.xyz.x, ray.xyz.y, 0))
     const x0 = ray.xyz.x
     const y0 = ray.xyz.y
-    this._parcel.add(new Highrise(size, { ray, at: { x: x + x0, y: y + y0, z: 0 } }))
+    this._parcel.add(new Highrise({ ray, at: { x: x + x0, y: y + y0, z: 0 }, size }))
   }
 
   addBlock (row = 0, col = 0) {

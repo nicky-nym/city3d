@@ -225,7 +225,7 @@ describe('Building traversed by ThreeOutputScene', function () {
       offset: xyz(0, 0, 0),
       shape: { type: 'rectangle', data: xy(X, Y) }
     }
-    const building = new Building(buildingSpec)
+    const building = new Building({ deprecatedSpec: buildingSpec })
 
     beforeEach(function () {
       threeOutputScene._traverse(building, spy)
