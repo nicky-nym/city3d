@@ -274,7 +274,7 @@ class MidriseComplex extends Structure {
       roofSpec = {
         flat: shape
       }
-      const roof = new Roof(roofSpec, this._ray)
+      const roof = new Roof({ ray: this._ray, deprecatedSpec: roofSpec })
       this.add(roof)
     } else {
       this.add(new Storey(this._ray, Use.BARE, shape))
@@ -291,7 +291,7 @@ class MidriseComplex extends Structure {
         roofSpec = {
           custom: { vertices, indices }
         }
-        const roof = new Roof(roofSpec, this._ray)
+        const roof = new Roof({ ray: this._ray, deprecatedSpec: roofSpec })
         this.add(roof)
       }
     }

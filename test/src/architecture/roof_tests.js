@@ -140,15 +140,15 @@ describe('Roof', function () {
     }
 
     beforeEach(function () {
-      flatRoof = new Roof(flatRoofSpec)
-      shedRoof = new Roof(shedRoofSpec)
-      gableRoof = new Roof(gableRoofSpec)
-      saltboxRoof = new Roof(saltboxRoofSpec)
-      hipRoof = new Roof(hipRoofSpec)
-      gambrelRoof = new Roof(gambrelRoofSpec)
-      mansardRoof = new Roof(mansardRoofSpec)
-      jerkinheadRoof = new Roof(jerkinheadRoofSpec)
-      dutchGableRoof = new Roof(dutchGableRoofSpec)
+      flatRoof = new Roof({ deprecatedSpec: flatRoofSpec })
+      shedRoof = new Roof({ deprecatedSpec: shedRoofSpec })
+      gableRoof = new Roof({ deprecatedSpec: gableRoofSpec })
+      saltboxRoof = new Roof({ deprecatedSpec: saltboxRoofSpec })
+      hipRoof = new Roof({ deprecatedSpec: hipRoofSpec })
+      gambrelRoof = new Roof({ deprecatedSpec: gambrelRoofSpec })
+      mansardRoof = new Roof({ deprecatedSpec: mansardRoofSpec })
+      jerkinheadRoof = new Roof({ deprecatedSpec: jerkinheadRoofSpec })
+      dutchGableRoof = new Roof({ deprecatedSpec: dutchGableRoofSpec })
     })
 
     describe('#getFaceCount()', function () {

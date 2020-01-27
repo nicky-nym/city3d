@@ -312,7 +312,7 @@ class House extends Structure {
     const roofSpec = {
       custom: { vertices, indices }
     }
-    return new Roof(roofSpec, this._ray)
+    return new Roof({ ray: this._ray, deprecatedSpec: roofSpec })
   }
 
   makeHouse (x = 0, y = 0, facing = Facing.NORTH) {

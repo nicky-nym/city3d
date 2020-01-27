@@ -84,7 +84,7 @@ class Building extends Structure {
       this.goto(point)
       this._ray.az = facing
       if (roof.custom) {
-        this.add(new Roof(roof, new Ray(this._ray.az)))
+        this.add(new Roof({ ray: new Ray(this._ray.az), deprecatedSpec: roof }))
       } else {
         const roofPlace = new Storey(this._ray, Use.ROOF, corners, { wall: roof.parapetHeight })
 
