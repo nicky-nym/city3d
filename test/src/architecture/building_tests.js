@@ -17,7 +17,7 @@ import { xy, xyz } from '../../../src/core/util.js'
 describe('Building', function () {
   let count
 
-  describe('#makeBuildingFromSpec', function () {
+  describe('#constructor', function () {
     it('should return a Building with the right name if one was specified', function () {
       const testSpec = {
         name: 'hut',
@@ -97,6 +97,7 @@ describe('Building', function () {
         count.should.equal(1)
       })
     })
+
     describe('For a simple three storey spec', function () {
       const simpleThreeStoreySpec = {
         name: 'Triplex',
@@ -149,6 +150,7 @@ describe('Building', function () {
         })
       })
     })
+
     describe('For a spec with a random storey height and number of storeys', function () {
       const randomSpec = {
         name: 'High-rise building',
@@ -296,6 +298,59 @@ describe('Building', function () {
           geometryInstances[0].geometry.depth.should.equal(numStoreysInSouthWing * storeyHeight)
           geometryInstances[1].geometry.depth.should.equal(numStoreysInTower * storeyHeight)
           geometryInstances[2].geometry.depth.should.equal(numStoreysInNorthWing * storeyHeight)
+        })
+      })
+    })
+
+    describe('Contained in a FeatureGroup', function () {
+      const minimalSpec = {
+        name: 'hut',
+        offset: xyz(0, 0, 0),
+        shape: { type: 'rectangle', data: xy(10, 20) }
+      }
+
+      it('should result in a Building whose full name includes the name of the containing group', function () {
+        const neighborhood = new FeatureGroup('Neighborhood 2')
+        const building = new Building({ deprecatedSpec: minimalSpec })
+        neighborhood.add(building)
+
+        building.fullName().should.equal('hut of Neighborhood 2')
+      })
+      it('should result in levels of detail whose full names include the name of the containing group', function () {
+        const neighborhood = new FeatureGroup('Neighborhood 2')
+        const building = new Building({ deprecatedSpec: minimalSpec })
+        neighborhood.add(building)
+
+        building.getLevelsOfDetail().forEach(lod => {
+          lod.feature.fullName().should.equal('hut of Neighborhood 2')
+        })
+      })
+
+      describe('#addLevelOfDetail', function () {
+        let building
+
+        beforeEach(function () {
+          const neighborhood = new FeatureGroup('Neighborhood 2')
+          building = new Building({ deprecatedSpec: minimalSpec })
+          neighborhood.add(building)
+        })
+
+        it('should result in an additional level of detail', function () {
+          building.getLevelsOfDetail().should.have.length(2)
+          building.addLevelOfDetail(new FeatureGroup('hut'), 9999)
+          building.getLevelsOfDetail().should.have.length(3)
+        })
+        it('should result in a level of detail whose full name includes the name of the containing group', function () {
+          building.addLevelOfDetail(new FeatureGroup('speck'), 9999)
+
+          building.getLevelsOfDetail().pop().feature.fullName().should.equal('speck of Neighborhood 2')
+        })
+        it('should not change the full names of the building or original levels of detail', function () {
+          building.addLevelOfDetail(new FeatureGroup('speck'), 9999)
+
+          building.fullName().should.equal('hut of Neighborhood 2')
+          building.getLevelsOfDetail()[0].feature.fullName().should.equal('hut of Neighborhood 2')
+          building.getLevelsOfDetail()[1].feature.fullName().should.equal('hut of Neighborhood 2')
         })
       })
     })
