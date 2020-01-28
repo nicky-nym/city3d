@@ -61,7 +61,7 @@ describe('District', function () {
     const roomRect = [xyz(5, 5, 0), xyz(45, 5, 0), xyz(45, 15, 0), xyz(5, 15, 0)]
 
     beforeEach(function () {
-      city = new City('Testopia')
+      city = new City({ name: 'Testopia' })
       corners = rectangleOfSize(xy(1000, 1000))
       district = new District({
         name: 'test district',
@@ -126,7 +126,7 @@ describe('District', function () {
           outline: corners,
           placement: ray
         })
-        city = new City('Testopia')
+        city = new City({ name: 'Testopia' })
         ray = new Ray()
         district.add(parcel)
         city.add(district)
