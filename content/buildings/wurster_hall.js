@@ -344,10 +344,9 @@ const NUM_SOUTH_WING_CRENELS_Y = 9 // eslint-disable-line no-unused-vars
 class WursterHall extends Building {
   constructor ({
     name,
-    ray,
-    at = xyz(0, 0, 0)
+    placement
   } = {}) {
-    super({ name, ray, at, deprecatedSpec: WURSTER_BUILDING_SPEC })
+    super({ name, placement, deprecatedSpec: WURSTER_BUILDING_SPEC })
   }
 }
 

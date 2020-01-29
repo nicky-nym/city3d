@@ -26,10 +26,9 @@ const OLD_COTTAGE_BUILDING_SPEC = {
 class Cottage extends Building {
   constructor ({
     name,
-    ray,
-    at = xyz(0, 0, 0)
+    placement
   } = {}) {
-    super({ name, ray, at, deprecatedSpec: OLD_COTTAGE_BUILDING_SPEC })
+    super({ name, placement, deprecatedSpec: OLD_COTTAGE_BUILDING_SPEC })
   }
 }
 

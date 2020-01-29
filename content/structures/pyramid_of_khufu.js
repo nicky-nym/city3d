@@ -1,5 +1,5 @@
 /** @file pyramid_of_khufu.js
- * @author Authored in 2019 at <https://github.com/nicky-nym/city3d>
+ * @author Authored in 2019, 2020 at <https://github.com/nicky-nym/city3d>
  * @license UNLICENSE
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -7,9 +7,7 @@
 
 import { UNIT } from '../../src/core/unit.js'
 import { xyz } from '../../src/core/util.js'
-import { Facing } from '../../src/core/facing.js'
 import { Roof } from '../../src/architecture/roof.js'
-import { Ray } from '../../src/core/ray.js'
 import { Structure } from '../../src/architecture/structure.js'
 
 const FEET_PER_CUBIT = 1.717
@@ -22,9 +20,8 @@ const halfBaseSpan = cubits(440) / 2
  * Class representing the Great Pyramid of Giza (aka the Pyramid of Khufu).
  */
 class PyramidOfKhufu extends Structure {
-  constructor ({ name = 'Great Pyramid of Giza', at = xyz(0, 0, 0) } = {}) {
-    super({ name, at })
-    this._ray = new Ray(Facing.NORTH)
+  constructor ({ name = 'Great Pyramid of Giza', placement } = {}) {
+    super({ name, placement })
 
     const PEAK = xyz(0, 0, height)
     const NE = xyz(halfBaseSpan, halfBaseSpan, 0)
@@ -42,7 +39,7 @@ class PyramidOfKhufu extends Structure {
     const roofSpec = {
       custom: { vertices, indices }
     }
-    this.add(new Roof({ placement: this._ray, deprecatedSpec: roofSpec }))
+    this.add(new Roof({ placement: this.placement(), deprecatedSpec: roofSpec }))
   }
 }
 

@@ -5,7 +5,7 @@
  * For more information, please refer to <http://unlicense.org>
  */
 
-import { array, cornersFromShape, countTo, randomInt, xyz, xyzAdd } from '../core/util.js'
+import { array, cornersFromShape, countTo, randomInt, xyzAdd } from '../core/util.js'
 import { FeatureGroup } from '../core/feature.js'
 import { Ray } from '../core/ray.js'
 import { Roof } from './roof.js'
@@ -51,10 +51,9 @@ class Building extends Structure {
   constructor ({
     name,
     placement,
-    at = xyz(0, 0, 0),
     deprecatedSpec
   } = {}) {
-    super({ name: name || deprecatedSpec.name, placement, at })
+    super({ name: name || deprecatedSpec.name, placement })
     this._makeBuildingFromSpec(deprecatedSpec)
   }
 
@@ -62,11 +61,10 @@ class Building extends Structure {
     let { storeyHeight, roof, children, numStoreys, shape, offset, walls } = spec
     roof = { parapetHeight: 0, ...roof }
     parentOffset = xyzAdd(parentOffset, offset)
-    // const point = { ...parentOffset }
     let point = { ...parentOffset }
-    const ray = new Ray(this._ray.az)
+    const ray = new Ray(this.placement().az)
     point = ray.applyRay(point)
-    const facing = this._ray.az
+    const facing = this.placement().az
     if (shape) {
       const corners = cornersFromShape(shape)
       const openings = _openingsFromWallsSpec(walls)
@@ -74,11 +72,10 @@ class Building extends Structure {
       for (const i in countTo(numStoreys)) {
         point.z = z
         const floorName = `Floor ${i}`
-        this.goto(point)
-        this._ray.az = facing
+        const placement = this.goto(point)
         const storey = new Storey({
           name: floorName,
-          placement: this._ray,
+          placement,
           outline: corners,
           deprecatedSpec: { use: Use.ROOM, wall: storeyHeight, openings: openings }
         })
@@ -86,13 +83,12 @@ class Building extends Structure {
         z = z + storeyHeight
       }
       point.z = z
-      this.goto(point)
-      this._ray.az = facing
+      const placement = this.goto(point, facing)
       if (roof.custom) {
-        this.add(new Roof({ placement: new Ray(this._ray.az), deprecatedSpec: roof }))
+        this.add(new Roof({ placement, deprecatedSpec: roof }))
       } else {
         const roofPlace = new Storey({
-          placement: this._ray,
+          placement,
           outline: corners,
           deprecatedSpec: { use: Use.ROOF, wall: roof.parapetHeight }
         })
@@ -107,7 +103,8 @@ class Building extends Structure {
       if (!childSpec.roof) {
         childSpec.roof = roof
       }
-      const child = new Building({ placement: this._ray, at: parentOffset, deprecatedSpec: childSpec })
+      const placement = this.goto(parentOffset)
+      const child = new Building({ placement, deprecatedSpec: childSpec })
       this.add(child)
     }
   }
@@ -116,15 +113,14 @@ class Building extends Structure {
     const { storeyHeight, children, numStoreys, shape, offset } = spec
     parentOffset = xyzAdd(parentOffset, offset)
     let point = { ...parentOffset }
-    const ray = new Ray(this._ray.az)
+    const ray = new Ray(this.placement().az)
     point = ray.applyRay(point)
-    const facing = this._ray.az
+    const facing = this.placement().az
     if (shape) {
       const corners = cornersFromShape(shape)
-      this.goto(point)
-      this._ray.az = facing
+      const placement = this.goto(point, facing)
       const depth = storeyHeight * numStoreys
-      const box = this.makePlaceholder(Use.WALL, corners, depth)
+      const box = this.makePlaceholder(placement, Use.WALL, corners, depth, placement)
       group.add(box)
     }
     for (const childSpec of array(children)) {

@@ -6,9 +6,11 @@
  */
 
 import { District } from '../../src/architecture/district.js'
+import { Facing } from '../../src/core/facing.js'
 import { Lattice } from '../buildings/lattice.js'
 import { METRIC } from '../../src/architecture/metric.js'
 import { MidriseComplex } from '../buildings/midrise_complex.js'
+import { Ray } from '../../src/core/ray.js'
 
 /**
  * Class representing a city district composed of Lattice and MidriseComplex buildings.
@@ -16,8 +18,8 @@ import { MidriseComplex } from '../buildings/midrise_complex.js'
 class LatticeDistrict extends District {
   makeFeatures () {
     const POPULATION = 1000
-    this.add(new Lattice({ at: { x: 100, y: 100 }, numRows: 3, numCols: 3 }))
-    this.add(new MidriseComplex({ at: { x: 238, y: 238 }, numRowPairs: 4, numColPairs: 4 }))
+    this.add(new Lattice({ placement: new Ray(Facing.NORTH, { x: 100, y: 100 }), numRows: 3, numCols: 3 }))
+    this.add(new MidriseComplex({ placement: new Ray(Facing.NORTH, { x: 238, y: 238 }), numRowPairs: 4, numColPairs: 4 }))
     this.setValueForMetric(METRIC.POPULATION, POPULATION)
   }
 }

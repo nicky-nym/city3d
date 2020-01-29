@@ -1,12 +1,11 @@
 /** @file district.js
- * @author Authored in 2019 at <https://github.com/nicky-nym/city3d>
+ * @author Authored in 2019, 2020 at <https://github.com/nicky-nym/city3d>
  * @license UNLICENSE
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
  */
 
 import { countTo, xyz } from '../core/util.js'
-import { Facing } from '../core/facing.js'
 import { Feature, FeatureInstance } from '../core/feature.js'
 import { Geometry } from '../core/geometry.js'
 import { METRIC } from './metric.js'
@@ -26,9 +25,7 @@ class District extends Model {
     placement = new Ray()
   } = {}) {
     super({ name })
-    this._ray = placement
-    this._x0 = placement.xyz.x
-    this._y0 = placement.xyz.y
+    this._placement = Object.freeze(placement || new Ray())
     const adjustedCorners = placement.applyRay(outline)
     adjustedCorners.push(adjustedCorners[0])
     const xyPolygon = new Geometry.XYPolygon(adjustedCorners)
@@ -42,9 +39,12 @@ class District extends Model {
     this.setValueForMetric(METRIC.LAND_AREA, xyPolygon.area())
   }
 
-  goto ({ x = 0, y = 0, z = 0, facing = Facing.NORTH } = {}) {
-    this._ray.goto(facing, xyz(this._x0 + x, this._y0 + y, z))
-    return this._ray
+  placement () {
+    return this._placement
+  }
+
+  goto ({ x = 0, y = 0, z = 0 } = {}, facing) {
+    return this._placement.add(xyz(x, y, z), facing)
   }
 }
 

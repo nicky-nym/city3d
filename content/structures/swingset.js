@@ -1,5 +1,5 @@
 /** @file swingset.js
- * @author Authored in 2019 at <https://github.com/nicky-nym/city3d>
+ * @author Authored in 2019, 2020 at <https://github.com/nicky-nym/city3d>
  * @license UNLICENSE
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -7,17 +7,15 @@
 
 import { UNIT } from '../../src/core/unit.js'
 import { xyz } from '../../src/core/util.js'
-import { Facing } from '../../src/core/facing.js'
 import { FeatureInstance } from '../../src/core/feature.js'
 import { Geometry } from '../../src/core/geometry.js'
-import { Ray } from '../../src/core/ray.js'
 import { Structure } from '../../src/architecture/structure.js'
 
 const WOOD = 0x663300
 const STEEL = 0x404040
 
-function _makeLine (waypoints, ray, color) {
-  const adjustedWaypoints = ray.applyRay(waypoints)
+function _makeLine (waypoints, placement, color) {
+  const adjustedWaypoints = placement.applyRay(waypoints)
   const line = new Geometry.Line(adjustedWaypoints)
   return new FeatureInstance(line, adjustedWaypoints[0], color, { layer: Structure.layer })
 }
@@ -27,13 +25,13 @@ function _makeLine (waypoints, ray, color) {
  * TODO: animate me!
  */
 class Swingset extends Structure {
-  constructor ({ name, at = xyz(0, 0, 0) } = {}) {
-    super({ name: name || 'Swing set', at })
+  constructor ({ name = 'Swing set', placement } = {}) {
+    super({ name, placement })
     const height = UNIT.feet(8)
     const halfDepth = UNIT.feet(9) / 2
     const span = UNIT.feet(10)
     const splay = UNIT.feet(1)
-    const ray = new Ray(Facing.NORTH)
+
     const crossBar = [
       xyz(0, 0, height),
       xyz(span, 0, height)
@@ -60,11 +58,12 @@ class Swingset extends Structure {
       xyz(7.4, 1.8, 2),
       xyz(7.4, 0, height)
     ]
-    this.add(_makeLine(crossBar, ray, WOOD))
-    this.add(_makeLine(leftTruss, ray, WOOD))
-    this.add(_makeLine(rightTruss, ray, WOOD))
-    this.add(_makeLine(leftSwing, ray, STEEL))
-    this.add(_makeLine(rightSwing, ray, STEEL))
+    const at = this.placement()
+    this.add(_makeLine(crossBar, at, WOOD))
+    this.add(_makeLine(leftTruss, at, WOOD))
+    this.add(_makeLine(rightTruss, at, WOOD))
+    this.add(_makeLine(leftSwing, at, STEEL))
+    this.add(_makeLine(rightSwing, at, STEEL))
   }
 }
 

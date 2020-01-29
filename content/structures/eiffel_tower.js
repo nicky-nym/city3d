@@ -1,5 +1,5 @@
 /** @file eiffel_tower.js
- * @author Authored in 2019 at <https://github.com/nicky-nym/city3d>
+ * @author Authored in 2019, 2020 at <https://github.com/nicky-nym/city3d>
  * @license UNLICENSE
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -10,12 +10,12 @@ import { xyz } from '../../src/core/util.js'
 import { Facing } from '../../src/core/facing.js'
 import { FeatureInstance } from '../../src/core/feature.js'
 import { Geometry } from '../../src/core/geometry.js'
-import { Ray } from '../../src/core/ray.js'
+// import { Ray } from '../../src/core/ray.js'
 import { Structure } from '../../src/architecture/structure.js'
 
 // TODO: refactor to merge this with _makeLine() in Swingset & UtilityPole
-function _makeLine (waypoints, ray, color) {
-  const adjustedWaypoints = ray.applyRay(waypoints)
+function _makeLine (waypoints, placement, color) {
+  const adjustedWaypoints = placement.applyRay(waypoints)
   const line = new Geometry.Line(adjustedWaypoints)
   return new FeatureInstance(line, adjustedWaypoints[0], color, { layer: Structure.layer })
 }
@@ -35,9 +35,8 @@ const platforms = [
  * Class representing the Eiffel tower in Paris.
  */
 class EiffelTower extends Structure {
-  constructor ({ name, at = xyz(0, 0, 0) } = {}) {
-    super({ name: name || 'Eiffel tower', at })
-    this._ray = new Ray(Facing.NORTH)
+  constructor ({ name = 'Eiffel tower', placement } = {}) {
+    super({ name, placement })
 
     for (const direction of [Facing.NORTH, Facing.SOUTH, Facing.EAST, Facing.WEST]) {
       this._drawQuadrant(direction)
@@ -46,11 +45,11 @@ class EiffelTower extends Structure {
       xyz(0, 0, platforms[3].height),
       xyz(0, 0, mastHeight)
     ]
-    this._line(mastPoints, this._ray)
+    this._line(mastPoints, this.placement())
   }
 
   _drawQuadrant (direction) {
-    const ray = this._ray
+    const ray = this.placement().copy()
     ray.az = direction
     const cornerPoints = []
     const xInsetPoints = []

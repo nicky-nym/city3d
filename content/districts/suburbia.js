@@ -38,11 +38,9 @@ class Suburbia extends District {
     const offset = { ...PARCEL.offset }
     for (const i in countTo(numParcels)) {
       offset.y = PARCEL.offset.y + i * PARCEL_DY
-      this.goto(offset)
-      const parcel = new Parcel({
-        outline: cornersFromShape(PARCEL.shape),
-        placement: this._ray
-      })
+      const placement = this.goto(offset)
+      const outline = cornersFromShape(PARCEL.shape)
+      const parcel = new Parcel({ outline, placement })
       this.add(parcel)
 
       const STREET_DX = 15
@@ -61,16 +59,12 @@ class Suburbia extends District {
         xy(SIDEWALK_WIDTH + STREET_DX, STREET_DY),
         xy(SIDEWALK_WIDTH + STREET_DX, 0)]
 
-      this.add(new Byway({ placement: this._ray, outline: SIDEWALK, deprecatedSpec: { use: Use.WALKWAY } }))
-      this.add(new Byway({ placement: this._ray, outline: STREET, deprecatedSpec: { use: Use.STREET } }))
+      this.add(new Byway({ placement, outline: SIDEWALK, deprecatedSpec: { use: Use.WALKWAY } }))
+      this.add(new Byway({ placement, outline: STREET, deprecatedSpec: { use: Use.STREET } }))
 
-      const ray = this._ray
-      const x0 = ray.xyz.x
-      const y0 = ray.xyz.y
-
-      parcel.add(new Cottage({ ray, at: xy(-154 + x0, 23 + y0) }))
-      parcel.add(new Garage({ ray, at: xy(-185 + x0, 23 + y0) }))
-      parcel.add(new House({ ray, at: xy(x0, y0) }))
+      parcel.add(new Cottage({ placement: placement.add(xy(-154, 23)) }))
+      parcel.add(new Garage({ placement: placement.add(xy(-185, 23)) }))
+      parcel.add(new House({ placement }))
 
       const PEOPLE_PER_PARCEL = 3
       this.setValueForMetric(METRIC.POPULATION, numParcels * PEOPLE_PER_PARCEL)

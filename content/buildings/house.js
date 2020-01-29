@@ -9,7 +9,6 @@ import { UNIT } from '../../src/core/unit.js'
 import { xy, xyz, xyzAdd, xywh2rect, countTo } from '../../src/core/util.js'
 
 import { Byway } from '../../src/architecture/byway.js'
-import { Facing } from '../../src/core/facing.js'
 import { Roof } from '../../src/architecture/roof.js'
 import { Storey } from '../../src/architecture/storey.js'
 import { Structure } from '../../src/architecture/structure.js'
@@ -275,27 +274,27 @@ function face (a, b, c) {
 * House objects know how to describe a Queen Anne single-family house.
 */
 class House extends Structure {
-  constructor ({ ray, at = xyz(0, 0, 0), name = 'House' } = {}) {
-    super({ ray, name })
-    this.makeBuilding(at)
+  constructor ({ name = 'House', placement } = {}) {
+    super({ name, placement })
+    this._makeGeometry()
   }
 
-  makeBuilding (at = { x: 0, y: 0 }) {
-    this.makeHouse(at.x, at.y, Facing.NORTH)
-    this.addAppurtenances(at.x, at.y, Facing.NORTH)
+  _makeGeometry () {
+    this._makeHouse()
+    this._makeAppurtenances()
   }
 
-  addStairs (x = 0, y = 0, facing = Facing.NORTH) {
+  _makeStairs () {
     for (const i of countTo(NUM_STAIR_STEPS)) {
       const z = CRAWL_SPACE_HEIGHT / NUM_STAIR_STEPS * i
-      x -= 1
-      const ray = this.goto({ x: x, y: y, z: z, facing: facing })
-      this.add(new Byway({ placement: ray, outline: STAIR, deprecatedSpec: { use: Use.WALKWAY } }))
+      const x = -1 * i
+      const placement = this.goto({ x, z })
+      this.add(new Byway({ placement, outline: STAIR, deprecatedSpec: { use: Use.WALKWAY } }))
     }
   }
 
-  addAppurtenances (x = 0, y = 0, facing = Facing.NORTH) {
-    const ray = this.goto({ x: x, y: y, z: 0, facing: facing })
+  _makeAppurtenances () {
+    const ray = this.goto()
     for (const i of countTo(FENCE_LINE.length - 1)) {
       const a = xyzAdd(ray.xyz, FENCE_LINE[i])
       const b = xyzAdd(ray.xyz, FENCE_LINE[i + 1])
@@ -304,43 +303,45 @@ class House extends Structure {
     this.add(new Byway({ placement: ray, outline: DOORPATH, deprecatedSpec: { use: Use.WALKWAY } }))
     this.add(new Byway({ placement: ray, outline: DRIVEWAY, deprecatedSpec: { use: Use.STREET, name: 'Driveway' } }))
     this.add(new Byway({ placement: ray, outline: ADU_DOORPATH, deprecatedSpec: { use: Use.WALKWAY } }))
-    this.addStairs(x, y, facing)
+    this._makeStairs()
     return this
   }
 
-  makeRoof (vertices, indices) {
+  _makeRoof (placement, vertices, indices) {
     const roofSpec = {
       custom: { vertices, indices }
     }
-    return new Roof({ placement: this._ray, deprecatedSpec: roofSpec })
+    return new Roof({ placement, deprecatedSpec: roofSpec })
   }
 
-  makeHouse (x = 0, y = 0, facing = Facing.NORTH) {
+  _makeHouse () {
+    let placement
+
     // Crawl space
-    this.goto({ x: x, y: y, z: 0, facing: facing })
-    this.add(new Storey({ placement: this._ray, outline: HOUSE, deprecatedSpec: { use: Use.BARE, wall: CRAWL_SPACE_HEIGHT } }))
-    this.add(new Storey({ placement: this._ray, outline: ADDON, deprecatedSpec: { use: Use.BARE, wall: CRAWL_SPACE_HEIGHT } }))
-    this.add(new Storey({ placement: this._ray, outline: PORCH, deprecatedSpec: { use: Use.BARE, wall: CRAWL_SPACE_HEIGHT } }))
+    placement = this.goto()
+    this.add(new Storey({ placement, outline: HOUSE, deprecatedSpec: { use: Use.BARE, wall: CRAWL_SPACE_HEIGHT } }))
+    this.add(new Storey({ placement, outline: ADDON, deprecatedSpec: { use: Use.BARE, wall: CRAWL_SPACE_HEIGHT } }))
+    this.add(new Storey({ placement, outline: PORCH, deprecatedSpec: { use: Use.BARE, wall: CRAWL_SPACE_HEIGHT } }))
 
     // Main floor
-    this.goto({ x: x, y: y, z: CRAWL_SPACE_HEIGHT, facing: facing })
-    this.add(new Storey({ placement: this._ray, outline: HOUSE, deprecatedSpec: { use: Use.ROOM, wall: GROUND_FLOOR_HEIGHT, openings: HOUSE_WINDOWS } }))
-    this.add(new Storey({ placement: this._ray, outline: PORCH, deprecatedSpec: { use: Use.CIRCULATION } }))
-    this.add(new Storey({ placement: this._ray, outline: ADDON, deprecatedSpec: { use: Use.ROOM, wall: ADDON_HEIGHT, openings: ADDON_WINDOWS } }))
+    placement = this.goto({ x: 0, y: 0, z: CRAWL_SPACE_HEIGHT })
+    this.add(new Storey({ placement, outline: HOUSE, deprecatedSpec: { use: Use.ROOM, wall: GROUND_FLOOR_HEIGHT, openings: HOUSE_WINDOWS } }))
+    this.add(new Storey({ placement, outline: PORCH, deprecatedSpec: { use: Use.CIRCULATION } }))
+    this.add(new Storey({ placement, outline: ADDON, deprecatedSpec: { use: Use.ROOM, wall: ADDON_HEIGHT, openings: ADDON_WINDOWS } }))
 
     // Attic
     const ATTIC_ELEVATION = GROUND_FLOOR_HEIGHT + CRAWL_SPACE_HEIGHT
-    this.goto({ x: x, y: y, z: ATTIC_ELEVATION, facing: facing })
-    this.add(new Storey({ placement: this._ray, outline: CHIMNEY, deprecatedSpec: { use: Use.UNFINISHED, wall: CHIMNEY_HEIGHT } }))
-    this.add(new Storey({ placement: this._ray, outline: ATTIC, deprecatedSpec: { use: Use.UNFINISHED } }))
-    this.add(this.makeRoof(VERTICES_OF_ROOF, INDICES_OF_ROOF_FACES))
-    this.add(this.makeRoof(VERTICES_OF_DORMER_ROOF, INDICES_OF_DORMER_ROOF_FACES))
+    placement = this.goto({ x: 0, y: 0, z: ATTIC_ELEVATION })
+    this.add(new Storey({ placement, outline: CHIMNEY, deprecatedSpec: { use: Use.UNFINISHED, wall: CHIMNEY_HEIGHT } }))
+    this.add(new Storey({ placement, outline: ATTIC, deprecatedSpec: { use: Use.UNFINISHED } }))
+    this.add(this._makeRoof(placement, VERTICES_OF_ROOF, INDICES_OF_ROOF_FACES))
+    this.add(this._makeRoof(placement, VERTICES_OF_DORMER_ROOF, INDICES_OF_DORMER_ROOF_FACES))
 
     // Porch roofs
     const PORCH_TOP_ELEVATION = ADDON_HEIGHT + CRAWL_SPACE_HEIGHT
-    this.goto({ x: x, y: y, z: PORCH_TOP_ELEVATION, facing: facing })
-    this.add(this.makeRoof(VERTICES_OF_PORCH_ROOF, INDICES_OF_PORCH_ROOF_FACES))
-    this.add(this.makeRoof(VERTICES_OF_ADDON_ROOF, INDICES_OF_ADDON_ROOF_FACES))
+    placement = this.goto({ x: 0, y: 0, z: PORCH_TOP_ELEVATION })
+    this.add(this._makeRoof(placement, VERTICES_OF_PORCH_ROOF, INDICES_OF_PORCH_ROOF_FACES))
+    this.add(this._makeRoof(placement, VERTICES_OF_ADDON_ROOF, INDICES_OF_ADDON_ROOF_FACES))
   }
 }
 

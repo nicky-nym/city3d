@@ -1,9 +1,9 @@
 /** @file ray.js
-  * @author Authored in 2019 at <https://github.com/nicky-nym/city3d>
-  * @license UNLICENSE
-  * This is free and unencumbered software released into the public domain.
-  * For more information, please refer to <http://unlicense.org>
-  */
+ * @author Authored in 2019, 2020 at <https://github.com/nicky-nym/city3d>
+ * @license UNLICENSE
+ * This is free and unencumbered software released into the public domain.
+ * For more information, please refer to <http://unlicense.org>
+ */
 
 import { xyzAdd, xyRotate } from '../core/util.js'
 import { Facing } from './facing.js'
@@ -17,13 +17,12 @@ class Ray {
     this.xyz = xyz
   }
 
-  goto (azimuth, xyz) {
-    this.az = azimuth
-    this.xyz = xyz
-  }
-
   copy () {
     return new Ray(this.az, { ...this.xyz })
+  }
+
+  add (xyz, facing) {
+    return new Ray(facing, xyzAdd(xyz, this.xyz))
   }
 
   applyRay (xyzObjOrList) {

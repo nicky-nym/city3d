@@ -14,10 +14,9 @@ import { Geometry } from '../../src/core/geometry.js'
 import { Highrise } from '../buildings/highrise.js'
 import { METRIC } from '../../src/architecture/metric.js'
 import { Parcel } from '../../src/architecture/parcel.js'
-import { Ray } from '../../src/core/ray.js'
 import { Use } from '../../src/architecture/use.js'
 
-const MANHATTEN_STREET_GRID_ORIENTATION = UNIT.degrees(-29)
+// const MANHATTEN_STREET_GRID_ORIENTATION = UNIT.degrees(-29)
 const BLOCK_DX = UNIT.feet(600)
 const BLOCK_DY = UNIT.feet(200)
 
@@ -63,8 +62,8 @@ const REPEAT_DX = BLOCK_DX + AVENUE_WIDTH + (SIDEWALK_WIDTH_AVENUES * 2)
 const REPEAT_DY = BLOCK_DY + STREET_WIDTH + (SIDEWALK_WIDTH_STREETS * 2)
 
 // TODO: refactor to merge this with _makeLine() in EiffelTower, Swingset & UtilityPole
-function _makeLine (waypoints, ray, color) {
-  const adjustedWaypoints = ray.applyRay(waypoints)
+function _makeLine (waypoints, placement, color) {
+  const adjustedWaypoints = placement.applyRay(waypoints)
   const line = new Geometry.Line(adjustedWaypoints)
   return new FeatureInstance(line, adjustedWaypoints[0], color)
 }
@@ -73,26 +72,18 @@ function _makeLine (waypoints, ray, color) {
  * Manhattan objects know how to describe the city blocks in New York.
  */
 class Manhattan extends District {
-  makeByway (use, area, { x = 0, y = 0, z = 0, dx = 0, dy = 0 } = {}) {
-    // TODO: This is messy. It needs some clean up.
-    let ray = this._ray
-    ray = new Ray(ray.az, xyz(ray.xyz.x, ray.xyz.y, z))
-    const delta = new Ray(ray.az, ray.xyz)
-    ray.xyz = delta.applyRay({ x: x + dx, y: y + dy })
-    this._parcel.add(new Byway({ placement: ray, outline: area, deprecatedSpec: { use } }))
+  _makeByway (at, use, area, { x = 0, y = 0, z = 0 } = {}) {
+    const placement = this.goto({ x: x + at.x, y: y + at.y, z })
+    this._parcel.add(new Byway({ placement, outline: area, deprecatedSpec: { use } }))
   }
 
   addBuildingAt (x = 0, y = 0) {
-    // TODO: This is messy. It needs some clean up.
     const size = { x: BUILDING_DX, y: BUILDING_DY }
-    let ray = this._ray
-    ray = new Ray(ray.az, xyz(ray.xyz.x, ray.xyz.y, 0))
-    const x0 = ray.xyz.x
-    const y0 = ray.xyz.y
-    this._parcel.add(new Highrise({ ray, at: { x: x + x0, y: y + y0, z: 0 }, size }))
+    const placement = this.goto({ x, y })
+    this._parcel.add(new Highrise({ placement, size }))
   }
 
-  addBlock (row = 0, col = 0) {
+  addBlock (row = 0, col = 0, origin) {
     const x = row * REPEAT_DX
     const y = col * REPEAT_DY
 
@@ -102,41 +93,42 @@ class Manhattan extends District {
         const y0 = HALF_STREET + SIDEWALK_WIDTH_STREETS + y
         const dx = bx * BUILDING_DX
         const dy = by * BUILDING_DY
-        this.addBuildingAt(dx + x0, dy + y0)
+        this.addBuildingAt(dx + x0 + origin.x, dy + y0 + origin.y)
       }
     }
 
-    this.makeByway(Use.STREET, STREET, { x: x, y: y, dx: HALF_AVENUE + SIDEWALK_WIDTH_AVENUES })
-    this.makeByway(Use.STREET, STREET, { x: x, y: y, dx: HALF_AVENUE + SIDEWALK_WIDTH_AVENUES, dy: HALF_STREET + (SIDEWALK_WIDTH_STREETS * 2) + BLOCK_DY })
-    this.makeByway(Use.STREET, AVENUE, { x: x, y: y, dy: HALF_STREET + SIDEWALK_WIDTH_STREETS })
-    this.makeByway(Use.STREET, AVENUE, { x: x, y: y, dx: HALF_AVENUE + (SIDEWALK_WIDTH_AVENUES * 2) + BLOCK_DX, dy: HALF_STREET + SIDEWALK_WIDTH_STREETS })
+    const at = { x: x + origin.x, y: y + origin.y }
+    this._makeByway(at, Use.STREET, STREET, { x: HALF_AVENUE + SIDEWALK_WIDTH_AVENUES })
+    this._makeByway(at, Use.STREET, STREET, { x: HALF_AVENUE + SIDEWALK_WIDTH_AVENUES, y: HALF_STREET + (SIDEWALK_WIDTH_STREETS * 2) + BLOCK_DY })
+    this._makeByway(at, Use.STREET, AVENUE, { y: HALF_STREET + SIDEWALK_WIDTH_STREETS })
+    this._makeByway(at, Use.STREET, AVENUE, { x: HALF_AVENUE + (SIDEWALK_WIDTH_AVENUES * 2) + BLOCK_DX, y: HALF_STREET + SIDEWALK_WIDTH_STREETS })
 
-    this.makeByway(Use.STREET, INTERSECTION, { x: x, y: y })
-    this.makeByway(Use.STREET, INTERSECTION, { x: x, y: y, dx: HALF_AVENUE + (SIDEWALK_WIDTH_AVENUES * 2) + BLOCK_DX })
-    this.makeByway(Use.STREET, INTERSECTION, { x: x, y: y, dy: HALF_STREET + (SIDEWALK_WIDTH_STREETS * 2) + BLOCK_DY })
-    this.makeByway(Use.STREET, INTERSECTION, { x: x, y: y, dx: HALF_AVENUE + (SIDEWALK_WIDTH_AVENUES * 2) + BLOCK_DX, dy: HALF_STREET + (SIDEWALK_WIDTH_STREETS * 2) + BLOCK_DY })
+    this._makeByway(at, Use.STREET, INTERSECTION, { x: 0, y: 0 })
+    this._makeByway(at, Use.STREET, INTERSECTION, { x: HALF_AVENUE + (SIDEWALK_WIDTH_AVENUES * 2) + BLOCK_DX })
+    this._makeByway(at, Use.STREET, INTERSECTION, { y: HALF_STREET + (SIDEWALK_WIDTH_STREETS * 2) + BLOCK_DY })
+    this._makeByway(at, Use.STREET, INTERSECTION, { x: HALF_AVENUE + (SIDEWALK_WIDTH_AVENUES * 2) + BLOCK_DX, y: HALF_STREET + (SIDEWALK_WIDTH_STREETS * 2) + BLOCK_DY })
 
-    this.makeByway(Use.WALKWAY, SIDEWALK_FOR_STREET, { x: x, y: y, dx: HALF_AVENUE + SIDEWALK_WIDTH_AVENUES, dy: HALF_STREET })
-    this.makeByway(Use.WALKWAY, SIDEWALK_FOR_STREET, { x: x, y: y, dx: HALF_AVENUE + SIDEWALK_WIDTH_AVENUES, dy: HALF_STREET + SIDEWALK_WIDTH_STREETS + BLOCK_DY })
-    this.makeByway(Use.WALKWAY, SIDEWALK_FOR_AVENUE, { x: x, y: y, dx: HALF_AVENUE, dy: HALF_STREET + SIDEWALK_WIDTH_STREETS })
-    this.makeByway(Use.WALKWAY, SIDEWALK_FOR_AVENUE, { x: x, y: y, dx: HALF_AVENUE + SIDEWALK_WIDTH_AVENUES + BLOCK_DX, dy: HALF_STREET + SIDEWALK_WIDTH_STREETS })
+    this._makeByway(at, Use.WALKWAY, SIDEWALK_FOR_STREET, { x: HALF_AVENUE + SIDEWALK_WIDTH_AVENUES, y: HALF_STREET })
+    this._makeByway(at, Use.WALKWAY, SIDEWALK_FOR_STREET, { x: HALF_AVENUE + SIDEWALK_WIDTH_AVENUES, y: HALF_STREET + SIDEWALK_WIDTH_STREETS + BLOCK_DY })
+    this._makeByway(at, Use.WALKWAY, SIDEWALK_FOR_AVENUE, { x: HALF_AVENUE, y: HALF_STREET + SIDEWALK_WIDTH_STREETS })
+    this._makeByway(at, Use.WALKWAY, SIDEWALK_FOR_AVENUE, { x: HALF_AVENUE + SIDEWALK_WIDTH_AVENUES + BLOCK_DX, y: HALF_STREET + SIDEWALK_WIDTH_STREETS })
 
     return this
   }
 
   addBlocks (numRows = 2, numCols = 2) {
-    this._ray.xyz.x += UNIT.feet(7200) // TODO: this places the blocks at about 1st Ave and 1st St
-    this._ray.xyz.y += UNIT.feet(6000) //  TODO: someday we should adjust the location, and add more blocks
-    this._ray.az = MANHATTEN_STREET_GRID_ORIENTATION
-    this._addLowLevelOfDetailStreetsAndAvenues(this._ray)
-    this._parcel = new Parcel({
-      outline: rectangleOfSize(xy(REPEAT_DX * numRows, REPEAT_DY * numCols)),
-      placement: this._ray
-    })
+    const origin = {
+      x: UNIT.feet(7200), // TODO: this places the blocks at about 1st Ave and 1st St
+      y: UNIT.feet(6000) //  TODO: someday we should adjust the location, and add more blocks
+    }
+    const placement = this.goto(origin)
+    this._addLowLevelOfDetailStreetsAndAvenues(placement)
+    const outline = rectangleOfSize(xy(REPEAT_DX * numRows, REPEAT_DY * numCols))
+    this._parcel = new Parcel({ outline, placement })
     this.add(this._parcel)
     for (const row of countTo(numRows)) {
       for (const col of countTo(numCols)) {
-        this.addBlock(row, col)
+        this.addBlock(row, col, origin)
       }
     }
     const PEOPLE_PER_BLOCK = 682 // roughly accurate for actual Manhattan population density
@@ -145,7 +137,7 @@ class Manhattan extends District {
     return this
   }
 
-  _addLowLevelOfDetailStreetsAndAvenues (ray) {
+  _addLowLevelOfDetailStreetsAndAvenues (placement) {
     const ASPHALT_GRAY = 0x222222
     const NUM_AVENUES = 11
     const NUM_STREETS = 217
@@ -157,7 +149,7 @@ class Manhattan extends District {
         xyz(REPEAT_DX - ISLAND_WIDTH, street * REPEAT_DY, PAVEMENT_HEIGHT),
         xyz(REPEAT_DX, street * REPEAT_DY, PAVEMENT_HEIGHT)
       ]
-      this.add(_makeLine(endpoints, ray, ASPHALT_GRAY))
+      this.add(_makeLine(endpoints, placement, ASPHALT_GRAY))
     }
     for (const avenue of countTo(NUM_AVENUES)) {
       const x = REPEAT_DX + (avenue * -REPEAT_DX)
@@ -165,7 +157,7 @@ class Manhattan extends District {
         xyz(x, 0, PAVEMENT_HEIGHT),
         xyz(x, ISLAND_LENGTH, PAVEMENT_HEIGHT)
       ]
-      this.add(_makeLine(endpoints, ray, ASPHALT_GRAY))
+      this.add(_makeLine(endpoints, placement, ASPHALT_GRAY))
     }
   }
 }

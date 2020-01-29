@@ -74,25 +74,25 @@ function addCreek (district) {
 }
 
 function addTree (district) {
-  district.add(new CITY.Tree({ at: { x: 28, y: 52, z: 0 }, crownHeight: 8, name: 'Topiary Tree' }))
+  district.add(new CITY.Tree({ placement: new Ray(Facing.NORTH, { x: 28, y: 52, z: 0 }), crownHeight: 8, name: 'Topiary Tree' }))
 }
 
 function addSwingset (district) {
-  district.add(new CITY.Swingset({ at: { x: 60, y: 52, z: 0 } }))
+  district.add(new CITY.Swingset({ placement: new Ray(Facing.NORTH, { x: 60, y: 52, z: 0 }) }))
 }
 
 function addUtilityPoles (district) {
   for (let y = -40; y < 800; y += 120) {
-    district.add(new CITY.UtilityPole({ at: { x: -96, y: y, z: 0 }, done: true }))
+    district.add(new CITY.UtilityPole({ placement: new Ray(Facing.NORTH, { x: -96, y: y, z: 0 }) }))
   }
 }
 
 function addEiffelTower (district) {
-  district.add(new CITY.EiffelTower({ at: { x: 1090, y: 1090, z: 0 } }))
+  district.add(new CITY.EiffelTower({ placement: new Ray(Facing.NORTH, { x: 1090, y: 1090, z: 0 }) }))
 }
 
 function addPyramid (district) {
-  district.add(new CITY.PyramidOfKhufu({ at: { x: -600, y: -600, z: 0 } }))
+  district.add(new CITY.PyramidOfKhufu({ placement: new Ray(Facing.NORTH, { x: -600, y: -600, z: 0 }) }))
 }
 
 function addKalpanaOrbital (district) {

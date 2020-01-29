@@ -6,7 +6,7 @@
  */
 
 import { UNIT } from '../../src/core/unit.js'
-import { xy, xyz, xyzAdd, xyRotate, xywh2rect, count, countTo, hypotenuse } from '../../src/core/util.js'
+import { xy, xyz, xyRotate, xywh2rect, count, countTo, hypotenuse } from '../../src/core/util.js'
 import { Byway } from '../../src/architecture/byway.js'
 import { Facing } from '../../src/core/facing.js'
 import { FeatureGroup } from '../../src/core/feature.js'
@@ -178,38 +178,37 @@ const NORTH_SOUTH_ALTITUDE = 22.5
 const HIGHLINE_ALTITUDE = 37.5
 
 class LatticeBlock extends Structure {
-  constructor ({ ray, at, offsetOfLattice = xy(0, 0), name } = {}) {
-    super({ ray, at, name })
-    this.offsetOfLattice = offsetOfLattice
+  constructor ({ name, placement } = {}) {
+    super({ name, placement })
 
-    this.goto({ z: -0.1, facing: Facing.NORTH })
-    this.add(new Storey({ placement: this._ray, use: Use.PARCEL, outline: PARCEL }))
+    placement = this.goto({ z: -0.1 }, Facing.NORTH)
+    this.add(new Storey({ placement, use: Use.PARCEL, outline: PARCEL }))
 
     this.addBoulevard({ x: 0, y: 0, z: NORTH_SOUTH_ALTITUDE, facing: Facing.NORTH })
-    this.addHighline({ x: 0, y: 0, z: HIGHLINE_ALTITUDE, facing: Facing.NORTH })
+    this._addHighline({ x: 0, y: 0, z: HIGHLINE_ALTITUDE, facing: Facing.NORTH })
     this.addLonghouse({ x: 0, y: 0, z: 0, height: 11.25, facing: Facing.NORTH })
     this.addLonghouse({ x: 0, y: 0, z: 11.25, height: 11.25, facing: Facing.NORTH })
 
-    this.goto({ z: NORTH_SOUTH_ALTITUDE, facing: Facing.NORTH })
-    this.addRamps()
+    placement = this.goto({ z: NORTH_SOUTH_ALTITUDE }, Facing.NORTH)
+    this.addRamps(placement)
 
     this.addBoulevard({ x: BLOCK_LENGTH, y: BLOCK_LENGTH, z: NORTH_SOUTH_ALTITUDE, facing: Facing.SOUTH })
-    this.addHighline({ x: BLOCK_LENGTH, y: BLOCK_LENGTH, z: HIGHLINE_ALTITUDE, facing: Facing.SOUTH })
+    this._addHighline({ x: BLOCK_LENGTH, y: BLOCK_LENGTH, z: HIGHLINE_ALTITUDE, facing: Facing.SOUTH })
     this.addLonghouse({ x: BLOCK_LENGTH, y: BLOCK_LENGTH, z: 0, height: 11.25, facing: Facing.SOUTH })
     this.addLonghouse({ x: BLOCK_LENGTH, y: BLOCK_LENGTH, z: 11.25, height: 11.25, facing: Facing.SOUTH })
 
-    this.goto({ x: BLOCK_LENGTH, y: BLOCK_LENGTH, z: NORTH_SOUTH_ALTITUDE, facing: Facing.SOUTH })
-    this.addRamps()
+    placement = this.goto({ x: BLOCK_LENGTH, y: BLOCK_LENGTH, z: NORTH_SOUTH_ALTITUDE }, Facing.SOUTH)
+    this.addRamps(placement)
 
     this.addBoulevard({ x: 0, y: BLOCK_LENGTH, z: EAST_WEST_ALTITUDE, facing: Facing.EAST })
-    this.addHighline({ x: 0, y: BLOCK_LENGTH, z: HIGHLINE_ALTITUDE, facing: Facing.EAST })
+    this._addHighline({ x: 0, y: BLOCK_LENGTH, z: HIGHLINE_ALTITUDE, facing: Facing.EAST })
     this.addLonghouse({ x: 0, y: BLOCK_LENGTH, z: 0, height: 7.5, facing: Facing.EAST })
     this.addLonghouse({ x: 0, y: BLOCK_LENGTH, z: NORTH_SOUTH_ALTITUDE, height: 15, facing: Facing.EAST })
 
-    this.goto({ x: 0, y: 0, z: EAST_WEST_ALTITUDE, facing: Facing.EAST })
+    placement = this.goto({ x: 0, y: 0, z: EAST_WEST_ALTITUDE }, Facing.EAST)
 
     this.addBoulevard({ x: BLOCK_LENGTH, y: 0, z: EAST_WEST_ALTITUDE, facing: Facing.WEST })
-    this.addHighline({ x: BLOCK_LENGTH, y: 0, z: HIGHLINE_ALTITUDE, facing: Facing.WEST })
+    this._addHighline({ x: BLOCK_LENGTH, y: 0, z: HIGHLINE_ALTITUDE, facing: Facing.WEST })
     this.addLonghouse({ x: BLOCK_LENGTH, y: 0, z: 0, height: 7.5, facing: Facing.WEST })
     this.addLonghouse({ x: BLOCK_LENGTH, y: 0, z: NORTH_SOUTH_ALTITUDE, height: 15, facing: Facing.WEST })
 
@@ -242,8 +241,8 @@ class LatticeBlock extends Structure {
       xy(30, 0)
     ]
 
-    this.goto({ x: x, y: y, z: z, facing: facing })
-    return this.makePlaceholder(Use.WALL, SIDE, HIGHLINE_ALTITUDE, { name })
+    const placement = this.goto({ x: x, y: y, z: z }, facing)
+    return this.makePlaceholder(placement, Use.WALL, SIDE, HIGHLINE_ALTITUDE, { name })
   }
 
   addByway (placement, use, outline) {
@@ -258,39 +257,38 @@ class LatticeBlock extends Structure {
       xy(LANE_WIDTH, 0),
       xy(LANE_WIDTH, BLOCK_LENGTH),
       xy(0, BLOCK_LENGTH)]
-    let ray
-    ray = this.goto({ x: x, y: y, z: z, facing: facing })
-    this.addByway(ray, Use.BARE, LANE) // median strip
+    let placement
+    placement = this.goto({ x: x, y: y, z: z }, facing)
+    this.addByway(placement, Use.BARE, LANE) // median strip
     let delta = 0
     for (const i of countTo(NUM_LANES)) { // eslint-disable-line no-unused-vars
       delta += LANE_WIDTH
       const dxy = xyRotate(xy(delta, 0), facing)
-      ray = this.goto({ x: x + dxy.x, y: y + dxy.y, z: z, facing: facing })
-      this.addByway(ray, Use.BIKEPATH, LANE)
-      this.addRoute([
+      placement = this.goto({ x: x + dxy.x, y: y + dxy.y, z: z }, facing)
+      this.addByway(placement, Use.BIKEPATH, LANE)
+      this.addRoute(placement, [
         xyz(LANE_WIDTH / 2, 0, 0),
         xyz(LANE_WIDTH / 2, BLOCK_LENGTH, 0)
       ])
     }
     delta += LANE_WIDTH
     const dxy = xyRotate(xy(delta, 0), facing)
-    ray = this.goto({ x: x + dxy.x, y: y + dxy.y, z: z, facing: facing })
-    this.addByway(ray, Use.BARE, LANE) // shoulder
+    placement = this.goto({ x: x + dxy.x, y: y + dxy.y, z: z }, facing)
+    this.addByway(placement, Use.BARE, LANE) // shoulder
     return this
   }
 
-  addRoute (xyzList) {
-    const waypointsRelativeToLattice = this._ray.applyRay(xyzList)
-    const absoluteWaypoints = waypointsRelativeToLattice.map(xyz => xyzAdd(xyz, this.offsetOfLattice))
-    this.add(new Route(absoluteWaypoints, Use.BIKEPATH))
+  addRoute (placement, xyzList) {
+    const waypoints = placement.applyRay(xyzList)
+    this.add(new Route(waypoints, Use.BIKEPATH))
   }
 
-  addRamps (self) {
-    const ray = this._ray
-    this.addByway(ray, Use.BIKEPATH, EXIT_DOWN, { z: 0.1 })
-    this.addByway(ray, Use.BIKEPATH, RAMP_DOWN_TO_LANDING, { incline: -RAMP_RISE_HEIGHT })
-    this.addByway(ray, Use.BIKEPATH, LANDING, { z: -7.5 })
-    this.addRoute([
+  addRamps (placement) {
+    const at = placement
+    this.addByway(at, Use.BIKEPATH, EXIT_DOWN, { z: 0.1 })
+    this.addByway(at, Use.BIKEPATH, RAMP_DOWN_TO_LANDING, { incline: -RAMP_RISE_HEIGHT })
+    this.addByway(at, Use.BIKEPATH, LANDING, { z: -7.5 })
+    this.addRoute(at, [
       xyz(25, 0, 0.1), xyz(35, 90, 0.1), // start and end of EXIT_DOWN
       xyz(35, 270, -7.5), // landing
       xyz(45, 390, -7.5),
@@ -298,39 +296,40 @@ class LatticeBlock extends Structure {
       xyz(170, 637.5, -14.9) // end of ENTRANCE_FROM_ABOVE
     ])
 
-    this.addByway(ray, Use.BARE, LANDING_PARKING, { z: -7.5 })
-    this.addByway(ray, Use.WALKWAY, LANDING_PLAZA, { z: -7.5 })
-    this.addByway(ray, Use.WALKWAY, LANDING_NORTH_WALKWAY, { z: -7.5, incline: RISE_HEIGHT })
-    this.addByway(ray, Use.WALKWAY, LANDING_SOUTH_WALKWAY, { z: -7.5, incline: RISE_HEIGHT })
+    this.addByway(at, Use.BARE, LANDING_PARKING, { z: -7.5 })
+    this.addByway(at, Use.WALKWAY, LANDING_PLAZA, { z: -7.5 })
+    this.addByway(at, Use.WALKWAY, LANDING_NORTH_WALKWAY, { z: -7.5, incline: RISE_HEIGHT })
+    this.addByway(at, Use.WALKWAY, LANDING_SOUTH_WALKWAY, { z: -7.5, incline: RISE_HEIGHT })
 
-    this.addByway(ray, Use.BIKEPATH, RAMP_UP_FROM_LANDING, { z: -7.5, incline: RAMP_RISE_HEIGHT })
-    this.addByway(ray, Use.BIKEPATH, ENTRANCE_FROM_BELOW, { z: 0.1 })
+    this.addByway(at, Use.BIKEPATH, RAMP_UP_FROM_LANDING, { z: -7.5, incline: RAMP_RISE_HEIGHT })
+    this.addByway(at, Use.BIKEPATH, ENTRANCE_FROM_BELOW, { z: 0.1 })
 
-    this.addByway(ray, Use.BIKEPATH, RAMP_DOWN_FROM_LANDING, { z: -7.5, incline: -RAMP_RISE_HEIGHT })
-    this.addByway(ray, Use.BIKEPATH, RIGHT_TURN_TO_ENTER, { z: -14.9 })
-    this.addByway(ray, Use.BIKEPATH, ENTRANCE_FROM_ABOVE, { z: -14.9 })
+    this.addByway(at, Use.BIKEPATH, RAMP_DOWN_FROM_LANDING, { z: -7.5, incline: -RAMP_RISE_HEIGHT })
+    this.addByway(at, Use.BIKEPATH, RIGHT_TURN_TO_ENTER, { z: -14.9 })
+    this.addByway(at, Use.BIKEPATH, ENTRANCE_FROM_ABOVE, { z: -14.9 })
 
-    this.addByway(ray, Use.BIKEPATH, EXIT_UP, { z: -14.9 })
-    this.addByway(ray, Use.BIKEPATH, RIGHT_TURN_FROM_EXIT, { z: -14.9 })
+    this.addByway(at, Use.BIKEPATH, EXIT_UP, { z: -14.9 })
+    this.addByway(at, Use.BIKEPATH, RIGHT_TURN_FROM_EXIT, { z: -14.9 })
 
-    this.addRoute([
+    this.addRoute(at, [
       xyz(170, 22.5, -14.9), // start of EXIT_UP
       xyz(100, 30, -14.9), xyz(60, 44, -14.9), xyz(45, 90, -14.9), // start, middle, end of RIGHT_TURN_FROM_EXIT
       xyz(45, 270, -7.5), // landing
       xyz(35, 390, -7.5),
       xyz(35, 570, 0.1), xyz(25, 660, 0.1) // start and end of ENTRANCE_FROM_BELOW
     ])
-    this.addByway(ray, Use.BIKEPATH, RAMP_UP_TO_LANDING, { z: -15, incline: RAMP_RISE_HEIGHT })
+    this.addByway(at, Use.BIKEPATH, RAMP_UP_TO_LANDING, { z: -15, incline: RAMP_RISE_HEIGHT })
 
-    this.addByway(ray, Use.WALKWAY, LOWER_PLAZA, { z: -14.9 })
-    this.addByway(ray, Use.WALKWAY, LOWER_PLAZA_WALKWAY_A, { z: -15 })
-    this.addByway(ray, Use.WALKWAY, LOWER_PLAZA_WALKWAY_B, { z: -15 })
-    this.addByway(ray, Use.WALKWAY, LOWER_PLAZA_WALKWAY_C, { z: -15 })
-    this.addByway(ray, Use.WALKWAY, LOWER_PLAZA_WALKWAY_D, { z: -15 })
+    this.addByway(at, Use.WALKWAY, LOWER_PLAZA, { z: -14.9 })
+    this.addByway(at, Use.WALKWAY, LOWER_PLAZA_WALKWAY_A, { z: -15 })
+    this.addByway(at, Use.WALKWAY, LOWER_PLAZA_WALKWAY_B, { z: -15 })
+    this.addByway(at, Use.WALKWAY, LOWER_PLAZA_WALKWAY_C, { z: -15 })
+    this.addByway(at, Use.WALKWAY, LOWER_PLAZA_WALKWAY_D, { z: -15 })
     return this
   }
 
-  addHighline ({ x = 0, y = 0, z = 0, facing = Facing.NORTH } = {}) {
+  _addHighline ({ x = 0, y = 0, z = 0, facing = Facing.NORTH } = {}) {
+    // console.log(`Lattice addHighline facing: ${facing}`)
     const RETAINING_WALL = [
       xy(30, 630),
       xy(30, 30)
@@ -343,10 +342,11 @@ class LatticeBlock extends Structure {
     ]
     const HIGHLINE_SOIL_THICKNESS = 4
     const HIGHLINE_WALL_HEIGHT = 3 + HIGHLINE_SOIL_THICKNESS
-    const ray = this.goto({ x: x, y: y, z: z, facing: facing })
+    const placement = this.goto({ x: x, y: y, z: z }, facing)
+    // console.log(`Lattice addHighline placement: (${placement.xyz.x}, ${placement.xyz.y}, ${placement.xyz.z}) ${placement.az}`)
 
-    this.add(new Storey({ placement: ray, outline: RETAINING_WALL, deprecatedSpec: { use: Use.BARE, wall: HIGHLINE_WALL_HEIGHT, cap: false } }))
-    this.add(new Storey({ placement: ray, outline: HIGHLINE_SOIL, deprecatedSpec: { use: Use.PARCEL, depth: HIGHLINE_SOIL_THICKNESS } }))
+    this.add(new Storey({ placement, outline: RETAINING_WALL, deprecatedSpec: { use: Use.BARE, wall: HIGHLINE_WALL_HEIGHT, cap: false } }))
+    this.add(new Storey({ placement, outline: HIGHLINE_SOIL, deprecatedSpec: { use: Use.PARCEL, depth: HIGHLINE_SOIL_THICKNESS } }))
 
     return this
   }
@@ -362,8 +362,8 @@ class LatticeBlock extends Structure {
     const WINDOW_RECTS = count(5, 585, 5).map(x => xywh2rect(x, 3, 4, height - 5))
     const WINDOWS = [[2, WINDOW_RECTS]]
 
-    const ray = this.goto({ x: x, y: y, z: z, facing: facing })
-    this.add(new Storey({ placement: ray, outline: LONGHOUSE, deprecatedSpec: { use: Use.ROOM, wall: height, openings: WINDOWS } }))
+    const placement = this.goto({ x: x, y: y, z: z }, facing)
+    this.add(new Storey({ placement, outline: LONGHOUSE, deprecatedSpec: { use: Use.ROOM, wall: height, openings: WINDOWS } }))
     return this
   }
 }
@@ -372,8 +372,8 @@ class LatticeBlock extends Structure {
  * A Lattice is a repeating pattern of Kinematic city bikeways.
  */
 class Lattice extends Structure {
-  constructor ({ ray, at, numRows = 2, numCols = 2, name = 'Lattice' } = {}) {
-    super({ ray, at, name })
+  constructor ({ name = 'Lattice', placement, numRows = 2, numCols = 2 } = {}) {
+    super({ name, placement })
     this.addUnitCells(numRows, numCols)
   }
 
@@ -381,7 +381,8 @@ class Lattice extends Structure {
     for (const row of countTo(num_rows)) {
       for (const col of countTo(num_cols)) {
         const at = xy(row * BLOCK_LENGTH, col * BLOCK_LENGTH)
-        this.add(new LatticeBlock({ ray: this._ray, at, offsetOfLattice: this.offset, name: `Block ${row}-${col}` }))
+        const placement = this.goto(at)
+        this.add(new LatticeBlock({ name: `Block ${row}-${col}`, placement }))
       }
     }
   }

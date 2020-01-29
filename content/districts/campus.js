@@ -5,7 +5,7 @@
  * For more information, please refer to <http://unlicense.org>
  */
 
-import { cornersFromShape, countTo, xy, xyz, xyzAdd } from '../../src/core/util.js'
+import { cornersFromShape, countTo, xy, xyz } from '../../src/core/util.js'
 import { Parcel } from '../../src/architecture/parcel.js'
 import { District } from '../../src/architecture/district.js'
 import { WursterHall } from '../buildings/wurster_hall.js'
@@ -27,14 +27,11 @@ class Campus extends District {
     const offset = { ...PARCEL.offset }
     for (const i in countTo(numBuildings)) {
       offset.x = i * PARCEL.shape.data.x
-      const ray = this.goto(offset)
-      const parcel = new Parcel({
-        outline: cornersFromShape(PARCEL.shape),
-        placement: ray
-      })
+      const placement = this.goto(offset)
+      const outline = cornersFromShape(PARCEL.shape)
+      const parcel = new Parcel({ outline, placement })
       this.add(parcel)
-      const at = xyzAdd(offset, { x: this._x0, y: this._y0 })
-      parcel.add(new WursterHall({ ray, at }))
+      parcel.add(new WursterHall({ placement }))
     }
   }
 }

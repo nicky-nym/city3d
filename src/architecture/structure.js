@@ -1,11 +1,10 @@
 /** @file structure.js
-  * @author Authored in 2019, 2020 at <https://github.com/nicky-nym/city3d>
-  * @license UNLICENSE
-  * This is free and unencumbered software released into the public domain.
-  * For more information, please refer to <http://unlicense.org>
-  */
+ * @author Authored in 2019, 2020 at <https://github.com/nicky-nym/city3d>
+ * @license UNLICENSE
+ * This is free and unencumbered software released into the public domain.
+ * For more information, please refer to <http://unlicense.org>
+ */
 
-import { Facing } from '../core/facing.js'
 import { Feature, FeatureGroup, FeatureInstance } from '../core/feature.js'
 import { Geometry } from '../core/geometry.js'
 import { Model } from './model.js'
@@ -45,23 +44,24 @@ const COLORS_BY_USE = {
 class Structure extends Model {
   constructor ({
     name,
-    ray,
-    at = xyz(0, 0, 0)
+    placement
   } = {}) {
     super({ name })
-    this._ray = ray || new Ray()
-    this.offset = xyz(at.x, at.y) // xyzAdd({ x: 0, y: 0 }, at)
+    this._placement = Object.freeze(placement || new Ray())
   }
 
-  goto ({ x = 0, y = 0, z = 0, facing = Facing.NORTH } = {}) {
-    this._ray.goto(facing, xyz(x, y, z))
-    return this._ray
+  placement () {
+    return this._placement
   }
 
-  makePlaceholder (use, corners, depth, { z = 0, name } = {}) {
-    z = z + this._ray.xyz.z
+  goto ({ x = 0, y = 0, z = 0 } = {}, facing) {
+    return this._placement.add(xyz(x, y, z), facing)
+  }
+
+  makePlaceholder (placement, use, corners, depth, { z = 0, name } = {}) {
+    z = z + placement.xyz.z
     const group = new FeatureGroup(name)
-    const adjustedCorners = this._ray.applyRay(corners)
+    const adjustedCorners = placement.applyRay(corners)
     const xyPolygon = new Geometry.XYPolygon(adjustedCorners)
     const color = COLORS_BY_USE[use]
     const abstractThickPolygon = new Geometry.ThickPolygon(xyPolygon, { depth })
