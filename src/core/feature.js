@@ -111,7 +111,10 @@ class FeatureGroup extends Feature {
 
   add (...features) {
     this.children.push(...features)
-    features.forEach(feature => { feature.parent = this })
+    features.forEach(feature => {
+      feature.parent = this
+      if (feature._onSetParent) feature._onSetParent(this)
+    })
     return this
   }
 
@@ -166,7 +169,12 @@ class FeatureLODGroup extends FeatureGroup {
    * @param {number} distanceThreshold - when to switch to this feature
    */
   addLevelOfDetail (feature, distanceThreshold) {
+    feature.parent = this.parent
     this._levels.push({ feature, distanceThreshold })
+  }
+
+  _onSetParent (parent) {
+    this._levels.forEach(level => { level.feature.parent = parent })
   }
 
   /**
