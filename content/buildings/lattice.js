@@ -9,6 +9,7 @@ import { UNIT } from '../../src/core/unit.js'
 import { xy, xyz, xyzAdd, xyRotate, xywh2rect, count, countTo, hypotenuse } from '../../src/core/util.js'
 import { Byway } from '../../src/architecture/byway.js'
 import { Facing } from '../../src/core/facing.js'
+import { FeatureGroup } from '../../src/core/feature.js'
 import { Route } from '../../src/routes/route.js'
 import { Storey } from '../../src/architecture/storey.js'
 import { Structure } from '../../src/architecture/structure.js'
@@ -172,13 +173,77 @@ const LOWER_PLAZA_WALKWAY_D = [
   xy(WALKWAY_XD + WALKWAY_WIDTH, 45)
 ]
 
-/**
- * A Lattice is a repeating pattern of Kinematic city bikeways.
- */
-class Lattice extends Structure {
-  constructor ({ ray, at, numRows = 2, numCols = 2, name = 'Lattice' } = {}) {
+const EAST_WEST_ALTITUDE = 7.5
+const NORTH_SOUTH_ALTITUDE = 22.5
+const HIGHLINE_ALTITUDE = 37.5
+
+class LatticeBlock extends Structure {
+  constructor ({ ray, at, offsetOfLattice = xy(0, 0), name } = {}) {
     super({ ray, at, name })
-    this.addUnitCells(numRows, numCols)
+    this.offsetOfLattice = offsetOfLattice
+
+    this.goto({ z: -0.1, facing: Facing.NORTH })
+    this.add(new Storey({ placement: this._ray, use: Use.PARCEL, outline: PARCEL }))
+
+    this.addBoulevard({ x: 0, y: 0, z: NORTH_SOUTH_ALTITUDE, facing: Facing.NORTH })
+    this.addHighline({ x: 0, y: 0, z: HIGHLINE_ALTITUDE, facing: Facing.NORTH })
+    this.addLonghouse({ x: 0, y: 0, z: 0, height: 11.25, facing: Facing.NORTH })
+    this.addLonghouse({ x: 0, y: 0, z: 11.25, height: 11.25, facing: Facing.NORTH })
+
+    this.goto({ z: NORTH_SOUTH_ALTITUDE, facing: Facing.NORTH })
+    this.addRamps()
+
+    this.addBoulevard({ x: BLOCK_LENGTH, y: BLOCK_LENGTH, z: NORTH_SOUTH_ALTITUDE, facing: Facing.SOUTH })
+    this.addHighline({ x: BLOCK_LENGTH, y: BLOCK_LENGTH, z: HIGHLINE_ALTITUDE, facing: Facing.SOUTH })
+    this.addLonghouse({ x: BLOCK_LENGTH, y: BLOCK_LENGTH, z: 0, height: 11.25, facing: Facing.SOUTH })
+    this.addLonghouse({ x: BLOCK_LENGTH, y: BLOCK_LENGTH, z: 11.25, height: 11.25, facing: Facing.SOUTH })
+
+    this.goto({ x: BLOCK_LENGTH, y: BLOCK_LENGTH, z: NORTH_SOUTH_ALTITUDE, facing: Facing.SOUTH })
+    this.addRamps()
+
+    this.addBoulevard({ x: 0, y: BLOCK_LENGTH, z: EAST_WEST_ALTITUDE, facing: Facing.EAST })
+    this.addHighline({ x: 0, y: BLOCK_LENGTH, z: HIGHLINE_ALTITUDE, facing: Facing.EAST })
+    this.addLonghouse({ x: 0, y: BLOCK_LENGTH, z: 0, height: 7.5, facing: Facing.EAST })
+    this.addLonghouse({ x: 0, y: BLOCK_LENGTH, z: NORTH_SOUTH_ALTITUDE, height: 15, facing: Facing.EAST })
+
+    this.goto({ x: 0, y: 0, z: EAST_WEST_ALTITUDE, facing: Facing.EAST })
+
+    this.addBoulevard({ x: BLOCK_LENGTH, y: 0, z: EAST_WEST_ALTITUDE, facing: Facing.WEST })
+    this.addHighline({ x: BLOCK_LENGTH, y: 0, z: HIGHLINE_ALTITUDE, facing: Facing.WEST })
+    this.addLonghouse({ x: BLOCK_LENGTH, y: 0, z: 0, height: 7.5, facing: Facing.WEST })
+    this.addLonghouse({ x: BLOCK_LENGTH, y: 0, z: NORTH_SOUTH_ALTITUDE, height: 15, facing: Facing.WEST })
+
+    this.addLevelsOfDetail()
+  }
+
+  addLevelsOfDetail () {
+    // TODO: Add more details to lod1.  Currently the two levels are the same (although ThreeOutput
+    // renders them with different materials).
+    const lod1 = new FeatureGroup(this.name)
+    this.addLevelOfDetail(lod1, 1000)
+    lod1.add(this.makeSide({ x: 0, y: 0, facing: Facing.NORTH, name: 'west side' }))
+    lod1.add(this.makeSide({ x: BLOCK_LENGTH, y: 0, facing: Facing.WEST, name: 'south side' }))
+    lod1.add(this.makeSide({ x: BLOCK_LENGTH, y: BLOCK_LENGTH, facing: Facing.SOUTH, name: 'east side' }))
+    lod1.add(this.makeSide({ x: 0, y: BLOCK_LENGTH, facing: Facing.EAST, name: 'north side' }))
+
+    const lod2 = new FeatureGroup(this.name)
+    this.addLevelOfDetail(lod2, 3000)
+    lod2.add(this.makeSide({ x: 0, y: 0, facing: Facing.NORTH, name: 'west side' }))
+    lod2.add(this.makeSide({ x: BLOCK_LENGTH, y: 0, facing: Facing.WEST, name: 'south side' }))
+    lod2.add(this.makeSide({ x: BLOCK_LENGTH, y: BLOCK_LENGTH, facing: Facing.SOUTH, name: 'east side' }))
+    lod2.add(this.makeSide({ x: 0, y: BLOCK_LENGTH, facing: Facing.EAST, name: 'north side' }))
+  }
+
+  makeSide ({ x = 0, y = 0, z = 0, facing = Facing.NORTH, name } = {}) {
+    const SIDE = [
+      xy(0, 0),
+      xy(0, BLOCK_LENGTH),
+      xy(30, BLOCK_LENGTH),
+      xy(30, 0)
+    ]
+
+    this.goto({ x: x, y: y, z: z, facing: facing })
+    return this.makePlaceholder(Use.WALL, SIDE, HIGHLINE_ALTITUDE, { name })
   }
 
   addByway (placement, use, outline) {
@@ -216,7 +281,7 @@ class Lattice extends Structure {
 
   addRoute (xyzList) {
     const waypointsRelativeToLattice = this._ray.applyRay(xyzList)
-    const absoluteWaypoints = waypointsRelativeToLattice.map(xyz => xyzAdd(xyz, this.offset))
+    const absoluteWaypoints = waypointsRelativeToLattice.map(xyz => xyzAdd(xyz, this.offsetOfLattice))
     this.add(new Route(absoluteWaypoints, Use.BIKEPATH))
   }
 
@@ -279,8 +344,10 @@ class Lattice extends Structure {
     const HIGHLINE_SOIL_THICKNESS = 4
     const HIGHLINE_WALL_HEIGHT = 3 + HIGHLINE_SOIL_THICKNESS
     const ray = this.goto({ x: x, y: y, z: z, facing: facing })
+
     this.add(new Storey({ placement: ray, outline: RETAINING_WALL, deprecatedSpec: { use: Use.BARE, wall: HIGHLINE_WALL_HEIGHT, cap: false } }))
     this.add(new Storey({ placement: ray, outline: HIGHLINE_SOIL, deprecatedSpec: { use: Use.PARCEL, depth: HIGHLINE_SOIL_THICKNESS } }))
+
     return this
   }
 
@@ -299,54 +366,22 @@ class Lattice extends Structure {
     this.add(new Storey({ placement: ray, outline: LONGHOUSE, deprecatedSpec: { use: Use.ROOM, wall: height, openings: WINDOWS } }))
     return this
   }
+}
 
-  addBlock (row = 0, col = 0) {
-    const x = row * BLOCK_LENGTH
-    const y = col * BLOCK_LENGTH
-    const EAST_WEST_ALTITUDE = 7.5
-    const NORTH_SOUTH_ALTITUDE = 22.5
-    const HIGHLINE_ALTITUDE = 37.5
-
-    const ray = this.goto({ x: x, y: y, z: -0.1, facing: Facing.NORTH })
-    this.add(new Storey({ placement: ray, use: Use.PARCEL, outline: PARCEL }))
-
-    this.addBoulevard({ x: x, y: y, z: NORTH_SOUTH_ALTITUDE, facing: Facing.NORTH })
-    this.addHighline({ x: x, y: y, z: HIGHLINE_ALTITUDE, facing: Facing.NORTH })
-    this.addLonghouse({ x: x, y: y, z: 0, height: 11.25, facing: Facing.NORTH })
-    this.addLonghouse({ x: x, y: y, z: 11.25, height: 11.25, facing: Facing.NORTH })
-
-    this.goto({ x: x, y: y, z: NORTH_SOUTH_ALTITUDE, facing: Facing.NORTH })
-    this.addRamps()
-
-    this.addBoulevard({ x: x + BLOCK_LENGTH, y: y + BLOCK_LENGTH, z: NORTH_SOUTH_ALTITUDE, facing: Facing.SOUTH })
-    this.addHighline({ x: x + BLOCK_LENGTH, y: y + BLOCK_LENGTH, z: HIGHLINE_ALTITUDE, facing: Facing.SOUTH })
-    this.addLonghouse({ x: x + BLOCK_LENGTH, y: y + BLOCK_LENGTH, z: 0, height: 11.25, facing: Facing.SOUTH })
-    this.addLonghouse({ x: x + BLOCK_LENGTH, y: y + BLOCK_LENGTH, z: 11.25, height: 11.25, facing: Facing.SOUTH })
-
-    this.goto({ x: x + BLOCK_LENGTH, y: y + BLOCK_LENGTH, z: NORTH_SOUTH_ALTITUDE, facing: Facing.SOUTH })
-    this.addRamps()
-
-    this.addBoulevard({ x: x, y: y + BLOCK_LENGTH, z: EAST_WEST_ALTITUDE, facing: Facing.EAST })
-    this.addHighline({ x: x, y: y + BLOCK_LENGTH, z: HIGHLINE_ALTITUDE, facing: Facing.EAST })
-    this.addLonghouse({ x: x, y: y + BLOCK_LENGTH, z: 0, height: 7.5, facing: Facing.EAST })
-    this.addLonghouse({ x: x, y: y + BLOCK_LENGTH, z: NORTH_SOUTH_ALTITUDE, height: 15, facing: Facing.EAST })
-
-    this.goto({ x: x, y: y, z: EAST_WEST_ALTITUDE, facing: Facing.EAST })
-
-    this.addBoulevard({ x: x + BLOCK_LENGTH, y: y, z: EAST_WEST_ALTITUDE, facing: Facing.WEST })
-    this.addHighline({ x: x + BLOCK_LENGTH, y: y, z: HIGHLINE_ALTITUDE, facing: Facing.WEST })
-    this.addLonghouse({ x: x + BLOCK_LENGTH, y: y, z: 0, height: 7.5, facing: Facing.WEST })
-    this.addLonghouse({ x: x + BLOCK_LENGTH, y: y, z: NORTH_SOUTH_ALTITUDE, height: 15, facing: Facing.WEST })
-
-    this.goto({ x: x + BLOCK_LENGTH, y: y + BLOCK_LENGTH, z: EAST_WEST_ALTITUDE, facing: Facing.WEST })
-
-    return this
+/**
+ * A Lattice is a repeating pattern of Kinematic city bikeways.
+ */
+class Lattice extends Structure {
+  constructor ({ ray, at, numRows = 2, numCols = 2, name = 'Lattice' } = {}) {
+    super({ ray, at, name })
+    this.addUnitCells(numRows, numCols)
   }
 
   addUnitCells (num_rows = 0, num_cols = 0) {
     for (const row of countTo(num_rows)) {
       for (const col of countTo(num_cols)) {
-        this.addBlock(row, col)
+        const at = xy(row * BLOCK_LENGTH, col * BLOCK_LENGTH)
+        this.add(new LatticeBlock({ ray: this._ray, at, offsetOfLattice: this.offset, name: `Block ${row}-${col}` }))
       }
     }
   }
