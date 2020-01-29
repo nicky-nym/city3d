@@ -22,6 +22,10 @@ class Ray {
     this.xyz = xyz
   }
 
+  copy () {
+    return new Ray(this.az, { ...this.xyz })
+  }
+
   applyRay (xyzObjOrList) {
     if (Array.isArray(xyzObjOrList)) {
       const transformed = []
