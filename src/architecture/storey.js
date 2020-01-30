@@ -9,8 +9,11 @@ import { Feature, FeatureInstance } from '../core/feature.js'
 import { Geometry } from '../core/geometry.js'
 import { METRIC } from './metric.js'
 import { Model } from './model.js'
-import { Use } from './use.js'
+import { Roof } from './roof.js'
+// import { Room } from './room.js'
+// import { Use } from './use.js'
 import { Wall } from './wall.js'
+import { countTo } from '../core/util.js'
 
 const WHITE = 0xffffff
 const RED = 0xcc0000 // eslint-disable-line no-unused-vars
@@ -78,32 +81,92 @@ class Storey extends Model {
    * @param {string} [name] - name of the storey
    * @param {xy[]} outline - vertices of floor, expected to be in counterclockwise order
    * @param {Ray} placement - location and compass direction
-   * @param {string} use - e.g. Use.ROOM
-   * @param {number} [z=0] - z-offset of the wall
-   * @param {number} [incline=0] - z-offset of second corner relative to first
-   * @param {number} [depth=-0.5] - floor is between z and z + depth, so positive means bottom of floor is at
+   * @param {object} [deprecatedSpec] - an old 2019 spec format that we're phasing out
+   * @param {object} [spec] - an specification object that is valid against storey.schema.json.js
+   *
+   * @param {string} deprecatedSpec.use - e.g. Use.ROOM
+   * @param {number} [deprecatedSpec.z=0] - z-offset of the wall
+   * @param {number} [deprecatedSpec.incline=0] - z-offset of second corner relative to first
+   * @param {number} [deprecatedSpec.depth=-0.5] - floor is between z and z + depth, so positive means bottom of floor is at
    *                                z and negative means top of floor is at z.
-   * @param {boolean} [cap=true] - whether to include floor
-   * @param {number} [wall=0] - height of walls
-   * @param {xy[][]} [openings=[]] - array of openings, where each is specified by an array of xy values
+   * @param {boolean} [deprecatedSpec.cap=true] - whether to include floor
+   * @param {number} [deprecatedSpec.wall=0] - height of walls
+   * @param {xy[][]} [deprecatedSpec.openings=[]] - array of openings, where each is specified by an array of xy values
    */
   constructor ({
     name,
     outline,
     placement,
-    deprecatedSpec = {}
+    deprecatedSpec = {},
+    spec
   } = {}) {
-    const use = deprecatedSpec.use
-    let z = deprecatedSpec.z || 0
-    const incline = deprecatedSpec.incline || 0
-    const depth = deprecatedSpec.depth || -0.5
-    const cap = deprecatedSpec.cap || true
-    const wall = deprecatedSpec.wall || 0
-    const openings = deprecatedSpec.openings || []
-    super({ name: name || use })
+    // name = name || `${Use[use]}${outline.name ? ` (${outline.name})` : ''}`
+    super({ name: name || deprecatedSpec.use })
+    if (deprecatedSpec) {
+      this._makeModelFromDeprecatedSpec(deprecatedSpec, outline, placement)
+    }
+    if (spec) {
+      this.makeModelFromSpec(spec, placement)
+    }
+  }
+
+  /**
+   * Generate Geometry objects corresponding to a specification.
+   * @param {object} spec - an specification object that is valid against storey.schema.json.js
+   * @param {Ray} [placement] - the location and orientation of this part
+   */
+  makeModelFromSpec (spec, placement) {
+    let { name, unit, altitude, height, repeat, floors, ceiling, walls, rooms, roof } = spec
+
+    this.name = name || this.name
+
+    if (unit && unit !== 'feet') {
+      // TODO: write this code!
+      throw new Error('TODO: need to convert values into feet')
+    }
+
+    const at = placement.add({ x: 0, y: 0, z: altitude }, placement.az)
+    repeat = repeat || 0
+    for (const i of countTo(repeat)) { // eslint-disable-line no-unused-vars
+      for (const floorSpec of floors) {
+        const floor = new Floor({ floorSpec, at })
+        this.add(floor)
+      }
+
+      let begin = { x: 0, y: 0 }
+      for (const wallSpec of walls) {
+        Model.mergeValueIfAbsent(wallSpec, { begin, height })
+        const wall = new Wall({ wallSpec, at })
+        this.add(wall)
+        begin = wall.end
+      }
+
+      for (const roomSpec of rooms) { // eslint-disable-line no-unused-vars
+        // TODO: write this code!
+        // const room = new Room({ roomSpec, at })
+        // this.add(room)
+      }
+    }
+
+    this.add(new Roof({ roof, placement }))
+
+    if (ceiling) {
+      // TODO: write this code!
+      // this.add(new Ceiling({ ceiling, placement }))
+    }
+  }
+
+  // TODO: delete this code when it is no longer used by any content model classes
+  _makeModelFromDeprecatedSpec (storeySpec, outline, placement) {
+    const use = storeySpec.use
+    let z = storeySpec.z || 0
+    const incline = storeySpec.incline || 0
+    const depth = storeySpec.depth || -0.5
+    const cap = storeySpec.cap || true
+    const wall = storeySpec.wall || 0
+    const openings = storeySpec.openings || []
     this._depth = depth
     z = z + placement.xyz.z
-    name = name || `${Use[use]}${outline.name ? ` (${outline.name})` : ''}`
     const adjustedCorners = placement.applyRay(outline)
     const xyPolygon = new Geometry.XYPolygon(adjustedCorners)
     if (cap) {

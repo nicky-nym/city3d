@@ -7,6 +7,7 @@
 
 import { array, cornersFromShape, countTo, randomInt, xyzAdd } from '../core/util.js'
 import { FeatureGroup } from '../core/feature.js'
+import { Model } from './model.js'
 import { Ray } from '../core/ray.js'
 import { Roof } from './roof.js'
 import { Storey } from './storey.js'
@@ -53,7 +54,7 @@ class Building extends Structure {
    * @param {string} [name] - a display name for this individual instance at a given placement
    * @param {Ray} [placement] - the location and orientation of this part
    * @param {object} [deprecatedSpec] - an old 2019 spec format that we're phasing out
-   * @param {object} [spec] - an specification object that is valid against roof.schema.json.js
+   * @param {object} [spec] - an specification object that is valid against building.schema.json.js
    */
   constructor ({
     name,
@@ -85,9 +86,16 @@ class Building extends Structure {
       throw new Error('TODO: need to convert values into feet')
     }
 
+    const priors = {
+      altitude: 0,
+      height: 0
+    }
     for (const storeySpec of storeys) {
+      Model.mergeValueIfAbsent(storeySpec, priors)
       const storey = new Storey({ storeySpec, placement })
       this.add(storey)
+      priors.altitude = storey.altitude() + storey.height()
+      priors.height = storey.height()
     }
   }
 

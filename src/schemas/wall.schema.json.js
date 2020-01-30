@@ -57,6 +57,7 @@ export default /* eslint-disable */
     "metadata": { "$ref": "metadata.schema.json" },
     "comments": { "$ref": "definitions.json#/def/comments" },
     "unit": { "$ref": "definitions.json#/def/unit" },
+    "height": { "$ref": "definitions.json#/def/number" },
     "begin": { "$ref": "definitions.json#/def/beginOrEnd" },
     "end": { "$ref": "definitions.json#/def/beginOrEnd" },
     "roofline": {

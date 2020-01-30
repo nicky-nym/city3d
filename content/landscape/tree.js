@@ -5,18 +5,20 @@
  * For more information, please refer to <http://unlicense.org>
  */
 
-import { xy, xyz, xyzAdd } from '../../src/core/util.js'
+import { xy, xyzAdd } from '../../src/core/util.js'
 import { Feature, FeatureInstance } from '../../src/core/feature.js'
 import { Geometry } from '../../src/core/geometry.js'
 import { Model } from '../../src/architecture/model.js'
 import { UNIT } from '../../src/core/unit.js'
+import { Ray } from '../../src/core/ray.js'
 
 const TRUNK_HEIGHT = UNIT.feet(8)
 const CROWN_HEIGHT = UNIT.feet(9)
 
 class Tree extends Model {
-  constructor ({ at = xyz(0, 0, 0), crownHeight = 10, name = 'Tree' } = {}) {
+  constructor ({ placement = new Ray(), crownHeight = 10, name = 'Tree' } = {}) {
     super({ name, layer: Tree.layer })
+    const at = placement.xyz
     this.add(this.makeTrunk(at))
     at.z += crownHeight
     this.add(this.makeCrown(at))

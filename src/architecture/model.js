@@ -28,6 +28,15 @@ class Model extends FeatureLODGroup {
     super(name, { layer })
   }
 
+  static mergeValueIfAbsent (obj, values) {
+    const keys = Object.keys(values)
+    for (const key of keys) {
+      if (!Object.prototype.hasOwnProperty.call(obj, key)) {
+        obj[key] = values[key]
+      }
+    }
+  }
+
   addLine (waypoints, ray, color) {
     const adjustedWaypoints = ray.applyRay(waypoints)
     const line = new Geometry.Line(adjustedWaypoints)
