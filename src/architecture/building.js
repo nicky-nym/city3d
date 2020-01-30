@@ -48,13 +48,47 @@ function _openingsFromWallsSpec (wallsSpec) {
  * Buildings can be made from declarative specifications in JSON format.
  */
 class Building extends Structure {
+  /**
+   * Create a new instance of a specified Building, and generate the Geometry objects for it.
+   * @param {string} [name] - a display name for this individual instance at a given placement
+   * @param {Ray} [placement] - the location and orientation of this part
+   * @param {object} [deprecatedSpec] - an old 2019 spec format that we're phasing out
+   * @param {object} [spec] - an specification object that is valid against roof.schema.json.js
+   */
   constructor ({
     name,
     placement,
-    deprecatedSpec
+    deprecatedSpec,
+    spec
   } = {}) {
     super({ name: name || deprecatedSpec.name, placement })
-    this._makeBuildingFromSpec(deprecatedSpec)
+    if (deprecatedSpec) {
+      this._makeModelFromDeprecatedSpec(deprecatedSpec, placement)
+    }
+    if (spec) {
+      this.makeModelFromSpec(spec, placement)
+    }
+  }
+
+  /**
+   * Generate Geometry objects corresponding to a specification.
+   * @param {object} spec - an specification object that is valid against building.schema.json.js
+   * @param {Ray} [placement] - the location and orientation of this part
+   */
+  makeModelFromSpec (spec, placement) {
+    const { name, unit, /* anchorPoint, */ storeys } = spec
+
+    this.name = name || this.name
+
+    if (unit && unit !== 'feet') {
+      // TODO: write this code!
+      throw new Error('TODO: need to convert values into feet')
+    }
+
+    for (const storeySpec of storeys) {
+      const storey = new Storey({ storeySpec, placement })
+      this.add(storey)
+    }
   }
 
   _makeHighResBuildingFromSpec (spec, parentOffset = { x: 0, y: 0, z: 0 }) {
@@ -156,7 +190,9 @@ class Building extends Structure {
     return spec
   }
 
-  _makeBuildingFromSpec (buildingSpec, at = { x: 0, y: 0, z: 0 }) {
+  // TODO: delete this code when it is no longer used by any content model classes
+  _makeModelFromDeprecatedSpec (buildingSpec, placement) {
+    const at = (placement && placement.xyz) || { x: 0, y: 0, z: 0 }
     const resolvedSpec = this._instantiateSpec(buildingSpec)
     this._makeHighResBuildingFromSpec(resolvedSpec, at)
 

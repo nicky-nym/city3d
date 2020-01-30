@@ -12,8 +12,8 @@ export default /* eslint-disable */
   anchorPoint: { x: 12, y: 10.5, z: 0 },
   def: {
     SW: { x: 0, y: 0 },
-    S1: { x: 2, y: 0 },
-    S2: { x: 22, y: 0 },
+    S1: { x: 1, y: 0 },
+    S2: { x: 23, y: 0 },
     SE: { x: 24, y: 0 },
     NE: { x: 24, y: 21 },
     NW: { x: 0, y: 21 },

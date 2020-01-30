@@ -13,6 +13,9 @@ import { Outline } from '../core/outline.js'
 
 const LIGHT_GRAY = 0x808080
 
+/**
+ * The overall shape of the roof as a whole, including all the different roof faces and/or surfaces.
+ */
 const FORM = {
   // NOTE: these values must exactly match the values in roof.schema.json.js
   FLAT: 'flat',
@@ -25,17 +28,24 @@ const FORM = {
  * Roof is a class for representing the roof of a building.
  */
 class Roof extends Model {
+  /**
+   * Create a new instance of a specified Roof, and generate the Geometry objects for it.
+   * @param {Ray} [placement] - the location and orientation of this part
+   * @param {object} [deprecatedSpec] - an old 2019 spec format that we're phasing out
+   * @param {object} [spec] - an specification object that is valid against roof.schema.json.js
+   */
   constructor ({ placement, deprecatedSpec, spec }) {
     super({ name: 'Roof', layer: Roof.layer })
     if (deprecatedSpec) {
-      this.makeModelFromDeprecatedSpec(deprecatedSpec, placement)
+      this._makeModelFromDeprecatedSpec(deprecatedSpec, placement)
     }
     if (spec) {
       this.makeModelFromSpec(spec, placement)
     }
   }
 
-  makeModelFromDeprecatedSpec (deprecatedSpec, placement) {
+  // TODO: delete this code when it is no longer used by any content model classes
+  _makeModelFromDeprecatedSpec (deprecatedSpec, placement) {
     if (deprecatedSpec.custom) {
       let { vertices, indices } = deprecatedSpec.custom
       vertices = placement.applyRay(vertices)
@@ -54,12 +64,18 @@ class Roof extends Model {
     }
   }
 
+  /**
+   * Generate Geometry objects corresponding to a specification.
+   * @param {object} spec - an specification object that is valid against roof.schema.json.js
+   * @param {Ray} [placement] - the location and orientation of this part
+   */
   makeModelFromSpec (spec, placement) {
     let { name, unit, outline, form, pitch, eaves /* surface */ } = spec
 
     this.name = name || this.name
 
     if (unit && unit !== 'feet') {
+      // TODO: write this code!
       throw new Error('TODO: need to convert values into feet')
     }
 
@@ -80,10 +96,13 @@ class Roof extends Model {
       const concreteThickPolygon = new FeatureInstance(abstractThickPolygon, p0, LIGHT_GRAY)
       this.add(concreteThickPolygon)
     } else if (form === FORM.PITCHED) {
+      // TODO: write this code!
       throw new Error('TODO: "pitched" Roof code has not yet been written')
     } else if (form === FORM.LIVING) {
+      // TODO: write this code!
       throw new Error('TODO: "living" Roof code has not yet been written')
     } else if (form === FORM.VAULTED) {
+      // TODO: write this code!
       throw new Error('TODO: "vaulted" Roof code has not yet been written')
     }
   }
