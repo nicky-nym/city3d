@@ -18,8 +18,8 @@ import { Ray } from '../../src/core/ray.js'
 class LatticeDistrict extends District {
   makeFeatures () {
     const POPULATION = 1000
-    this.add(new Lattice({ placement: new Ray(Facing.NORTH, { x: 100, y: 100 }), numRows: 3, numCols: 3 }))
-    this.add(new MidriseComplex({ placement: new Ray(Facing.NORTH, { x: 238, y: 238 }), numRowPairs: 4, numColPairs: 4 }))
+    this.add(new Lattice({ placement: new Ray(Facing.NORTH, { x: 100, y: 100, z: 0 }), numRows: 3, numCols: 3 }))
+    this.add(new MidriseComplex({ placement: new Ray(Facing.NORTH, { x: 238, y: 238, z: 0 }), numRowPairs: 4, numColPairs: 4 }))
     this.setValueForMetric(METRIC.POPULATION, POPULATION)
   }
 }
