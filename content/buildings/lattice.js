@@ -6,7 +6,7 @@
  */
 
 import { UNIT } from '../../src/core/unit.js'
-import { xy, xyz, xyRotate, xywh2rect, count, countTo, hypotenuse } from '../../src/core/util.js'
+import { xy, xyz, xyzAdd, xyRotate, xywh2rect, count, countTo, hypotenuse } from '../../src/core/util.js'
 import { Byway } from '../../src/architecture/byway.js'
 import { Facing } from '../../src/core/facing.js'
 import { FeatureGroup } from '../../src/core/feature.js'
@@ -178,8 +178,9 @@ const NORTH_SOUTH_ALTITUDE = 22.5
 const HIGHLINE_ALTITUDE = 37.5
 
 class LatticeBlock extends Structure {
-  constructor ({ name, placement } = {}) {
+  constructor (parentOffset, { name, placement } = {}) {
     super({ name, placement })
+    this._parentOffset = parentOffset
 
     placement = this.goto({ z: -0.1 }, Facing.NORTH)
     this.add(new Storey({ placement, use: Use.PARCEL, outline: PARCEL }))
@@ -245,8 +246,8 @@ class LatticeBlock extends Structure {
     return this.makePlaceholder(placement, Use.WALL, SIDE, HIGHLINE_ALTITUDE, { name })
   }
 
-  addByway (placement, use, outline) {
-    this.add(new Byway({ placement, outline, deprecatedSpec: { use } }))
+  addByway (placement, use, outline, { z = 0, incline = 0 } = {}) {
+    this.add(new Byway({ placement, outline, deprecatedSpec: { use, z, incline } }))
   }
 
   addBoulevard ({ x = 0, y = 0, z = 0, facing = Facing.NORTH } = {}) {
@@ -279,7 +280,9 @@ class LatticeBlock extends Structure {
   }
 
   addRoute (placement, xyzList) {
-    const waypoints = placement.applyRay(xyzList)
+    const offset = xyzAdd(this.offset, this._parentOffset)
+    const at = placement.add(offset, placement.az)
+    const waypoints = at.applyRay(xyzList)
     this.add(new Route(waypoints, Use.BIKEPATH))
   }
 
@@ -329,7 +332,6 @@ class LatticeBlock extends Structure {
   }
 
   _addHighline ({ x = 0, y = 0, z = 0, facing = Facing.NORTH } = {}) {
-    // console.log(`Lattice addHighline facing: ${facing}`)
     const RETAINING_WALL = [
       xy(30, 630),
       xy(30, 30)
@@ -343,7 +345,6 @@ class LatticeBlock extends Structure {
     const HIGHLINE_SOIL_THICKNESS = 4
     const HIGHLINE_WALL_HEIGHT = 3 + HIGHLINE_SOIL_THICKNESS
     const placement = this.goto({ x: x, y: y, z: z }, facing)
-    // console.log(`Lattice addHighline placement: (${placement.xyz.x}, ${placement.xyz.y}, ${placement.xyz.z}) ${placement.az}`)
 
     this.add(new Storey({ placement, outline: RETAINING_WALL, deprecatedSpec: { use: Use.BARE, wall: HIGHLINE_WALL_HEIGHT, cap: false } }))
     this.add(new Storey({ placement, outline: HIGHLINE_SOIL, deprecatedSpec: { use: Use.PARCEL, depth: HIGHLINE_SOIL_THICKNESS } }))
@@ -382,7 +383,7 @@ class Lattice extends Structure {
       for (const col of countTo(num_cols)) {
         const at = xy(row * BLOCK_LENGTH, col * BLOCK_LENGTH)
         const placement = this.goto(at)
-        this.add(new LatticeBlock({ name: `Block ${row}-${col}`, placement }))
+        this.add(new LatticeBlock(this.offset, { name: `Block ${row}-${col}`, placement }))
       }
     }
   }
