@@ -128,7 +128,7 @@ function main () {
   addMovers(extras)
   addObjectFromSpec(extras, specReader, 'Garage', { x: -288, y: 60, z: 0 })
   addObjectFromSpec(extras, specReader, 'Cottage', { x: -252, y: 60, z: 0 })
-  addObjectFromSpec(extras, specReader, 'House', { x: -160, y: 60, z: 0 })
+  addObjectFromSpec(extras, specReader, 'House', { x: -130, y: 30, z: 0 })
 
   const city = new CITY.City({ name: 'Paracosm' })
   addBuildings(city)

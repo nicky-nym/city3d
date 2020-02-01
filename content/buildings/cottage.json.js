@@ -172,8 +172,8 @@ export default /* eslint-disable */
       }],
       interior: [{
         name: 'bedroom wall',
-        begin: { x: -11 + 6 / 12, y: 21 },
-        end: { x: -11 + 6 / 12, y: 0 },
+        begin: { x: 18 + 10 / 12, y: 21 },
+        end: { x: 18 + 10 / 12, y: 0 },
         doors: [{
           name: 'bedroom door',
           motion: 'swinging',
@@ -198,8 +198,8 @@ export default /* eslint-disable */
         }
       }, {
         name: 'bathroom wall',
-        begin: { x: -11, y: -(5 + 8 / 12) },
-        end: { x: 0, y: -(5 + 8 / 12) },
+        begin: { x: (19 + 4 / 12), y: (15 + 4 / 12) },
+        end: { x: (30 + 4 / 12), y: (15 + 4 / 12) },
         doors: [{
           name: 'bathroom door',
           motion: 'swinging',
@@ -215,8 +215,8 @@ export default /* eslint-disable */
         }
       }, {
         name: 'closet wall',
-        begin: { x: -8, y: -8 },
-        end: { x: 0, y: -8 },
+        begin: { x: (22 + 4 / 12), y: 13 },
+        end: { x: (30 + 4 / 12), y: 13 },
         doors: [{
           name: 'closet doors',
           motion: 'sliding',
@@ -226,12 +226,12 @@ export default /* eslint-disable */
         }]
       }, {
         name: 'wall toward bathroom',
-        begin: { x: -8, y: -(5 + 8 / 12) },
-        end: { x: -8, y: -8 }
+        begin: { x: (22 + 4 / 12), y: (15 + 4 / 12) },
+        end: { x: (22 + 4 / 12), y: 13 }
       }, {
         name: 'laundry room wall',
-        begin: { x: 0, y: -(7 + 8 / 12) },
-        end: { x: 10 + 6 / 12, y: -(7 + 8 / 12) },
+        begin: { x: 21, y: (13 + 4 / 12) },
+        end: { x: 10 + 6 / 12, y: (13 + 4 / 12) },
         doors: [{
           name: 'laundry room door',
           motion: 'swinging',
@@ -249,7 +249,7 @@ export default /* eslint-disable */
       }, {
         name: 'kitchen/laundry wall',
         begin: { x: 7, y: 0 },
-        end: { x: 7, y: -(7 + 2 / 12) },
+        end: { x: 7, y: (13 + 10 / 12) },
         outside: {
           fixtures: [
             { at: { x: 1, y: 1 }, copy: { $ref: 'power outlet, duplex' } },

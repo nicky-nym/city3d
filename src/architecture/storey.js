@@ -157,7 +157,7 @@ class Storey extends Model {
       const wallSpecs = [...exterior, ...interior]
       for (const wallSpec of wallSpecs) {
         Model.mergeValueIfAbsent(wallSpec, { begin, height, roofline })
-        const wall = new Wall({ spec: wallSpec /*, at */ })
+        const wall = new Wall({ spec: wallSpec, placement: at })
         this.add(wall)
         begin = wall.end()
         roofline = wall.roofline()

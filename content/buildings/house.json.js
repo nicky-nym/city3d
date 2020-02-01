@@ -96,7 +96,91 @@ export default /* eslint-disable */
     ]
     }
   }, {
+    name: 'back addition',
+    altitude: 4,
+    height: 8,
+    roof: {
+      form: 'pitched',
+      pitch: { rise: 4, run: 12 },
+      eaves: 1,
+      surface: {
+        style: 'shingled',
+        material: 'asphalt composition'
+      }
+    },
+    walls: {
+      exterior: [{
+        begin: { $ref: '#/def/L' },
+        end: { $ref: '#/def/M' },
+        roofline: 'shed'
+      }, {
+        end: { $ref: '#/def/N' },
+        roofline: 'pitched',
+        outside: {
+          fixtures: [
+            { at: { x: 9.5, y: 6, from: 'left' }, copy: { $ref: 'sconce' } }
+          ]
+        },
+        doors: [{
+          name: 'back door',
+          motion: 'swinging',
+          handleSide: 'right',
+          outline: { shape: 'rectangle', size: { x: 2.666, y: 6.666 } },
+          at: { x: 11.772, from: 'left' },
+          casing: { width: 0.5 }
+        }],
+        windows: [{
+          name: 'kitchen sink window',
+          leafCount: { cols: 2 },
+          motion: 'casement',
+          outline: { shape: 'rectangle', size: { x: 3.750, y: 2.083 } },
+          at: { x: 3.167, y: 4.333, from: 'left' },
+          casing: { width: 0.5 }
+        }, {
+          name: 'laundry room windows',
+          leafCount: { cols: 3 },
+          motion: 'casement',
+          outline: { shape: 'rectangle', size: { x: 5.750, y: 4.083 } },
+          at: { x: 14.938, y: 2.583, from: 'left' },
+          casing: { width: 0.5 }
+        }, {
+          name: 'half-bath window',
+          motion: 'casement',
+          outline: { shape: 'rectangle', size: { x: 1.750, y: 2.083 } },
+          at: { x: 22.542, y: 4.500, from: 'left' },
+          casing: { width: 0.5 }
+        }]
+      }, {
+        end: { $ref: '#/def/O' },
+        roofline: 'shed'
+      }]
+    }
+  }, {
+    name: 'front porch',
+    altitude: 4,
+    height: 8,
+    roof: {
+      form: 'pitched',
+      pitch: { rise: 4, run: 12 },
+      eaves: 1,
+      surface: {
+        style: 'shingled',
+        material: 'asphalt composition'
+      }
+    },
+    walls: {
+      exterior: [{
+        begin: { $ref: '#/def/S' },
+        end: { $ref: '#/def/T' },
+        roofline: 'pitched'
+      }, {
+        end: { $ref: '#/def/U' },
+        roofline: 'pitched'
+      }]
+    }
+  }, {
     name: 'main house',
+    altitude: 4,
     height: 10,
     floors: [{
       surface: { material: 'wood' },
@@ -279,87 +363,6 @@ export default /* eslint-disable */
       }]
     },
     rooms: []
-  }, {
-    name: 'back addition',
-    height: 8,
-    roof: {
-      form: 'pitched',
-      pitch: { rise: 4, run: 12 },
-      eaves: 1,
-      surface: {
-        style: 'shingled',
-        material: 'asphalt composition'
-      }
-    },
-    walls: {
-      exterior: [{
-        begin: { $ref: '#/def/L' },
-        end: { $ref: '#/def/M' },
-        roofline: 'shed'
-      }, {
-        end: { $ref: '#/def/N' },
-        roofline: 'pitched',
-        outside: {
-          fixtures: [
-            { at: { x: 9.5, y: 6, from: 'left' }, copy: { $ref: 'sconce' } }
-          ]
-        },
-        doors: [{
-          name: 'back door',
-          motion: 'swinging',
-          handleSide: 'right',
-          outline: { shape: 'rectangle', size: { x: 2.666, y: 6.666 } },
-          at: { x: 11.772, from: 'left' },
-          casing: { width: 0.5 }
-        }],
-        windows: [{
-          name: 'kitchen sink window',
-          leafCount: { cols: 2 },
-          motion: 'casement',
-          outline: { shape: 'rectangle', size: { x: 3.750, y: 2.083 } },
-          at: { x: 3.167, y: 4.333, from: 'left' },
-          casing: { width: 0.5 }
-        }, {
-          name: 'laundry room windows',
-          leafCount: { cols: 3 },
-          motion: 'casement',
-          outline: { shape: 'rectangle', size: { x: 5.750, y: 4.083 } },
-          at: { x: 14.938, y: 2.583, from: 'left' },
-          casing: { width: 0.5 }
-        }, {
-          name: 'half-bath window',
-          motion: 'casement',
-          outline: { shape: 'rectangle', size: { x: 1.750, y: 2.083 } },
-          at: { x: 22.542, y: 4.500, from: 'left' },
-          casing: { width: 0.5 }
-        }]
-      }, {
-        end: { $ref: '#/def/O' },
-        roofline: 'shed'
-      }]
-    }
-  }, {
-    name: 'front porch',
-    height: 8,
-    roof: {
-      form: 'pitched',
-      pitch: { rise: 4, run: 12 },
-      eaves: 1,
-      surface: {
-        style: 'shingled',
-        material: 'asphalt composition'
-      }
-    },
-    walls: {
-      exterior: [{
-        begin: { $ref: '#/def/S' },
-        end: { $ref: '#/def/T' },
-        roofline: 'pitched'
-      }, {
-        end: { $ref: '#/def/U' },
-        roofline: 'pitched'
-      }]
-    }
   }, {
     name: 'attic',
     height: 1.5,
