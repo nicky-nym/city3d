@@ -5,9 +5,10 @@
  * For more information, please refer to <http://unlicense.org>
  */
 
-// import { Building } from './building.js'
-import { Cottage } from '../../content/buildings/cottage.js'
 import { StockCatalog } from '../../content/stock_catalog.js'
+import { Building } from './building.js'
+import { Facing } from '../core/facing.js'
+import { Ray } from '../core/ray.js'
 
 /**
  * Class representing a catalog of model specification objects.
@@ -91,8 +92,8 @@ class SpecReader {
     }
     if (specification.type === 'building.schema.json') {
       const resolvedSpec = SpecReader._resolveLocalRefDirectives(specification, specification) // eslint-disable-line no-unused-vars
-      // TODO: this Cottage() is just a placeholder until we are correctly generating actual models
-      return new Cottage({ at })
+      const placement = new Ray(Facing.NORTH, at)
+      return new Building({ spec: resolvedSpec, placement })
     }
   }
 

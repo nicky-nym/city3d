@@ -54,7 +54,7 @@ class Building extends Structure {
    * @param {string} [name] - a display name for this individual instance at a given placement
    * @param {Ray} [placement] - the location and orientation of this part
    * @param {object} [deprecatedSpec] - an old 2019 spec format that we're phasing out
-   * @param {object} [spec] - an specification object that is valid against building.schema.json.js
+   * @param {object} [spec] - a specification object that is valid against building.schema.json.js
    */
   constructor ({
     name,
@@ -62,7 +62,8 @@ class Building extends Structure {
     deprecatedSpec,
     spec
   } = {}) {
-    super({ name: name || deprecatedSpec.name, placement })
+    name = name || (spec && spec.name) || (deprecatedSpec && deprecatedSpec.name)
+    super({ name, placement })
     if (deprecatedSpec) {
       this._makeModelFromDeprecatedSpec(deprecatedSpec, placement)
     }
@@ -92,7 +93,7 @@ class Building extends Structure {
     }
     for (const storeySpec of storeys) {
       Model.mergeValueIfAbsent(storeySpec, priors)
-      const storey = new Storey({ storeySpec, placement })
+      const storey = new Storey({ spec: storeySpec, placement })
       this.add(storey)
       priors.altitude = storey.altitude() + storey.height()
       priors.height = storey.height()

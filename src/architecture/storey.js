@@ -82,7 +82,7 @@ class Storey extends Model {
    * @param {xy[]} outline - vertices of floor, expected to be in counterclockwise order
    * @param {Ray} placement - location and compass direction
    * @param {object} [deprecatedSpec] - an old 2019 spec format that we're phasing out
-   * @param {object} [spec] - an specification object that is valid against storey.schema.json.js
+   * @param {object} [spec] - a specification object that is valid against storey.schema.json.js
    *
    * @param {string} deprecatedSpec.use - e.g. Use.ROOM
    * @param {number} [deprecatedSpec.z=0] - z-offset of the wall
@@ -97,11 +97,12 @@ class Storey extends Model {
     name,
     outline,
     placement,
-    deprecatedSpec = {},
+    deprecatedSpec,
     spec
   } = {}) {
     // name = name || `${Use[use]}${outline.name ? ` (${outline.name})` : ''}`
-    super({ name: name || deprecatedSpec.use })
+    name = name || (spec && spec.name) || (deprecatedSpec && deprecatedSpec.use)
+    super({ name })
     if (deprecatedSpec) {
       this._makeModelFromDeprecatedSpec(deprecatedSpec, outline, placement)
     }
@@ -110,15 +111,29 @@ class Storey extends Model {
     }
   }
 
+  altitude () {
+    return this._altitude
+  }
+
+  height () {
+    return this._height
+  }
+
+  floorDepth () {
+    return this._depth
+  }
+
   /**
    * Generate Geometry objects corresponding to a specification.
    * @param {object} spec - an specification object that is valid against storey.schema.json.js
    * @param {Ray} [placement] - the location and orientation of this part
    */
   makeModelFromSpec (spec, placement) {
-    let { name, unit, altitude, height, repeat, floors, ceiling, walls, rooms, roof } = spec
+    let { name, unit, altitude = 0, height = 0, repeat, floors, ceiling, walls, rooms, roof } = spec
 
     this.name = name || this.name
+    this._altitude = altitude
+    this._height = height
 
     if (unit && unit !== 'feet') {
       // TODO: write this code!
@@ -126,25 +141,34 @@ class Storey extends Model {
     }
 
     const at = placement.add({ x: 0, y: 0, z: altitude }, placement.az)
-    repeat = repeat || 0
+    repeat = repeat || 1
     for (const i of countTo(repeat)) { // eslint-disable-line no-unused-vars
-      for (const floorSpec of floors) {
-        const floor = new Floor({ floorSpec, at })
-        this.add(floor)
+      if (floors) {
+        for (const floorSpec of floors) {
+          const floor = new Floor({ floorSpec, at })
+          this.add(floor)
+        }
       }
 
       let begin = { x: 0, y: 0 }
-      for (const wallSpec of walls) {
-        Model.mergeValueIfAbsent(wallSpec, { begin, height })
-        const wall = new Wall({ wallSpec, at })
+      let roofline = 'pitched'
+      const exterior = walls.exterior || []
+      const interior = walls.interior || []
+      const wallSpecs = [...exterior, ...interior]
+      for (const wallSpec of wallSpecs) {
+        Model.mergeValueIfAbsent(wallSpec, { begin, height, roofline })
+        const wall = new Wall({ spec: wallSpec /*, at */ })
         this.add(wall)
-        begin = wall.end
+        begin = wall.end()
+        roofline = wall.roofline()
       }
 
-      for (const roomSpec of rooms) { // eslint-disable-line no-unused-vars
-        // TODO: write this code!
-        // const room = new Room({ roomSpec, at })
-        // this.add(room)
+      if (rooms) {
+        for (const roomSpec of rooms) { // eslint-disable-line no-unused-vars
+          // TODO: write this code!
+          // const room = new Room({ roomSpec, at })
+          // this.add(room)
+        }
       }
     }
 
@@ -191,10 +215,6 @@ class Storey extends Model {
     if (wall !== 0) {
       _addWalls(this, xyPolygon, wall, z, openings, cap)
     }
-  }
-
-  floorDepth () {
-    return this._depth
   }
 }
 

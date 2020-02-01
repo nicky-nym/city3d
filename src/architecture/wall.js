@@ -1,14 +1,16 @@
 /** @file wall.js
- * @author Authored in 2019 at <https://github.com/nicky-nym/city3d>
+ * @author Authored in 2019, 2020 at <https://github.com/nicky-nym/city3d>
  * @license UNLICENSE
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
  */
 
+import { Door } from './door.js'
 import { Feature, FeatureInstance } from '../core/feature.js'
 import { Geometry } from '../core/geometry.js'
 import { METRIC } from './metric.js'
 import { Model } from './model.js'
+import { Window } from './window.js'
 import { xy, hypotenuse } from '../core/util.js'
 
 const ALMOST_WHITE = 0x999999
@@ -24,18 +26,83 @@ const DEFAULT_WALL_THICKNESS = 0.5
 class Wall extends Model {
   /**
    * Creates an instance of a wall between two points.
-   * @param {xy} v1 - first endpoint of the base of the wall, projected onto XY plane
-   * @param {xy} v2 - second endpoint of the base of the wall, projected onto XY plane
-   * @param {number} height - height of the wall
-   * @param {number} [z=0] - z-offset of the wall
-   * @param {number} [depth=DEFAULT_WALL_THICKNESS] - thickness of the wall
-   * @param {xy[][]} [openings] - array of openings, where each is specified by an array of xy values
    * @param {string} [name]
+   * @param {object} [deprecatedSpec] - an old 2019 spec format that we're phasing out
+   * @param {object} [spec] - a specification object that is valid against wall.schema.json.js
+   *
+   * @param {xy} deprecatedSpec.v1 - first endpoint of the base of the wall, projected onto XY plane
+   * @param {xy} deprecatedSpec.v2 - second endpoint of the base of the wall, projected onto XY plane
+   * @param {number} deprecatedSpec.height - height of the wall
+   * @param {number} [deprecatedSpec.z=0] - z-offset of the wall
+   * @param {number} [deprecatedSpec.depth=DEFAULT_WALL_THICKNESS] - thickness of the wall
+   * @param {xy[][]} [deprecatedSpec.openings] - array of openings, where each is specified by an array of xy values
    */
   constructor ({
     name = 'Wall',
-    deprecatedSpec = {} // v1, v2, height, z, depth, openings
+    deprecatedSpec, // v1, v2, height, z, depth, openings
+    spec
   } = {}) {
+    super({ name, layer: Wall.layer })
+    if (deprecatedSpec) {
+      this._makeModelFromDeprecatedSpec(deprecatedSpec)
+    }
+    if (spec) {
+      this.makeModelFromSpec(spec)
+    }
+  }
+
+  height () {
+    return this._height
+  }
+
+  end () {
+    return this._end
+  }
+
+  roofline () {
+    return this._roofline
+  }
+
+  /**
+   * Generate Geometry objects corresponding to a specification.
+   * @param {object} spec - an specification object that is valid against wall.schema.json.js
+   */
+  makeModelFromSpec (spec) {
+    let { name, unit, height, begin, end, roofline, doors, windows /* , outside, inside */ } = spec
+
+    this.name = name || this.name
+    this._begin = begin
+    this._end = end
+    this._roofline = roofline
+    this._height = height
+
+    if (unit && unit !== 'feet') {
+      // TODO: write this code!
+      throw new Error('TODO: need to convert values into feet')
+    }
+
+    const openings = []
+    doors = doors || []
+    for (const doorSpec of doors) {
+      const door = new Door({ doorSpec }) // eslint-disable-line no-unused-vars
+    }
+    windows = windows || []
+    for (const windowSpec of windows) {
+      const window = new Window({ windowSpec }) // eslint-disable-line no-unused-vars
+    }
+
+    const deprecatedSpec = {
+      v1: begin,
+      v2: end,
+      height: height,
+      z: 0,
+      depth: -DEFAULT_WALL_THICKNESS,
+      openings: openings
+    }
+    this._makeModelFromDeprecatedSpec(deprecatedSpec)
+  }
+
+  _makeModelFromDeprecatedSpec (deprecatedSpec) {
     const v1 = deprecatedSpec.v1
     const v2 = deprecatedSpec.v2
     const height = deprecatedSpec.height
@@ -43,7 +110,6 @@ class Wall extends Model {
     const depth = deprecatedSpec.depth || -DEFAULT_WALL_THICKNESS
     const openings = deprecatedSpec.openings || []
 
-    super({ name, layer: Wall.layer })
     this._height = height
     const dx = v2.x - v1.x
     const dy = v2.y - v1.y
@@ -57,10 +123,6 @@ class Wall extends Model {
     this.setValueForMetric(METRIC.WALL_AREA, abstractWall.area())
     this.setValueForMetric(METRIC.WINDOW_AREA, abstractWall.areaOfOpenings()) // TODO: separate out doors vs. windows
     // this.setValueForMetric(METRIC.DOOR_AREA, abstractWall.areaOfOpenings()) // TODO: separate out doors vs. windows
-  }
-
-  height () {
-    return this._height
   }
 }
 
