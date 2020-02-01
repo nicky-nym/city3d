@@ -205,7 +205,7 @@ export default /* eslint-disable */
           motion: 'swinging',
           handleSide: 'right',
           outline: { shape: 'rectangle', size: { x: 2 + 6 / 12, y: 6 + 8 / 12 } },
-          at: { x: 3, from: 'left' },
+          at: { x: 1.5, from: 'left' },
           casing: { width: 0.5 }
         }],
         inside: {
@@ -230,7 +230,7 @@ export default /* eslint-disable */
         end: { x: (22 + 4 / 12), y: 13 }
       }, {
         name: 'laundry room wall',
-        begin: { x: 21, y: (13 + 4 / 12) },
+        begin: { x: 0, y: (13 + 4 / 12) },
         end: { x: 10 + 6 / 12, y: (13 + 4 / 12) },
         doors: [{
           name: 'laundry room door',
@@ -248,7 +248,7 @@ export default /* eslint-disable */
         }
       }, {
         name: 'kitchen/laundry wall',
-        begin: { x: 7, y: 0 },
+        begin: { x: 7, y: 21 },
         end: { x: 7, y: (13 + 10 / 12) },
         outside: {
           fixtures: [

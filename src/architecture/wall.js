@@ -74,24 +74,33 @@ class Wall extends Model {
     let { name, unit, height, begin, end, roofline, doors, windows /* , outside, inside */ } = spec
 
     this.name = name || this.name
-    this._begin = begin
-    this._end = end
-    this._roofline = roofline
-    this._height = height
 
     if (unit && unit !== 'feet') {
       // TODO: write this code!
       throw new Error('TODO: need to convert values into feet')
     }
 
+    this._begin = begin
+    this._end = end
+    this._roofline = roofline
+    this._height = height
+
+    const dx = end.x - begin.x
+    const dy = end.y - begin.y
+    const length = hypotenuse(dx, dy)
+
     const openings = []
     doors = doors || []
     for (const doorSpec of doors) {
-      const door = new Door({ doorSpec }) // eslint-disable-line no-unused-vars
+      doorSpec.wallLength = length
+      const door = new Door({ spec: doorSpec })
+      openings.push(door.opening())
     }
     windows = windows || []
     for (const windowSpec of windows) {
-      const window = new Window({ windowSpec }) // eslint-disable-line no-unused-vars
+      windowSpec.wallLength = length
+      const window = new Window({ spec: windowSpec })
+      openings.push(window.opening())
     }
 
     const deprecatedSpec = {
