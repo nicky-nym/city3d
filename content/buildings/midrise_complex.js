@@ -8,6 +8,7 @@
 import { xy, xyz, xywh2rect, count, countTo, randomInt, hypotenuse } from '../../src/core/util.js'
 import { Byway } from '../../src/architecture/byway.js'
 import { Facing } from '../../src/core/facing.js'
+import { FeatureGroup } from '../../src/core/feature.js'
 import { Roof } from '../../src/architecture/roof.js'
 import { Storey } from '../../src/architecture/storey.js'
 import { Structure } from '../../src/architecture/structure.js'
@@ -265,6 +266,12 @@ function _getLandingPattern (numRowPairs, numColPairs) {
 class MidriseComplex extends Structure {
   constructor ({ name = 'Midrise Complex', placement, numRowPairs = 1, numColPairs = 1 } = {}) {
     super({ name, placement })
+
+    this.mediumGroup = new FeatureGroup(this.name)
+    this.lowGroup = new FeatureGroup(this.name)
+    this.addLevelOfDetail(this.mediumGroup, 1000)
+    this.addLevelOfDetail(this.lowGroup, 3000)
+
     this._addBuildings(numRowPairs, numColPairs)
   }
 
@@ -274,10 +281,13 @@ class MidriseComplex extends Structure {
       roofSpec = {
         flat: shape
       }
-      const roof = new Roof({ placement, deprecatedSpec: roofSpec })
-      this.add(roof)
+      this.add(new Roof({ placement, deprecatedSpec: roofSpec }))
+      this.mediumGroup.add(new Roof({ placement, deprecatedSpec: roofSpec }))
+      this.lowGroup.add(new Roof({ placement, deprecatedSpec: roofSpec }))
     } else {
       this.add(new Storey({ placement, outline: shape, deprecatedSpec: { use: Use.BARE } }))
+      this.mediumGroup.add(new Storey({ placement, outline: shape, deprecatedSpec: { use: Use.BARE } }))
+      this.lowGroup.add(new Storey({ placement, outline: shape, deprecatedSpec: { use: Use.BARE } }))
       let i = 0
       for (const corner of shape) {
         const next = i + 1 < shape.length ? i + 1 : 0
@@ -291,8 +301,9 @@ class MidriseComplex extends Structure {
         roofSpec = {
           custom: { vertices, indices }
         }
-        const roof = new Roof({ placement, deprecatedSpec: roofSpec })
-        this.add(roof)
+        this.add(new Roof({ placement, deprecatedSpec: roofSpec }))
+        this.mediumGroup.add(new Roof({ placement, deprecatedSpec: roofSpec }))
+        this.lowGroup.add(new Roof({ placement, deprecatedSpec: roofSpec }))
       }
     }
   }
@@ -304,6 +315,7 @@ class MidriseComplex extends Structure {
     // Landing
     placement = this.goto({ x: x, y: y, z: z }, Facing.NORTH)
     this.add(new Byway({ placement, outline: OCTAGONAL_LANDING, deprecatedSpec: { use: Use.WALKWAY } }))
+    this.mediumGroup.add(new Byway({ placement, outline: OCTAGONAL_LANDING, deprecatedSpec: { use: Use.WALKWAY } }))
     if (z % STOREY_HEIGHT === 0) {
       this.add(new Storey({ placement, outline: DIAMOND_CENTER, deprecatedSpec: { use: Use.BARE, wall: 3 } }))
     }
@@ -312,6 +324,7 @@ class MidriseComplex extends Structure {
     for (const bearing of rampBearings) {
       placement = this.goto({ x: x, y: y, z: z }, bearing)
       this.add(new Byway({ placement, outline: RAMP_CORNERS, deprecatedSpec: { use: Use.WALKWAY, incline: RAMP_RISE_HEIGHT } }))
+      this.mediumGroup.add(new Byway({ placement, outline: RAMP_CORNERS, deprecatedSpec: { use: Use.WALKWAY, incline: RAMP_RISE_HEIGHT } }))
     }
 
     // Floors, Walls, and Roof
@@ -332,6 +345,9 @@ class MidriseComplex extends Structure {
           placement = this.goto({ x: x, y: y, z: altitude }, bearing)
           this.add(new Storey({ placement, outline: APARTMENT, deprecatedSpec: { use: Use.ROOM, wall: STOREY_HEIGHT, openings: APARTMENT_WINDOWS } }))
         }
+        placement = this.goto({ x: x, y: y, z: z }, bearing)
+        this.mediumGroup.add(this.makePlaceholder(placement, Use.WALL, APARTMENT, ROOFLINE - z))
+        this.lowGroup.add(this.makePlaceholder(placement, Use.WALL, APARTMENT, ROOFLINE - z))
 
         // roof
         const midpoint = (APARTMENT_WIDTH + D2) / 2
