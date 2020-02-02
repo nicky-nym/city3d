@@ -144,6 +144,8 @@ class Storey extends Model {
     const at = placement.add({ x: 0, y: 0, z: altitude }, placement.az)
     repeat = repeat || 1
     for (const i of countTo(repeat)) { // eslint-disable-line no-unused-vars
+      this.add(new Roof({ roof, placement }))
+
       if (floors) {
         for (const floorSpec of floors) {
           const floor = new Floor({ spec: floorSpec, placement: at })
@@ -152,16 +154,19 @@ class Storey extends Model {
       }
 
       let begin = { x: 0, y: 0 }
-      let roofline = 'pitched'
+      let roofline = 'pitched' // TODO: use enum value from Wall
+      const pitch = roof && roof.pitch
       const exterior = walls.exterior || []
       const interior = walls.interior || []
       const wallSpecs = [...exterior, ...interior]
+      let firstWall = true
       for (const wallSpec of wallSpecs) {
-        Model.mergeValueIfAbsent(wallSpec, { begin, height, roofline })
+        Model.mergeValueIfAbsent(wallSpec, { begin, height, roofline, pitch, firstWall })
         const wall = new Wall({ spec: wallSpec, placement: at })
         this.add(wall)
         begin = wall.end()
         roofline = wall.roofline()
+        firstWall = false
       }
 
       if (rooms) {
@@ -172,8 +177,6 @@ class Storey extends Model {
         }
       }
     }
-
-    this.add(new Roof({ roof, placement }))
 
     if (ceiling) {
       // TODO: write this code!

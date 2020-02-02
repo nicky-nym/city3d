@@ -10,11 +10,22 @@ import { Feature, FeatureInstance } from '../core/feature.js'
 import { Geometry } from '../core/geometry.js'
 import { METRIC } from './metric.js'
 import { Model } from './model.js'
+import { Pitch } from '../core/pitch.js'
 import { Window } from './window.js'
 import { xy, hypotenuse } from '../core/util.js'
 
 const ALMOST_WHITE = 0x999999
 const DEFAULT_WALL_THICKNESS = 0.5
+
+/**
+ * The shape of this section of wall as it meets the roof.
+ */
+const ROOFLINE = {
+  // NOTE: these values must exactly match the values in wall.schema.json.js
+  GABLED: 'gabled',
+  PITCHED: 'pitched',
+  SHED: 'shed'
+}
 
 /**
 * Wall is a class to represent a single flat wall on a single storey of a building.
@@ -71,7 +82,7 @@ class Wall extends Model {
    * @param {Ray} placement - location and compass direction
    */
   makeModelFromSpec (spec, placement) {
-    let { name, unit, height, begin, end, roofline, doors, windows /* , outside, inside */ } = spec
+    let { name, unit, height, begin, end, roofline, pitch, firstWall, doors, windows /* , outside, inside */ } = spec
 
     this.name = name || this.name
 
@@ -83,7 +94,9 @@ class Wall extends Model {
     this._begin = begin
     this._end = end
     this._roofline = roofline
+    this._pitch = pitch
     this._height = height
+    this._firstWall = firstWall
 
     const dx = end.x - begin.x
     const dy = end.y - begin.y
@@ -123,18 +136,47 @@ class Wall extends Model {
     const openings = deprecatedSpec.openings || []
 
     this._height = height
+    let peakHeight = 0
     const dx = v2.x - v1.x
     const dy = v2.y - v1.y
     const length = hypotenuse(dx, dy)
-    const xyPolygon = new Geometry.XYPolygon([xy(0, 0), xy(0, height), xy(length, height), xy(length, 0)])
-    const zRotation = Math.atan2(dy, dx)
-    const abstractWall = new Geometry.ThickPolygon(xyPolygon, { incline: height, zRotation, depth, openings })
-    const concreteWall = new FeatureInstance(abstractWall, { ...v1, z }, ALMOST_WHITE)
-    this.add(concreteWall)
+    let xyPolygon = null
 
-    this.setValueForMetric(METRIC.WALL_AREA, abstractWall.area())
-    this.setValueForMetric(METRIC.WINDOW_AREA, abstractWall.areaOfOpenings()) // TODO: separate out doors vs. windows
-    // this.setValueForMetric(METRIC.DOOR_AREA, abstractWall.areaOfOpenings()) // TODO: separate out doors vs. windows
+    if (!this._roofline || this._roofline === ROOFLINE.PITCHED) {
+      if (height > 0) {
+        xyPolygon = new Geometry.XYPolygon([xy(0, 0), xy(0, height), xy(length, height), xy(length, 0)])
+      }
+    } else if (this._roofline === ROOFLINE.GABLED) {
+      const midLength = length / 2
+      const pitch = new Pitch(this._pitch.rise, ':', this._pitch.run)
+      peakHeight = height + pitch.slope() * midLength
+      if (height > 0) {
+        xyPolygon = new Geometry.XYPolygon([xy(0, 0), xy(0, height), xy(midLength, peakHeight), xy(length, height), xy(length, 0)])
+      } else {
+        xyPolygon = new Geometry.XYPolygon([xy(0, 0), xy(midLength, peakHeight), xy(length, 0)])
+      }
+    } else if (this._roofline === ROOFLINE.SHED) {
+      const pitch = new Pitch(this._pitch.rise, ':', this._pitch.run)
+      peakHeight = height + pitch.slope() * length
+      if (this._firstWall) {
+        xyPolygon = new Geometry.XYPolygon([xy(0, 0), xy(0, peakHeight), xy(length, height), xy(length, 0)])
+      } else {
+        xyPolygon = new Geometry.XYPolygon([xy(0, 0), xy(0, height), xy(length, peakHeight), xy(length, 0)])
+      }
+    } else {
+      throw new Error('bad roofline type in spec for new Wall()')
+    }
+    if (xyPolygon) {
+      const incline = height
+      const zRotation = Math.atan2(dy, dx)
+      const abstractWall = new Geometry.ThickPolygon(xyPolygon, { incline, zRotation, depth, openings })
+      const concreteWall = new FeatureInstance(abstractWall, { ...v1, z }, ALMOST_WHITE)
+      this.add(concreteWall)
+
+      this.setValueForMetric(METRIC.WALL_AREA, abstractWall.area())
+      this.setValueForMetric(METRIC.WINDOW_AREA, abstractWall.areaOfOpenings()) // TODO: separate out doors vs. windows
+      // this.setValueForMetric(METRIC.DOOR_AREA, abstractWall.areaOfOpenings()) // TODO: separate out doors vs. windows
+    }
   }
 }
 

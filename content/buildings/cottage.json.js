@@ -261,7 +261,7 @@ export default /* eslint-disable */
     rooms: [{}]
   }, {
     name: 'attic',
-    height: 0,
+    height: 2 / 12,
     floors: [{
       outline: { "$ref": "#/def/RECTANGLE" },
       surface: { material: 'wood' }
