@@ -15,6 +15,7 @@ describe('SCHEMA', function () {
     const ajv = new Ajv()
     ajv.addSchema(SCHEMA.XY, SCHEMA.XY.$id)
     ajv.addSchema(SCHEMA.PITCH, SCHEMA.PITCH.$id)
+    ajv.addSchema(SCHEMA.DEFINITIONS, SCHEMA.DEFINITIONS.$id)
     ajv.addSchema(SCHEMA.OUTLINE, SCHEMA.OUTLINE.$id)
     const validator = ajv.compile(SCHEMA.OUTLINE)
 

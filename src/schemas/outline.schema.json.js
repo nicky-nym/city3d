@@ -51,8 +51,8 @@ export default /* eslint-disable */
       "description": "for irregular polygons, the list of corner points",
       "type": "array",
       "minItems": 3,
-      "uniqueItems": true,
-      "items": { "$ref": "xy.schema.json" }
+      "uniqueItems": false,
+      "items": { "$ref": "definitions.json#/def/xyOrRef" }
     },
     "size": { 
       "description": "for rectangles (or regular polygons), the size of the bounding box",

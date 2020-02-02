@@ -58,7 +58,7 @@ export default /* eslint-disable */
         }
       }]
     },
-    "beginOrEnd": {
+    "xyOrRef": {
       "anyOf": [{
         "type": "object",
         "required": [ "$ref" ],

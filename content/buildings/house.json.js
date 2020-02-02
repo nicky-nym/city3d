@@ -126,7 +126,7 @@ export default /* eslint-disable */
           motion: 'swinging',
           handleSide: 'right',
           outline: { shape: 'rectangle', size: { x: 2.666, y: 6.666 } },
-          at: { x: 11.772, from: 'left' },
+          at: { x: 13.105, from: 'left' },
           casing: { width: 0.5 }
         }],
         windows: [{
@@ -134,20 +134,20 @@ export default /* eslint-disable */
           leafCount: { cols: 2 },
           motion: 'casement',
           outline: { shape: 'rectangle', size: { x: 3.750, y: 2.083 } },
-          at: { x: 3.167, y: 4.333, from: 'left' },
+          at: { x: 5.042, y: 5.3745, from: 'left' },
           casing: { width: 0.5 }
         }, {
           name: 'laundry room windows',
           leafCount: { cols: 3 },
           motion: 'casement',
           outline: { shape: 'rectangle', size: { x: 5.750, y: 4.083 } },
-          at: { x: 14.938, y: 2.583, from: 'left' },
+          at: { x: 17.813, y: 4.6245, from: 'left' },
           casing: { width: 0.5 }
         }, {
           name: 'half-bath window',
           motion: 'casement',
           outline: { shape: 'rectangle', size: { x: 1.750, y: 2.083 } },
-          at: { x: 22.542, y: 4.500, from: 'left' },
+          at: { x: 23.417, y: 5.5415, from: 'left' },
           casing: { width: 0.5 }
         }]
       }, {
@@ -156,9 +156,33 @@ export default /* eslint-disable */
       }]
     }
   }, {
+    name: 'front porch skirt',
+    altitude: 0,
+    height: 4,
+    walls: {
+      exterior: [{
+        begin: { $ref: '#/def/S' },
+        end: { $ref: '#/def/T' }
+      }, {
+        end: { $ref: '#/def/U' }
+      }]
+    }
+  }, {
     name: 'front porch',
-    altitude: 4,
     height: 8,
+    floors: [{
+      surface: { material: 'wood' },
+      outline: {
+        shape: 'polygon',
+        corners: [
+          { $ref: '#/def/S' },
+          { $ref: '#/def/T' },
+          { $ref: '#/def/U' },
+          { $ref: '#/def/B' },
+          { $ref: '#/def/S' }
+        ]
+      }
+    }],
     roof: {
       form: 'pitched',
       pitch: { rise: 4, run: 12 },
@@ -172,10 +196,25 @@ export default /* eslint-disable */
       exterior: [{
         begin: { $ref: '#/def/S' },
         end: { $ref: '#/def/T' },
-        roofline: 'pitched'
+        roofline: 'pitched',
+        windows: [{
+          outline: { shape: 'rectangle', size: { x: 4.6, y: 4.833 } },
+          at: { x: 0, y: 4.9165, from: 'center' }
+        }]
       }, {
         end: { $ref: '#/def/U' },
-        roofline: 'pitched'
+        roofline: 'pitched',
+        doors: [{
+          outline: { shape: 'rectangle', size: { x: 4.6, y: 7.333 } },
+          at: { x: 13.9, from: 'left' }
+        }],
+        windows: [{
+          outline: { shape: 'rectangle', size: { x: 4.6, y: 4.833 } },
+          at: { x: 3.3, y: 4.9165, from: 'left' }
+        }, {
+          outline: { shape: 'rectangle', size: { x: 4.6, y: 4.833 } },
+          at: { x: 8.6, y: 4.9165, from: 'left' }
+        }]
       }]
     }
   }, {
@@ -187,20 +226,21 @@ export default /* eslint-disable */
       outline: {
         shape: 'polygon',
         corners: [
-          { begin: { $ref: '#/def/A' }, end: { $ref: '#/def/B' } },
-          { end: { $ref: '#/def/C' } },
-          { end: { $ref: '#/def/E' } },
-          { end: { $ref: '#/def/F' } },
-          { end: { $ref: '#/def/H' } },
-          { end: { $ref: '#/def/I' } },
-          { end: { $ref: '#/def/J' } },
-          { end: { $ref: '#/def/Z' } },
-          { end: { $ref: '#/def/Y' } },
-          { end: { $ref: '#/def/W' } },
-          { end: { $ref: '#/def/V' } },
-          { end: { $ref: '#/def/Q' } },
-          { end: { $ref: '#/def/R' } },
-          { end: { $ref: '#/def/A' } }
+          { $ref: '#/def/A' },
+          { $ref: '#/def/B' },
+          { $ref: '#/def/C' },
+          { $ref: '#/def/E' },
+          { $ref: '#/def/F' },
+          { $ref: '#/def/H' },
+          { $ref: '#/def/I' },
+          { $ref: '#/def/J' },
+          { $ref: '#/def/Z' },
+          { $ref: '#/def/Y' },
+          { $ref: '#/def/W' },
+          { $ref: '#/def/V' },
+          { $ref: '#/def/Q' },
+          { $ref: '#/def/R' },
+          { $ref: '#/def/A' }
         ]
       }
     }, {
@@ -208,17 +248,18 @@ export default /* eslint-disable */
       outline: {
         shape: 'polygon',
         corners: [
-          { begin: { $ref: '#/def/Z' }, end: { $ref: '#/def/J' } },
-          { end: { $ref: '#/def/K' } },
-          { end: { $ref: '#/def/L' } },
-          { end: { $ref: '#/def/M' } },
-          { end: { $ref: '#/def/N' } },
-          { end: { $ref: '#/def/O' } },
-          { end: { $ref: '#/def/P' } },
-          { end: { $ref: '#/def/V' } },
-          { end: { $ref: '#/def/W' } },
-          { end: { $ref: '#/def/X' } },
-          { end: { $ref: '#/def/Z' } }
+          { $ref: '#/def/Z' },
+          { $ref: '#/def/J' },
+          { $ref: '#/def/K' },
+          { $ref: '#/def/L' },
+          { $ref: '#/def/M' },
+          { $ref: '#/def/N' },
+          { $ref: '#/def/O' },
+          { $ref: '#/def/P' },
+          { $ref: '#/def/V' },
+          { $ref: '#/def/W' },
+          { $ref: '#/def/X' },
+          { $ref: '#/def/Z' }
         ]
       }
     }],
@@ -248,13 +289,13 @@ export default /* eslint-disable */
           name: 'office porch window, left',
           motion: 'hung',
           outline: { shape: 'rectangle', size: { x: 2.250, y: 6.400 } },
-          at: { x: 5.25, y: 2.0, from: 'left' },
+          at: { x: 6.375, y: 5.2, from: 'left' },
           casing: { width: 0.5 }
         }, {
           name: 'office porch window, right',
           motion: 'hung',
           outline: { shape: 'rectangle', size: { x: 2.250, y: 6.400 } },
-          at: { x: 8.167, y: 2.0, from: 'left' },
+          at: { x: 9.292, y: 5.2, from: 'left' },
           casing: { width: 0.5 }
         }],
         doors: [{
@@ -262,7 +303,7 @@ export default /* eslint-disable */
           motion: 'swinging',
           handleSide: 'right',
           outline: { shape: 'rectangle', size: { x: 3, y: 7 } },
-          at: { x: 14.125, from: 'left' },
+          at: { x: 15.625, from: 'left' },
           casing: { width: 0.5 }
         }]
       }, {
@@ -279,7 +320,7 @@ export default /* eslint-disable */
           name: 'bay window, southeast',
           motion: 'hung',
           outline: { shape: 'rectangle', size: { x: 2.750, y: 6.400 } },
-          at: { x: 1, y: 2.0, from: 'left' },
+          at: { x: 2.375, y: 5.2, from: 'left' },
           casing: { width: 0.5 }
         }]
       }, {
@@ -288,7 +329,7 @@ export default /* eslint-disable */
           name: 'bay window, front',
           motion: 'hung',
           outline: { shape: 'rectangle', size: { x: 4.333, y: 6.400 } },
-          at: { x: 1.608, y: 2.0, from: 'left' },
+          at: { x: 3.7745, y: 5.2, from: 'left' },
           casing: { width: 0.5 }
         }]
       }, {
@@ -297,7 +338,7 @@ export default /* eslint-disable */
           name: 'bay window, northeast',
           motion: 'hung',
           outline: { shape: 'rectangle', size: { x: 2.750, y: 6.400 } },
-          at: { x: 1, y: 2.0, from: 'left' },
+          at: { x: 2.375, y: 5.2, from: 'left' },
           casing: { width: 0.5 }
         }]
       }, {
@@ -306,13 +347,13 @@ export default /* eslint-disable */
           name: 'dining room window, left',
           motion: 'hung',
           outline: { shape: 'rectangle', size: { x: 2.250, y: 6.400 } },
-          at: { x: 15.625, y: 2.0, from: 'left' },
+          at: { x: 16.75, y: 5.2, from: 'left' },
           casing: { width: 0.5 }
         }, {
           name: 'dining room window, right',
           motion: 'hung',
           outline: { shape: 'rectangle', size: { x: 2.250, y: 6.400 } },
-          at: { x: 18.542, y: 2.0, from: 'left' },
+          at: { x: 19.667, y: 5.2, from: 'left' },
           casing: { width: 0.5 }
         }]
       }, {
@@ -324,13 +365,20 @@ export default /* eslint-disable */
           leafCount: { cols: 3 },
           motion: 'casement',
           outline: { shape: 'rectangle', size: { x: 5.750, y: 4.083 } },
-          at: { x: 3.751, y: 2.583, from: 'left' },
+          at: { x: 6.626, y: 4.6245, from: 'left' },
           casing: { width: 0.5 }
         }]
       }, {
-        end: { $ref: '#/def/L' },
+        end: { $ref: '#/def/L' }
       }, {
         end: { $ref: '#/def/O' },
+        doors: [{
+          outline: { shape: 'rectangle', size: { x: 11, y: 8 } },
+          at: { x: 6, from: 'left' },
+        }, {
+          outline: { shape: 'rectangle', size: { x: 2.333, y: 6.666 } },
+          at: { x: 13.3325, from: 'left' },
+        }]
       }, {
         end: { $ref: '#/def/P' },
       }, {
@@ -340,13 +388,13 @@ export default /* eslint-disable */
           leafCount: { cols: 2 },
           motion: 'casement',
           outline: { shape: 'rectangle', size: { x: 2.375, y: 3.083 } },
-          at: { x: 1.542, y: 4.166, from: 'left' },
+          at: { x: 2.7295, y: 5.7075, from: 'left' },
           casing: { width: 0.5 }
         }, {
           name: 'bedroom window',
           motion: 'hung',
           outline: { shape: 'rectangle', size: { x: 3.666, y: 6.250 } },
-          at: { x: 9.084, y: 2.166, from: 'left' },
+          at: { x: 10.917, y: 5.291, from: 'left' },
           casing: { width: 0.5 }
         }]
       }, {
@@ -357,7 +405,7 @@ export default /* eslint-disable */
           name: 'office window',
           motion: 'hung',
           outline: { shape: 'rectangle', size: { x: 2.250, y: 6.400 } },
-          at: { x: 6.209, y: 2.0, from: 'left' },
+          at: { x: 7.334, y: 5.2, from: 'left' },
           casing: { width: 0.5 }
         }]
       }]
@@ -371,23 +419,24 @@ export default /* eslint-disable */
       outline: {
         shape: 'polygon',
         corners: [
-          { begin: { $ref: '#/def/A' }, end: { $ref: '#/def/B' } },
-          { end: { $ref: '#/def/C' } },
-          { end: { $ref: '#/def/D' } },
-          { end: { $ref: '#/def/E' } },
-          { end: { $ref: '#/def/F' } },
-          { end: { $ref: '#/def/G' } },
-          { end: { $ref: '#/def/H' } },
-          { end: { $ref: '#/def/I' } },
-          { end: { $ref: '#/def/J' } },
-          { end: { $ref: '#/def/K' } },
-          { end: { $ref: '#/def/L' } },
-          { end: { $ref: '#/def/O' } },
-          { end: { $ref: '#/def/P' } },
-          { end: { $ref: '#/def/V' } },
-          { end: { $ref: '#/def/Q' } },
-          { end: { $ref: '#/def/R' } },
-          { end: { $ref: '#/def/A' } }
+          { $ref: '#/def/A' },
+          { $ref: '#/def/B' },
+          { $ref: '#/def/C' },
+          { $ref: '#/def/D' },
+          { $ref: '#/def/E' },
+          { $ref: '#/def/F' },
+          { $ref: '#/def/G' },
+          { $ref: '#/def/H' },
+          { $ref: '#/def/I' },
+          { $ref: '#/def/J' },
+          { $ref: '#/def/K' },
+          { $ref: '#/def/L' },
+          { $ref: '#/def/O' },
+          { $ref: '#/def/P' },
+          { $ref: '#/def/V' },
+          { $ref: '#/def/Q' },
+          { $ref: '#/def/R' },
+          { $ref: '#/def/A' }
         ]
       }
     }],
@@ -449,6 +498,5 @@ export default /* eslint-disable */
         end: { $ref: '#/def/a' }
       }]
     }
-   }]
-
+  }]
 }

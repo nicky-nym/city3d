@@ -58,8 +58,8 @@ export default /* eslint-disable */
     "comments": { "$ref": "definitions.json#/def/comments" },
     "unit": { "$ref": "definitions.json#/def/unit" },
     "height": { "$ref": "definitions.json#/def/number" },
-    "begin": { "$ref": "definitions.json#/def/beginOrEnd" },
-    "end": { "$ref": "definitions.json#/def/beginOrEnd" },
+    "begin": { "$ref": "definitions.json#/def/xyOrRef" },
+    "end": { "$ref": "definitions.json#/def/xyOrRef" },
     "roofline": {
       "enum": ["gabled", "pitched", "shed"]
     },
