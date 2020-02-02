@@ -62,7 +62,7 @@ class SpecReader {
     if (Array.isArray(node)) {
       return node.map((itemInList, i) => {
         if (SpecReader._isLocalRefNode(itemInList)) {
-          node[i] = SpecReader._getValueOfRef(root, itemInList.$ref)
+          return SpecReader._getValueOfRef(root, itemInList.$ref)
         } else {
           return SpecReader._resolveLocalRefDirectives(root, itemInList)
         }
@@ -91,9 +91,9 @@ class SpecReader {
       throw new Error('Unrecognised "context" string in spec object')
     }
     if (specification.type === 'building.schema.json') {
-      const resolvedSpec = SpecReader._resolveLocalRefDirectives(specification, specification) // eslint-disable-line no-unused-vars
+      specification = SpecReader._resolveLocalRefDirectives(specification, specification)
       const placement = new Ray(Facing.NORTH, at)
-      return new Building({ spec: resolvedSpec, placement })
+      return new Building({ spec: specification, placement })
     }
   }
 

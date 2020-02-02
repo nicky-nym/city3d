@@ -5,7 +5,8 @@
  * For more information, please refer to <http://unlicense.org>
  */
 
-import { Feature, FeatureInstance } from '../core/feature.js'
+import { FeatureInstance } from '../core/feature.js'
+import { Floor } from './floor.js'
 import { Geometry } from '../core/geometry.js'
 import { METRIC } from './metric.js'
 import { Model } from './model.js'
@@ -145,7 +146,7 @@ class Storey extends Model {
     for (const i of countTo(repeat)) { // eslint-disable-line no-unused-vars
       if (floors) {
         for (const floorSpec of floors) {
-          const floor = new Floor({ floorSpec, at })
+          const floor = new Floor({ spec: floorSpec, placement: at })
           this.add(floor)
         }
       }
@@ -217,9 +218,5 @@ class Storey extends Model {
     }
   }
 }
-
-// This can stay here unless and until another class needs it.
-class Floor {}
-Floor.layer = Feature.registerLayer(Floor, 'floors & ramps', { category: 'Buildings' })
 
 export { Storey }

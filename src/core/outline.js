@@ -28,10 +28,10 @@ class Outline {
   /**
    * Creates a new instance with a given shape.
    * @param {object} outlineSpec - an outline spec value, as defined in outline.schema.json.js
-   * @param {number} [offset] - an optional extra border distance to add (or subtract) around the whole outline
+   * @param {number} [inset] - an optional inner border distance to subtract around the whole outline
    */
-  constructor (outlineSpec, offset) {
-    this._corners = Outline.cornersFromSpec(outlineSpec, offset)
+  constructor (outlineSpec, inset) {
+    this._corners = Outline.cornersFromSpec(outlineSpec, inset)
   }
 
   corners () {
@@ -45,12 +45,12 @@ class Outline {
    * @example:
    * outline.cornersFromSpec({ shape: 'polygon', corners: [xy(0, 0), xy(5, 10), xy(-5, 10) })
    * @param {object} spec - shape specification object as defined in outline.schema.json.js
-   * @param {number} [offset] - an optional extra border distance to add (or subtract) around the whole outline
+   * @param {number} [inset] - an optional inner border distance to subtract around the whole outline
    * @returns {array} an array of {x, y} corners
    */
-  static cornersFromSpec (spec, offset) {
-    if (offset) {
-      throw new Error('TODO: offset Outline code has not yet been written')
+  static cornersFromSpec (spec, inset) {
+    if (inset) {
+      throw new Error('TODO: inset Outline code has not yet been written')
     }
     let corners
     if (spec.shape === SHAPE.RECTANGLE) {
@@ -68,7 +68,7 @@ class Outline {
         corners = rectangleOfSize(spec.size)
       }
     } else if (spec.shape === SHAPE.POLYGON) {
-      corners = spec.shape.corners
+      corners = spec.corners
     } else {
       throw new Error('bad Outline shape name: ' + spec.shape)
     }
