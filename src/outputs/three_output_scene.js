@@ -267,14 +267,14 @@ class ThreeOutputScene extends THREE.Scene {
       const axis = new THREE.Vector3().crossVectors(edge, new THREE.Vector3(0, 0, 1))
       axis.normalize()
       const R = new THREE.Matrix4().makeRotationAxis(axis, angle)
-      mesh.applyMatrix(R)
+      mesh.applyMatrix4(R)
     }
     if (thickPolygon.zRotation) {
       const R2 = new THREE.Matrix4().makeRotationZ(thickPolygon.zRotation)
-      mesh.applyMatrix(R2)
+      mesh.applyMatrix4(R2)
     }
     const T = new THREE.Matrix4().setPosition(p0.x, p0.y, p0.z)
-    mesh.applyMatrix(T)
+    mesh.applyMatrix4(T)
     mesh.castShadow = true
     return mesh
   }
