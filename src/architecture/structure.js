@@ -48,7 +48,7 @@ class Structure extends Model {
   } = {}) {
     super({ name })
     placement = placement || new Ray()
-    this.offset = placement.xyz
+    this.offset = { ...xyz(0, 0, 0), ...placement.xyz }
     placement.xyz = xyz(0, 0, 0)
     this._placement = Object.freeze(placement || new Ray())
   }
