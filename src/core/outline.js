@@ -48,10 +48,7 @@ class Outline {
    * @param {number} [inset] - an optional inner border distance to subtract around the whole outline
    * @returns {array} an array of {x, y} corners
    */
-  static cornersFromSpec (spec, inset) {
-    if (inset) {
-      throw new Error('TODO: inset Outline code has not yet been written')
-    }
+  static cornersFromSpec (spec, inset = 0) {
     let corners
     if (spec.shape === SHAPE.RECTANGLE) {
       if (spec.top) {
@@ -71,6 +68,38 @@ class Outline {
       corners = spec.corners
     } else {
       throw new Error('bad Outline shape name: ' + spec.shape)
+    }
+    if (inset) {
+      const newCorners = []
+      let p0 = corners[corners.length - 1]
+      let p1 = null
+      let p2 = null // eslint-disable-line no-unused-vars
+      for (let i = 0; i < corners.length; i++) {
+        p1 = corners[i]
+        p2 = i === (corners.length - 1) ? corners[0] : corners[i + 1]
+
+        const p0p1 = {
+          dx: p1.x - p0.x,
+          dy: p1.y - p0.y
+        }
+        const p1p2 = {
+          dx: p2.x - p1.x,
+          dy: p2.y - p1.y
+        }
+        p1p2.dx = p1p2.dx && (p1p2.dx / Math.abs(p1p2.dx))
+        p1p2.dy = p1p2.dy && (p1p2.dy / Math.abs(p1p2.dy))
+        p0p1.dx = p0p1.dx && (p0p1.dx / Math.abs(p0p1.dx))
+        p0p1.dy = p0p1.dy && (p0p1.dy / Math.abs(p0p1.dy))
+
+        const newCorner = {
+          x: p1.x + (p1p2.dx - p0p1.dx) * inset,
+          y: p1.y + (+p1p2.dy - p0p1.dy) * inset
+        }
+        newCorners.push(newCorner)
+        p0 = p1
+      }
+
+      corners = newCorners
     }
     return corners
   }
