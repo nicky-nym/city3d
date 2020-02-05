@@ -144,8 +144,6 @@ class Storey extends Model {
     const at = placement.add({ x: 0, y: 0, z: altitude }, placement.az)
     repeat = repeat || 1
     for (const i of countTo(repeat)) { // eslint-disable-line no-unused-vars
-      this.add(new Roof({ roof, placement }))
-
       if (floors) {
         for (const floorSpec of floors) {
           const floor = new Floor({ spec: floorSpec, placement: at })
@@ -160,14 +158,19 @@ class Storey extends Model {
       const interior = walls.interior || []
       const wallSpecs = [...exterior, ...interior]
       let firstWall = true
+      const allWalls = []
       for (const wallSpec of wallSpecs) {
         Model.mergeValueIfAbsent(wallSpec, { begin, height, roofline, pitch, firstWall })
         const wall = new Wall({ spec: wallSpec, placement: at })
         this.add(wall)
+        allWalls.push(wall)
         begin = wall.end()
         roofline = wall.roofline()
         firstWall = false
       }
+
+      at.xyz.z += height
+      this.add(new Roof({ spec: roof, placement: at, walls: allWalls }))
 
       if (rooms) {
         for (const roomSpec of rooms) { // eslint-disable-line no-unused-vars

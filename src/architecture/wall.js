@@ -64,14 +64,55 @@ class Wall extends Model {
     }
   }
 
+  /**
+   * Return a number for the height of the wall, in feet (or some other unit).
+   * @return {number} - the height of the wall, in feet (or some other unit)
+   */
   height () {
     return this._height
   }
 
+  /**
+   * Return a number for the length of the wall, in feet (or some other unit).
+   * @return {number} - the length of the wall, in feet (or some other unit)
+   */
+  length () {
+    const dx = this._end.x - this._begin.x
+    const dy = this._end.y - this._begin.y
+    const length = hypotenuse(dx, dy)
+    return length
+  }
+
+  /**
+   * Return the {x:, y:} coordinate for the left corner of the wall (as viewed from the outside/front).
+   * @return {object} - an {x:, y:} coordinate
+   */
+  begin () {
+    return this._begin
+  }
+
+  /**
+   * Return the {x:, y:} coordinate for the right corner of the wall (as viewed from the outside/front).
+   * @return {object} - an {x:, y:} coordinate
+   */
   end () {
     return this._end
   }
 
+  /**
+   * Return the {x:, y:} coordinate for the midpoint of the wall.
+   * @return {object} - an {x:, y:} coordinate
+   */
+  midpoint () {
+    const x = ((this._end.x - this._begin.x) / 2) + this._begin.x
+    const y = ((this._end.y - this._begin.y) / 2) + this._begin.y
+    return { x, y }
+  }
+
+  /**
+   * Return one of: ROOFLINE.GABLED, ROOFLINE.PITCHED, or ROOFLINE.SHED
+   * @return {ROOFLINE} - a type of roofline for this wall
+   */
   roofline () {
     return this._roofline
   }
@@ -98,9 +139,7 @@ class Wall extends Model {
     this._height = height
     this._firstWall = firstWall
 
-    const dx = end.x - begin.x
-    const dy = end.y - begin.y
-    const length = hypotenuse(dx, dy)
+    const length = this.length()
 
     const openings = []
     doors = doors || []
