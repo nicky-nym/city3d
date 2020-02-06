@@ -21,14 +21,14 @@ export default /* eslint-disable */
     '  R-Q                      |       ',
     '  |                        |       ',
     '  |                        |       ',
-    '  |                        |       ',
-    '  |                        |       ',
+    '  |      e h               |       ',
+    '  |      f-g               |       ',
     '  AS-------------B         |       ',
     '   |             |         |       ',
     '   T-------------C         H       ',
     '                  \       /        ',
     '                 D E-----F G       ',
-    '                                   ',
+    '-y                               +y',
   ],
   anchorPoint: { x: 39.875, y: 30.875, z: 0 },
   def: {
@@ -61,7 +61,12 @@ export default /* eslint-disable */
     a: { x: -44.333, y: 35 },
     b: { x: -44.333, y: 35 + 2.95 },
     c: { x: -44.333 - 2.1, y: 35 + 2.95 },
-    d: { x: -44.333 - 2.1, y: 35 }
+    d: { x: -44.333 - 2.1, y: 35 },
+    /* TODO: determine accurate locations for dormer */
+    e: { x: -33, y: 23 },
+    f: { x: -27, y: 23 },
+    g: { x: -27, y: 27 },
+    h: { x: -33, y: 27 }
   },
   storeys: [{
     name: 'crawl space',
@@ -484,6 +489,109 @@ export default /* eslint-disable */
       }]
     }
    }, {
+    name: 'TWEAK: attic hipped rectangle 1',
+    height: 0,
+    roof: {
+      form: 'hipped',
+      pitch: { rise: 12, run: 12 },
+      eaves: 1
+    },
+    walls: {
+      exterior: [{
+        begin: { $ref: '#/def/D' },
+        end: { $ref: '#/def/G' }
+      }, {
+        end: { $ref: '#/def/I' }
+      }, {
+        end: { x: -44.333, y: 32.75 }
+      }, {
+        end: { $ref: '#/def/D' }
+      }]
+    }
+   }, {
+    name: 'TWEAK: attic hipped rectangle 2',
+    height: 0,
+    roof: {
+      form: 'hipped',
+      pitch: { rise: 12, run: 12 },
+      eaves: 1
+    },
+    walls: {
+      exterior: [{
+        begin: { $ref: '#/def/I' },
+        end: { x: -44.333, y: 16.75 }
+      }, {
+        end: { x: -25.792, y: 16.75 }
+      }, {
+        end: { x: -25.792, y: 47 }
+      }, {
+        end: { $ref: '#/def/I' }
+      }]
+    }
+   }, {
+    name: 'TWEAK: attic hipped rectangle 3',
+    height: 0,
+    roof: {
+      form: 'hipped',
+      pitch: { rise: 12, run: 12 },
+      eaves: 1
+    },
+    walls: {
+      exterior: [{
+        begin: { $ref: '#/def/A' },
+        end: { x: -25.792, y: 47 }
+      }, {
+        end: { x: -41.167, y: 47 }
+      }, {
+        end: { $ref: '#/def/R' }
+      }, {
+        end: { $ref: '#/def/A' }
+      }]
+    }
+   }, {
+    name: 'TWEAK: attic hipped rectangle 4',
+    height: 0,
+    roof: {
+      form: 'hipped',
+      pitch: { rise: 12, run: 12 },
+      eaves: 1
+    },
+    walls: {
+      exterior: [{
+        begin: { $ref: '#/def/K' },
+        end: { $ref: '#/def/P' }
+      }, {
+        end: { x: -25.792, y: 16.75 }
+      }, {
+        end: { x: -25.792, y: 44.542 }
+      }, {
+        end: { $ref: '#/def/K' }
+      }]
+    }
+   }, {
+    name: 'dormer',
+    height: 4,
+    roof: {
+      form: 'pitched',
+      pitch: { rise: 12, run: 12 },
+      eaves: 0.5
+    },
+    walls: {
+      exterior: [{
+        begin: { $ref: '#/def/e' },
+        end: { $ref: '#/def/f' },
+        roofline: 'pitched'
+      }, {
+        end: { $ref: '#/def/g' },
+        roofline: 'gabled'
+      }, {
+        end: { $ref: '#/def/h' },
+        roofline: 'pitched'
+      }, {
+        end: { $ref: '#/def/e' }
+      }]
+    }
+  }, {
     name: 'chimney',
     height: 16,
     walls: {

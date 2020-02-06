@@ -21,6 +21,7 @@ const FORM = {
   // NOTE: these values must exactly match the values in roof.schema.json.js
   FLAT: 'flat',
   PITCHED: 'pitched',
+  HIPPED: 'hipped',
   LIVING: 'living',
   VAULTED: 'vaulted'
 }
@@ -123,61 +124,131 @@ class Roof extends Model {
     if (form === FORM.FLAT) {
       this._makeSlab(outline.corners(), placement)
     } else if (form === FORM.PITCHED) {
-      const corners = outline.corners()
-      let leftCorner = null
-      let rightCorner = null
-      let previousWall = walls[walls.length - 1]
-      let currentWall = null
-      let nextWall = null // eslint-disable-line no-unused-vars
-      for (let i = 0; i < walls.length; i++) {
-        leftCorner = corners[i]
-        rightCorner = (i === (corners.length - 1)) ? corners[0] : corners[i + 1]
-        const length = _distance(leftCorner, rightCorner)
-        currentWall = walls[i]
-        nextWall = (i === (walls.length - 1)) ? walls[0] : walls[i + 1]
-        if (currentWall.roofline() === 'gabled') { // TODO: use enum value from Wall
-          const begin = leftCorner // currentWall.begin()
-          const endPoint = rightCorner // currentWall.end()
-          const midpoint = _midpoint(leftCorner, rightCorner) // currentWall.midpoint()
-          const halfLength = length / 2 // currentWall.length() / 2
-          const insetDistance = Math.max(halfLength, previousWall.length())
-          const insetX = insetDistance * (endPoint.y - begin.y) / length // currentWall.length()
-          const insetY = insetDistance * (begin.x - endPoint.x) / length // currentWall.length()
-          const gableHeight = halfLength * pitch.slope()
-          const hyp = hypotenuse(halfLength, gableHeight)
-          const ratio = hyp / halfLength
-          const dx = (midpoint.x - begin.x) * (ratio - 1)
-          const dy = (midpoint.y - begin.y) * (ratio - 1)
-          const incline = halfLength * pitch.slope()
-
-          const at = placement.copy()
-          at.xyz.z -= eaves * pitch.slope()
-          // placement.xyz.z -= eaves * pitch.slope()
-          const cornersForLeftFace = [
-            begin,
-            { x: midpoint.x + dx, y: midpoint.y + dy },
-            { x: midpoint.x + dx - insetX, y: midpoint.y + dy - insetY },
-            { x: begin.x - insetX, y: begin.y - insetY }
-          ]
-          this._makeSlab(cornersForLeftFace, at, incline)
-
-          const cornersForRightFace = [
-            { x: endPoint.x - insetX, y: endPoint.y - insetY },
-            { x: midpoint.x - dx - insetX, y: midpoint.y - dy - insetY },
-            { x: midpoint.x - dx, y: midpoint.y - dy },
-            endPoint
-          ]
-          this._makeSlab(cornersForRightFace, at, incline)
-        }
-        previousWall = currentWall
-      }
-      // TODO: write this code!
+      this._makePitchedRoof(eaves, pitch, placement, walls, outline)
+    } else if (form === FORM.HIPPED) {
+      this._makeHippedRoof(eaves, pitch, placement, walls, outline)
     } else if (form === FORM.LIVING) {
       // TODO: write this code!
       throw new Error('TODO: "living" Roof code has not yet been written')
     } else if (form === FORM.VAULTED) {
       // TODO: write this code!
       throw new Error('TODO: "vaulted" Roof code has not yet been written')
+    }
+  }
+
+  _makePitchedRoof (eaves, pitch, placement, walls, outline) {
+    const corners = outline.corners()
+    let leftCorner = null
+    let rightCorner = null
+    let previousWall = walls[walls.length - 1]
+    let currentWall = null
+    let nextWall = null // eslint-disable-line no-unused-vars
+    for (let i = 0; i < walls.length; i++) {
+      leftCorner = corners[i]
+      rightCorner = (i === (corners.length - 1)) ? corners[0] : corners[i + 1]
+      const length = _distance(leftCorner, rightCorner)
+      currentWall = walls[i]
+      nextWall = (i === (walls.length - 1)) ? walls[0] : walls[i + 1]
+      if (currentWall.roofline() === 'gabled') { // TODO: use enum value from Wall
+        const begin = leftCorner
+        const endPoint = rightCorner
+        const midpoint = _midpoint(leftCorner, rightCorner)
+        const halfLength = length / 2
+        const insetDistance = Math.max(halfLength, previousWall.length())
+        const insetX = insetDistance * (endPoint.y - begin.y) / length
+        const insetY = insetDistance * (begin.x - endPoint.x) / length
+        const gableHeight = halfLength * pitch.slope()
+        const hyp = hypotenuse(halfLength, gableHeight)
+        const ratio = hyp / halfLength
+        const stretch = {
+          x: (midpoint.x - begin.x) * (ratio - 1),
+          y: (midpoint.y - begin.y) * (ratio - 1)
+        }
+        const incline = halfLength * pitch.slope()
+
+        const at = placement.copy()
+        at.xyz.z -= eaves * pitch.slope()
+        const cornersForLeftFace = [
+          begin,
+          { x: midpoint.x + stretch.x, y: midpoint.y + stretch.y },
+          { x: midpoint.x + stretch.x - insetX, y: midpoint.y + stretch.y - insetY },
+          { x: begin.x - insetX, y: begin.y - insetY }
+        ]
+        this._makeSlab(cornersForLeftFace, at, incline)
+
+        const cornersForRightFace = [
+          { x: endPoint.x - insetX, y: endPoint.y - insetY },
+          { x: midpoint.x - stretch.x - insetX, y: midpoint.y - stretch.y - insetY },
+          { x: midpoint.x - stretch.x, y: midpoint.y - stretch.y },
+          endPoint
+        ]
+        this._makeSlab(cornersForRightFace, at, incline)
+      }
+      previousWall = currentWall
+    }
+  }
+
+  _makeHippedRoof (eaves, pitch, placement, walls, outline) {
+    const at = placement.copy()
+    at.xyz.z -= eaves * pitch.slope()
+    const corners = outline.corners()
+    let previousWall = walls[walls.length - 1]
+    let currentWall = null
+    let leftCorner = null
+    let rightCorner = null
+    for (let i = 0; i < corners.length; i++) {
+      currentWall = walls[i]
+      const bookendLength = eaves + Math.min(previousWall.length(), currentWall.length()) / 2
+      const wallLength = (eaves * 2) + currentWall.length()
+      const middleLength = wallLength - (bookendLength * 2)
+      const incline = bookendLength * pitch.slope()
+      leftCorner = corners[i]
+      rightCorner = (i === (corners.length - 1)) ? corners[0] : corners[i + 1]
+      const dxAtGutter = rightCorner.x - leftCorner.x
+      const dyAtGutter = rightCorner.y - leftCorner.y
+      const peakHeight = bookendLength * pitch.slope()
+      const hyp = hypotenuse(bookendLength, peakHeight)
+      const ratio = hyp / bookendLength
+
+      const leftishCorner = {
+        x: leftCorner.x + dxAtGutter * (bookendLength / wallLength),
+        y: leftCorner.y + dyAtGutter * (bookendLength / wallLength)
+      }
+      const rightishCorner = {
+        x: leftishCorner.x + dxAtGutter * (middleLength / wallLength),
+        y: leftishCorner.y + dyAtGutter * (middleLength / wallLength)
+      }
+      const leftishPeak = {
+        x: leftishCorner.x - (ratio * dyAtGutter * (bookendLength / wallLength)),
+        y: leftishCorner.y + (ratio * dxAtGutter * (bookendLength / wallLength))
+      }
+      const rightishPeak = {
+        x: rightishCorner.x - (ratio * dyAtGutter * (bookendLength / wallLength)),
+        y: rightishCorner.y + (ratio * dxAtGutter * (bookendLength / wallLength))
+      }
+
+      const cornersForLeftFace = [
+        leftishCorner,
+        leftishPeak,
+        leftCorner
+      ]
+      this._makeSlab(cornersForLeftFace, at, incline)
+      if (middleLength) {
+        const middleSlabCorners = [
+          leftishCorner,
+          leftishPeak,
+          rightishPeak,
+          rightishCorner
+        ]
+        this._makeSlab(middleSlabCorners, at, incline)
+      }
+      const cornersForRightFace = [
+        rightishCorner,
+        rightishPeak,
+        rightCorner
+      ]
+      this._makeSlab(cornersForRightFace, at, incline)
+      previousWall = currentWall
     }
   }
 }
