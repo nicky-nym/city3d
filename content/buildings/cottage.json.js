@@ -13,6 +13,8 @@ export default /* eslint-disable */
   def: {
     SW: { x: 0, y: 0 },
     S1: { x: 1, y: 0 },
+    S1_tweak: { x: 1, y: -0.1 },
+    S2_tweak: { x: 18 + 4 / 12, y: -0.1 },
     S2: { x: 18 + 4 / 12, y: 0 },
     SE: { x: 30 + 4 / 12, y: 0 },
     NE: { x: 30 + 4 / 12, y: 21 },
@@ -282,9 +284,17 @@ export default /* eslint-disable */
         end: { $ref: '#/def/S1' },
         roofline: 'pitched'
       }, {
+        name: 'TODO: this is a hack until the roof code is better',
+        end: { $ref: '#/def/S1_tweak' },
+        roofline: 'pitched'
+      }, {
         name: 'front wall (center)',
-        end: { $ref: '#/def/S2' },
+        end: { $ref: '#/def/S2_tweak' },
         roofline: 'gabled'
+      }, {
+        name: 'TODO: this is a hack until the roof code is better',
+        end: { $ref: '#/def/S2' },
+        roofline: 'pitched'
       }, {
         name: 'front wall (right)',
         end: { $ref: '#/def/SE' },
