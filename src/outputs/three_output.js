@@ -208,14 +208,7 @@ class ThreeOutput extends Output {
 
   _buildSceneFrom (model) {
     if (!this._modelsInScene.includes(model)) {
-      model.populateRoutes(this.add.bind(this))
-      if (window.DEBUG) var t0 = Date.now()
-      this._scene.buildFrom(model)
-      if (window.DEBUG) this.print(`time for this._scene.buildFrom(model) was ${Date.now() - t0} msec`)
-      const SHOW_PATH = true
-      if (SHOW_PATH) {
-        this._scene.addPaths(model)
-      }
+      this._scene.queueBuildFrom(model)
       this._modelsInScene.push(model)
     } else {
       window.alert(`${model.name} is already included`)
@@ -223,7 +216,7 @@ class ThreeOutput extends Output {
   }
 
   add (feature) {
-    this._scene.buildFrom(feature)
+    this._scene.buildSynchronouslyFrom(feature)
   }
 
   _addClippingPlane (name, xyzVal, distance) {

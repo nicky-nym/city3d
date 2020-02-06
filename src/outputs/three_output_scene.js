@@ -10,6 +10,8 @@ import { Feature, FeatureGroup, FeatureInstance, FeatureLODGroup } from '../core
 import { Geometry } from '../core/geometry.js'
 import { xyzSubtract } from '../core/util.js'
 
+/* global requestIdleCallback */
+
 const ONE_MILE = 5280
 const FIXME_FUCHSIA = 0xff00ff // used as a default so it's obvious when a color is missing
 const COLOR_GREY = 0x808080
@@ -83,11 +85,54 @@ class ThreeOutputScene extends THREE.Scene {
     this.add(meshY)
   }
 
-  buildFrom (feature) {
+  _doSomeTasks (deadline) {
+    // const tr = deadline.timeRemaining()
+    let count = 0
+    while (deadline.timeRemaining() > 0 || (deadline.didTimeout && count < 100)) {
+      count++
+      const obj = this.queuedTaskGeneratorObject.next()
+      if (obj.done) {
+        return
+      }
+    }
+    // console.log(`------- ${count} steps ---------- ${Math.floor(tr)} ------------`)
+    requestIdleCallback(this._doSomeTasks.bind(this), { timeout: 500 })
+  }
+
+  queueBuildFrom (feature) {
+    const queuedGenerators = []
+    const mainFeatureGeneratorObject = this._featureGenerator(feature, this)
+    queuedGenerators.push([mainFeatureGeneratorObject, '_featureGenerator'])
+
+    if (feature.getRoutes && feature.getRoutes().length > 0) {
+      const routeGeneratorObject = feature.populateRoutes(this.queueBuildFrom.bind(this))
+      queuedGenerators.push([routeGeneratorObject, 'populateRoutes'])
+
+      // TODO: use a Layer for this
+      const SHOW_PATH = true
+      if (SHOW_PATH) {
+        const pathGeneratorObject = this._pathGenerator(feature)
+        queuedGenerators.push([pathGeneratorObject, '_pathGenerator'])
+      }
+    }
+
+    this.queuedTaskGeneratorObject = (function * () {
+      for (const [gen, generatorFunctionName] of queuedGenerators) {
+        const str = `Generator ${generatorFunctionName}() for feature ${feature.fullName()}`
+        console.time(str)
+        console.log(`Starting ${str}`)
+        yield * gen
+        console.timeEnd(str)
+      }
+    })()
+    requestIdleCallback(this._doSomeTasks.bind(this), { timeout: 500 })
+  }
+
+  buildSynchronouslyFrom (feature) {
     this._traverse(feature, this)
   }
 
-  addPaths (model) {
+  * _pathGenerator (model) {
     const material = new THREE.LineBasicMaterial({ color: 0xFF00FF })
     for (const route of model.getRoutes()) {
       const geometry = new THREE.Geometry()
@@ -98,6 +143,10 @@ class ThreeOutputScene extends THREE.Scene {
   }
 
   _traverse (feature, threeObject) {
+    for (const _ of this._featureGenerator(feature, threeObject)); // eslint-disable-line no-unused-vars
+  }
+
+  * _featureGenerator (feature, threeObject) {
     if (!(feature instanceof Feature)) {
       // TODO: should Routes also be Features?
       return
@@ -107,15 +156,16 @@ class ThreeOutputScene extends THREE.Scene {
 
     if (feature instanceof FeatureGroup) {
       if (feature instanceof FeatureLODGroup) {
-        const lod = this.makeLODFromLODGroup(feature)
+        const lod = yield * this._LODGroupGenerator(feature)
         threeObject.add(lod)
         object = lod
+        yield
       } else {
         const group = new THREE.Group()
         group.userData.feature = feature
         threeObject.add(group)
         for (const child of feature.children) {
-          this._traverse(child, group)
+          yield * this._featureGenerator(child, group)
         }
         object = group
       }
@@ -131,6 +181,7 @@ class ThreeOutputScene extends THREE.Scene {
       mesh.userData.feature = feature
       threeObject.add(mesh)
       object = mesh
+      yield
     } else {
       // TODO
     }
@@ -147,7 +198,7 @@ class ThreeOutputScene extends THREE.Scene {
     }
   }
 
-  makeLODFromLODGroup (lodGroup) {
+  * _LODGroupGenerator (lodGroup) {
     const lod = new THREE.LOD()
     if (lodGroup.offset) {
       lod.translateX(lodGroup.offset.x)
@@ -157,7 +208,7 @@ class ThreeOutputScene extends THREE.Scene {
     const group = new THREE.Group()
     group.userData.feature = lodGroup
     for (const child of lodGroup.children) {
-      this._traverse(child, group)
+      yield * this._featureGenerator(child, group)
     }
     lod.addLevel(group, 0)
 
@@ -168,19 +219,19 @@ class ThreeOutputScene extends THREE.Scene {
 
     let materialCost = 'lowest'
     for (const level of levels) {
-      const object = this.makeLowResObject(level.feature, materialCost)
+      const object = yield * this.makeLowResObject(level.feature, materialCost)
       lod.addLevel(object, level.distanceThreshold)
       materialCost = 'medium'
     }
     return lod
   }
 
-  makeLowResObject (feature, materialCost) {
+  * makeLowResObject (feature, materialCost) {
     if (feature instanceof FeatureGroup) {
       const group = new THREE.Group()
       group.userData.feature = feature
       for (const child of feature.children) {
-        group.add(this.makeLowResObject(child, materialCost))
+        group.add(yield * this.makeLowResObject(child, materialCost))
       }
       return group
     }
