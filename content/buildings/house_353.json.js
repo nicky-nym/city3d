@@ -25,7 +25,8 @@ export default /* eslint-disable */
     '  |      f-g               |       ',
     '  AS-------------B         |       ',
     '   |             |         |       ',
-    '   T-------------C         H       ',
+    '   T-------------U         |       ',
+    '                 C         H       ',
     '                  \       /        ',
     '                 D E-----F G       ',
     '-y                               +y',
@@ -105,7 +106,7 @@ export default /* eslint-disable */
     altitude: 4,
     height: 8,
     roof: {
-      form: 'pitched',
+      form: 'shed',
       pitch: { rise: 4, run: 12 },
       eaves: 1,
       surface: {
@@ -158,6 +159,10 @@ export default /* eslint-disable */
       }, {
         end: { $ref: '#/def/O' },
         roofline: 'shed'
+      }, {
+        end: { $ref: '#/def/L' },
+        height: 0,
+        roofline: 'none'
       }]
     }
   }, {
@@ -189,7 +194,7 @@ export default /* eslint-disable */
       }
     }],
     roof: {
-      form: 'pitched',
+      form: 'shed',
       pitch: { rise: 4, run: 12 },
       eaves: 1,
       surface: {
@@ -201,10 +206,10 @@ export default /* eslint-disable */
       exterior: [{
         begin: { $ref: '#/def/S' },
         end: { $ref: '#/def/T' },
-        roofline: 'pitched',
-        windows: [{
-          outline: { shape: 'rectangle', size: { x: 4.6, y: 4.833 } },
-          at: { x: 0, y: 4.9165, from: 'center' }
+        roofline: 'shed',
+        doors: [{
+          outline: { shape: 'rectangle', size: { x: 4.6, y: 7.333 } },
+          at: { x: 0, from: 'center' }
         }]
       }, {
         end: { $ref: '#/def/U' },
@@ -212,14 +217,21 @@ export default /* eslint-disable */
         doors: [{
           outline: { shape: 'rectangle', size: { x: 4.6, y: 7.333 } },
           at: { x: 13.9, from: 'left' }
-        }],
-        windows: [{
-          outline: { shape: 'rectangle', size: { x: 4.6, y: 4.833 } },
-          at: { x: 3.3, y: 4.9165, from: 'left' }
         }, {
-          outline: { shape: 'rectangle', size: { x: 4.6, y: 4.833 } },
-          at: { x: 8.6, y: 4.9165, from: 'left' }
+          outline: { shape: 'rectangle', size: { x: 4.6, y: 7.333 } },
+          at: { x: 3.3, from: 'left' }
+        }, {
+          outline: { shape: 'rectangle', size: { x: 4.6, y: 7.333 } },
+          at: { x: 8.6, from: 'left' }
         }]
+      }, {
+        end: { $ref: '#/def/B' },
+        height: 0,
+        roofline: 'shed'
+      }, {
+        end: { $ref: '#/def/S' },
+        height: 0,
+        roofline: 'none'
       }]
     }
   }, {
@@ -464,7 +476,14 @@ export default /* eslint-disable */
         roofline: 'pitched'
       }, {
         end: { $ref: '#/def/G' },
-        roofline: 'gabled'
+        roofline: 'gabled',
+        windows: [{
+          name: 'gable window',
+          motion: 'hung',
+          outline: { shape: 'rectangle', size: { x: 2.2, y: 3.8 } },
+          at: { x: 0, y: 3.8, from: 'center' },
+          casing: { width: 0.5 }
+        }]
       }, {
         end: { $ref: '#/def/I' },
         roofline: 'pitched'
@@ -583,7 +602,14 @@ export default /* eslint-disable */
         roofline: 'pitched'
       }, {
         end: { $ref: '#/def/g' },
-        roofline: 'gabled'
+        roofline: 'gabled',
+        windows: [{
+          name: 'dormer window',
+          motion: 'picture',
+          outline: { shape: 'rectangle', size: { x: 2.2, y: 2.2 } },
+          at: { x: 0, y: 2.8, from: 'center' },
+          casing: { width: 0.5 }
+        }]
       }, {
         end: { $ref: '#/def/h' },
         roofline: 'pitched'
@@ -593,7 +619,7 @@ export default /* eslint-disable */
     }
   }, {
     name: 'chimney',
-    height: 16,
+    height: 12,
     walls: {
       exterior: [{
         begin: { $ref: '#/def/a' },

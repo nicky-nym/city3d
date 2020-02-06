@@ -61,7 +61,7 @@ export default /* eslint-disable */
     "begin": { "$ref": "definitions.json#/def/xyOrRef" },
     "end": { "$ref": "definitions.json#/def/xyOrRef" },
     "roofline": {
-      "enum": ["gabled", "pitched", "shed"]
+      "enum": ["none", "gabled", "pitched", "shed"]
     },
     "doors": {
       "type": "array",

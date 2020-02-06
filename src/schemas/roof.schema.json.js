@@ -38,7 +38,7 @@ export default /* eslint-disable */
       "$ref": "outline.schema.json"
     },
     "form": {
-      "enum": ["flat", "pitched", "hipped", "living", "vaulted"]
+      "enum": ["none", "flat", "pitched", "hipped", "shed", "living", "vaulted"]
     },
     "parapetHeight": {
       "type": "number"

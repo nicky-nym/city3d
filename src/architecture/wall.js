@@ -22,6 +22,7 @@ const DEFAULT_WALL_THICKNESS = 0.5
  */
 const ROOFLINE = {
   // NOTE: these values must exactly match the values in wall.schema.json.js
+  NONE: 'none',
   GABLED: 'gabled',
   PITCHED: 'pitched',
   SHED: 'shed'
@@ -118,6 +119,14 @@ class Wall extends Model {
   }
 
   /**
+   * Return true if this wall was the first wall in the spec list for this storey
+   * @return {boolean} - true if this wall was specified before the others in this storey
+   */
+  isFirstWall () {
+    return this._firstWall
+  }
+
+  /**
    * Generate Geometry objects corresponding to a specification.
    * @param {object} spec - an specification object that is valid against wall.schema.json.js
    * @param {Ray} placement - location and compass direction
@@ -181,7 +190,7 @@ class Wall extends Model {
     const length = hypotenuse(dx, dy)
     let xyPolygon = null
 
-    if (!this._roofline || this._roofline === ROOFLINE.PITCHED) {
+    if (!this._roofline || this._roofline === ROOFLINE.NONE || this._roofline === ROOFLINE.PITCHED) {
       if (height > 0) {
         xyPolygon = new Geometry.XYPolygon([xy(0, 0), xy(0, height), xy(length, height), xy(length, 0)])
       }

@@ -19,9 +19,11 @@ const LIGHT_GRAY = 0x808080
  */
 const FORM = {
   // NOTE: these values must exactly match the values in roof.schema.json.js
+  NONE: 'none',
   FLAT: 'flat',
   PITCHED: 'pitched',
   HIPPED: 'hipped',
+  SHED: 'shed',
   LIVING: 'living',
   VAULTED: 'vaulted'
 }
@@ -79,15 +81,6 @@ class Roof extends Model {
     }
   }
 
-  _makeSlab (corners, placement, incline = 0) {
-    const adjustedCorners = placement.applyRay(corners)
-    const xyPolygon = new Geometry.XYPolygon(adjustedCorners)
-    const abstractThickPolygon = new Geometry.ThickPolygon(xyPolygon, { incline, depth: ROOF_THICKNESS })
-    const p0 = { ...adjustedCorners[0], z: placement.xyz.z }
-    const concreteThickPolygon = new FeatureInstance(abstractThickPolygon, p0, LIGHT_GRAY)
-    this.add(concreteThickPolygon)
-  }
-
   /**
    * Generate Geometry objects corresponding to a specification.
    * @param {object} spec - an specification object that is valid against roof.schema.json.js
@@ -127,6 +120,8 @@ class Roof extends Model {
       this._makePitchedRoof(eaves, pitch, placement, walls, outline)
     } else if (form === FORM.HIPPED) {
       this._makeHippedRoof(eaves, pitch, placement, walls, outline)
+    } else if (form === FORM.SHED) {
+      this._makeShedRoof(eaves, pitch, placement, walls, outline)
     } else if (form === FORM.LIVING) {
       // TODO: write this code!
       throw new Error('TODO: "living" Roof code has not yet been written')
@@ -136,6 +131,16 @@ class Roof extends Model {
     }
   }
 
+  _makeSlab (corners, placement, incline = 0) {
+    const adjustedCorners = placement.applyRay(corners)
+    const xyPolygon = new Geometry.XYPolygon(adjustedCorners)
+    const abstractThickPolygon = new Geometry.ThickPolygon(xyPolygon, { incline, depth: ROOF_THICKNESS })
+    const p0 = { ...adjustedCorners[0], z: placement.xyz.z }
+    const concreteThickPolygon = new FeatureInstance(abstractThickPolygon, p0, LIGHT_GRAY)
+    this.add(concreteThickPolygon)
+  }
+
+  // TODO: do a DRY refactor to extract common code from _makeShedRoof, _makeHippedRoof, _makePitchedRoof
   _makePitchedRoof (eaves, pitch, placement, walls, outline) {
     const corners = outline.corners()
     let leftCorner = null
@@ -188,6 +193,7 @@ class Roof extends Model {
     }
   }
 
+  // TODO: do a DRY refactor to extract common code from _makeShedRoof, _makeHippedRoof, _makePitchedRoof
   _makeHippedRoof (eaves, pitch, placement, walls, outline) {
     const at = placement.copy()
     at.xyz.z -= eaves * pitch.slope()
@@ -248,6 +254,60 @@ class Roof extends Model {
         rightCorner
       ]
       this._makeSlab(cornersForRightFace, at, incline)
+      previousWall = currentWall
+    }
+  }
+
+  // TODO: do a DRY refactor to extract common code from _makeShedRoof, _makeHippedRoof, _makePitchedRoof
+  _makeShedRoof (eaves, pitch, placement, walls, outline) {
+    const corners = outline.corners()
+    let leftCorner = null
+    let rightCorner = null
+    let previousWall = walls[walls.length - 1]
+    let currentWall = null
+    let nextWall = null // eslint-disable-line no-unused-vars
+    for (let i = 0; i < walls.length; i++) {
+      leftCorner = corners[i]
+      rightCorner = (i === (corners.length - 1)) ? corners[0] : corners[i + 1]
+      const length = _distance(leftCorner, rightCorner)
+      currentWall = walls[i]
+      nextWall = (i === (walls.length - 1)) ? walls[0] : walls[i + 1]
+      if (currentWall.roofline() === 'shed') { // TODO: use enum value from Wall
+        const begin = leftCorner
+        const endPoint = rightCorner
+        const insetDistance = Math.max(length, previousWall.length())
+        const insetX = insetDistance * (endPoint.y - begin.y) / length
+        const insetY = insetDistance * (begin.x - endPoint.x) / length
+        const peakHeight = length * pitch.slope()
+        const hyp = hypotenuse(length, peakHeight)
+        const ratio = hyp / length
+        const stretch = {
+          x: (endPoint.x - begin.x) * (ratio - 1),
+          y: (endPoint.y - begin.y) * (ratio - 1)
+        }
+        const incline = length * pitch.slope()
+
+        const at = placement.copy()
+        at.xyz.z -= eaves * pitch.slope()
+
+        if (currentWall.isFirstWall()) {
+          const cornersForFace = [
+            { x: endPoint.x - insetX, y: endPoint.y - insetY },
+            { x: begin.x - stretch.x - insetX, y: begin.y - stretch.y - insetY },
+            { x: begin.x - stretch.x, y: begin.y - stretch.y },
+            endPoint
+          ]
+          this._makeSlab(cornersForFace, at, incline)
+        } else {
+          const cornersForFace = [
+            begin,
+            { x: endPoint.x + stretch.x, y: endPoint.y + stretch.y },
+            { x: endPoint.x + stretch.x - insetX, y: endPoint.y + stretch.y - insetY },
+            { x: begin.x - insetX, y: begin.y - insetY }
+          ]
+          this._makeSlab(cornersForFace, at, incline)
+        }
+      }
       previousWall = currentWall
     }
   }
