@@ -9,7 +9,7 @@ import { Catalog } from './catalog.js'
 import COTTAGE from './buildings/cottage.json.js'
 import GARAGE from './buildings/garage.json.js'
 import HIGHRISE from './buildings/highrise.json.js'
-import HOUSE from './buildings/house.json.js'
+import HOUSE_353 from './buildings/house_353.json.js'
 import WURSTER_HALL from './buildings/wurster_hall.json.js'
 import CAMPUS from './districts/campus.json.js'
 
@@ -23,7 +23,7 @@ class StockCatalog extends Catalog {
       COTTAGE,
       GARAGE,
       HIGHRISE,
-      HOUSE,
+      HOUSE_353,
       WURSTER_HALL,
       CAMPUS
     ])

@@ -7,12 +7,12 @@
 
 import Ajv from '../../../node_modules/ajv/dist/ajv.min.js'
 import { SCHEMA } from '../../../src/schemas/schema.js'
-import HOUSE_SPEC from '../../../content/buildings/house.json.js'
+import HOUSE_SPEC from '../../../content/buildings/house_353.json.js'
 
 /* global describe, it */
 
-describe('house.json.js', function () {
-  describe('house schema validation', function () {
+describe('house_353.json.js', function () {
+  describe('house 353 schema validation', function () {
     const ajv = new Ajv()
     Object.keys(SCHEMA).forEach(item => ajv.addSchema(SCHEMA[item], SCHEMA[item].$id))
     const validator = ajv.compile(SCHEMA.BUILDING)
