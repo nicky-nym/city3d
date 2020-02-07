@@ -41,8 +41,8 @@ export default /* eslint-disable */
       'on the walls that are unobstructured, which may vary by floor,',
       'and by whether this building is on a corner parcel.'
     ],
-    repeat: { type: 'randomInt', min: 4, max: 60 },
-    height: { type: 'randomInt', min: 9, max: 14 },
+    repeat: 16, /* { type: 'randomInt', min: 4, max: 60 }, */
+    height: 12, /* { type: 'randomInt', min: 9, max: 14 }, */
     floors: [{
       outline: { "$ref": "#/def/RECTANGLE" },
       surface: { material: 'concrete' }
@@ -106,7 +106,8 @@ export default /* eslint-disable */
     name: 'attic',
     height: 0,
     roof: {
-      form: 'flat'
+      form: 'flat',
+      outline: { "$ref": "#/def/RECTANGLE" }
     }
   }]
 

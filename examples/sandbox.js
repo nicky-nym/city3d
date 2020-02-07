@@ -130,6 +130,7 @@ function main () {
   addObjectFromSpec(extras, specReader, 'Cottage', { x: -252, y: 60, z: 0 })
   addObjectFromSpec(extras, specReader, 'House 353', { x: -130, y: 30, z: 0 })
   addObjectFromSpec(extras, specReader, 'Wurster Hall', { x: 50, y: -400, z: 0 })
+  addObjectFromSpec(extras, specReader, 'Highrise building', { x: -480, y: 40, z: 0 })
 
   const city = new CITY.City({ name: 'Paracosm' })
   addBuildings(city)
