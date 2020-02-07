@@ -189,6 +189,7 @@ class Wall extends Model {
     const dy = v2.y - v1.y
     const length = hypotenuse(dx, dy)
     let xyPolygon = null
+    let incline = height || Number.EPSILON // This is the desired z-offset of the second vertex relative to the first, so it must be non-zero to enable rotating out of the x-y plane.
 
     if (!this._roofline || this._roofline === ROOFLINE.NONE || this._roofline === ROOFLINE.PITCHED) {
       if (height > 0) {
@@ -198,16 +199,14 @@ class Wall extends Model {
       const midLength = length / 2
       const pitch = new Pitch(this._pitch.rise, ':', this._pitch.run)
       peakHeight = height + pitch.slope() * midLength
-      if (height > 0) {
-        xyPolygon = new Geometry.XYPolygon([xy(0, 0), xy(0, height), xy(midLength, peakHeight), xy(length, height), xy(length, 0)])
-      } else {
-        xyPolygon = new Geometry.XYPolygon([xy(0, 0), xy(midLength, peakHeight), xy(length, 0)])
-      }
+      const h1 = incline // Length of first edge (which will become height). The direction of this edge is used to determine rotation, so we can't just leave it out if height = 0.
+      xyPolygon = new Geometry.XYPolygon([xy(0, 0), xy(0, h1), xy(midLength, peakHeight), xy(length, h1), xy(length, 0)])
     } else if (this._roofline === ROOFLINE.SHED) {
       const pitch = new Pitch(this._pitch.rise, ':', this._pitch.run)
       peakHeight = height + pitch.slope() * length
       if (this._firstWall) {
         xyPolygon = new Geometry.XYPolygon([xy(0, 0), xy(0, peakHeight), xy(length, height), xy(length, 0)])
+        incline = peakHeight // Adjust to match the length of the first edge.
       } else {
         xyPolygon = new Geometry.XYPolygon([xy(0, 0), xy(0, height), xy(length, peakHeight), xy(length, 0)])
       }
@@ -215,7 +214,6 @@ class Wall extends Model {
       throw new Error('bad roofline type in spec for new Wall()')
     }
     if (xyPolygon) {
-      const incline = height
       const zRotation = Math.atan2(dy, dx)
       const abstractWall = new Geometry.ThickPolygon(xyPolygon, { incline, zRotation, depth, openings })
       const concreteWall = new FeatureInstance(abstractWall, { ...v1, z }, ALMOST_WHITE)
