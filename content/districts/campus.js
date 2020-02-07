@@ -5,18 +5,10 @@
  * For more information, please refer to <http://unlicense.org>
  */
 
-import { cornersFromShape, countTo, xy, xyz } from '../../src/core/util.js'
-import { Parcel } from '../../src/architecture/parcel.js'
+import { countTo, xy } from '../../src/core/util.js'
+import { Facing } from '../../src/core/facing.js'
 import { District } from '../../src/architecture/district.js'
 import { WursterHall } from '../buildings/wurster_hall.js'
-
-const PARCEL = {
-  offset: xyz(0, 0, 0),
-  shape: {
-    type: 'rectangle',
-    data: xy(360, 540)
-  }
-}
 
 /**
  * Class representing a college campus.
@@ -24,14 +16,11 @@ const PARCEL = {
  */
 class Campus extends District {
   makeCampus (numBuildings = 1) {
-    const offset = { ...PARCEL.offset }
     for (const i in countTo(numBuildings)) {
-      offset.x = i * PARCEL.shape.data.x
+      const offset = xy(560 + i * 400, 140)
       const placement = this.goto(offset)
-      const outline = cornersFromShape(PARCEL.shape)
-      const parcel = new Parcel({ outline, placement })
-      this.add(parcel)
-      parcel.add(new WursterHall({ placement }))
+      placement.az = Facing.WEST
+      this.add(new WursterHall({ placement }))
     }
   }
 }

@@ -44,7 +44,7 @@ function addBuildings (city) {
   const campus = new CITY.Campus({
     name: 'Campus',
     outline: rectangleOfSize(xy(1200, 550)),
-    placement: new Ray(Facing.NORTH, xyz(100, -600, 0))
+    placement: new Ray(Facing.NORTH, xyz(330, -600, 0))
   })
   campus.makeCampus(3)
   city.add(campus)
@@ -129,6 +129,7 @@ function main () {
   addObjectFromSpec(extras, specReader, 'Garage', { x: -288, y: 60, z: 0 })
   addObjectFromSpec(extras, specReader, 'Cottage', { x: -252, y: 60, z: 0 })
   addObjectFromSpec(extras, specReader, 'House 353', { x: -130, y: 30, z: 0 })
+  addObjectFromSpec(extras, specReader, 'Wurster Hall', { x: 50, y: -400, z: 0 })
 
   const city = new CITY.City({ name: 'Paracosm' })
   addBuildings(city)

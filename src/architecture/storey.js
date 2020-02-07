@@ -154,9 +154,12 @@ class Storey extends Model {
       let begin = { x: 0, y: 0 }
       let roofline = 'pitched' // TODO: use enum value from Wall
       const pitch = roof && roof.pitch
-      const exterior = walls.exterior || []
-      const interior = walls.interior || []
-      const wallSpecs = [...exterior, ...interior]
+      let wallSpecs = []
+      if (walls) {
+        const exterior = walls.exterior || []
+        const interior = walls.interior || []
+        wallSpecs = [...exterior, ...interior]
+      }
       let firstWall = true
       const allWalls = []
       for (const wallSpec of wallSpecs) {

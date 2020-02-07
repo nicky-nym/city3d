@@ -165,11 +165,11 @@ export default /* eslint-disable */
         { $ref: '#/def/ext/O' },
         { $ref: '#/def/ext/P' },
         { $ref: '#/def/ext/Q' },
-        { $ref: '#/def/ext/U' },
         { $ref: '#/def/ext/V' },
         { $ref: '#/def/ext/W' },
         { $ref: '#/def/ext/X' },
-        { $ref: '#/def/ext/Y' }
+        { $ref: '#/def/ext/Y' },
+        { $ref: '#/def/ext/Z' }
       ]
     },
     LEVEL10EAST: {
@@ -372,6 +372,23 @@ export default /* eslint-disable */
         end: { $ref: '#/def/ext/E' },
         windows: [{ $ref: '#/def/WINDOWS' }]
       }]
+    }
+  }, {
+    name: 'floor 5, roof of south wing',
+    altitude: 4 * 13,
+    height: 0,
+    roof: {
+      form: 'flat',
+      parapetHeight: 4,
+      outline: {
+        shape: 'polygon',
+        corners: [
+          { $ref: '#/def/ext/E' },
+          { $ref: '#/def/ext/F' },
+          { $ref: '#/def/ext/G' },
+          { $ref: '#/def/ext/H' }
+        ]
+      }
     }
   }, {
     name: 'floor 4, roof of center span',
@@ -601,10 +618,8 @@ export default /* eslint-disable */
       }, {
         end: { $ref: '#/def/ext/Q' }
       }, {
-        end: { $ref: '#/def/ext/U' },
+        end: { $ref: '#/def/ext/V' },
         windows: [{ $ref: '#/def/WINDOWS' }]
-      }, {
-        end: { $ref: '#/def/ext/V' }
       }, {
         end: { $ref: '#/def/ext/W' },
         windows: [
@@ -619,11 +634,13 @@ export default /* eslint-disable */
         end: { $ref: '#/def/ext/Y' },
         windows: [ /* TODO: add office window */ ]
       }, {
+        end: { $ref: '#/def/ext/Z' }
+      }, {
         end: { $ref: '#/def/ext/K' },
         windows: [ /* TODO: add single window */ ]
       }],
       interior: [{
-        begin: { $ref: '#/def/ext/p1/r' },
+        begin: { $ref: '#/def/p1/r' },
         end: { $ref: '#/def/p1/q' }
       }, {
         end: { $ref: '#/def/p1/p' }
@@ -668,43 +685,17 @@ export default /* eslint-disable */
       }]
     }
   }, {
-    name: 'floor 10',
+    name: 'floor 10 east',
+    altitude: 9 * 13,
     comments: [
       'TODO: ... '
     ],
     height: 13,
-    roof: {
-      form: 'flat',
-      parapetHeight: 4,
-      outline: {
-        shape: 'polygon',
-        corners: [
-          { $ref: '#/def/ext/K' },
-          { $ref: '#/def/ext/L' },
-          { $ref: '#/def/ext/Q' },
-          { $ref: '#/def/ext/U' }
-        ]
-      }
-    },
     floors: [
-      { outline: { $ref: '#/def/LEVEL10EAST' } },
-      /* TODO: add west balcony */
-      { outline: { $ref: '#/def/LEVEL10WEST' } }
+      { outline: { $ref: '#/def/LEVEL10EAST' } }
     ],
     walls: {
-      exterior: [{ 
-        begin: { $ref: '#/def/ext/V' },
-        end: { $ref: '#/def/ext/W' }
-        /* TODO: add stairwell window */
-      }, {
-        end: { $ref: '#/def/ext/X' }
-        /* TODO: add narrow stair window */
-        /* TODO: add balcony door */
-      }, {
-        end: { $ref: '#/def/ext/Y' }
-      }, {
-        end: { $ref: '#/def/ext/V' }
-      }, {
+      exterior: [{
         begin: { $ref: '#/def/ext/M' },
         /* TODO: on the 10th floor, this wall should be a couple dozen feet further north */
         end: { $ref: '#/def/ext/N' }
@@ -716,7 +707,55 @@ export default /* eslint-disable */
       }, { 
         end: { $ref: '#/def/ext/M' }
       }]
+    },
+    roof: {
+      form: 'flat'
     }
+  }, {
+    name: 'floor 10 west',
+    altitude: 9 * 13,
+    comments: [
+      'TODO: ... '
+    ],
+    height: 13,
+    floors: [
+      { outline: { $ref: '#/def/LEVEL10WEST' } }
+    ],
+    walls: {
+      exterior: [{ 
+        begin: { $ref: '#/def/ext/W' },
+        end: { $ref: '#/def/ext/X' }
+        /* TODO: add stairwell window */
+      }, {
+        end: { $ref: '#/def/ext/Y' }
+        /* TODO: add narrow stair window */
+        /* TODO: add balcony door */
+      }, {
+        end: { $ref: '#/def/ext/Z' }
+      }, {
+        end: { $ref: '#/def/ext/W' }
+      }]
+    },
+    roof: {
+      form: 'flat'
+    }
+  }, {
+    name: 'floor 10, roof of tower',
+    altitude: 9 * 13,
+    height: 0,
+    roof: {
+      form: 'flat',
+      parapetHeight: 4,
+      outline: {
+        shape: 'polygon',
+        corners: [
+          { $ref: '#/def/ext/K' },
+          { $ref: '#/def/ext/L' },
+          { $ref: '#/def/ext/Q' },
+          { $ref: '#/def/ext/V' }
+        ]
+      }
+    },
   }]
 
 }

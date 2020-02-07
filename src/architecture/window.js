@@ -34,12 +34,17 @@ class Window extends Opening {
    * @param {Ray} placement - location and compass direction
    */
   makeModelFromSpec (spec, placement) {
-    const { name, unit, wallLength, /* motion, */ outline, /* leafCount, handleSide, */ at /*, casing */ } = spec
+    if (spec.repeat) {
+      // TODO: need to do more than this if we want repeating windows!
+      spec = spec.repeat.feature
+    }
+
+    const { name, unit, wallLength, /* motion, */ outline, /* leafCount, handleSide, */ at = { x: 0, y: 0, from: 'center' } /*, casing */ } = spec
     // EXAMPLE:
     // name: 'kitchen window',
     // unit: 'feet',
     // motion: 'casement',
-    // outline: { shape: 'rectangle', data: { x: 16, y: 7 } },
+    // outline: { shape: 'rectangle', size: { x: 16, y: 7 } },
     // leafCount: { cols: 2 },
     // lites: { rows: 2, cols: 1 },
     // at: { x: 4, y: 3, from: 'left' },

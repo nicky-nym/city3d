@@ -102,16 +102,13 @@ class Roof extends Model {
 
     let corners = []
     if (outline) {
-      corners = outline
-      // console.log(`new Roof with outline: ${eaves}`, outline)
+      corners = outline.corners
     } else {
       for (const wall of walls) {
         corners.push(wall.begin())
       }
-      // console.log(`new Roof with corners: ${eaves}`, corners)
     }
     outline = new Outline({ shape: 'polygon', corners }, -eaves || 0)
-    // console.log(`new Roof with eaves: ${eaves}`, outline)
 
     form = form || FORM.FLAT
     if (form === FORM.FLAT) {
