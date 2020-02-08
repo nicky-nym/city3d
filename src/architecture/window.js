@@ -53,8 +53,9 @@ class Window extends Opening {
     this.name = name || this.name
     this.setWallLength(wallLength)
     this.setOutline(outline)
-    at.y -= outline.size.y / 2
-    this.setAt(at)
+    const myAt = { ...at }
+    myAt.y -= outline.size.y / 2
+    this.setAt(myAt)
 
     if (unit && unit !== 'feet') {
       // TODO: write this code!

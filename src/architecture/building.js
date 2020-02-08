@@ -95,7 +95,7 @@ class Building extends Structure {
       Model.mergeValueIfAbsent(storeySpec, priors)
       const storey = new Storey({ spec: storeySpec, placement })
       this.add(storey)
-      priors.altitude = storey.altitude() + storey.height()
+      priors.altitude = storey.altitude() + (storey.height() * storey.repeat())
       priors.height = storey.height()
     }
   }

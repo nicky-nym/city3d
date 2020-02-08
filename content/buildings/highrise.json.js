@@ -28,7 +28,7 @@ export default /* eslint-disable */
       leafCount: { cols: 24 },
       motion: 'picture',
       outline: { shape: 'rectangle', size: { x: 96, y: 6 } },
-      center: { x: 0, y: 6 }
+      at: { x: 0, y: 6, from: 'center'}
     }
   },
   storeys: [{

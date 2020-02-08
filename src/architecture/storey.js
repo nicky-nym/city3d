@@ -124,17 +124,22 @@ class Storey extends Model {
     return this._depth
   }
 
+  repeat () {
+    return this._repeat
+  }
+
   /**
    * Generate Geometry objects corresponding to a specification.
    * @param {object} spec - an specification object that is valid against storey.schema.json.js
    * @param {Ray} [placement] - the location and orientation of this part
    */
   makeModelFromSpec (spec, placement) {
-    let { name, unit, altitude = 0, height = 0, repeat, floors, ceiling, walls, rooms, roof } = spec
+    const { name, unit, altitude = 0, height = 0, repeat = 1, floors, ceiling, walls, rooms, roof } = spec
 
     this.name = name || this.name
     this._altitude = altitude
     this._height = height
+    this._repeat = repeat
 
     if (unit && unit !== 'feet') {
       // TODO: write this code!
@@ -142,7 +147,6 @@ class Storey extends Model {
     }
 
     const at = placement.add({ x: 0, y: 0, z: altitude }, placement.az)
-    repeat = repeat || 1
     for (const i of countTo(repeat)) { // eslint-disable-line no-unused-vars
       if (floors) {
         for (const floorSpec of floors) {

@@ -21,7 +21,7 @@ class Opening extends Model {
   }
 
   setAt (at) {
-    this._at = at || { x: 0, from: 'center' }
+    this._at = at ? { ...at } : { x: 0, from: 'center' }
   }
 
   opening () {
