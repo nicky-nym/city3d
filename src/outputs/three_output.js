@@ -119,7 +119,7 @@ class ThreeOutput extends Output {
     this._tooltipDiv.className = 'tooltip'
     outputDivElement.appendChild(this._tooltipDiv)
 
-    this.controls = new OrbitControls(this._camera, this._renderer.domElement)
+    this.controls = new OrbitControls(this._camera, outputDivElement)
     this.controls.enabled = true
     this._highlightingOn = true
 
