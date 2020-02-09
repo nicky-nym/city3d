@@ -20,25 +20,30 @@ class Opening extends Model {
     this._outline = outline
   }
 
-  setAt (at) {
-    this._at = at ? { ...at } : { x: 0, from: 'center' }
+  pushAt (at) {
+    this._atList = this._atList || []
+    this._atList.push(at ? { ...at } : { x: 0, from: 'center' })
   }
 
-  opening () {
+  openings () {
+    const openings = []
     // TODO: this assumes the outline is just a rectangled
     // TODO: make an instance of Outline instead
     const w = this._outline.size.x
     const h = this._outline.size.y
     let x = 0
-    const y = this._at.y || 0
-    if (this._at.from === 'left') {
-      x = this._at.x - (w / 2)
-    } else if (this._at.from === 'right') {
-      x = this._wallLength + this._at.x - (w / 2)
-    } else if (this._at.from === 'center') {
-      x = (this._wallLength / 2) + this._at.x - (w / 2)
+    for (const at of this._atList) {
+      const y = at.y || 0
+      if (at.from === 'left') {
+        x = at.x - (w / 2)
+      } else if (at.from === 'right') {
+        x = this._wallLength + at.x - (w / 2)
+      } else if (at.from === 'center') {
+        x = (this._wallLength / 2) + at.x - (w / 2)
+      }
+      openings.push(xywh2rect(x, y, w, h))
     }
-    return xywh2rect(x, y, w, h)
+    return openings
   }
 }
 

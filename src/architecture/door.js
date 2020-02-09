@@ -48,7 +48,7 @@ class Door extends Opening {
     this.name = name || this.name
     this.setWallLength(wallLength)
     this.setOutline(outline)
-    this.setAt(at)
+    this.pushAt(at)
 
     if (unit && unit !== 'feet') {
       // TODO: write this code!

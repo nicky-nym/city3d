@@ -196,6 +196,7 @@ export default /* eslint-disable */
         feature: {
           motion: 'awning',
           outline: { shape: 'rectangle', size: { x: 8, y: 9 } },
+          at: { x: 0, y: 7.5, from: 'center'},
           awning: { size: { x: 8, y: 5, z: 0 } }
         }
       }

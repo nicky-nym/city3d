@@ -6,6 +6,7 @@
  */
 
 import { Opening } from './opening.js'
+import { countTo } from '../core/util.js'
 
 /**
 * Window is a class for representing any kind of window in a wall
@@ -34,28 +35,50 @@ class Window extends Opening {
    * @param {Ray} placement - location and compass direction
    */
   makeModelFromSpec (spec, placement) {
+    let spacing = 0
+    let numWindows = 1
     if (spec.repeat) {
-      // TODO: need to do more than this if we want repeating windows!
-      spec = spec.repeat.feature
+      /* Example of repeat pattern:
+       * repeat: {
+       *   spacing: 9 + 2 / 12,
+       *   feature: {
+       *     motion: 'awning',
+       *     outline: { shape: 'rectangle', size: { x: 8, y: 9 } },
+       *     awning: { size: { x: 8, y: 5, z: 0 } }
+       *   }
+       * }
+      */
+      spacing = spec.repeat.spacing
+      const wallLength = spec.wallLength
+      numWindows = Math.floor(wallLength / spacing)
+      const specCopy = { ...spec.repeat.feature }
+      specCopy.wallLength = spec.wallLength
+      specCopy.at = { ...spec.repeat.feature.at }
+      spec = specCopy
     }
 
-    const { name, unit, wallLength, /* motion, */ outline, /* leafCount, handleSide, */ at = { x: 0, y: 0, from: 'center' } /*, casing */ } = spec
-    // EXAMPLE:
-    // name: 'kitchen window',
-    // unit: 'feet',
-    // motion: 'casement',
-    // outline: { shape: 'rectangle', size: { x: 16, y: 7 } },
-    // leafCount: { cols: 2 },
-    // lites: { rows: 2, cols: 1 },
-    // at: { x: 4, y: 3, from: 'left' },
-    // casing: { width: 0.5 },
+    const { name, unit, wallLength, /* motion, */ outline, /* leafCount, */ at /*, handleSide, casing */ } = spec
+    /* Example of window spec:
+     * name: 'kitchen window',
+     * unit: 'feet',
+     * motion: 'casement',
+     * outline: { shape: 'rectangle', size: { x: 16, y: 7 } },
+     * leafCount: { cols: 2 },
+     * lites: { rows: 2, cols: 1 },
+     * at: { x: 4, y: 3, from: 'left' },
+     * casing: { width: 0.5 }
+     */
 
     this.name = name || this.name
     this.setWallLength(wallLength)
     this.setOutline(outline)
-    const myAt = { ...at }
-    myAt.y -= outline.size.y / 2
-    this.setAt(myAt)
+
+    for (const i of countTo(numWindows)) {
+      const iAt = { ...at }
+      iAt.x += (i + 0.5 - (numWindows / 2)) * spacing
+      iAt.y -= outline.size.y / 2
+      this.pushAt(iAt)
+    }
 
     if (unit && unit !== 'feet') {
       // TODO: write this code!

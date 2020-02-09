@@ -155,13 +155,13 @@ class Wall extends Model {
     for (const doorSpec of doors) {
       doorSpec.wallLength = length
       const door = new Door({ spec: doorSpec })
-      openings.push(door.opening())
+      openings.push(...door.openings())
     }
     windows = windows || []
     for (const windowSpec of windows) {
       windowSpec.wallLength = length
       const window = new Window({ spec: windowSpec })
-      openings.push(window.opening())
+      openings.push(...window.openings())
     }
 
     const deprecatedSpec = {
