@@ -37,6 +37,11 @@ export default /* eslint-disable */
     "metadata": { "$ref": "metadata.schema.json" },
     "comments": { "$ref": "definitions.json#/def/comments" },
     "unit": { "$ref": "definitions.json#/def/unit" },
+    "def": { "$ref": "definitions.json#/def/def" },
+    "anchorPoint": {
+      "description": "the point that serves as the center of the building when the building is place on a parcel",
+      "$ref": "xy.schema.json"
+    },
     "border": {
       "$ref": "outline.schema.json"
     },
