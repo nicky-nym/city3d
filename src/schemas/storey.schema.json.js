@@ -50,6 +50,20 @@ export default /* eslint-disable */
         "$ref": "floor.schema.json"
       }
     },
+    "stairs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [  ],
+        "properties": {
+          "name": { "$ref": "definitions.json#/def/name" },
+          "unit": { "$ref": "definitions.json#/def/unit" },
+          "pitch": { "$ref": "pitch.schema.json" },
+          "outline": { "$ref": "outline.schema.json" },
+          "surface": { "$ref": "surface.schema.json" }
+        }
+      }
+    },
     "roof": {
       "$ref": "roof.schema.json"
     },

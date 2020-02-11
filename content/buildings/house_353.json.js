@@ -25,10 +25,12 @@ export default /* eslint-disable */
     '  |      f-g               |       ',
     '  AS-------------B         |       ',
     '   |             |         |       ',
-    '   T-------------U         |       ',
-    '                 C         H       ',
-    '                  \       /        ',
-    '                 D E-----F G       ',
+    '   T--------k---jU         |       ',
+    '            |---|C         H       ',
+    '            |---|\       /        ',
+    '            |---|D E-----F G       ',
+    '            l---i                  ',
+    '                                   ',
     '-y                               +y',
   ],
   anchorPoint: { x: 39.875, y: 30.875, z: 0 },
@@ -67,7 +69,12 @@ export default /* eslint-disable */
     e: { x: -33, y: 23 },
     f: { x: -27, y: 23 },
     g: { x: -27, y: 27 },
-    h: { x: -33, y: 27 }
+    h: { x: -33, y: 27 },
+    /* TODO: determine accurate locations for front stairs */
+    i: { x: -25.792 + 5.333 + 5.5, y: 32 },
+    j: { x: -25.792 + 5.333, y: 32 },
+    k: { x: -25.792 + 5.333, y: 27 },
+    l: { x: -25.792 + 5.333 + 5.5, y: 27 }
   },
   storeys: [{
     name: 'crawl space',
@@ -176,7 +183,21 @@ export default /* eslint-disable */
       }, {
         end: { $ref: '#/def/U' }
       }]
-    }
+    },
+    stairs: [{
+      name: 'front stairs',
+      surface: { material: 'wood' },
+      pitch: { rise: 6.857, run: 11 },
+      outline: {
+        shape: 'polygon',
+        corners: [
+          { $ref: '#/def/i' },
+          { $ref: '#/def/j' },
+          { $ref: '#/def/k' },
+          { $ref: '#/def/l' }
+        ]
+      }
+    }]
   }, {
     name: 'front porch',
     height: 8,

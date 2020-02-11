@@ -12,6 +12,7 @@ import { METRIC } from './metric.js'
 import { Model } from './model.js'
 import { Roof } from './roof.js'
 // import { Room } from './room.js'
+import { Stairs } from './stairs.js'
 // import { Use } from './use.js'
 import { Wall } from './wall.js'
 import { countTo } from '../core/util.js'
@@ -134,7 +135,7 @@ class Storey extends Model {
    * @param {Ray} [placement] - the location and orientation of this part
    */
   makeModelFromSpec (spec, placement) {
-    const { name, unit, altitude = 0, height = 0, repeat = 1, floors, ceiling, walls, rooms, roof } = spec
+    const { name, unit, altitude = 0, height = 0, repeat = 1, floors, stairs, ceiling, walls, rooms, roof } = spec
 
     this.name = name || this.name
     this._altitude = altitude
@@ -152,6 +153,13 @@ class Storey extends Model {
         for (const floorSpec of floors) {
           const floor = new Floor({ spec: floorSpec, placement: at })
           this.add(floor)
+        }
+      }
+
+      if (stairs) {
+        for (const stairSpec of stairs) {
+          const flight = new Stairs({ spec: stairSpec, placement: at })
+          this.add(flight)
         }
       }
 

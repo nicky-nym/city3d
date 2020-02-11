@@ -84,7 +84,7 @@ class Floor extends Model {
     // EXAMPLE:
     // name: 'Expansive hardwood floor',
     // unit: 'feet',
-    // outline: { shape: 'rectangle', data: { x: 16, y: 7 } },
+    // outline: { shape: 'rectangle', size: { x: 16, y: 7 } },
     // surface: { style: 'parquet', material: 'wood' },
 
     this.name = name || this.name
