@@ -55,12 +55,12 @@ export default /* eslint-disable */
   },
   contents: [{
     copy: { $ref: 'Garage' },
-    at: { x: 34, y: 152 }
+    at: { x: 16, y: 152, rotated: 90 }
   }, {
     copy: { $ref: 'Cottage' },
-    at: { x: 34, y: 120 }
+    at: { x: 16, y: 120, rotated: 90 }
   }, {
     copy: { $ref: 'House 353' },
-    at: { x: 30, y: 40 }
+    at: { x: 66, y: 20, rotated: 90 }
   }]
 }

@@ -124,7 +124,8 @@ class Manhattan extends District {
     const placement = this.goto(origin)
     this._addLowLevelOfDetailStreetsAndAvenues(placement)
     const outline = rectangleOfSize(xy(REPEAT_DX * numRows, REPEAT_DY * numCols))
-    this._parcel = new Parcel({ outline, placement })
+    const deprecatedSpec = { outline }
+    this._parcel = new Parcel({ deprecatedSpec, placement })
     this.add(this._parcel)
     for (const row of countTo(numRows)) {
       for (const col of countTo(numCols)) {

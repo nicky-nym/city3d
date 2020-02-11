@@ -8,6 +8,7 @@
 import { StockCatalog } from '../../content/stock_catalog.js'
 import { Building } from './building.js'
 import { Facing } from '../core/facing.js'
+import { Parcel } from './parcel.js'
 import { Ray } from '../core/ray.js'
 
 /**
@@ -88,12 +89,18 @@ class SpecReader {
    */
   makeModelFromSpec (specification, at) {
     if (specification.context !== 'city3d') {
-      throw new Error('Unrecognised "context" string in spec object')
+      throw new Error(`Unrecognised "context" string in spec object ${specification.context}`)
     }
     if (specification.type === 'building.schema.json') {
       specification = SpecReader._resolveLocalRefDirectives(specification, specification)
       const placement = new Ray(Facing.NORTH, at)
       return new Building({ spec: specification, placement })
+    } else if (specification.type === 'parcel.schema.json') {
+      specification = SpecReader._resolveLocalRefDirectives(specification, specification)
+      const placement = new Ray(Facing.NORTH, at)
+      return new Parcel({ spec: specification, placement, specReader: this })
+    } else {
+      throw new Error(`Unrecognised "type" string in spec object ${specification.type}`)
     }
   }
 

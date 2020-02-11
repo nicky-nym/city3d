@@ -6,12 +6,19 @@
  */
 
 import { Catalog } from './catalog.js'
+
+// buildings
 import COTTAGE from './buildings/cottage.json.js'
 import GARAGE from './buildings/garage.json.js'
 import HIGHRISE from './buildings/highrise.json.js'
 import HOUSE_353 from './buildings/house_353.json.js'
 import WURSTER_HALL from './buildings/wurster_hall.json.js'
+
+// districts
 import CAMPUS from './districts/campus.json.js'
+
+// parcels
+import PARCEL_353 from './parcels/parcel_353.json.js'
 
 /**
  * Catalog of all the model specification objects included as example content in city3d.
@@ -25,7 +32,8 @@ class StockCatalog extends Catalog {
       HIGHRISE,
       HOUSE_353,
       WURSTER_HALL,
-      CAMPUS
+      CAMPUS,
+      PARCEL_353
     ])
   }
 }

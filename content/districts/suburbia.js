@@ -40,7 +40,8 @@ class Suburbia extends District {
       offset.y = PARCEL.offset.y + i * PARCEL_DY
       const placement = this.goto(offset)
       const outline = cornersFromShape(PARCEL.shape)
-      const parcel = new Parcel({ outline, placement })
+      const deprecatedSpec = { outline }
+      const parcel = new Parcel({ deprecatedSpec, placement })
       this.add(parcel)
 
       const STREET_DX = 15

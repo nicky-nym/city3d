@@ -1,5 +1,5 @@
 /** @file parcel.js
- * @author Authored in 2019 at <https://github.com/nicky-nym/city3d>
+ * @author Authored in 2019, 2020 at <https://github.com/nicky-nym/city3d>
  * @license UNLICENSE
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -9,6 +9,7 @@ import { Feature, FeatureInstance } from '../core/feature.js'
 import { Geometry } from '../core/geometry.js'
 import { Model } from './model.js'
 import { METRIC } from './metric.js'
+import { Outline } from '../core/outline.js'
 
 const MARTIAN_ORANGE = 0xdf4911
 
@@ -16,13 +17,64 @@ const MARTIAN_ORANGE = 0xdf4911
 * Parcel is a class for representing a parcel of land in a city.
 */
 class Parcel extends Model {
+  /**
+   * Create a new instance of a specified Parcel, and generate the Geometry objects for it.
+   * @param {string} [name] - a display name for this individual instance at a given placement
+   * @param {Ray} [placement] - the location and orientation of this parcel
+   * @param {object} [deprecatedSpec] - an old 2019 spec format that we're phasing out
+   * @param {object} [spec] - a specification object that is valid against parcel.schema.json.js
+   * @param {SpecReader} [specReader] - an instance of a SpecReader, for adding content models in the parcel
+   */
   constructor ({
     name = 'Parcel',
     outline,
-    placement
+    placement,
+    deprecatedSpec,
+    spec,
+    specReader
   } = {}) {
+    name = name || (spec && spec.name)
     super({ name })
-    const adjustedCorners = placement.applyRay(outline)
+    if (deprecatedSpec) {
+      this._makeModelFromDeprecatedSpec(deprecatedSpec, placement)
+    }
+    if (spec) {
+      this.makeModelFromSpec(spec, placement, specReader)
+    }
+  }
+
+  /**
+   * Generate Geometry objects corresponding to a specification.
+   * @param {object} spec - an specification object that is valid against parcel.schema.json.js
+   * @param {Ray} [placement] - the location and orientation of this part
+   */
+  makeModelFromSpec (spec, placement, specReader) {
+    const { name, unit, /* anchorPoint, */ border, contents } = spec
+
+    this.name = name || this.name
+
+    if (unit && unit !== 'feet') {
+      // TODO: write this code!
+      throw new Error('TODO: need to convert values into feet')
+    }
+    const outline = new Outline(border)
+    const corners = outline.corners()
+    const deprecatedSpec = { outline: corners }
+    this._makeModelFromDeprecatedSpec(deprecatedSpec, placement)
+
+    if (contents) {
+      for (const copySpec of contents) {
+        const at = placement.applyRay(copySpec.at)
+        const specName = copySpec.copy.$ref
+        const modelObject = specReader.makeModelFromSpecName(specName, at)
+        this.add(modelObject)
+      }
+    }
+  }
+
+  // TODO: delete this code when it is no longer used by any content model classes
+  _makeModelFromDeprecatedSpec (parcelSpec, placement) {
+    const adjustedCorners = placement.applyRay(parcelSpec.outline)
     adjustedCorners.push(adjustedCorners[0])
     const xyPolygon = new Geometry.XYPolygon(adjustedCorners)
     const abstractOutlinePolygon = new Geometry.OutlinePolygon(xyPolygon)

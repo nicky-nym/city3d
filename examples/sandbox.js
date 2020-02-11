@@ -17,8 +17,8 @@ window.DEBUG = true
 function addBuildings (city) {
   const suburbia = new CITY.Suburbia({
     name: 'Suburbia',
-    outline: rectangleOfSize(xy(-250, 200)),
-    placement: new Ray(Facing.NORTH, xyz(-100, 100, 0))
+    outline: rectangleOfSize(xy(-250, 120)),
+    placement: new Ray(Facing.NORTH, xyz(-100, 300, 0))
   })
   suburbia.addStreet(2)
   city.add(suburbia)
@@ -126,9 +126,7 @@ function main () {
   addPyramid(extras)
   addKalpanaOrbital(extras)
   addMovers(extras)
-  addObjectFromSpec(extras, specReader, 'Garage', { x: -288, y: 60, z: 0 })
-  addObjectFromSpec(extras, specReader, 'Cottage', { x: -252, y: 60, z: 0 })
-  addObjectFromSpec(extras, specReader, 'House 353', { x: -130, y: 30, z: 0 })
+  addObjectFromSpec(extras, specReader, 'Parcel 353', { x: -300, y: 50, z: 0 })
   addObjectFromSpec(extras, specReader, 'Wurster Hall', { x: 50, y: -400, z: 0 })
   addObjectFromSpec(extras, specReader, 'Highrise building', { x: -480, y: 40, z: 0 })
 
