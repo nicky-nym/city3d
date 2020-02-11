@@ -413,9 +413,6 @@ class ThreeOutput extends Output {
       const buildings = todoFolder.addFolder('Buildings')
       buildings.add(ui.layers.building, 'doors & windows')
 
-      const pavement = todoFolder.addFolder('Pavement')
-      pavement.add(ui.layers.pavement, 'streets, etc.')
-
       const landscape = todoFolder.addFolder('Landscape')
       landscape.add(ui.layers.landscape, 'ground surface')
 

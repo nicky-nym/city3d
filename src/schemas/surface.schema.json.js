@@ -49,6 +49,7 @@ export default /* eslint-disable */
         "brick",
         "cinder block",
         "stone",
+        "gravel",
         "wood",
         "glulam",
         "bamboo",

@@ -141,8 +141,9 @@ class Wall extends Model {
       throw new Error('TODO: need to convert values into feet')
     }
 
-    this._begin = begin
-    this._end = end
+    // TODO: get this working...
+    this._begin = begin // xyzAdd(begin, placement.xyz)
+    this._end = end // xyzAdd(end, placement.xyz)
     this._roofline = roofline
     this._pitch = pitch
     this._height = height

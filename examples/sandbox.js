@@ -126,7 +126,7 @@ function main () {
   addPyramid(extras)
   addKalpanaOrbital(extras)
   addMovers(extras)
-  addObjectFromSpec(extras, specReader, 'Parcel 353', { x: -300, y: 50, z: 0 })
+  addObjectFromSpec(extras, specReader, 'Parcel 353', { x: -100, y: 100, z: 0 })
   addObjectFromSpec(extras, specReader, 'Wurster Hall', { x: 50, y: -400, z: 0 })
   addObjectFromSpec(extras, specReader, 'Highrise building', { x: -480, y: 40, z: 0 })
 

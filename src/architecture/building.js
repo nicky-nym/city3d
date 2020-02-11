@@ -87,13 +87,16 @@ class Building extends Structure {
       throw new Error('TODO: need to convert values into feet')
     }
 
+    const anchor = placement.copy()
+    // TODO: get this working:
+    // anchor.xyz = xyzSubtract(anchor.xyz, anchorPoint)
     const priors = {
       altitude: 0,
       height: 0
     }
     for (const storeySpec of storeys) {
       Model.mergeValueIfAbsent(storeySpec, priors)
-      const storey = new Storey({ spec: storeySpec, placement })
+      const storey = new Storey({ spec: storeySpec, placement: anchor })
       this.add(storey)
       priors.altitude = storey.altitude() + (storey.height() * storey.repeat())
       priors.height = storey.height()

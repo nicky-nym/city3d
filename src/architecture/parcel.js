@@ -10,6 +10,7 @@ import { Geometry } from '../core/geometry.js'
 import { Model } from './model.js'
 import { METRIC } from './metric.js'
 import { Outline } from '../core/outline.js'
+import { Pavement } from './pavement.js'
 
 const MARTIAN_ORANGE = 0xdf4911
 
@@ -49,7 +50,7 @@ class Parcel extends Model {
    * @param {Ray} [placement] - the location and orientation of this part
    */
   makeModelFromSpec (spec, placement, specReader) {
-    const { name, unit, /* anchorPoint, */ border, contents } = spec
+    const { name, unit, /* anchorPoint, */ border, contents, pavement } = spec
 
     this.name = name || this.name
 
@@ -68,6 +69,13 @@ class Parcel extends Model {
         const specName = copySpec.copy.$ref
         const modelObject = specReader.makeModelFromSpecName(specName, at)
         this.add(modelObject)
+      }
+    }
+
+    if (pavement) {
+      for (const spec of pavement) {
+        const surface = new Pavement({ spec, placement })
+        this.add(surface)
       }
     }
   }

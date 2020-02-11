@@ -30,6 +30,25 @@ export default /* eslint-disable */
         "$ref": "copy.schema.json"
       }
     },
+    "pavement": {
+      "description": "paved surfaces, like streets, sidewalks, driveways, and bike paths",
+      "type": "array",
+      "items": { 
+        "type": "object",
+        "required": [],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "surface": {
+            "$ref": "surface.schema.json"
+          },
+          "outline": {
+            "$ref": "outline.schema.json"
+          }
+        }
+      }
+    },
     "def": {
       "description": "schema definitions for property values that are shared across schemas",
       "type": "object"
