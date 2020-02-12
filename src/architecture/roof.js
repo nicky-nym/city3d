@@ -8,8 +8,9 @@
 import { Feature, FeatureInstance } from '../core/feature.js'
 import { Geometry } from '../core/geometry.js'
 import { Model } from './model.js'
-import { Pitch } from '../core/pitch.js'
 import { Outline } from '../core/outline.js'
+import { Pitch } from '../core/pitch.js'
+import { Storey } from './storey.js'
 import { hypotenuse } from '../core/util.js'
 
 const LIGHT_GRAY = 0x808080
@@ -81,13 +82,41 @@ class Roof extends Model {
     }
   }
 
+  _makeParapet (parapetHeight, placement, corners) {
+    if (parapetHeight) {
+      const parapetSpec = {
+        name: 'Roof parapet',
+        height: parapetHeight,
+        walls: {
+          exterior: []
+        }
+      }
+      for (let i = 1; i < corners.length; i++) {
+        const end = corners[i]
+        const wallSpec = { end }
+        if (i === 1) {
+          wallSpec.begin = corners[0]
+        }
+        parapetSpec.walls.exterior.push(wallSpec)
+      }
+      const end = corners[0]
+      parapetSpec.walls.exterior.push({ end })
+
+      const parapetStory = new Storey({
+        placement,
+        spec: parapetSpec
+      })
+      this.add(parapetStory)
+    }
+  }
+
   /**
    * Generate Geometry objects corresponding to a specification.
    * @param {object} spec - an specification object that is valid against roof.schema.json.js
    * @param {Ray} [placement] - the location and orientation of this part
    */
   makeModelFromSpec (spec, placement, walls) {
-    let { name, unit, outline, form, pitch, eaves /* surface */ } = spec
+    let { name, unit, outline, openings, parapetHeight, form, pitch, eaves /* surface */ } = spec
 
     this.name = name || this.name
 
@@ -112,7 +141,17 @@ class Roof extends Model {
 
     form = form || FORM.FLAT
     if (form === FORM.FLAT) {
-      this._makeSlab(outline.corners(), placement)
+      const openingSpecs = openings || []
+      openings = []
+      for (const opening of openingSpecs) {
+        const corners = Outline.cornersFromSpec(opening)
+        const adjustedCorners = placement.applyRay(corners)
+        openings.push(adjustedCorners)
+        this._makeParapet(parapetHeight, placement, corners)
+      }
+      const corners = outline.corners()
+      this._makeSlab(corners, placement, 0, openings)
+      this._makeParapet(parapetHeight, placement, corners)
     } else if (form === FORM.PITCHED) {
       this._makePitchedRoof(eaves, pitch, placement, walls, outline)
     } else if (form === FORM.HIPPED) {
@@ -128,10 +167,10 @@ class Roof extends Model {
     }
   }
 
-  _makeSlab (corners, placement, incline = 0) {
+  _makeSlab (corners, placement, incline = 0, openings = []) {
     const adjustedCorners = placement.applyRay(corners)
     const xyPolygon = new Geometry.XYPolygon(adjustedCorners)
-    const abstractThickPolygon = new Geometry.ThickPolygon(xyPolygon, { incline, depth: ROOF_THICKNESS })
+    const abstractThickPolygon = new Geometry.ThickPolygon(xyPolygon, { incline, depth: ROOF_THICKNESS, openings })
     const p0 = { ...adjustedCorners[0], z: placement.xyz.z }
     const concreteThickPolygon = new FeatureInstance(abstractThickPolygon, p0, LIGHT_GRAY)
     this.add(concreteThickPolygon)

@@ -34,6 +34,12 @@ export default /* eslint-disable */
     "outline": {
       "$ref": "outline.schema.json"
     },
+    "openings": {
+      "type": "array",
+      "items": {
+        "$ref": "outline.schema.json"
+      }
+    },
     "surface": {
       "$ref": "surface.schema.json"
     },

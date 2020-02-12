@@ -34,7 +34,7 @@ export default /* eslint-disable */
     "comments": { "$ref": "definitions.json#/def/comments" },
     "unit": { "$ref": "definitions.json#/def/unit" },
     "motion": {
-      "enum": ["casement", "awning", "sliding", "hung", "picture"]
+      "enum": ["casement", "awning", "sliding", "hung", "picture", "open"]
     },
     "outline": {
       "$ref": "outline.schema.json"

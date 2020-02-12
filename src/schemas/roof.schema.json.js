@@ -37,6 +37,12 @@ export default /* eslint-disable */
     "outline": {
       "$ref": "outline.schema.json"
     },
+    "openings": {
+      "type": "array",
+      "items": {
+        "$ref": "outline.schema.json"
+      }
+    },
     "form": {
       "enum": ["none", "flat", "pitched", "hipped", "shed", "living", "vaulted"]
     },

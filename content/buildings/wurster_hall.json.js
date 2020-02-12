@@ -28,10 +28,10 @@ export default /* eslint-disable */
       '  |      V-W - - - -Z--K                    |              |  ',
       '  |        |        |  J--------------------I              |  ',
       '  |        |        |                       |              |  ',
-      '  |        X--------Y                       |              |  ',
-      '  |                                         |              |  ',
-      '  |                    B----C               |              |  ',
-      '  |                    A -- D---------------E--------------F  ',
+      '  |        Xb---e---Yc                      |              |  ',
+      '  |         |   f---g|                      |              |  ',
+      '  |         |        | B----C               |              |  ',
+      '  |         a--------d A -- D---------------E--------------F  ',
       '  |                    |                                      ',
       '  |                    U                                      ',
       '  |                    |                                      ',
@@ -66,6 +66,15 @@ export default /* eslint-disable */
       X: { x: 50, y: 80 },
       Y: { x: 95, y: 80 },
       Z: { x: 95, y: 110 },
+      // atrium
+      a: { x: 55, y: 58 },
+      b: { x: 55, y: 80 },
+      c: { x: 100, y: 80 },
+      d: { x: 100, y: 58 },
+      // balcony
+      e: { x: 72, y: 80 },
+      f: { x: 72, y: 70 },
+      g: { x: 95, y: 70 }
     },
 
     LEVEL1: { // see alternative syntax ideas below...
@@ -186,8 +195,11 @@ export default /* eslint-disable */
       corners: [
         { $ref: '#/def/ext/W' },
         { $ref: '#/def/ext/X' },
+        { $ref: '#/def/ext/e' },
+        { $ref: '#/def/ext/f' },
+        { $ref: '#/def/ext/g' },
         { $ref: '#/def/ext/Y' },
-        { $ref: '#/def/ext/V' }
+        { $ref: '#/def/ext/Z' }
       ]
     },
     WINDOWS: {
@@ -294,7 +306,18 @@ export default /* eslint-disable */
     name: 'floors 2 and 3',
     repeat: 2,
     height: 13,
-    floors: [{ outline: { $ref: '#/def/LEVELS2AND3' } }],
+    floors: [{ 
+      outline: { $ref: '#/def/LEVELS2AND3' },
+      openings: [{
+        shape: 'polygon',
+        corners: [
+          { $ref: '#/def/ext/a' },
+          { $ref: '#/def/ext/b' },
+          { $ref: '#/def/ext/c' },
+          { $ref: '#/def/ext/d' }
+        ]
+      }]
+    }],
     walls: {
       exterior: [{
         begin: { $ref: '#/def/ext/A' },
@@ -429,7 +452,16 @@ export default /* eslint-disable */
           { $ref: '#/def/ext/Y' },
           { $ref: '#/def/ext/Z' }
         ]
-      }
+      },
+      openings: [{
+        shape: 'polygon',
+        corners: [
+          { $ref: '#/def/ext/a' },
+          { $ref: '#/def/ext/b' },
+          { $ref: '#/def/ext/c' },
+          { $ref: '#/def/ext/d' }
+        ]
+      }]
     }
   }, {
     name: 'tower floors, 4 to 9',
@@ -728,11 +760,32 @@ export default /* eslint-disable */
         end: { $ref: '#/def/ext/X' }
         /* TODO: add stairwell window */
       }, {
-        end: { $ref: '#/def/ext/Y' }
+        end: { $ref: '#/def/ext/e' }
+      }, {
+        end: { $ref: '#/def/ext/f' },
+        windows: [{
+          motion: 'open',
+          outline: { shape: 'rectangle', size: { x: 10, y: 4 } },
+          at: { x: 0, y: 6.5, from: 'center'}
+        }]
+      }, {
+        end: { $ref: '#/def/ext/g' },
+        windows: [{
+          motion: 'open',
+          outline: { shape: 'rectangle', size: { x: 23, y: 5 } },
+          at: { x: 0, y: 5.5, from: 'center'}
+        }]
+      }, {
+        end: { $ref: '#/def/ext/Y' },
+        windows: [{
+          motion: 'open',
+          outline: { shape: 'rectangle', size: { x: 10, y: 4 } },
+          at: { x: 0, y: 6.5, from: 'center'}
+        }]
+        }, {
+        end: { $ref: '#/def/ext/Z' }
         /* TODO: add narrow stair window */
         /* TODO: add balcony door */
-      }, {
-        end: { $ref: '#/def/ext/Z' }
       }, {
         end: { $ref: '#/def/ext/W' }
       }]

@@ -80,7 +80,7 @@ class Floor extends Model {
    * @param {Ray} placement - location and compass direction
    */
   makeModelFromSpec (spec, placement) {
-    const { name, unit, outline /*, surface */ } = spec
+    let { name, unit, outline, /* surface, */ openings } = spec
     // EXAMPLE:
     // name: 'Expansive hardwood floor',
     // unit: 'feet',
@@ -94,6 +94,13 @@ class Floor extends Model {
       throw new Error('TODO: need to convert values into feet')
     }
 
+    const openingSpecs = openings || []
+    openings = []
+    for (const opening of openingSpecs) {
+      const corners = Outline.cornersFromSpec(opening)
+      const adjustedCorners = placement.applyRay(corners)
+      openings.push(adjustedCorners)
+    }
     const corners = Outline.cornersFromSpec(outline)
     const adjustedCorners = placement.applyRay(corners)
     const xyPolygon = new Geometry.XYPolygon(adjustedCorners)
@@ -101,7 +108,7 @@ class Floor extends Model {
     const depth = -0.5
     const incline = 0
     const z = placement.xyz.z
-    const abstractThickPolygon = new Geometry.ThickPolygon(xyPolygon, { incline: incline, depth: depth })
+    const abstractThickPolygon = new Geometry.ThickPolygon(xyPolygon, { incline, depth, openings })
     const concreteThickPolygon = new FeatureInstance(abstractThickPolygon, { ...xyPolygon[0], z }, color,
       { layer: Floor.layer })
     this.add(concreteThickPolygon)
