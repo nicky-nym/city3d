@@ -15,16 +15,6 @@ import { xy, xyz, rectangleOfSize } from '../src/core/util.js'
 window.DEBUG = true
 
 function addBuildings (city) {
-  // const suburbia = new CITY.Suburbia({
-  //   name: 'Old Suburbia',
-  //   placement: new Ray(Facing.NORTH, xyz(-100, 300, 0)),
-  //   deprecatedSpec: {
-  //     outline: rectangleOfSize(xy(-250, 120))
-  //   }
-  // })
-  // suburbia.addStreet(2)
-  // city.add(suburbia)
-
   const CITY_SIZE = 1
   const nyc = new CITY.Manhattan({
     name: 'Manhattan',

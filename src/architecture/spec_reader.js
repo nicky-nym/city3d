@@ -85,27 +85,32 @@ class SpecReader {
     return node
   }
 
+  copySpec (specification) {
+    return JSON.parse(JSON.stringify(specification))
+  }
+
   /**
    * Given a specification object, return a tree of corresponding model objects.
    */
   makeModelFromSpec (specification, at) {
-    if (specification.context !== 'city3d') {
-      throw new Error(`Unrecognised "context" string in spec object ${specification.context}`)
+    let spec = this.copySpec(specification)
+    if (spec.context !== 'city3d') {
+      throw new Error(`Unrecognised "context" string in spec object ${spec.context}`)
     }
-    if (specification.type === 'building.schema.json') {
-      specification = SpecReader._resolveLocalRefDirectives(specification, specification)
+    if (spec.type === 'building.schema.json') {
+      spec = SpecReader._resolveLocalRefDirectives(spec, spec)
       const placement = new Ray(Facing.NORTH, at)
-      return new Building({ spec: specification, placement })
-    } else if (specification.type === 'parcel.schema.json') {
-      specification = SpecReader._resolveLocalRefDirectives(specification, specification)
+      return new Building({ spec, placement })
+    } else if (spec.type === 'parcel.schema.json') {
+      spec = SpecReader._resolveLocalRefDirectives(spec, spec)
       const placement = new Ray(Facing.NORTH, at)
-      return new Parcel({ spec: specification, placement, specReader: this })
-    } else if (specification.type === 'district.schema.json') {
-      specification = SpecReader._resolveLocalRefDirectives(specification, specification)
+      return new Parcel({ spec, placement, specReader: this })
+    } else if (spec.type === 'district.schema.json') {
+      spec = SpecReader._resolveLocalRefDirectives(spec, spec)
       const placement = new Ray(Facing.NORTH, at)
-      return new District({ spec: specification, placement, specReader: this })
+      return new District({ spec, placement, specReader: this })
     } else {
-      throw new Error(`Unrecognised "type" string in spec object ${specification.type}`)
+      throw new Error(`Unrecognised "type" string in spec object ${spec.type}`)
     }
   }
 
