@@ -15,27 +15,33 @@ import { xy, xyz, rectangleOfSize } from '../src/core/util.js'
 window.DEBUG = true
 
 function addBuildings (city) {
-  const suburbia = new CITY.Suburbia({
-    name: 'Suburbia',
-    outline: rectangleOfSize(xy(-250, 120)),
-    placement: new Ray(Facing.NORTH, xyz(-100, 300, 0))
-  })
-  suburbia.addStreet(2)
-  city.add(suburbia)
+  // const suburbia = new CITY.Suburbia({
+  //   name: 'Old Suburbia',
+  //   placement: new Ray(Facing.NORTH, xyz(-100, 300, 0)),
+  //   deprecatedSpec: {
+  //     outline: rectangleOfSize(xy(-250, 120))
+  //   }
+  // })
+  // suburbia.addStreet(2)
+  // city.add(suburbia)
 
   const CITY_SIZE = 1
   const nyc = new CITY.Manhattan({
     name: 'Manhattan',
-    outline: CITY.Manhattan.BOUNDARY,
-    placement: new Ray(Facing.NORTH, xyz(-13200, -5280, 0))
+    placement: new Ray(Facing.NORTH, xyz(-13200, -5280, 0)),
+    deprecatedSpec: {
+      outline: CITY.Manhattan.BOUNDARY
+    }
   })
   nyc.addBlocks(CITY_SIZE, CITY_SIZE * 2)
   city.add(nyc)
 
   const latticeburg = new CITY.LatticeDistrict({
     name: 'Latticeburg',
-    outline: rectangleOfSize(xy(2000, 2000)),
-    placement: new Ray(Facing.NORTH, xyz(238, 238, 0))
+    placement: new Ray(Facing.NORTH, xyz(238, 238, 0)),
+    deprecatedSpec: {
+      outline: rectangleOfSize(xy(2000, 2000))
+    }
   })
   latticeburg.makeFeatures()
   latticeburg.add(new CITY.SoccerField({ at: { x: 920, y: 315, z: 0 } }))
@@ -43,8 +49,10 @@ function addBuildings (city) {
 
   const campus = new CITY.Campus({
     name: 'Campus',
-    outline: rectangleOfSize(xy(1200, 550)),
-    placement: new Ray(Facing.NORTH, xyz(330, -600, 0))
+    placement: new Ray(Facing.NORTH, xyz(330, -600, 0)),
+    deprecatedSpec: {
+      outline: rectangleOfSize(xy(1200, 550))
+    }
   })
   campus.makeCampus(3)
   city.add(campus)
@@ -82,8 +90,8 @@ function addSwingset (district) {
 }
 
 function addUtilityPoles (district) {
-  for (let y = -40; y < 800; y += 120) {
-    district.add(new CITY.UtilityPole({ placement: new Ray(Facing.NORTH, { x: -96, y: y, z: 0 }) }))
+  for (let y = 100; y < 600; y += 120) {
+    district.add(new CITY.UtilityPole({ placement: new Ray(Facing.NORTH, { x: -304, y: y, z: 0 }) }))
   }
 }
 
@@ -116,27 +124,33 @@ function addObjectFromSpec (district, specReader, specName, at) {
 }
 
 function main () {
+  const tethys = new CITY.Model({ name: 'River Tethys' })
+  addCreek(tethys)
+  addTree(tethys)
+  addSwingset(tethys)
+
+  const city = new CITY.City({ name: 'Paracosm' })
+  city.add(tethys)
   const specReader = new SpecReader()
+  addObjectFromSpec(city, specReader, 'Suburbia', { x: -550, y: 100, z: 0 })
+  addBuildings(city)
+
   const extras = new CITY.Model({ name: 'extras' })
-  addCreek(extras)
-  addTree(extras)
-  addSwingset(extras)
   addUtilityPoles(extras)
   addEiffelTower(extras)
   addPyramid(extras)
   addKalpanaOrbital(extras)
   addMovers(extras)
-  addObjectFromSpec(extras, specReader, 'Parcel 353', { x: -100, y: 100, z: 0 })
   addObjectFromSpec(extras, specReader, 'Wurster Hall', { x: 50, y: -400, z: 0 })
-  addObjectFromSpec(extras, specReader, 'Highrise building', { x: -480, y: 40, z: 0 })
-
-  const city = new CITY.City({ name: 'Paracosm' })
-  addBuildings(city)
+  addObjectFromSpec(extras, specReader, 'Highrise building', { x: -800, y: 100, z: 0 })
   city.add(extras)
 
   // display the city on the web page
-  const districts = city.getDistricts()
+  const districts = []
+  districts.push(tethys)
+  districts.push(...city.getDistricts())
   districts.push(extras)
+
   CITY.Output.addOutput(new CITY.ThreeOutput(districts))
   CITY.Output.addOutput(new CITY.MetricsOutput(
     [city],

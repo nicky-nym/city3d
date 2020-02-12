@@ -65,8 +65,10 @@ describe('District', function () {
       corners = rectangleOfSize(xy(1000, 1000))
       district = new District({
         name: 'test district',
-        outline: corners,
-        placement: ray
+        placement: ray,
+        deprecatedSpec: {
+          outline: corners
+        }
       })
       city.add(district)
       ray = new Ray()
@@ -126,8 +128,10 @@ describe('District', function () {
         parcel = new Parcel({ deprecatedSpec, placement: ray })
         district = new District({
           name: 'test district',
-          outline: corners,
-          placement: ray
+          placement: ray,
+          deprecatedSpec: {
+            outline: corners
+          }
         })
         city = new City({ name: 'Testopia' })
         ray = new Ray()

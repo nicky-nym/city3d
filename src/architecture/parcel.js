@@ -28,7 +28,6 @@ class Parcel extends Model {
    */
   constructor ({
     name = 'Parcel',
-    outline,
     placement,
     deprecatedSpec,
     spec,

@@ -7,6 +7,7 @@
 
 import { StockCatalog } from '../../content/stock_catalog.js'
 import { Building } from './building.js'
+import { District } from './district.js'
 import { Facing } from '../core/facing.js'
 import { Parcel } from './parcel.js'
 import { Ray } from '../core/ray.js'
@@ -99,6 +100,10 @@ class SpecReader {
       specification = SpecReader._resolveLocalRefDirectives(specification, specification)
       const placement = new Ray(Facing.NORTH, at)
       return new Parcel({ spec: specification, placement, specReader: this })
+    } else if (specification.type === 'district.schema.json') {
+      specification = SpecReader._resolveLocalRefDirectives(specification, specification)
+      const placement = new Ray(Facing.NORTH, at)
+      return new District({ spec: specification, placement, specReader: this })
     } else {
       throw new Error(`Unrecognised "type" string in spec object ${specification.type}`)
     }
