@@ -121,7 +121,11 @@ function xyz (x, y, z = 0) {
 }
 
 function xyzAdd (xyz0, xyz1) {
-  return { x: xyz0.x + xyz1.x, y: xyz0.y + xyz1.y, z: (xyz0.z || 0) + (xyz1.z || 0) }
+  return {
+    x: (xyz0.x || 0) + (xyz1.x || 0),
+    y: (xyz0.y || 0) + (xyz1.y || 0),
+    z: (xyz0.z || 0) + (xyz1.z || 0)
+  }
 }
 
 function xyzSubtract (xyz0, xyz1) {

@@ -65,12 +65,6 @@ function addTree (district) {
   district.add(new CITY.Tree({ placement: new Ray(Facing.NORTH, { x: 28, y: 52, z: 0 }), crownHeight: 8, name: 'Topiary Tree' }))
 }
 
-function addUtilityPoles (district) {
-  for (let y = 100; y < 600; y += 120) {
-    district.add(new CITY.UtilityPole({ placement: new Ray(Facing.NORTH, { x: -304, y: y, z: 0 }) }))
-  }
-}
-
 function addEiffelTower (district) {
   district.add(new CITY.EiffelTower({ placement: new Ray(Facing.NORTH, { x: 1090, y: 1090, z: 0 }) }))
 }
@@ -112,7 +106,6 @@ function main () {
   addBuildings(city)
 
   const extras = new CITY.Model({ name: 'extras' })
-  addUtilityPoles(extras)
   addEiffelTower(extras)
   addPyramid(extras)
   addKalpanaOrbital(extras)

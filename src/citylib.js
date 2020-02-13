@@ -46,7 +46,6 @@ import { MidriseComplex } from '../content/buildings/midrise_complex.js'
 // structures
 import { EiffelTower } from '../content/structures/eiffel_tower.js'
 import { PyramidOfKhufu } from '../content/structures/pyramid_of_khufu.js'
-import { UtilityPole } from '../content/structures/utility_pole.js'
 
 // landscape
 import { Creek } from '../content/landscape/creek.js'
@@ -96,7 +95,6 @@ export const CITY = {
   ThreeOutput,
   Tree,
   Use,
-  UtilityPole,
   Vehicle,
   Wall,
   Window

@@ -50,7 +50,7 @@ describe('SCHEMA', function () {
         name: 'telephone poles',
         copy: { $ref: 'CITY.structures.utility_pole' },
         at: { x: 0, y: 0, z: 0 },
-        repeat: { rows: 28, cols: 1, dx: 88 }
+        repeat: { count: 5, offset: { y: 160 } }
       }
       validator(goodJSON).should.equal(true)
     })

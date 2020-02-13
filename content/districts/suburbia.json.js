@@ -34,7 +34,11 @@ export default /* eslint-disable */
     copy: { $ref: 'Parcel 353' },
     at: { x: 240, y: 50 }
   }],
-  contents: [ /* TODO: add benches, tables, etc. */ ],
+  contents: [{
+    copy: { $ref: 'Utility pole' },
+    at: { x: 245, y: 20 },
+    repeat: { count: 5, offset: { y: 120 } }
+  }],
   pavement: [{
     name: 'sidewalk',
     surface: { material: 'concrete' },

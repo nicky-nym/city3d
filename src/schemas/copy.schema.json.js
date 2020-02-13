@@ -30,7 +30,7 @@ export default /* eslint-disable */
       name: 'telephone poles',
       copy: { $ref: 'CITY.structures.utility_pole' },
       at: { x: 0, y: 0, z: 0 },
-      repeat: { rows: 28, cols: 1, dx: 88 }
+      repeat: { count: 5, offset: { y: 160 } }
     }
   ],
   "required": [ "copy" ],
@@ -43,10 +43,22 @@ export default /* eslint-disable */
       "description": "where the copy goes, and the direction it is oriented in",
       "$ref": "placement.schema.json"
     },
+    // "repeat": {
+    //   "description": "to make multiple copies at once, set the number of rows and columns",
+    //   "$ref": "grid.schema.json"
+    // },
     "repeat": {
-      "description": "to make multiple copies at once, set the number of rows and columns",
-      "$ref": "grid.schema.json"
-    },
+      "description": "to make multiple copies at once, set the repeat count and offset",
+      "type": "object",
+      "required": [ "count", "offset" ],
+      "properties": {
+        "count": {
+          "type": "number"
+        },
+        "offset": {
+          "$ref": "placement.schema.json"
+        }
+      }    },
     "copy": {
       "description": "an identifier that specifies what model this is a copy of",
       "type": "object",

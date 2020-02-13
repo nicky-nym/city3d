@@ -5,7 +5,7 @@
  * For more information, please refer to <http://unlicense.org>
  */
 
-import { countTo, xyz } from '../core/util.js'
+import { countTo, xyz, xyzAdd } from '../core/util.js'
 import { Feature, FeatureInstance } from '../core/feature.js'
 import { Geometry } from '../core/geometry.js'
 import { METRIC } from './metric.js'
@@ -84,10 +84,24 @@ class District extends Model {
 
     if (contents) {
       for (const copySpec of contents) {
-        const at = placement.applyRay(copySpec.at)
         const specName = copySpec.copy.$ref
-        const modelObject = specReader.makeModelFromSpecName(specName, at)
-        this.add(modelObject)
+        let count = 1
+        let offset = { x: 0, y: 0, z: 0 }
+        if (copySpec.repeat) {
+          count = copySpec.repeat.count
+          offset = xyzAdd(offset, copySpec.repeat.offset)
+        }
+        for (let i = 0; i < count; i++) {
+          const iOffset = {
+            x: i * offset.x,
+            y: i * offset.y,
+            z: i * offset.z
+          }
+          const iAt = xyzAdd(copySpec.at, iOffset)
+          const at = placement.applyRay(iAt)
+          const modelObject = specReader.makeModelFromSpecName(specName, at)
+          this.add(modelObject)
+        }
       }
     }
 
