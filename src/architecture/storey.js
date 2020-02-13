@@ -5,7 +5,7 @@
  * For more information, please refer to <http://unlicense.org>
  */
 
-import { FeatureInstance } from '../core/feature.js'
+import { FeatureGroup, FeatureInstance } from '../core/feature.js'
 import { Floor } from './floor.js'
 import { Geometry } from '../core/geometry.js'
 import { METRIC } from './metric.js'
@@ -57,6 +57,11 @@ const METRICS_BY_USE = {
   PARCEL: METRIC.LAND_AREA,
   CANAL: METRIC.WATER_AREA,
   ROOF: METRIC.ROOF_AREA
+}
+
+const LOD = {
+  HIGH: 'high',
+  LOW: 'low'
 }
 
 function _addWalls (group, xyPolygon, height, z, openingsByWall, cap) {
@@ -135,6 +140,39 @@ class Storey extends Model {
    * @param {Ray} [placement] - the location and orientation of this part
    */
   makeModelFromSpec (spec, placement) {
+    const resolvedSpec = spec // this._instantiateSpec(buildingSpec)
+    this.makeModelForOneLOD(this, LOD.HIGH, resolvedSpec, placement)
+
+    // TODO: The medium and low resolution instances constructed here are currently
+    // identical, so the only difference will be in the material.
+    // const mediumGroup = new FeatureGroup(this.name)
+    // this._makeLowResGroupFromSpec(resolvedSpec, mediumGroup, placement)
+    // this.addLevelOfDetail(mediumGroup, 1000)
+
+    const lowGroup = new FeatureGroup(this.name)
+    this.makeModelForOneLOD(lowGroup, LOD.LOW, resolvedSpec, placement)
+    this.addLevelOfDetail(lowGroup, 2000)
+  }
+
+  _makePlaceholder (placement, corners, height) {
+    const z = placement.xyz.z
+    const group = new FeatureGroup()
+    const adjustedCorners = placement.applyRay(corners)
+    const xyPolygon = new Geometry.XYPolygon(adjustedCorners)
+    const color = DARK_GRAY
+    const abstractThickPolygon = new Geometry.ThickPolygon(xyPolygon, { depth: height })
+    const p0 = { ...adjustedCorners[0], z }
+    const concreteThickPolygon = new FeatureInstance(abstractThickPolygon, p0, color)
+    group.add(concreteThickPolygon)
+    return group
+  }
+
+  /**
+   * Generate Geometry objects corresponding to a specification.
+   * @param {object} spec - an specification object that is valid against storey.schema.json.js
+   * @param {Ray} [placement] - the location and orientation of this part
+   */
+  makeModelForOneLOD (parentGroup, levelOfDetail, spec, placement) {
     const { name, unit, altitude = 0, height = 0, repeat = 1, floors, stairs, ceiling, walls, rooms, roof } = spec
 
     this.name = name || this.name
@@ -148,57 +186,76 @@ class Storey extends Model {
     }
 
     const at = placement.add({ x: 0, y: 0, z: altitude }, placement.az)
-    for (const i of countTo(repeat)) { // eslint-disable-line no-unused-vars
-      if (floors) {
-        for (const floorSpec of floors) {
-          const floor = new Floor({ spec: floorSpec, placement: at })
-          this.add(floor)
-        }
-      }
-
-      if (stairs) {
-        for (const stairSpec of stairs) {
-          const flight = new Stairs({ spec: stairSpec, placement: at })
-          this.add(flight)
-        }
-      }
-
-      let begin = { x: 0, y: 0 }
-      let roofline = 'pitched' // TODO: use enum value from Wall
-      const pitch = roof && roof.pitch
-      let wallSpecs = []
+    if (levelOfDetail === LOD.LOW) {
+      if (floors) {} // do not include at LOD.LOW
+      if (stairs) {} // do not include at LOD.LOW
+      if (rooms) {} // do not include at LOD.LOW
+      if (ceiling) {} // do not include at LOD.LOW
       if (walls) {
-        const exterior = walls.exterior || []
-        const interior = walls.interior || []
-        wallSpecs = [...exterior, ...interior]
+        const totalHeight = height * repeat
+        const corners = []
+        corners.push(walls.exterior[0].begin)
+        for (const wallSpec of walls.exterior) {
+          corners.push(wallSpec.end)
+        }
+        const placeholder = this._makePlaceholder(at, corners, totalHeight)
+        parentGroup.add(placeholder)
       }
-      let firstWall = true
-      const allWalls = []
-      for (const wallSpec of wallSpecs) {
-        Model.mergeValueIfAbsent(wallSpec, { begin, height, roofline, pitch, firstWall })
-        const wall = new Wall({ spec: wallSpec, placement: at })
-        this.add(wall)
-        allWalls.push(wall)
-        begin = wall.end()
-        roofline = wall.roofline()
-        firstWall = false
-      }
+    } else if (levelOfDetail === LOD.HIGH) {
+      for (const i of countTo(repeat)) { // eslint-disable-line no-unused-vars
+        if (floors) {
+          for (const floorSpec of floors) {
+            const floor = new Floor({ spec: floorSpec, placement: at })
+            parentGroup.add(floor)
+          }
+        }
 
-      at.xyz.z += height
-      this.add(new Roof({ spec: roof, placement: at, walls: allWalls }))
+        if (stairs) {
+          for (const stairSpec of stairs) {
+            const flight = new Stairs({ spec: stairSpec, placement: at })
+            parentGroup.add(flight)
+          }
+        }
 
-      if (rooms) {
-        for (const roomSpec of rooms) { // eslint-disable-line no-unused-vars
+        let begin = { x: 0, y: 0 }
+        let roofline = 'pitched' // TODO: use enum value from Wall
+        const pitch = roof && roof.pitch
+        let wallSpecs = []
+        if (walls) {
+          const exterior = walls.exterior || []
+          const interior = walls.interior || []
+          wallSpecs = [...exterior, ...interior]
+        }
+        let firstWall = true
+        const allWalls = []
+        for (const wallSpec of wallSpecs) {
+          Model.mergeValueIfAbsent(wallSpec, { begin, height, roofline, pitch, firstWall })
+          const wall = new Wall({ spec: wallSpec, placement: at })
+          parentGroup.add(wall)
+          allWalls.push(wall)
+          begin = wall.end()
+          roofline = wall.roofline()
+          firstWall = false
+        }
+
+        at.xyz.z += height
+        parentGroup.add(new Roof({ spec: roof, placement: at, walls: allWalls }))
+
+        if (rooms) {
+          for (const roomSpec of rooms) { // eslint-disable-line no-unused-vars
+            // TODO: write this code!
+            // const room = new Room({ roomSpec, at })
+            // parentGroup.add(room)
+          }
+        }
+
+        if (ceiling) {
           // TODO: write this code!
-          // const room = new Room({ roomSpec, at })
-          // this.add(room)
+          // parentGroup.add(new Ceiling({ ceiling, placement }))
         }
       }
-    }
-
-    if (ceiling) {
-      // TODO: write this code!
-      // this.add(new Ceiling({ ceiling, placement }))
+    } else {
+      throw new Error('Unrecognized "level-of-detail" level in Storey.js')
     }
   }
 
