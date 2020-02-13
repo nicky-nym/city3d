@@ -65,10 +65,6 @@ function addTree (district) {
   district.add(new CITY.Tree({ placement: new Ray(Facing.NORTH, { x: 28, y: 52, z: 0 }), crownHeight: 8, name: 'Topiary Tree' }))
 }
 
-function addSwingset (district) {
-  district.add(new CITY.Swingset({ placement: new Ray(Facing.NORTH, { x: 60, y: 52, z: 0 }) }))
-}
-
 function addUtilityPoles (district) {
   for (let y = 100; y < 600; y += 120) {
     district.add(new CITY.UtilityPole({ placement: new Ray(Facing.NORTH, { x: -304, y: y, z: 0 }) }))
@@ -107,7 +103,6 @@ function main () {
   const tethys = new CITY.Model({ name: 'River Tethys' })
   addCreek(tethys)
   addTree(tethys)
-  addSwingset(tethys)
 
   const city = new CITY.City({ name: 'Paracosm' })
   city.add(tethys)

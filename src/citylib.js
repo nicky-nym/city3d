@@ -46,7 +46,6 @@ import { MidriseComplex } from '../content/buildings/midrise_complex.js'
 // structures
 import { EiffelTower } from '../content/structures/eiffel_tower.js'
 import { PyramidOfKhufu } from '../content/structures/pyramid_of_khufu.js'
-import { Swingset } from '../content/structures/swingset.js'
 import { UtilityPole } from '../content/structures/utility_pole.js'
 
 // landscape
@@ -91,7 +90,6 @@ export const CITY = {
   SoccerField,
   Storey,
   SummaryOutput,
-  Swingset,
   TableOutput,
   Tabulator,
   TextOutput,

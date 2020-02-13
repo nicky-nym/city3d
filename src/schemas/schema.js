@@ -16,6 +16,7 @@ import DISTRICT from './district.schema.json.js'
 import DOOR from './door.schema.json.js'
 import FLOOR from './floor.schema.json.js'
 import GRID from './grid.schema.json.js'
+import LINE from './line.schema.json.js'
 import OUTLINE from './outline.schema.json.js'
 import PARCEL from './parcel.schema.json.js'
 import PITCH from './pitch.schema.json.js'
@@ -23,6 +24,7 @@ import PLACEMENT from './placement.schema.json.js'
 import ROOF from './roof.schema.json.js'
 import ROOM from './room.schema.json.js'
 import STOREY from './storey.schema.json.js'
+import STRUCTURE from './structure.schema.json.js'
 import SURFACE from './surface.schema.json.js'
 import VEHICLE from './vehicle.schema.json.js'
 import WALL from './wall.schema.json.js'
@@ -42,6 +44,7 @@ const SCHEMA = {
   DOOR,
   FLOOR,
   GRID,
+  LINE,
   OUTLINE,
   PARCEL,
   PITCH,
@@ -49,6 +52,7 @@ const SCHEMA = {
   ROOF,
   ROOM,
   STOREY,
+  STRUCTURE,
   SURFACE,
   VEHICLE,
   WALL,

@@ -44,13 +44,17 @@ const COLORS_BY_USE = {
 class Structure extends Model {
   constructor ({
     name,
-    placement
+    placement,
+    spec
   } = {}) {
     super({ name })
     placement = placement || new Ray()
     this.offset = { ...xyz(0, 0, 0), ...placement.xyz }
     placement.xyz = xyz(0, 0, 0)
     this._placement = Object.freeze(placement || new Ray())
+    if (spec) {
+      this.makeModelFromSpec(spec, placement)
+    }
   }
 
   placement () {
@@ -72,6 +76,17 @@ class Structure extends Model {
     const concreteThickPolygon = new FeatureInstance(abstractThickPolygon, p0, color)
     group.add(concreteThickPolygon)
     return group
+  }
+
+  makeModelFromSpec (spec, placement) {
+    const { lines /* anchorPoint, */ } = spec
+    for (const lineSpec of lines) {
+      const vertices = lineSpec.vertices
+      const adjustedWaypoints = placement.applyRay(vertices)
+      const line = new Geometry.Line(adjustedWaypoints)
+      const result = new FeatureInstance(line, adjustedWaypoints[0], 0x663300, { layer: Structure.layer })
+      this.add(result)
+    }
   }
 }
 

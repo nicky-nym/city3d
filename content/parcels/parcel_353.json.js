@@ -87,6 +87,9 @@ export default /* eslint-disable */
   }, {
     copy: { $ref: 'House 353' },
     at: { x: 0, y: 0, rotated: 90 }
+  }, {
+    copy: { $ref: 'Swing set' },
+    at: { x: -210, y: 25, rotated: 90 }
   }],
   // TODO: implement this!
   /*

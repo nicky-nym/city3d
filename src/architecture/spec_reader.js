@@ -11,6 +11,7 @@ import { District } from './district.js'
 import { Facing } from '../core/facing.js'
 import { Parcel } from './parcel.js'
 import { Ray } from '../core/ray.js'
+import { Structure } from './structure.js'
 
 /**
  * Class representing a catalog of model specification objects.
@@ -101,6 +102,10 @@ class SpecReader {
       spec = SpecReader._resolveLocalRefDirectives(spec, spec)
       const placement = new Ray(Facing.NORTH, at)
       return new Building({ spec, placement })
+    } else if (spec.type === 'structure.schema.json') {
+      spec = SpecReader._resolveLocalRefDirectives(spec, spec)
+      const placement = new Ray(Facing.NORTH, at)
+      return new Structure({ spec, placement, specReader: this })
     } else if (spec.type === 'parcel.schema.json') {
       spec = SpecReader._resolveLocalRefDirectives(spec, spec)
       const placement = new Ray(Facing.NORTH, at)

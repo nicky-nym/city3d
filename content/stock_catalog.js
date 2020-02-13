@@ -21,6 +21,10 @@ import SUBURBIA from './districts/suburbia.json.js'
 // parcels
 import PARCEL_353 from './parcels/parcel_353.json.js'
 
+// structures
+import SWINGSET from './structures/swingset.json.js'
+import UTILITY_POLE from './structures/utility_pole.json.js'
+
 /**
  * Catalog of all the model specification objects included as example content in city3d.
  */
@@ -35,7 +39,9 @@ class StockCatalog extends Catalog {
       WURSTER_HALL,
       CAMPUS,
       PARCEL_353,
-      SUBURBIA
+      SUBURBIA,
+      SWINGSET,
+      UTILITY_POLE
     ])
   }
 }
