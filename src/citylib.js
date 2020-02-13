@@ -42,7 +42,6 @@ import { Tabulator } from './metrics/tabulator.js'
 import { Lattice } from '../content/buildings/lattice.js'
 import { Highrise } from '../content/buildings/highrise.js'
 import { MidriseComplex } from '../content/buildings/midrise_complex.js'
-import { WursterHall } from '../content/buildings/wurster_hall.js'
 
 // structures
 import { EiffelTower } from '../content/structures/eiffel_tower.js'
@@ -102,6 +101,5 @@ export const CITY = {
   UtilityPole,
   Vehicle,
   Wall,
-  Window,
-  WursterHall
+  Window
 }
