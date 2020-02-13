@@ -12,20 +12,14 @@ export default /* eslint-disable */
   anchorPoint: { x: 360, y: 270, z: 0 },
   border: {
     shape: 'rectangle',
-    size: { x: 720, y: 540 }
+    size: { x: 720, y: 300 }
   },
-  contents: [ /* TODO: add benches, tables, etc. */ ],
-  parcels: [{
-    border: {
-      shape: 'rectangle',
-      size: { x: 720, y: 540 }
-    },
-    contents: [{
-      copy: { $ref: 'CITY.buildings.wurster_hall' },
-      at: { x: 180, y: 270 }
-    }, {
-      copy: { $ref: 'CITY.buildings.wurster_hall' },
-      at: { x: 540, y: 270, rotated: 180, mirrored: false }
-    }]
+  parcels: [],
+  contents: [{
+    copy: { $ref: 'Wurster Hall' },
+    at: { x: 40, y: 30 }
+  }, {
+    copy: { $ref: 'Wurster Hall' },
+    at: { x: 380, y: 30, rotated: 180, mirrored: false }
   }]
 }

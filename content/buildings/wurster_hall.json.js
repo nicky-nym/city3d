@@ -12,6 +12,7 @@ export default /* eslint-disable */
   anchorPoint: { x: 153, y: 110, z: 0 },
   def: {
     comments: [
+      'UC Berkeley Wurster Hall',
       '                                                              ',
       '           O----------N                                       ',
       '           |          |                                       ',

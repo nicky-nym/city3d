@@ -40,10 +40,7 @@ import { Tabulator } from './metrics/tabulator.js'
 
 // buildings
 import { Lattice } from '../content/buildings/lattice.js'
-// import { Cottage } from '../content/buildings/cottage.js'
-// import { Garage } from '../content/buildings/garage.js'
 import { Highrise } from '../content/buildings/highrise.js'
-// import { House } from '../content/buildings/house.js'
 import { MidriseComplex } from '../content/buildings/midrise_complex.js'
 import { WursterHall } from '../content/buildings/wurster_hall.js'
 
@@ -64,18 +61,14 @@ import { Kayak } from '../content/movers/kayak.js'
 import { Vehicle } from '../content/movers/vehicle.js'
 
 // districts
-import { Campus } from '../content/districts/campus.js'
 import { LatticeDistrict } from '../content/districts/lattice_district.js'
 import { Manhattan } from '../content/districts/manhattan.js'
-// import { Suburbia } from '../content/districts/suburbia.js'
 
 export const CITY = {
   Lattice,
   Building,
   Byway,
-  Campus,
   City,
-  // Cottage,
   Creek,
   District,
   Door,
@@ -83,9 +76,7 @@ export const CITY = {
   FeatureGroup,
   Kalpana,
   Kayak,
-  // Garage,
   Highrise,
-  // House,
   LatticeDistrict,
   Manhattan,
   MemoryOutput,
@@ -100,7 +91,6 @@ export const CITY = {
   Route,
   SoccerField,
   Storey,
-  // Suburbia,
   SummaryOutput,
   Swingset,
   TableOutput,

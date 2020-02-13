@@ -36,16 +36,6 @@ function addBuildings (city) {
   latticeburg.makeFeatures()
   latticeburg.add(new CITY.SoccerField({ at: { x: 920, y: 315, z: 0 } }))
   city.add(latticeburg)
-
-  const campus = new CITY.Campus({
-    name: 'Campus',
-    placement: new Ray(Facing.NORTH, xyz(330, -600, 0)),
-    deprecatedSpec: {
-      outline: rectangleOfSize(xy(1200, 550))
-    }
-  })
-  campus.makeCampus(3)
-  city.add(campus)
 }
 
 function addCreek (district) {
@@ -123,6 +113,7 @@ function main () {
   city.add(tethys)
   const specReader = new SpecReader()
   addObjectFromSpec(city, specReader, 'Suburbia', { x: -550, y: 100, z: 0 })
+  addObjectFromSpec(city, specReader, 'Campus', { x: 50, y: -400, z: 0 })
   addBuildings(city)
 
   const extras = new CITY.Model({ name: 'extras' })
@@ -131,7 +122,6 @@ function main () {
   addPyramid(extras)
   addKalpanaOrbital(extras)
   addMovers(extras)
-  addObjectFromSpec(extras, specReader, 'Wurster Hall', { x: 50, y: -400, z: 0 })
   addObjectFromSpec(extras, specReader, 'Highrise building', { x: -800, y: 100, z: 0 })
   city.add(extras)
 
