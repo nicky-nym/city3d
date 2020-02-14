@@ -6,9 +6,10 @@
  */
 
 import * as THREE from '../../node_modules/three/build/three.module.js'
-import { Feature, FeatureGroup, FeatureInstance, FeatureLODGroup } from '../core/feature.js'
+import { Feature, FeatureGroup, FeatureInstance, FeatureLODGroup, InstancedFeature } from '../core/feature.js'
 import { Geometry } from '../core/geometry.js'
 import { xyzSubtract } from '../core/util.js'
+import { BufferGeometryUtils } from '../../node_modules/three/examples/jsm/utils/BufferGeometryUtils.js'
 
 /* global requestIdleCallback */
 
@@ -182,6 +183,12 @@ class ThreeOutputScene extends THREE.Scene {
       threeObject.add(mesh)
       object = mesh
       yield
+    } else if (feature instanceof InstancedFeature) {
+      const mesh = this.makeInstancedMesh(feature)
+      mesh.userData.feature = feature.feature
+      threeObject.add(mesh)
+      object = mesh
+      yield
     } else {
       // TODO
     }
@@ -348,6 +355,116 @@ class ThreeOutputScene extends THREE.Scene {
     geometry.computeBoundingSphere()
     geometry.computeFaceNormals()
     const mesh = new THREE.Mesh(geometry, material)
+    return mesh
+  }
+
+  makeInstancedMesh (instancedFeature) {
+    const feature = instancedFeature.feature
+    const placements = instancedFeature.placements
+    const materialCost = instancedFeature.materialCost
+    const useNormals = instancedFeature.useNormals
+    const geometries = []
+    const materials = []
+
+    const visitor = feature => {
+      if (feature instanceof FeatureInstance) {
+        if (feature.geometry instanceof Geometry.TriangularPolyhedron) {
+          const geometry = new THREE.BufferGeometry()
+          const positions = []
+          const vertices = feature.geometry.vertices
+          vertices.forEach(v => positions.push(v.x, v.y, v.z))
+          geometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(positions), 3))
+          if (useNormals) {
+            geometry.computeVertexNormals() // not indexed, so computes normals per triangle
+          }
+          geometries.push(geometry)
+        } else if (feature.geometry instanceof Geometry.ThickPolygon) {
+          const thickPolygon = feature.geometry
+          const xyPolygon = thickPolygon.xyPolygon
+          const x0 = xyPolygon[0].x
+          const y0 = xyPolygon[0].y
+          const shape = new THREE.Shape(xyPolygon)
+          shape.closePath()
+
+          for (const opening of thickPolygon.openings) {
+            const points = opening.map(xy => new THREE.Vector2(xy.x, xy.y))
+            const path = new THREE.Path(points)
+            shape.holes.push(path)
+          }
+
+          const geometry = new THREE.ExtrudeBufferGeometry(shape, {
+            depth: thickPolygon.depth,
+            bevelEnabled: false
+          })
+          geometry.deleteAttribute('uv')
+          if (!useNormals) {
+            geometry.deleteAttribute('normal')
+          }
+          geometry.translate(-x0, -y0, 0)
+
+          if (thickPolygon.incline) {
+            const x1 = xyPolygon[1].x
+            const y1 = xyPolygon[1].y
+            const edge = new THREE.Vector3(x1 - x0, y1 - y0, 0)
+            const hypotenuse = edge.length()
+            const angle = Math.asin(thickPolygon.incline / hypotenuse)
+
+            // want to rotate around axis perpendicular to edge and in x-y plane
+            const axis = new THREE.Vector3().crossVectors(edge, new THREE.Vector3(0, 0, 1))
+            axis.normalize()
+            const R = new THREE.Matrix4().makeRotationAxis(axis, angle)
+            geometry.applyMatrix4(R)
+          }
+          if (thickPolygon.zRotation) {
+            const R2 = new THREE.Matrix4().makeRotationZ(thickPolygon.zRotation)
+            geometry.applyMatrix4(R2)
+          }
+          geometry.translate(feature.p0.x, feature.p0.y, feature.p0.z)
+          geometries.push(geometry)
+        }
+        // TODO:
+        // const side = feature.side == 'front' ? THREE.FrontSide : THREE.DoubleSide
+        materials.push(this._material(materialCost, feature.hexColor, true))
+      }
+    }
+
+    if (feature.accept) {
+      feature.accept(visitor)
+    } else {
+      visitor(feature)
+    }
+
+    const mergedGeometry = BufferGeometryUtils.mergeBufferGeometries(geometries, true)
+
+    // Clone one copy of each unique material, and redo material indices to use them.
+    const clonedMaterials = []
+    let materialIndex = 0
+    materials.forEach((mat, i) => {
+      if (mat) {
+        clonedMaterials.push(mat.clone())
+        mergedGeometry.groups[i].materialIndex = materialIndex
+        for (let j = i + 1; j < materials.length; j++) {
+          if (materials[j] === materials[i]) {
+            mergedGeometry.groups[j].materialIndex = materialIndex
+            materials[j] = null
+          }
+        }
+        materialIndex++
+      }
+    })
+
+    const mesh = new THREE.InstancedMesh(mergedGeometry, clonedMaterials, placements.length)
+    const dummy = new THREE.Object3D()
+    placements.forEach((p, i) => {
+      dummy.scale.x = p.mirror ? -1 : 1
+      dummy.rotation.z = p.az * Math.PI / 180
+      dummy.position.set(p.xyz.x, p.xyz.y, p.xyz.z)
+      dummy.updateMatrix()
+      mesh.setMatrixAt(i, dummy.matrix)
+    })
+    // mesh.onBeforeRender = (renderer, scene, camera, mergedGeometry, material, group) => {
+    //   console.log(material)
+    // }
     return mesh
   }
 

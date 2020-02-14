@@ -12,9 +12,10 @@ import { Facing } from './facing.js'
  * Ray is a class for representing a compass facing azimuth at an xyz location.
  */
 class Ray {
-  constructor (azimuth = Facing.NORTH, xyz = { x: 0, y: 0, z: 0 }) {
+  constructor (azimuth = Facing.NORTH, xyz = { x: 0, y: 0, z: 0 }, { mirror = false } = {}) {
     this.az = azimuth
     this.xyz = xyz
+    this.mirror = mirror
   }
 
   copy () {

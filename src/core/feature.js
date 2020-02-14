@@ -95,6 +95,25 @@ class FeatureInstance extends Feature {
     this.geometry = geometry
     this.p0 = { x, y, z }
     this.hexColor = hexColor
+    this.side = options.side || 'double'
+  }
+}
+
+/**
+ * InstancedFeature is a class for representing multiple instances of a Feature, with an array
+ * of placements specifying the location and orientation of each instance.
+ */
+class InstancedFeature extends Feature {
+  /**
+   * @param {Feature} feature
+   * @param {Ray[]} placements
+   */
+  constructor (feature, placements, { materialCost = 'lowest', useNormals = false } = {}) {
+    super()
+    this.feature = feature
+    this.placements = placements
+    this.materialCost = materialCost
+    this.useNormals = useNormals
   }
 }
 
@@ -186,4 +205,4 @@ class FeatureLODGroup extends FeatureGroup {
   }
 }
 
-export { Feature, FeatureGroup, FeatureInstance, FeatureLODGroup }
+export { Feature, FeatureGroup, FeatureInstance, FeatureLODGroup, InstancedFeature }

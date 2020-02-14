@@ -21,7 +21,7 @@ import { Window } from './architecture/window.js'
 import { Use } from './architecture/use.js'
 
 // core
-import { FeatureGroup } from './core/feature.js'
+import { FeatureGroup, InstancedFeature } from './core/feature.js'
 
 // outputs
 import { Output } from './outputs/output.js'
@@ -74,6 +74,7 @@ export const CITY = {
   Kalpana,
   Kayak,
   Highrise,
+  InstancedFeature,
   LatticeDistrict,
   Manhattan,
   MemoryOutput,

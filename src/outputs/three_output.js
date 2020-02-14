@@ -623,13 +623,19 @@ class ThreeOutput extends Output {
     // make tooltip visible
     this._tooltipDiv.style.opacity = 0.8
 
-    obj.currentMaterial = obj.material
-    obj.material = obj.material.clone()
-    obj.material.color.setHex(0xff00ff)
+    if (obj.material instanceof THREE.Material) {
+      obj.currentMaterial = obj.material
+      obj.material = obj.material.clone()
+      obj.material.color.setHex(0xff00ff)
+    } else {
+      obj.currentMaterial = null
+    }
   }
 
   unhighlight (obj) {
-    obj.material = obj.currentMaterial
+    if (obj.currentMaterial) {
+      obj.material = obj.currentMaterial
+    }
 
     // make tooltip invisible
     this._tooltipDiv.style.opacity = 0

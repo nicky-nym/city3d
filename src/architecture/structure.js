@@ -47,6 +47,7 @@ class Structure extends Model {
     placement,
     spec
   } = {}) {
+    name = name || (spec && spec.name)
     super({ name })
     placement = placement || new Ray()
     this.offset = { ...xyz(0, 0, 0), ...placement.xyz }

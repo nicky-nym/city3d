@@ -61,8 +61,25 @@ function addCreek (district) {
   district.add(new CITY.Vehicle(creekBikePath, 0.15, 'pedicab'))
 }
 
-function addTree (district) {
-  district.add(new CITY.Tree({ placement: new Ray(Facing.NORTH, { x: 28, y: 52, z: 0 }), crownHeight: 8, name: 'Topiary Tree' }))
+function addTrees (district) {
+  const specReader = new SpecReader()
+  addObjectFromSpec(district, specReader, 'Tree', { x: 5, y: 10, z: 0 })
+  addObjectFromSpec(district, specReader, 'Tree', { x: -5, y: 50, z: 0 })
+
+  district.add(new CITY.Tree({ placement: new Ray(Facing.NORTH, { x: 28, y: 52, z: 0 }), trunkHeight: 10, name: 'Topiary Tree' }))
+  district.add(new CITY.InstancedFeature(new CITY.Tree({ trunkHeight: 12, name: 'Tree (MeshPhongMaterial, with normals)' }), [
+    new Ray(Facing.NORTH, { x: 51, y: 45, z: 0 }),
+    new Ray(Facing.EAST, { x: 75, y: 40, z: 0 }),
+    new Ray(Facing.SOUTH, { x: 60, y: 10, z: 0 }, { mirror: true })
+  ], { materialCost: 'high', useNormals: true }))
+  district.add(new CITY.InstancedFeature(new CITY.Tree({ trunkHeight: 15, name: 'Tree (MeshBasicMaterial, no normals)' }), [
+    new Ray(Facing.NORTH, { x: -30, y: 50, z: 0 }),
+    new Ray(Facing.SOUTH, { x: -30, y: 11, z: 0 }, { mirror: true })
+  ], { materialCost: 'lowest', useNormals: false })) // these are the defaults
+  district.add(new CITY.InstancedFeature(new CITY.Tree({ trunkHeight: 15, name: 'Tree (MeshLambertMaterial, with normals)' }), [
+    new Ray(Facing.NORTH, { x: -60, y: 50, z: 0 }),
+    new Ray(Facing.SOUTH, { x: -60, y: 11, z: 0 }, { mirror: true })
+  ], { materialCost: 'medium', useNormals: true })) // these are the defaults
 }
 
 function addEiffelTower (district) {
@@ -71,6 +88,38 @@ function addEiffelTower (district) {
 
 function addPyramid (district) {
   district.add(new CITY.PyramidOfKhufu({ placement: new Ray(Facing.NORTH, { x: -600, y: -600, z: 0 }) }))
+}
+
+function addInstancedBuildings (district) {
+  const specReader = new SpecReader()
+
+  const cottage1 = specReader.makeModelFromSpecName('Cottage', { x: 0, y: 0, z: 0 })
+  district.add(new CITY.InstancedFeature(cottage1, [
+    new Ray(Facing.NORTH, { x: -440, y: 450, z: 0 }),
+    new Ray(Facing.NORTH, { x: -360, y: 450, z: 0 }, { mirror: true }),
+    new Ray(Facing.EAST, { x: -350, y: 420, z: 0 }),
+    new Ray(Facing.WEST, { x: -450, y: 400, z: 0 }),
+    new Ray(Facing.SOUTHWEST, { x: -410, y: 350, z: 0 }),
+    new Ray(Facing.SOUTHEAST, { x: -390, y: 350, z: 0 }, { mirror: true })
+  ], { materialCost: 'high', useNormals: true }))
+
+  const cottage2 = specReader.makeModelFromSpecName('Cottage', { x: 0, y: 0, z: 0 })
+  district.add(new CITY.InstancedFeature(cottage2, [
+    new Ray(Facing.NORTH, { x: -220, y: 450, z: 0 }),
+    new Ray(Facing.NORTH, { x: -140, y: 450, z: 0 }, { mirror: true }),
+    new Ray(Facing.EAST, { x: -130, y: 420, z: 0 }),
+    new Ray(Facing.WEST, { x: -230, y: 400, z: 0 }),
+    new Ray(Facing.SOUTHWEST, { x: -190, y: 350, z: 0 }),
+    new Ray(Facing.SOUTHEAST, { x: -170, y: 350, z: 0 }, { mirror: true })
+  ], { materialCost: 'lowest', useNormals: false }))
+
+  const wursterHall = specReader.makeModelFromSpecName('Wurster Hall', { x: 0, y: 0, z: 0 })
+  district.add(new CITY.InstancedFeature(wursterHall, [
+    new Ray(Facing.NORTH, { x: 80, y: -650, z: 0 }),
+    new Ray(Facing.NORTH, { x: 780, y: -650, z: 0 }, { mirror: true }),
+    new Ray(Facing.SOUTH, { x: 380, y: -700, z: 0 }),
+    new Ray(Facing.SOUTH, { x: 480, y: -700, z: 0 }, { mirror: true })
+  ], { materialCost: 'high', useNormals: true }))
 }
 
 function addKalpanaOrbital (district) {
@@ -96,7 +145,7 @@ function addObjectFromSpec (district, specReader, specName, at) {
 function main () {
   const tethys = new CITY.Model({ name: 'River Tethys' })
   addCreek(tethys)
-  addTree(tethys)
+  addTrees(tethys)
 
   const city = new CITY.City({ name: 'Paracosm' })
   city.add(tethys)
@@ -114,6 +163,7 @@ function main () {
   addObjectFromSpec(extras, specReader, 'Highrise building', { x: -800, y: 200, z: 0 })
   addObjectFromSpec(extras, specReader, 'Highrise building', { x: -800, y: 300, z: 0 })
   addObjectFromSpec(extras, specReader, 'Highrise building', { x: -800, y: 400, z: 0 })
+  addInstancedBuildings(extras)
   city.add(extras)
 
   // display the city on the web page

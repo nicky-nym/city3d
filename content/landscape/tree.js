@@ -16,15 +16,15 @@ const TRUNK_HEIGHT = UNIT.feet(8)
 const CROWN_HEIGHT = UNIT.feet(9)
 
 class Tree extends Model {
-  constructor ({ placement = new Ray(), crownHeight = 10, name = 'Tree' } = {}) {
+  constructor ({ placement = new Ray(), trunkHeight = TRUNK_HEIGHT, name = 'Tree' } = {}) {
     super({ name, layer: Tree.layer })
     const at = placement.xyz
-    this.add(this.makeTrunk(at))
-    at.z += crownHeight
+    this.add(this.makeTrunk(at, trunkHeight))
+    at.z += trunkHeight
     this.add(this.makeCrown(at))
   }
 
-  makeTrunk (atXy) {
+  makeTrunk (atXy, trunkHeight) {
     const BROWN = 0x663300
     let xyVertices = [
       xy(0, -1),
@@ -35,26 +35,26 @@ class Tree extends Model {
     ]
     xyVertices = xyVertices.map(xy => xyzAdd(xy, atXy))
     const xyPolygon = new Geometry.XYPolygon(xyVertices)
-    const abstractThickPolygon = new Geometry.ThickPolygon(xyPolygon, { depth: TRUNK_HEIGHT })
+    const abstractThickPolygon = new Geometry.ThickPolygon(xyPolygon, { depth: trunkHeight })
     const concreteThickPolygon = new FeatureInstance(abstractThickPolygon, xyVertices[0], BROWN)
     return concreteThickPolygon
   }
 
-  makeCrown (atXy) {
+  makeCrown (atXyz) {
     const GREEN = 0x00cc00
     let xyVertices = [
       xy(0, -10),
-      xy(-8, -6),
+      xy(-1, -4),
       xy(-10, 2),
       xy(-4, 9),
       xy(4, 9),
       xy(10, 2),
       xy(8, -6)
     ]
-    xyVertices = xyVertices.map(xy => xyzAdd(xy, atXy))
+    xyVertices = xyVertices.map(xy => xyzAdd(xy, atXyz))
     const xyPolygon = new Geometry.XYPolygon(xyVertices)
     const abstractThickPolygon = new Geometry.ThickPolygon(xyPolygon, { depth: CROWN_HEIGHT })
-    const concreteThickPolygon = new FeatureInstance(abstractThickPolygon, { ...xyVertices[0], z: TRUNK_HEIGHT }, GREEN)
+    const concreteThickPolygon = new FeatureInstance(abstractThickPolygon, { ...xyVertices[0], z: atXyz.z }, GREEN)
     return concreteThickPolygon
   }
 }
