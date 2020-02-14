@@ -90,6 +90,9 @@ export default /* eslint-disable */
   }, {
     copy: { $ref: 'Swing set' },
     at: { x: -210, y: 25, rotated: 90 }
+  }, {
+    copy: { $ref: 'Tree' },
+    at: { x: -90, y: 40 }
   }],
   // TODO: implement this!
   /*

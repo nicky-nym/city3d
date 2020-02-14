@@ -21,6 +21,9 @@ import SUBURBIA from './districts/suburbia.json.js'
 // parcels
 import PARCEL_353 from './parcels/parcel_353.json.js'
 
+// landscape
+import TREE from './landscape/tree.json.js'
+
 // structures
 import SWINGSET from './structures/swingset.json.js'
 import UTILITY_POLE from './structures/utility_pole.json.js'
@@ -41,6 +44,7 @@ class StockCatalog extends Catalog {
       PARCEL_353,
       SUBURBIA,
       SWINGSET,
+      TREE,
       UTILITY_POLE
     ])
   }
