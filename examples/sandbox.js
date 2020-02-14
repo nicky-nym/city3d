@@ -111,6 +111,9 @@ function main () {
   addKalpanaOrbital(extras)
   addMovers(extras)
   addObjectFromSpec(extras, specReader, 'Highrise building', { x: -800, y: 100, z: 0 })
+  addObjectFromSpec(extras, specReader, 'Highrise building', { x: -800, y: 200, z: 0 })
+  addObjectFromSpec(extras, specReader, 'Highrise building', { x: -800, y: 300, z: 0 })
+  addObjectFromSpec(extras, specReader, 'Highrise building', { x: -800, y: 400, z: 0 })
   city.add(extras)
 
   // display the city on the web page

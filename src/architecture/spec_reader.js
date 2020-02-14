@@ -61,6 +61,29 @@ class SpecReader {
     return current
   }
 
+  /**
+   * Returns true if the node is an object like { $random: ['foo', 'bar', 3, 4, false] }
+   * @param {*} node - a value that might be an object
+   * @return {boolean} true, if the value is a $random object
+   */
+  static _isRandomDirectiveNode (node) {
+    return SpecReader._isVanillaObject(node) &&
+      Object.prototype.hasOwnProperty.call(node, '$random') &&
+      Object.keys(node).length === 1 &&
+      !!node.$random &&
+      Array.isArray(node.$random)
+  }
+
+  /**
+   * Looks up a reference and returns the value for it.
+   * @param {any[]} list - an array of candidate values
+   * @return {value} the value in the tree at the reference location
+   */
+  static _pickRandomValue (list) {
+    const i = Math.floor(Math.random() * list.length)
+    return list[i]
+  }
+
   static _resolveLocalRefDirectives (root, node) {
     if (Array.isArray(node)) {
       return node.map((itemInList, i) => {
@@ -86,6 +109,31 @@ class SpecReader {
     return node
   }
 
+  static _resolveRandomDirectives (root, node) {
+    if (Array.isArray(node)) {
+      return node.map((itemInList, i) => {
+        if (SpecReader._isRandomDirectiveNode(itemInList)) {
+          return SpecReader._pickRandomValue(itemInList.$random)
+        } else {
+          return SpecReader._resolveRandomDirectives(root, itemInList)
+        }
+      })
+    }
+
+    if (SpecReader._isVanillaObject(node)) {
+      return Object.keys(node).reduce((result, key) => {
+        if (SpecReader._isRandomDirectiveNode(node[key])) {
+          result[key] = SpecReader._pickRandomValue(node[key].$random)
+        } else {
+          result[key] = SpecReader._resolveRandomDirectives(root, result[key])
+        }
+        return result
+      }, node)
+    }
+
+    return node
+  }
+
   copySpec (specification) {
     return JSON.parse(JSON.stringify(specification))
   }
@@ -98,21 +146,16 @@ class SpecReader {
     if (spec.context !== 'city3d') {
       throw new Error(`Unrecognised "context" string in spec object ${spec.context}`)
     }
+    spec = SpecReader._resolveLocalRefDirectives(spec, spec)
+    spec = SpecReader._resolveRandomDirectives(spec, spec)
+    const placement = new Ray(Facing.NORTH, at)
     if (spec.type === 'building.schema.json') {
-      spec = SpecReader._resolveLocalRefDirectives(spec, spec)
-      const placement = new Ray(Facing.NORTH, at)
       return new Building({ spec, placement })
     } else if (spec.type === 'structure.schema.json') {
-      spec = SpecReader._resolveLocalRefDirectives(spec, spec)
-      const placement = new Ray(Facing.NORTH, at)
       return new Structure({ spec, placement, specReader: this })
     } else if (spec.type === 'parcel.schema.json') {
-      spec = SpecReader._resolveLocalRefDirectives(spec, spec)
-      const placement = new Ray(Facing.NORTH, at)
       return new Parcel({ spec, placement, specReader: this })
     } else if (spec.type === 'district.schema.json') {
-      spec = SpecReader._resolveLocalRefDirectives(spec, spec)
-      const placement = new Ray(Facing.NORTH, at)
       return new District({ spec, placement, specReader: this })
     } else {
       throw new Error(`Unrecognised "type" string in spec object ${spec.type}`)

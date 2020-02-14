@@ -41,8 +41,8 @@ export default /* eslint-disable */
       'on the walls that are unobstructured, which may vary by floor,',
       'and by whether this building is on a corner parcel.'
     ],
-    repeat: 16, /* { type: 'randomInt', min: 4, max: 60 }, */
-    height: 12, /* { type: 'randomInt', min: 9, max: 14 }, */
+    repeat: { $random: [4, 5, 6, 7, 8, 9, 10, 12, 14, 16, 18, 20, 25, 30, 35, 40, 45, 50, 55, 60] },
+    height: { $random: [9, 10, 11, 12, 13, 14] },
     floors: [{
       outline: { "$ref": "#/def/RECTANGLE" },
       surface: { material: 'concrete' }

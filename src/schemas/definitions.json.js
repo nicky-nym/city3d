@@ -61,18 +61,15 @@ export default /* eslint-disable */
       "description": "a number literal, or a specification for a random number",
       "oneOf": [{
         "type": "number"
-      }, { 
+      }, {
         "type": "object",
-        "required": [ "type" ],
+        "required": [ "$random" ],
         "properties": {
-          "type": {
-            "const": "randomInt"
-          },
-          "min": {
-            "type": "number"
-          },
-          "max": {
-            "type": "number"
+          "$random": {
+            "type": "array",
+            "items": { 
+              "type": "number"
+            }
           }
         }
       }]
