@@ -17,6 +17,7 @@ import WURSTER_HALL from './buildings/wurster_hall.json.js'
 // districts
 import CAMPUS from './districts/campus.json.js'
 import SUBURBIA from './districts/suburbia.json.js'
+import MANHATTAN from './districts/manhattan.json.js'
 
 // parcels
 import PARCEL_353 from './parcels/parcel_353.json.js'
@@ -41,6 +42,7 @@ class StockCatalog extends Catalog {
       HOUSE_353,
       WURSTER_HALL,
       CAMPUS,
+      MANHATTAN,
       PARCEL_353,
       SUBURBIA,
       SWINGSET,

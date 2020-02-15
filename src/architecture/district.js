@@ -5,7 +5,7 @@
  * For more information, please refer to <http://unlicense.org>
  */
 
-import { countTo, xyz, xyzAdd } from '../core/util.js'
+import { array, countTo, xyz, xyzAdd } from '../core/util.js'
 import { Feature, FeatureInstance } from '../core/feature.js'
 import { Geometry } from '../core/geometry.js'
 import { METRIC } from './metric.js'
@@ -85,22 +85,21 @@ class District extends Model {
     if (contents) {
       for (const copySpec of contents) {
         const specName = copySpec.copy.$ref
-        let count = 1
-        let offset = { x: 0, y: 0, z: 0 }
+        // let count = 1
+        // let offset = { x: 0, y: 0, z: 0 }
+        // const repeats = array(copySpec.repeat)
+        // for (const repeatSpec of repeats) {
+
+        // }
         if (copySpec.repeat) {
-          count = copySpec.repeat.count
-          offset = xyzAdd(offset, copySpec.repeat.offset)
-        }
-        for (let i = 0; i < count; i++) {
-          const iOffset = {
-            x: i * offset.x,
-            y: i * offset.y,
-            z: i * offset.z
-          }
-          const iAt = xyzAdd(copySpec.at, iOffset)
-          const at = placement.applyRay(iAt)
-          const modelObject = specReader.makeModelFromSpecName(specName, at)
-          this.add(modelObject)
+          const repeatSpecs = District._copySpecFragment(array(copySpec.repeat))
+          this._applyRepeats(repeatSpecs, placement, specReader, specName, copySpec)
+          // const repeat = repeatSpecs[0]
+          // count = repeat.count
+          // offset = xyzAdd(offset, repeat.offset)
+        } else {
+          const offset = { x: 0, y: 0, z: 0 }
+          this._makeModelOnce(1, offset, placement, specReader, specName, copySpec)
         }
       }
     }
@@ -111,6 +110,52 @@ class District extends Model {
         this.add(surface)
       }
     }
+  }
+
+  static _copySpecFragment (specFragment) {
+    return JSON.parse(JSON.stringify(specFragment))
+  }
+
+  _applyRepeats (repeatSpecs, placement, specReader, specName, copySpec) {
+    let count = 1
+    let offset = { x: 0, y: 0, z: 0 }
+    if (repeatSpecs.length === 0) {
+      return null
+    } else if (repeatSpecs.length === 1) {
+      const repeatSpec = repeatSpecs[0]
+      count = repeatSpec.count
+      offset = xyzAdd(offset, repeatSpec.offset)
+      // console.log(`District make '${specName}' x ${count}`)
+      for (let i = 0; i < count; i++) {
+        this._makeModelOnce(i, offset, placement, specReader, specName, copySpec)
+      }
+    } else if (repeatSpecs.length > 1) {
+      const lastSpec = repeatSpecs.pop()
+      count = lastSpec.count
+      offset = xyzAdd(offset, lastSpec.offset)
+      // console.log(`District make '${specName}' x ${count} x ${repeatSpecs.length}`)
+      for (let i = 0; i < count; i++) {
+        const iOffset = {
+          x: i * offset.x,
+          y: i * offset.y,
+          z: i * offset.z
+        }
+        const at = placement.add(iOffset, placement.az)
+        this._applyRepeats(repeatSpecs, at, specReader, specName, copySpec)
+      }
+    }
+  }
+
+  _makeModelOnce (i, offset, placement, specReader, specName, copySpec) {
+    const iOffset = {
+      x: i * offset.x,
+      y: i * offset.y,
+      z: i * offset.z
+    }
+    const iAt = xyzAdd(copySpec.at, iOffset)
+    const at = placement.applyRay(iAt)
+    const modelObject = specReader.makeModelFromSpecName(specName, at)
+    this.add(modelObject)
   }
 
   _makeModelFromDeprecatedSpec (deprecatedSpec, placement) {

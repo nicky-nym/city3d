@@ -17,7 +17,7 @@ window.DEBUG = true
 function addBuildings (city) {
   const CITY_SIZE = 1
   const nyc = new CITY.Manhattan({
-    name: 'Manhattan',
+    name: 'Old Manhattan',
     placement: new Ray(Facing.NORTH, xyz(-13200, -5280, 0)),
     deprecatedSpec: {
       outline: CITY.Manhattan.BOUNDARY
@@ -152,6 +152,7 @@ function main () {
   const specReader = new SpecReader()
   addObjectFromSpec(city, specReader, 'Suburbia', { x: -550, y: 100, z: 0 })
   addObjectFromSpec(city, specReader, 'Campus', { x: 50, y: -400, z: 0 })
+  addObjectFromSpec(city, specReader, 'Manhattan', { x: -1200, y: 800, z: 0 })
   addBuildings(city)
 
   const extras = new CITY.Model({ name: 'extras' })
@@ -159,10 +160,6 @@ function main () {
   addPyramid(extras)
   addKalpanaOrbital(extras)
   addMovers(extras)
-  addObjectFromSpec(extras, specReader, 'Highrise building', { x: -800, y: 100, z: 0 })
-  addObjectFromSpec(extras, specReader, 'Highrise building', { x: -800, y: 200, z: 0 })
-  addObjectFromSpec(extras, specReader, 'Highrise building', { x: -800, y: 300, z: 0 })
-  addObjectFromSpec(extras, specReader, 'Highrise building', { x: -800, y: 400, z: 0 })
   addInstancedBuildings(extras)
   city.add(extras)
 
