@@ -32,7 +32,13 @@ export default /* eslint-disable */
     N: { x: 80, y: 48 },
     /* sidewalk, north */
     O: { x: 80, y: 248 },
-    P: { x: 680, y: 248 }
+    P: { x: 680, y: 248 },
+    /* full-length avenue */
+    Q: { x: 60, y: 216 * 264 },
+    R: { x: 0, y: 216 * 264 },
+    /* full-length street */
+    S: { x: 10 * -700, y: 0 },
+    T: { x: 10 * -700, y: 32 }
   },
   parcels: [],
   contents: [{
@@ -115,6 +121,32 @@ export default /* eslint-disable */
         { $ref: '#/def/I' }
       ]
     }
+  }, {
+    name: '11 parallel avenues',
+    surface: { material: 'asphalt' },
+    outline: {
+      shape: 'polygon',
+      corners: [
+        { $ref: '#/def/A' },
+        { $ref: '#/def/B' },
+        { $ref: '#/def/Q' },
+        { $ref: '#/def/R' }
+      ]
+    },
+    repeat: { count: 11, offset: { x: -700 } }
+  }, {
+    name: '217 parallel streets',
+    surface: { material: 'asphalt' },
+    outline: {
+      shape: 'polygon',
+      corners: [
+        { $ref: '#/def/B' },
+        { $ref: '#/def/S' },
+        { $ref: '#/def/T' },
+        { $ref: '#/def/G' }
+      ]
+    },
+    repeat: { count: 217, offset: { y: 264 } }
   }],
   comment: [
     'Boundary corners for the island of Manhattan.',

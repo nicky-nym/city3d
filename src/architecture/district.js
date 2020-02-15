@@ -85,18 +85,9 @@ class District extends Model {
     if (contents) {
       for (const copySpec of contents) {
         const specName = copySpec.copy.$ref
-        // let count = 1
-        // let offset = { x: 0, y: 0, z: 0 }
-        // const repeats = array(copySpec.repeat)
-        // for (const repeatSpec of repeats) {
-
-        // }
         if (copySpec.repeat) {
           const repeatSpecs = District._copySpecFragment(array(copySpec.repeat))
           this._applyRepeats(repeatSpecs, placement, specReader, specName, copySpec)
-          // const repeat = repeatSpecs[0]
-          // count = repeat.count
-          // offset = xyzAdd(offset, repeat.offset)
         } else {
           const offset = { x: 0, y: 0, z: 0 }
           this._makeModelOnce(1, offset, placement, specReader, specName, copySpec)
@@ -106,8 +97,22 @@ class District extends Model {
 
     if (pavement) {
       for (const spec of pavement) {
-        const surface = new Pavement({ spec, placement })
-        this.add(surface)
+        let count = 1
+        let offset = { x: 0, y: 0, z: 0 }
+        if (spec.repeat) {
+          count = spec.repeat.count
+          offset = xyzAdd(offset, spec.repeat.offset)
+        }
+        for (const i of countTo(count)) {
+          const iOffset = {
+            x: i * offset.x,
+            y: i * offset.y,
+            z: i * offset.z
+          }
+          const at = placement.add(iOffset, placement.az)
+          const surface = new Pavement({ spec, placement: at })
+          this.add(surface)
+        }
       }
     }
   }
