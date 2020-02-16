@@ -127,6 +127,6 @@ class Floor extends Model {
   }
 }
 
-Floor.layer = Feature.registerLayer(Floor, 'floors & ramps', { category: 'Buildings' })
+Floor.layer = Feature.registerLayer('floors & ramps', { category: 'Buildings' })
 
 export { Floor }

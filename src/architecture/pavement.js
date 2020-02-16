@@ -76,6 +76,6 @@ class Pavement extends Model {
   }
 }
 
-Pavement.layer = Feature.registerLayer(Pavement, 'streets, etc.', { category: 'Pavement' })
+Pavement.layer = Feature.registerLayer('streets, etc.', { category: 'Pavement' })
 
 export { Pavement }

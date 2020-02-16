@@ -180,6 +180,6 @@ class District extends Model {
 }
 
 class DistrictBoundary {}
-DistrictBoundary.layer = Feature.registerLayer(DistrictBoundary, 'district boundary', { category: 'Abstract' })
+DistrictBoundary.layer = Feature.registerLayer('district boundary', { category: 'Abstract' })
 
 export { District }

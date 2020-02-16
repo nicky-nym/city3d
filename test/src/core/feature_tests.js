@@ -49,16 +49,9 @@ describe('Feature ', function () {
     })
     it('should return list with expected first layer', function () {
       layers[0].index.should.equal(0)
-      layers[0].definingClass.should.equal(Feature)
       layers[0].displayName.should.equal('layer 0')
       layers[0].description.should.equal('Default layer for Features')
       layers[0].category.should.equal('Abstract')
-    })
-    it('should return layers with defining classes Wall and Roof', function () {
-      const definingClasses = layers.map(l => l.definingClass)
-
-      definingClasses.should.include(Wall)
-      definingClasses.should.include(Roof)
     })
   })
 
@@ -78,15 +71,13 @@ describe('Feature ', function () {
   })
 
   describe('#registerLayer()', function () {
-    class Cricket {}
-    class LightningRod {}
     let newLayer
 
     describe('With a new category', function () {
       const newCategory = 'Those that belong to the emperor'
 
       it('should return a layer with the specified properties', function () {
-        newLayer = Feature.registerLayer(Cricket, 'cricket', { description: 'Gryllidae', category: newCategory })
+        newLayer = Feature.registerLayer('cricket', { description: 'Gryllidae', category: newCategory })
 
         newLayer.displayName.should.equal('cricket')
         newLayer.description.should.equal('Gryllidae')
@@ -102,7 +93,7 @@ describe('Feature ', function () {
 
     describe('With existing category "Buildings"', function () {
       it('should return a layer with the specified properties', function () {
-        newLayer = Feature.registerLayer(LightningRod, 'lightning rod', { category: 'Buildings' })
+        newLayer = Feature.registerLayer('lightning rod', { category: 'Buildings' })
 
         newLayer.displayName.should.equal('lightning rod')
         newLayer.category.should.equal('Buildings')
@@ -118,6 +109,24 @@ describe('Feature ', function () {
       })
       it('should result in one additional layer in category "Buildings"', function () {
         Feature.getRegisteredLayersByCategory().get('Buildings').should.have.length(origNumBuildingLayers + 1)
+      })
+    })
+
+    describe('With a duplicate Layer', function () {
+      let numLayersBeforeRegisteringDuplicateLayer
+
+      it('should return a layer with the specified properties', function () {
+        numLayersBeforeRegisteringDuplicateLayer = Feature.getRegisteredLayers().length
+        newLayer = Feature.registerLayer('walls', { category: 'Buildings' })
+
+        newLayer.displayName.should.equal('walls')
+        newLayer.category.should.equal('Buildings')
+      })
+      it('should not increase the number of registered Layers', function () {
+        Feature.getRegisteredLayers().should.have.length(numLayersBeforeRegisteringDuplicateLayer)
+      })
+      it('should return the previously registered Layer', function () {
+        newLayer.should.equal(Wall.layer)
       })
     })
   })
@@ -148,7 +157,7 @@ describe('Feature ', function () {
 
     describe('#layerIndex()', function () {
       it('should return different value than for a Roof', function () {
-        Dome.Layer = Feature.registerLayer(Dome, 'domes', { category: 'Buildings' })
+        Dome.Layer = Feature.registerLayer('domes', { category: 'Buildings' })
         const dome = new Dome(roofSpec, ray, Dome.Layer)
 
         dome.layerIndex().should.not.equal(roofLayerIndex)

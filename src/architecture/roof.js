@@ -349,6 +349,6 @@ class Roof extends Model {
   }
 }
 
-Roof.layer = Feature.registerLayer(Roof, 'roofs', { category: 'Buildings' })
+Roof.layer = Feature.registerLayer('roofs', { category: 'Buildings' })
 
 export { Roof }

@@ -59,6 +59,6 @@ class Tree extends Model {
   }
 }
 
-Tree.layer = Feature.registerLayer(Tree, 'trees & plants', { category: 'Landscape' })
+Tree.layer = Feature.registerLayer('trees & plants', { category: 'Landscape' })
 
 export { Tree }

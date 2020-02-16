@@ -94,6 +94,6 @@ class Parcel extends Model {
 }
 
 class ParcelBoundary {}
-ParcelBoundary.layer = Feature.registerLayer(ParcelBoundary, 'parcel boundary', { category: 'Abstract' })
+ParcelBoundary.layer = Feature.registerLayer('parcel boundary', { category: 'Abstract' })
 
 export { Parcel }

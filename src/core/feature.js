@@ -48,8 +48,8 @@ class Feature {
     return this._layer.index
   }
 
-  static registerLayer (definingClass, displayName, { description, category } = {}) {
-    return Layer.register(definingClass, displayName, { description, category })
+  static registerLayer (displayName, { description, category } = {}) {
+    return Layer.register(displayName, { description, category })
   }
 
   static getRegisteredLayers () {
@@ -67,7 +67,7 @@ class Feature {
   }
 }
 
-const DEFAULT_LAYER = Feature.registerLayer(Feature, 'layer 0',
+const DEFAULT_LAYER = Feature.registerLayer('layer 0',
   { description: 'Default layer for Features', category: 'Abstract' })
 
 /**

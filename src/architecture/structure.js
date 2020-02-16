@@ -85,12 +85,13 @@ class Structure extends Model {
       const vertices = lineSpec.vertices
       const adjustedWaypoints = placement.applyRay(vertices)
       const line = new Geometry.Line(adjustedWaypoints)
-      const result = new FeatureInstance(line, adjustedWaypoints[0], 0x663300, { layer: Structure.layer })
+      const layer = spec.layer || Structure.layer
+      const result = new FeatureInstance(line, adjustedWaypoints[0], 0x663300, { layer })
       this.add(result)
     }
   }
 }
 
-Structure.layer = Feature.registerLayer(Structure, 'structures', { category: 'Other' })
+Structure.layer = Feature.registerLayer('structures', { category: 'Other' })
 
 export { Structure }

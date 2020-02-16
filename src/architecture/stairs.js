@@ -95,6 +95,6 @@ class Stairs extends Model {
   }
 }
 
-Stairs.layer = Feature.registerLayer(Stairs, 'stairs', { category: 'Circulation' })
+Stairs.layer = Feature.registerLayer('stairs', { category: 'Circulation' })
 
 export { Stairs }

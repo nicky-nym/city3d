@@ -108,6 +108,6 @@ class Mover extends Feature {
   }
 }
 
-Mover.layer = Feature.registerLayer(Mover, 'movers & vehicles', { category: 'Entourage' })
+Mover.layer = Feature.registerLayer('movers & vehicles', { category: 'Entourage' })
 
 export { Mover }

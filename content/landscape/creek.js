@@ -64,6 +64,6 @@ class Creek extends Model {
   }
 }
 
-Creek.layer = Feature.registerLayer(Creek, 'water', { category: 'Landscape' })
+Creek.layer = Feature.registerLayer('water', { category: 'Landscape' })
 
 export { Creek }

@@ -227,6 +227,6 @@ class Wall extends Model {
   }
 }
 
-Wall.layer = Feature.registerLayer(Wall, 'walls', { category: 'Buildings' })
+Wall.layer = Feature.registerLayer('walls', { category: 'Buildings' })
 
 export { Wall }
