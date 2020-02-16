@@ -14,18 +14,7 @@ import { xy, xyz, rectangleOfSize } from '../src/core/util.js'
 
 window.DEBUG = true
 
-function addBuildings (city) {
-  const CITY_SIZE = 1
-  const nyc = new CITY.Manhattan({
-    name: 'Old Manhattan',
-    placement: new Ray(Facing.NORTH, xyz(-13200, -5280, 0)),
-    deprecatedSpec: {
-      outline: CITY.Manhattan.BOUNDARY
-    }
-  })
-  nyc.addBlocks(CITY_SIZE, CITY_SIZE * 2)
-  city.add(nyc)
-
+function addLatticeburg (city) {
   const latticeburg = new CITY.LatticeDistrict({
     name: 'Latticeburg',
     placement: new Ray(Facing.NORTH, xyz(238, 238, 0)),
@@ -153,7 +142,7 @@ function main () {
   addObjectFromSpec(city, specReader, 'Suburbia', { x: -550, y: 100, z: 0 })
   addObjectFromSpec(city, specReader, 'Campus', { x: 50, y: -400, z: 0 })
   addObjectFromSpec(city, specReader, 'Manhattan', { x: -1200, y: 800, z: 0 })
-  addBuildings(city)
+  addLatticeburg(city)
 
   const extras = new CITY.Model({ name: 'extras' })
   addEiffelTower(extras)

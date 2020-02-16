@@ -40,7 +40,6 @@ import { Tabulator } from './metrics/tabulator.js'
 
 // buildings
 import { Lattice } from '../content/buildings/lattice.js'
-import { Highrise } from '../content/buildings/highrise.js'
 import { MidriseComplex } from '../content/buildings/midrise_complex.js'
 
 // structures
@@ -59,7 +58,6 @@ import { Vehicle } from '../content/movers/vehicle.js'
 
 // districts
 import { LatticeDistrict } from '../content/districts/lattice_district.js'
-import { Manhattan } from '../content/districts/manhattan.js'
 
 export const CITY = {
   Lattice,
@@ -73,10 +71,8 @@ export const CITY = {
   FeatureGroup,
   Kalpana,
   Kayak,
-  Highrise,
   InstancedFeature,
   LatticeDistrict,
-  Manhattan,
   MemoryOutput,
   MidriseComplex,
   MetricsOutput,

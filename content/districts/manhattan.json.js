@@ -38,7 +38,9 @@ export default /* eslint-disable */
     R: { x: 0, y: 216 * 264 },
     /* full-length street */
     S: { x: 10 * -700, y: 0 },
-    T: { x: 10 * -700, y: 32 }
+    T: { x: 10 * -700, y: 32 },
+    peoplePerBlock: 682,
+    population: 682 * 11 * 217
   },
   parcels: [],
   contents: [{
@@ -49,6 +51,7 @@ export default /* eslint-disable */
       { count: 2, offset: { y: 100 } }
     ]
   }],
+  /* TODO: rotate street grid by -29 degrees */
   pavement: [{
     name: 'avenue',
     surface: { material: 'asphalt' },
@@ -160,6 +163,7 @@ export default /* eslint-disable */
   ],
   border: {
     shape: 'polygon',
+    at: { x: -12200, y: -6000 },
     corners: [
       { x: 30160, y: 62408 },
       { x: 29708, y: 60435 },

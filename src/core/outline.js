@@ -6,7 +6,7 @@
  */
 
 import { Pitch } from './pitch.js'
-import { rectangleOfSize } from './util.js'
+import { rectangleOfSize, xyzAdd } from './util.js'
 
 const SHAPE = {
   // NOTE: these values must exactly match the values in outline.schema.json.js
@@ -100,6 +100,9 @@ class Outline {
       }
 
       corners = newCorners
+    }
+    if (spec.at) {
+      corners = corners.map(corner => xyzAdd(corner, spec.at))
     }
     return corners
   }
