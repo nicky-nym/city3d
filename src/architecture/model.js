@@ -22,10 +22,12 @@ class Model extends FeatureLODGroup {
    * Creates a Model instance.
    * @param {object} [args] - an object with key-value arguments
    * @param {string} [args.name] - optional name for this model instance
-   * @param {Layer} [args.layer] - optional instance of Layer
+   * @param {object} [args.spec] - optional specification object that is valid against building.schema.json.js
+   * @param {object} [args.deprecatedSpec] - optional old 2019 spec format that we're phasing out
    */
-  constructor ({ name, layer } = {}) {
-    super(name, { layer })
+  constructor (options = {}) {
+    const { name, spec, deprecatedSpec, ...remainingOptions } = options
+    super(name || (spec && spec.name) || (deprecatedSpec && deprecatedSpec.name), remainingOptions)
   }
 
   static mergeValueIfAbsent (obj, values) {

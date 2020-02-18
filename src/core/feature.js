@@ -12,10 +12,12 @@ class Feature {
    * Creates a Feature.
    * @param {string} name - can be an empty string, null, or undefined, in which case it will be skipped over by fullName()
    * @param {Layer} [layer]
+   * @param {Layer} [copyLayer] - the Layer assigned to an InstancedFeature based on this Feature
    */
-  constructor (name, { layer = DEFAULT_LAYER } = {}) {
+  constructor (name, { layer = DEFAULT_LAYER, copyLayer } = {}) {
     this.name = name
     this._layer = layer
+    this._copyLayer = copyLayer
     this._valuesByMetric = new Map()
   }
 
@@ -114,6 +116,10 @@ class InstancedFeature extends Feature {
     this.placements = placements
     this.materialCost = materialCost
     this.useNormals = useNormals
+  }
+
+  layerIndex () {
+    return this.feature._copyLayer ? this.feature._copyLayer.index : this.feature._layer.index
   }
 }
 

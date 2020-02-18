@@ -42,13 +42,10 @@ const COLORS_BY_USE = {
  * Structure is an abstract superclass for buildings, city blocks, and other types of structures.
  */
 class Structure extends Model {
-  constructor ({
-    name,
-    placement,
-    spec
-  } = {}) {
-    name = name || (spec && spec.name)
-    super({ name })
+  constructor (options = {}) {
+    let { placement, spec, ...remainingOptions } = options
+    super({ placement, spec, ...remainingOptions, layer: spec && spec.layer })
+
     placement = placement || new Ray()
     this.offset = { ...xyz(0, 0, 0), ...placement.xyz }
     placement.xyz = xyz(0, 0, 0)
@@ -81,12 +78,12 @@ class Structure extends Model {
 
   makeModelFromSpec (spec, placement) {
     const { lines /* anchorPoint, */ } = spec
+    const options = spec.layer ? {} : { layer: Structure.layer }
     for (const lineSpec of lines) {
       const vertices = lineSpec.vertices
       const adjustedWaypoints = placement.applyRay(vertices)
       const line = new Geometry.Line(adjustedWaypoints)
-      const layer = spec.layer || Structure.layer
-      const result = new FeatureInstance(line, adjustedWaypoints[0], 0x663300, { layer })
+      const result = new FeatureInstance(line, adjustedWaypoints[0], 0x663300, options)
       this.add(result)
     }
   }

@@ -6,7 +6,7 @@
  */
 
 import { array, cornersFromShape, countTo, randomInt, xyzAdd } from '../core/util.js'
-import { FeatureGroup } from '../core/feature.js'
+import { Feature, FeatureGroup } from '../core/feature.js'
 import { Model } from './model.js'
 import { Ray } from '../core/ray.js'
 import { Roof } from './roof.js'
@@ -51,24 +51,15 @@ function _openingsFromWallsSpec (wallsSpec) {
 class Building extends Structure {
   /**
    * Create a new instance of a specified Building, and generate the Geometry objects for it.
-   * @param {string} [name] - a display name for this individual instance at a given placement
    * @param {Ray} [placement] - the location and orientation of this part
    * @param {object} [deprecatedSpec] - an old 2019 spec format that we're phasing out
-   * @param {object} [spec] - a specification object that is valid against building.schema.json.js
    */
-  constructor ({
-    name,
-    placement,
-    deprecatedSpec,
-    spec
-  } = {}) {
-    name = name || (spec && spec.name) || (deprecatedSpec && deprecatedSpec.name)
-    super({ name, placement })
+  constructor (options = {}) {
+    const { placement, deprecatedSpec, ...remainingOptions } = options
+    super({ placement, deprecatedSpec, ...remainingOptions, copyLayer: Building.copyLayer })
+
     if (deprecatedSpec) {
       this._makeModelFromDeprecatedSpec(deprecatedSpec, placement)
-    }
-    if (spec) {
-      this.makeModelFromSpec(spec, placement)
     }
   }
 
@@ -219,5 +210,7 @@ class Building extends Structure {
     this.addLevelOfDetail(lowGroup, 2000)
   }
 }
+
+Building.copyLayer = Feature.registerLayer('copies', { category: 'Buildings' })
 
 export { Building }
