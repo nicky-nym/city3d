@@ -139,6 +139,8 @@ class ThreeOutputScene extends THREE.Scene {
       const geometry = new THREE.Geometry()
       geometry.vertices.push(...route.waypoints().map(p => new THREE.Vector3(p.x, p.y, p.z)))
       const line = new THREE.Line(geometry, material)
+      const layer = route.layerIndex()
+      line.traverseVisible(node => node.layers.set(layer))
       this.add(line)
     }
   }
@@ -194,7 +196,7 @@ class ThreeOutputScene extends THREE.Scene {
     }
 
     const layer = feature.layerIndex()
-    if (layer > 0) {
+    if (object && layer > 0) {
       // NOTE: Object3D.layers does not apply to the object's children, so we must traverse
       // the children here.
       // TODO: could use enable() instead of set() to allow multiple layers to be set

@@ -34,7 +34,7 @@ const LAYER = {
   // highlighting
   DISTRICTS: 'district boundaries',
   PARCELS: 'parcel boundaries',
-  ROUTES: 'vehicle routes (TODO)',
+  ROUTES: 'vehicle routes',
   /* TODO:
   TOOLTIPS: 'tooltips',
   GRID: 'grid',

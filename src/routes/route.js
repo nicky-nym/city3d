@@ -1,21 +1,24 @@
 /** @file route.js
- * @author Authored in 2019 at <https://github.com/nicky-nym/city3d>
+ * @author Authored in 2019, 2020 at <https://github.com/nicky-nym/city3d>
  * @license UNLICENSE
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
  */
 
 import { xyzSubtract, length, countTo } from '../core/util.js'
+import { Feature } from '../core/feature.js'
+import { LAYER } from '../architecture/layer.js'
 
 /**
-* Route is a class for representing the path of a Mover
-*/
-class Route {
+ * Route is a class for representing the path of a Mover
+ */
+class Route extends Feature {
   /**
    * @param {xyz[]} listOfWaypoints - array of xyz coordinates specifying a route
    * @param {Use} use - e.g. Use.BIKEPATH
    */
   constructor (listOfWaypoints, use) {
+    super('Route', { layer: LAYER.ROUTES })
     this._listOfWaypoints = listOfWaypoints || []
     this.use = use
     this._segments = []
