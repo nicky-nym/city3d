@@ -28,6 +28,13 @@ import PARCEL_353 from './parcels/parcel_353.json.js'
 // landscape
 import TREE from './landscape/tree.json.js'
 
+// furniture
+import TABLE from './furniture/table.json.js'
+
+// occupants
+import DOG from './movers/dog.json.js'
+import PERSON from './movers/person.json.js'
+
 // structures
 import SWINGSET from './structures/swingset.json.js'
 import UTILITY_POLE from './structures/utility_pole.json.js'
@@ -48,14 +55,25 @@ class StockCatalog extends Catalog {
       HOUSE_353,
       LATTICE,
       WURSTER_HALL,
+
       // districts
       CAMPUS,
       MANHATTAN,
       SUBURBIA,
+
       // parcels
       PARCEL_353,
+
       // landscape
       TREE,
+
+      // furniture
+      TABLE,
+
+      // occupants
+      DOG,
+      PERSON,
+
       // structures
       SWINGSET,
       UTILITY_POLE

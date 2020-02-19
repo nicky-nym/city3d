@@ -18,10 +18,10 @@ const LAYER = {
   STRUCTURES: 'structures',
 
   // occupants
-  PEOPLE: 'people (TODO)',
-  ANIMALS: 'animals (TODO)',
+  PEOPLE: 'people',
+  ANIMALS: 'animals',
   VEHICLES: 'vehicles',
-  FURNITURE: 'furniture (TODO)',
+  FURNITURE: 'furniture',
 
   // landscape
   GROUND: 'ground (TODO)',

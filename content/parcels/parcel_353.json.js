@@ -93,6 +93,15 @@ export default /* eslint-disable */
   }, {
     copy: { $ref: 'Tree' },
     at: { x: -90, y: 40 }
+  }, {
+    copy: { $ref: 'Table' },
+    at: { x: -80, y: 24 }
+  }, {
+    copy: { $ref: 'Dog' },
+    at: { x: -10, y: 30 }
+  }, {
+    copy: { $ref: 'Person' },
+    at: { x: -2, y: 30 }
   }],
   // TODO: implement this!
   /*
