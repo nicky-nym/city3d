@@ -8,6 +8,10 @@
 import * as THREE from '../../node_modules/three/build/three.module.js'
 import { Feature, FeatureGroup, FeatureInstance, FeatureLODGroup, InstancedFeature } from '../core/feature.js'
 import { Geometry } from '../core/geometry.js'
+
+// TODO: remove dependency on non-core /architecture/ code
+import { LAYER } from '../architecture/layer.js'
+
 import { xyzSubtract } from '../core/util.js'
 import { BufferGeometryUtils } from '../../node_modules/three/examples/jsm/utils/BufferGeometryUtils.js'
 
@@ -39,6 +43,7 @@ class ThreeOutputScene extends THREE.Scene {
     // grid
     const gridHelper = new THREE.GridHelper(ONE_MILE, 8, COLOR_GREY, COLOR_GREY)
     gridHelper.geometry.rotateX(Math.PI / 2)
+    gridHelper.traverseVisible(node => node.layers.set(LAYER.GRID.index))
     this.add(gridHelper)
 
     // ground
@@ -59,6 +64,7 @@ class ThreeOutputScene extends THREE.Scene {
     ground.rotation.x = -Math.PI / 2
     ground.receiveShadow = true
     ground.userData.noHighlight = true
+    ground.traverseVisible(node => node.layers.set(LAYER.GROUND.index))
     this.add(ground)
 
     // add an origin marker for debugging purposes

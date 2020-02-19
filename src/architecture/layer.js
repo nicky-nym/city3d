@@ -13,7 +13,7 @@ const LAYER = {
   WALLS: 'walls',
   FLOORS: 'floors',
   COPIES: 'copies',
-  PORTALS: 'TODO: doors & windows',
+  PORTALS: 'doors (TODO) & windows',
   PAVEMENT: 'streets & sidewalks',
   STRUCTURES: 'structures',
 
@@ -24,7 +24,7 @@ const LAYER = {
   FURNITURE: 'furniture',
 
   // landscape
-  GROUND: 'ground (TODO)',
+  GROUND: 'ground',
   WATER: 'water',
   PLANTS: 'trees & plants',
   CLOUDS: 'clouds (TODO)',
@@ -35,9 +35,9 @@ const LAYER = {
   DISTRICTS: 'district boundaries',
   PARCELS: 'parcel boundaries',
   ROUTES: 'vehicle routes',
+  GRID: 'grid',
   /* TODO:
   TOOLTIPS: 'tooltips',
-  GRID: 'grid',
   SUN_PATH: 'sun path & day arcs',
   DAYLIGHT: 'daylight factor heatmap',
   KINEMATIC_RANGE: 'kinematic range heatmap',
@@ -87,7 +87,8 @@ const CATEGORIES = [{
   layers: [
     { id: LAYER.DISTRICTS },
     { id: LAYER.PARCELS },
-    { id: LAYER.ROUTES }
+    { id: LAYER.ROUTES },
+    { id: LAYER.GRID }
   ]
 }, {
   category: 'Floor area (TODO)',
