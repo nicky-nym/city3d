@@ -401,34 +401,68 @@ describe('ThreeOutputScene', function () {
     describe('with input geometry constructed with a 3D zigzag', function () {
       const [X, Y, Z] = [1, 2, 3]
       const zigzagVertices = [xyz(0, 0, 0), xyz(X, 0, Z), xyz(0, Y, 0), xyz(0, 0, Z)]
-      const zigzag = new Geometry.Line(zigzagVertices)
+      const radius = 0.5
+      const zigzag = new Geometry.Line(zigzagVertices, radius)
       const [A, B, C] = [5, 7, 11]
+      const numSegments = zigzagVertices.length - 1
 
-      it('should return a line containing a geometry containing four vertices', function () {
-        const line = threeOutputScene.makeLines(zigzag, null)
+      it('should return a mesh containing a geometry containing 6 triangles per segment', function () {
+        const mesh = threeOutputScene.makeLines(zigzag, null)
 
-        line.geometry.should.exist
-        line.geometry.vertices.should.exist
-        line.geometry.vertices.should.have.length(4)
+        mesh.geometry.should.exist
+        mesh.geometry.index.should.exist
+        mesh.geometry.index.count.should.equal(6 * 3 /* = indices/triangle */ * numSegments)
+      })
+      it('should return vertices close to original vertices', function () {
+        const mesh = threeOutputScene.makeLines(zigzag, null)
+
+        const actualVertices = getVerticesFromBufferGeometry(mesh.geometry)
+        actualVertices.should.have.length.at.least(numSegments * 3)
+        const isWithinRadiusOfSomeOrigVertex = v => zigzagVertices.some(z => distance(v, z) < 1.01 * radius)
+        actualVertices.every(isWithinRadiusOfSomeOrigVertex).should.be.true
+      })
+      it('should return some vertices close to every original vertex', function () {
+        const mesh = threeOutputScene.makeLines(zigzag, null)
+
+        const actualVertices = getVerticesFromBufferGeometry(mesh.geometry)
+        const isWithinRadiusOfSomeActualVertex = v => actualVertices.some(z => distance(v, z) < 1.01 * radius)
+        zigzagVertices.every(isWithinRadiusOfSomeActualVertex).should.be.true
       })
       it('should return expected vertices with specified offset', function () {
-        const line = threeOutputScene.makeLines(zigzag, null, { x: A, y: B, z: C })
+        const mesh = threeOutputScene.makeLines(zigzag, null, { x: A, y: B, z: C })
 
-        const actualVertices = line.geometry.vertices.map(roundXYZ)
-        actualVertices.should.include.deep.members([
-          xyz(A, B, C), xyz(A + X, B, C + Z), xyz(A, B + Y, C), xyz(A, B, C + Z)
-        ])
+        const actualVertices = getVerticesFromBufferGeometry(mesh.geometry)
+        const expectedVertices = [xyz(A, B, C), xyz(A + X, B, C + Z), xyz(A, B + Y, C), xyz(A, B, C + Z)]
+        const isWithinRadiusOfSomeExpectedVertex = v => expectedVertices.some(z => distance(v, z) < 1.01 * radius)
+        actualVertices.every(isWithinRadiusOfSomeExpectedVertex).should.be.true
+        const isWithinRadiusOfSomeActualVertex = v => actualVertices.some(z => distance(v, z) < 1.01 * radius)
+        expectedVertices.every(isWithinRadiusOfSomeActualVertex).should.be.true
       })
       it('should return expected vertices with specified offset, and off-origin line', function () {
         const translatedVertices = zigzagVertices.map(v => xyzAdd(v, { x: 13, y: -4, z: 20 }))
         const translatedZigzag = new Geometry.Line(translatedVertices)
-        const line = threeOutputScene.makeLines(translatedZigzag, null, { x: A, y: B, z: C })
+        const mesh = threeOutputScene.makeLines(translatedZigzag, null, { x: A, y: B, z: C })
 
-        const actualVertices = line.geometry.vertices.map(roundXYZ)
-        actualVertices.should.include.deep.members([
-          xyz(A, B, C), xyz(A + X, B, C + Z), xyz(A, B + Y, C), xyz(A, B, C + Z)
-        ])
+        const actualVertices = getVerticesFromBufferGeometry(mesh.geometry)
+        const expectedVertices = [xyz(A, B, C), xyz(A + X, B, C + Z), xyz(A, B + Y, C), xyz(A, B, C + Z)]
+        const isWithinRadiusOfSomeExpectedVertex = v => expectedVertices.some(z => distance(v, z) < 1.01 * radius)
+        actualVertices.every(isWithinRadiusOfSomeExpectedVertex).should.be.true
+        const isWithinRadiusOfSomeActualVertex = v => actualVertices.some(z => distance(v, z) < 1.01 * radius)
+        expectedVertices.every(isWithinRadiusOfSomeActualVertex).should.be.true
       })
     })
   })
 })
+
+function distance (v0, v1) {
+  return Math.sqrt((v0.x - v1.x) ** 2 + (v0.y - v1.y) ** 2 + (v0.z - v1.z) ** 2)
+}
+
+function getVerticesFromBufferGeometry (bufferGeometry) {
+  const positions = bufferGeometry.getAttribute('position')
+  const vertices = []
+  for (let i = 0; i < positions.count; i++) {
+    vertices.push(new THREE.Vector3(positions.getX(i), positions.getY(i), positions.getZ(i)))
+  }
+  return vertices
+}

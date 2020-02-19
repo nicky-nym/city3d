@@ -91,7 +91,7 @@ class Structure extends Model {
     for (const lineSpec of lines) {
       const vertices = lineSpec.vertices
       const adjustedWaypoints = placement.applyRay(vertices)
-      const line = new Geometry.Line(adjustedWaypoints)
+      const line = new Geometry.Line(adjustedWaypoints, lineSpec.radius)
       const result = new FeatureInstance(line, adjustedWaypoints[0], 0x663300, options)
       this.add(result)
     }

@@ -22,6 +22,7 @@ export default /* eslint-disable */
   lines: [{
     name: 'left truss',
     material: 'wood',
+    radius: 0.2,
     vertices: [
       { x: -1, y: -4.5, z: 0 },
       { x: 0, y: 0, z: 8 },
@@ -30,6 +31,7 @@ export default /* eslint-disable */
   }, {
     name: 'cross bar',
     material: 'wood',
+    radius: 0.2,
     vertices: [
       { x: 0, y: 0, z: 8 },
       { x: 10, y: 0, z: 8 }
@@ -37,6 +39,7 @@ export default /* eslint-disable */
   }, {
     name: 'right truss',
     material: 'wood',
+    radius: 0.2,
     vertices: [
       { x: 1 + 10, y: -4.5, z: 0 },
       { x: 10, y: 0, z: 8 },
@@ -45,6 +48,7 @@ export default /* eslint-disable */
   }, {
     name: 'left swing',
     material: 'steel',
+    radius: 0.05,
     vertices: [
       { x: 2, y: 0, z: 8 },
       { x: 2, y: -1, z: 1.5 },
@@ -54,6 +58,7 @@ export default /* eslint-disable */
   }, {
     name: 'right swing',
     material: 'steel',
+    radius: 0.05,
     vertices: [
       { x: 6, y: 0, z: 8 },
       { x: 6, y: 1.8, z: 2 },

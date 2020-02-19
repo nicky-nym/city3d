@@ -271,25 +271,43 @@ class ThreeOutputScene extends THREE.Scene {
       return this.makeOutlinePolygonLines(instanceGeometry, color, p0)
     }
     if (instanceGeometry instanceof Geometry.Line) {
-      return this.makeLines(instanceGeometry, color, p0)
+      return this.makeLines(instanceGeometry, material, p0)
     }
     console.error('unknown geometry')
   }
 
-  // TODO: consider refactoring to merge this with makeOutlinePolygonLines()
-  makeLines (outlinePolygon, hexColor, p0 = { x: 0, y: 0, z: 0 }) {
-    const material = new THREE.LineBasicMaterial({ color: hexColor })
-    const geometry = new THREE.Geometry()
-    const inputVertices = outlinePolygon.xyzWaypoints
-    const verticesTranslatedToOrigin = inputVertices.map(v => xyzSubtract(v, inputVertices[0]))
-    const vectors = verticesTranslatedToOrigin.map(v => new THREE.Vector3(v.x, v.y, v.z))
-    geometry.vertices.push(...vectors)
+  makeLines (line, material, p0 = { x: 0, y: 0, z: 0 }) {
+    const geometry = this.makeMergedCylinderGeometriesFromLines(line)
     geometry.translate(p0.x, p0.y, p0.z)
-    const line = new THREE.Line(geometry, material)
-    return line
+    return new THREE.Mesh(geometry, material)
   }
 
-  // TODO: consider refactoring to merge this with makeLines()
+  makeMergedCylinderGeometriesFromLines (line) {
+    const inputVertices = line.xyzWaypoints
+    const verticesTranslatedToOrigin = inputVertices.map(v => xyzSubtract(v, inputVertices[0]))
+    const vectors = verticesTranslatedToOrigin.map(v => new THREE.Vector3(v.x, v.y, v.z))
+    const geometries = []
+    const initCylinderVector = new THREE.Vector3(0, 1, 0)
+    const segmentVector = new THREE.Vector3()
+    const matrix = new THREE.Matrix4()
+    const quaternion = new THREE.Quaternion()
+    const r = line.radius
+    vectors.forEach((v, i) => {
+      if (i < vectors.length - 1) {
+        segmentVector.subVectors(vectors[i + 1], v)
+        const len = segmentVector.length()
+        const cylinder = new THREE.CylinderBufferGeometry(r, r, len, 3, 1, true)
+        cylinder.translate(0, len / 2, 0)
+        quaternion.setFromUnitVectors(initCylinderVector, segmentVector.normalize())
+        matrix.makeRotationFromQuaternion(quaternion)
+        cylinder.applyMatrix4(matrix)
+        cylinder.translate(v.x, v.y, v.z)
+        geometries.push(cylinder)
+      }
+    })
+    return BufferGeometryUtils.mergeBufferGeometries(geometries, true)
+  }
+
   makeOutlinePolygonLines (outlinePolygon, hexColor, p0 = { x: 0, y: 0, z: 0 }) {
     const material = new THREE.LineBasicMaterial({ color: hexColor })
     const geometry = new THREE.Geometry()
@@ -427,6 +445,10 @@ class ThreeOutputScene extends THREE.Scene {
             const R2 = new THREE.Matrix4().makeRotationZ(thickPolygon.zRotation)
             geometry.applyMatrix4(R2)
           }
+          geometry.translate(feature.p0.x, feature.p0.y, feature.p0.z)
+          geometries.push(geometry)
+        } else if (feature.geometry instanceof Geometry.Line) {
+          const geometry = this.makeMergedCylinderGeometriesFromLines(feature.geometry)
           geometry.translate(feature.p0.x, feature.p0.y, feature.p0.z)
           geometries.push(geometry)
         }

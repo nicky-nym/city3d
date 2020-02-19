@@ -6,8 +6,9 @@
   */
 
 class Line {
-  constructor (xyzWaypoints) {
+  constructor (xyzWaypoints, radius = 0.1) {
     this.xyzWaypoints = xyzWaypoints
+    this.radius = radius
   }
 }
 

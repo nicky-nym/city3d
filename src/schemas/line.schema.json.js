@@ -32,6 +32,9 @@ export default /* eslint-disable */
       "minItems": 2,
       "uniqueItems": false,
       "items": { "$ref": "definitions.json#/def/xyzOrRef" }
+    },
+    "radius": {
+      "type": "number"
     }
   }
 }

@@ -20,8 +20,16 @@ export default /* eslint-disable */
   lines: [{
     name: 'trunk',
     material: 'wood',
+    radius: 1.5,
     vertices: [
       { x: 0, y: 0, z: -2 },
+      { x: 0, y: 2, z: 6 }
+    ]
+  }, {
+    name: 'branch',
+    material: 'wood',
+    radius: 1,
+    vertices: [
       { x: 0, y: 2, z: 6 },
       { x: 2, y: 2, z: 10 },
       { x: 2, y: 0, z: 13 }
@@ -29,6 +37,7 @@ export default /* eslint-disable */
   }, {
     name: 'branch',
     material: 'wood',
+    radius: 1,
     vertices: [
       { x: 0, y: 2, z: 6 },
       { x: -1, y: 6, z: 10 },
@@ -37,6 +46,7 @@ export default /* eslint-disable */
   }, {
     name: 'branch',
     material: 'wood',
+    radius: 0.5,
     vertices: [
       { x: -4, y: 6, z: 12 },
       { x: -1, y: 6, z: 10 },
@@ -45,6 +55,7 @@ export default /* eslint-disable */
   }, {
     name: 'branch',
     material: 'wood',
+    radius: 0.5,
     vertices: [
       { x: 2, y: 2, z: 10 },
       { x: 4, y: 3, z: 12 },
@@ -53,6 +64,7 @@ export default /* eslint-disable */
   }, {
     name: 'branch',
     material: 'wood',
+    radius: 1,
     vertices: [
       { x: 0, y: 2, z: 6 },
       { x: 1, y: -1, z: 9 }

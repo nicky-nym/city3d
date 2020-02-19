@@ -52,8 +52,14 @@ function addCreek (district) {
 
 function addTrees (district) {
   const specReader = new SpecReader()
-  addObjectFromSpec(district, specReader, 'Tree', { x: 5, y: 10, z: 0 })
-  addObjectFromSpec(district, specReader, 'Tree', { x: -5, y: 50, z: 0 })
+  const tree = specReader.makeModelFromSpecName('Tree', { x: 0, y: 0, z: 0 })
+  district.add(new CITY.InstancedFeature(tree, [
+    new Ray(Facing.NORTH, { x: 12, y: 10, z: 0 }),
+    new Ray(Facing.WEST, { x: 25, y: 12, z: 0 }),
+    new Ray(Facing.SOUTH, { x: 35, y: 10, z: 0 }, { mirror: true }),
+    new Ray(Facing.EAST, { x: -8, y: 51, z: 0 }),
+    new Ray(Facing.SOUTH, { x: 5, y: 50, z: 0 }, { mirror: true })
+  ]))
 
   district.add(new CITY.Tree({ placement: new Ray(Facing.NORTH, { x: 28, y: 52, z: 0 }), trunkHeight: 10, name: 'Topiary Tree' }))
   district.add(new CITY.InstancedFeature(new CITY.Tree({ trunkHeight: 12, name: 'Tree (MeshPhongMaterial, with normals)' }), [
