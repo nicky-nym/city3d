@@ -17,13 +17,13 @@ window.DEBUG = true
 function addLatticeburg (city) {
   const latticeburg = new CITY.LatticeDistrict({
     name: 'Latticeburg',
-    placement: new Ray(Facing.NORTH, xyz(238, 238, 0)),
+    placement: new Ray(Facing.NORTH, xyz(438, 438, 0)),
     deprecatedSpec: {
       outline: rectangleOfSize(xy(2000, 2000))
     }
   })
   latticeburg.makeFeatures()
-  latticeburg.add(new CITY.SoccerField({ at: { x: 920, y: 315, z: 0 } }))
+  latticeburg.add(new CITY.SoccerField({ at: { x: 1120, y: 515, z: 0 } }))
   city.add(latticeburg)
 }
 
@@ -72,7 +72,7 @@ function addTrees (district) {
 }
 
 function addEiffelTower (district) {
-  district.add(new CITY.EiffelTower({ placement: new Ray(Facing.NORTH, { x: 1090, y: 1090, z: 0 }) }))
+  district.add(new CITY.EiffelTower({ placement: new Ray(Facing.NORTH, { x: 1290, y: 1290, z: 0 }) }))
 }
 
 function addPyramid (district) {
@@ -145,6 +145,9 @@ function main () {
   addLatticeburg(city)
 
   const extras = new CITY.Model({ name: 'extras' })
+  addObjectFromSpec(extras, specReader, 'Hotel on Boardwalk', { x: -300, y: -60, z: 0 })
+  addObjectFromSpec(extras, specReader, 'House on Park Place', { x: -300, y: -100, z: 0 })
+  addObjectFromSpec(extras, specReader, 'Lattice Building', { x: 0, y: 100, z: 0 })
   addEiffelTower(extras)
   addPyramid(extras)
   addKalpanaOrbital(extras)

@@ -39,7 +39,7 @@ describe('Garage', function () {
     })
 
     it('should have the correct WALL_AREA', function () {
-      garage.getValueForMetric(METRIC.WALL_AREA).should.be.closeTo(948, 1)
+      garage.getValueForMetric(METRIC.WALL_AREA).should.be.closeTo(933, 1)
     })
 
     it('should have the correct WINDOW_AREA', function () {
