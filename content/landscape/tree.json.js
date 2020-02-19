@@ -1,11 +1,9 @@
-import { Feature } from '../../src/core/feature.js'
-
 export default /* eslint-disable */
 {
   context: 'city3d',
   type: 'structure.schema.json',
   name: 'Tree',
-  layer: Feature.registerLayer('trees & plants', { category: 'Landscape' }),
+  layer: 'trees & plants',
   metadata: {
     license: 'UNLICENSE: This is free and unencumbered software released into the public domain. For more information, please refer to <http://unlicense.org>',
     creator: 'Authored at <https://github.com/nicky-nym/city3d>',

@@ -5,8 +5,9 @@
  * For more information, please refer to <http://unlicense.org>
  */
 
-import { Feature, FeatureInstance } from '../core/feature.js'
+import { FeatureInstance } from '../core/feature.js'
 import { Geometry } from '../core/geometry.js'
+import { LAYER } from './layer.js'
 import { Model } from './model.js'
 import { Outline } from '../core/outline.js'
 import { Pitch } from '../core/pitch.js'
@@ -53,7 +54,7 @@ class Roof extends Model {
    * @param {Wall[]} [walls] - an array of Wall instances
    */
   constructor ({ placement, deprecatedSpec, spec, walls }) {
-    super({ name: 'Roof', layer: Roof.layer })
+    super({ name: 'Roof', layer: LAYER.ROOFS })
     if (deprecatedSpec) {
       this._makeModelFromDeprecatedSpec(deprecatedSpec, placement)
     }
@@ -348,7 +349,5 @@ class Roof extends Model {
     }
   }
 }
-
-Roof.layer = Feature.registerLayer('roofs', { category: 'Buildings' })
 
 export { Roof }

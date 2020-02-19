@@ -5,8 +5,10 @@
  * For more information, please refer to <http://unlicense.org>
  */
 
-import { Feature, FeatureGroup, FeatureInstance } from '../core/feature.js'
+import { FeatureGroup, FeatureInstance } from '../core/feature.js'
 import { Geometry } from '../core/geometry.js'
+import { Layer } from '../core/layer.js'
+import { LAYER } from './layer.js'
 import { Model } from './model.js'
 import { Ray } from '../core/ray.js'
 import { xyz } from '../core/util.js'
@@ -44,7 +46,11 @@ const COLORS_BY_USE = {
 class Structure extends Model {
   constructor (options = {}) {
     let { placement, spec, ...remainingOptions } = options
-    super({ placement, spec, ...remainingOptions, layer: spec && spec.layer })
+    let layer = null
+    if (spec && spec.layer) {
+      layer = Layer.getLayer(spec.layer)
+    }
+    super({ placement, spec, ...remainingOptions, layer })
 
     placement = placement || new Ray()
     this.offset = { ...xyz(0, 0, 0), ...placement.xyz }
@@ -78,7 +84,10 @@ class Structure extends Model {
 
   makeModelFromSpec (spec, placement) {
     const { lines /* anchorPoint, */ } = spec
-    const options = spec.layer ? {} : { layer: Structure.layer }
+    if (spec.layer && typeof spec.layer === 'string') {
+      spec.layer = Layer.getLayer(spec.layer)
+    }
+    const options = spec.layer ? { layer: spec.layer } : { layer: LAYER.STRUCTURES }
     for (const lineSpec of lines) {
       const vertices = lineSpec.vertices
       const adjustedWaypoints = placement.applyRay(vertices)
@@ -88,7 +97,5 @@ class Structure extends Model {
     }
   }
 }
-
-Structure.layer = Feature.registerLayer('structures', { category: 'Other' })
 
 export { Structure }

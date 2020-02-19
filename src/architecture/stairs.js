@@ -6,8 +6,9 @@
  */
 
 import { countTo } from '../core/util.js'
-import { Feature, FeatureInstance } from '../core/feature.js'
+import { FeatureInstance } from '../core/feature.js'
 import { Geometry } from '../core/geometry.js'
+import { LAYER } from './layer.js'
 import { METRIC } from './metric.js'
 import { Model } from './model.js'
 import { Outline } from '../core/outline.js'
@@ -80,7 +81,7 @@ class Stairs extends Model {
         size: { x: (pitch.run / 12), y: width }
       }
       const treadCorners = Outline.cornersFromSpec(outline)
-      this._makeSlab(treadCorners, at, Stairs.layer, BROWN, 0, -0.1)
+      this._makeSlab(treadCorners, at, LAYER.CIRCULATION, BROWN, 0, -0.1)
     }
   }
 
@@ -94,7 +95,5 @@ class Stairs extends Model {
     this.add(concreteThickPolygon)
   }
 }
-
-Stairs.layer = Feature.registerLayer('stairs', { category: 'Circulation' })
 
 export { Stairs }

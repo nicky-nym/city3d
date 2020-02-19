@@ -6,8 +6,9 @@
  */
 
 import { Door } from './door.js'
-import { Feature, FeatureInstance } from '../core/feature.js'
+import { FeatureInstance } from '../core/feature.js'
 import { Geometry } from '../core/geometry.js'
+import { LAYER } from './layer.js'
 import { METRIC } from './metric.js'
 import { Model } from './model.js'
 import { Pitch } from '../core/pitch.js'
@@ -56,7 +57,7 @@ class Wall extends Model {
     deprecatedSpec, // v1, v2, height, z, depth, openings
     spec
   } = {}) {
-    super({ name, layer: Wall.layer })
+    super({ name, layer: LAYER.WALLS })
     if (deprecatedSpec) {
       this._makeModelFromDeprecatedSpec(deprecatedSpec)
     }
@@ -226,7 +227,5 @@ class Wall extends Model {
     }
   }
 }
-
-Wall.layer = Feature.registerLayer('walls', { category: 'Buildings' })
 
 export { Wall }

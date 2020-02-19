@@ -6,8 +6,9 @@
  */
 
 import { array, countTo, xyz, xyzAdd } from '../core/util.js'
-import { Feature, FeatureInstance } from '../core/feature.js'
+import { FeatureInstance } from '../core/feature.js'
 import { Geometry } from '../core/geometry.js'
+import { LAYER } from './layer.js'
 import { METRIC } from './metric.js'
 import { Model } from './model.js'
 import { Outline } from '../core/outline.js'
@@ -171,15 +172,12 @@ class District extends Model {
     const abstractOutlinePolygon = new Geometry.OutlinePolygon(xyPolygon)
     const [{ x, y }, z] = [adjustedCorners[0], placement.xyz.z]
     for (const i of countTo(3)) {
-      const concreteOutlinePolygon = new FeatureInstance(abstractOutlinePolygon, { x, y, z: z + (i * 3) }, MARTIAN_ORANGE, { layer: DistrictBoundary.layer })
+      const concreteOutlinePolygon = new FeatureInstance(abstractOutlinePolygon, { x, y, z: z + (i * 3) }, MARTIAN_ORANGE, { layer: LAYER.DISTRICTS })
       this.add(concreteOutlinePolygon)
     }
 
     this.setValueForMetric(METRIC.LAND_AREA, xyPolygon.area())
   }
 }
-
-class DistrictBoundary {}
-DistrictBoundary.layer = Feature.registerLayer('district boundary', { category: 'Abstract' })
 
 export { District }

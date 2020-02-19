@@ -5,8 +5,9 @@
  * For more information, please refer to <http://unlicense.org>
  */
 
-import { Feature, FeatureInstance } from '../core/feature.js'
+import { FeatureInstance } from '../core/feature.js'
 import { Geometry } from '../core/geometry.js'
+import { LAYER } from './layer.js'
 import { Model } from './model.js'
 import { METRIC } from './metric.js'
 import { Outline } from '../core/outline.js'
@@ -86,14 +87,11 @@ class Parcel extends Model {
     const xyPolygon = new Geometry.XYPolygon(adjustedCorners)
     const abstractOutlinePolygon = new Geometry.OutlinePolygon(xyPolygon)
     const p0 = { ...adjustedCorners[0], z: placement.xyz.z }
-    const concreteOutlinePolygon = new FeatureInstance(abstractOutlinePolygon, p0, MARTIAN_ORANGE, { layer: ParcelBoundary.layer })
+    const concreteOutlinePolygon = new FeatureInstance(abstractOutlinePolygon, p0, MARTIAN_ORANGE, { layer: LAYER.PARCELS })
     this.add(concreteOutlinePolygon)
 
     this.setValueForMetric(METRIC.LAND_AREA, xyPolygon.area())
   }
 }
-
-class ParcelBoundary {}
-ParcelBoundary.layer = Feature.registerLayer('parcel boundary', { category: 'Abstract' })
 
 export { Parcel }

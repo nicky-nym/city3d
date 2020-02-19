@@ -386,48 +386,22 @@ class ThreeOutput extends Output {
 
       const layerMap = Feature.getRegisteredLayersByCategory()
       for (const [category, layers] of layerMap) {
-        const obj = {}
-        layers.forEach(layer => { obj[layer.displayName] = true })
+        if (category) {
+          const obj = {}
+          layers.forEach(layer => { obj[layer.displayName] = true })
 
-        const categoryFolder = layersFolder.addFolder(category)
-        layers.forEach(layer => {
-          const controller = categoryFolder.add(obj, layer.displayName)
-          this._camera.layers.enable(layer.index)
-          controller.onChange(b => {
-            const action = b ? 'enable' : 'disable'
-            this._camera.layers[action](layer.index)
+          const categoryFolder = layersFolder.addFolder(category)
+          layers.forEach(layer => {
+            const controller = categoryFolder.add(obj, layer.displayName)
+            this._camera.layers.enable(layer.index)
+            controller.onChange(b => {
+              const action = b ? 'enable' : 'disable'
+              this._camera.layers[action](layer.index)
+            })
           })
-        })
-        ui.layers[category] = obj
+          ui.layers[category] = obj
+        }
       }
-
-      const todoFolder = layersFolder.addFolder('TODO')
-
-      const buildings = todoFolder.addFolder('Buildings')
-      buildings.add(ui.layers.building, 'doors & windows')
-
-      const landscape = todoFolder.addFolder('Landscape')
-      landscape.add(ui.layers.landscape, 'ground surface')
-
-      const entourage = todoFolder.addFolder('Entourage')
-      entourage.add(ui.layers.entourage, 'people')
-      entourage.add(ui.layers.entourage, 'animals')
-      entourage.add(ui.layers.entourage, 'furniture')
-
-      const weather = todoFolder.addFolder('Weather')
-      weather.add(ui.layers.weather, 'clouds')
-      weather.add(ui.layers.weather, 'fog')
-      weather.add(ui.layers.weather, 'lightning')
-
-      const abstractions = todoFolder.addFolder('Abstract')
-      abstractions.add(ui.layers.abstract, 'vehicle route lines')
-      abstractions.add(ui.layers.abstract, 'tooltips')
-      abstractions.add(ui.layers.abstract, 'grid')
-      abstractions.add(ui.layers.abstract, 'sun path & day arcs')
-      abstractions.add(ui.layers.abstract, 'daylight factor heatmap')
-      abstractions.add(ui.layers.abstract, 'kinematic range heatmap')
-      abstractions.add(ui.layers.abstract, 'green space heatmap')
-      abstractions.add(ui.layers.abstract, 'assignable FAR heatmap')
     }
   }
 

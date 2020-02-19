@@ -11,7 +11,7 @@ import { Roof } from '../../../src/architecture/roof.js'
 import { Ray } from '../../../src/core/ray.js'
 import { Wall } from '../../../src/architecture/wall.js'
 
-/* global describe, it */
+/* global describe, it, should */
 
 describe('Feature ', function () {
   const roofSpec = { flat: [] }
@@ -49,9 +49,9 @@ describe('Feature ', function () {
     })
     it('should return list with expected first layer', function () {
       layers[0].index.should.equal(0)
-      layers[0].displayName.should.equal('layer 0')
+      layers[0].displayName.should.equal('null layer')
       layers[0].description.should.equal('Default layer for Features')
-      layers[0].category.should.equal('Abstract')
+      should.not.exist(layers[0].category)
     })
   })
 
@@ -113,6 +113,7 @@ describe('Feature ', function () {
     })
 
     describe('With a duplicate Layer', function () {
+      const preexistingLayer = Feature.registerLayer('walls', { category: 'Buildings' })
       let numLayersBeforeRegisteringDuplicateLayer
 
       it('should return a layer with the specified properties', function () {
@@ -126,12 +127,13 @@ describe('Feature ', function () {
         Feature.getRegisteredLayers().should.have.length(numLayersBeforeRegisteringDuplicateLayer)
       })
       it('should return the previously registered Layer', function () {
-        newLayer.should.equal(Wall.layer)
+        newLayer.should.equal(preexistingLayer)
       })
     })
   })
 
   const genericRoof = new Roof({ placement: ray, deprecatedSpec: roofSpec })
+  const roofLayer = genericRoof._layer
   const roofLayerIndex = genericRoof.layerIndex()
 
   describe('With new class extending Roof', function () {
@@ -168,7 +170,7 @@ describe('Feature ', function () {
   describe('With new class ShadeStructure reusing Roof.layer', function () {
     class ShadeStructure extends Model {
       constructor () {
-        super({ name: 'SS', layer: Roof.layer })
+        super({ name: 'SS', layer: roofLayer })
       }
     }
 

@@ -57,6 +57,10 @@ class Layer {
   static getLayers () {
     return LAYER.layers
   }
+
+  static getLayer (id) {
+    return LAYER.layers.find(layer => layer.displayName === id)
+  }
 }
 
 export { Layer }

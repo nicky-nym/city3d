@@ -6,8 +6,9 @@
  */
 
 import { xyz, countTo } from '../../src/core/util.js'
-import { Feature, FeatureInstance } from '../../src/core/feature.js'
+import { FeatureInstance } from '../../src/core/feature.js'
 import { Geometry } from '../../src/core/geometry.js'
+import { LAYER } from '../../src/architecture/layer.js'
 import { Model } from '../../src/architecture/model.js'
 import { Route } from '../../src/routes/route.js'
 import { UNIT } from '../../src/core/unit.js'
@@ -59,11 +60,9 @@ class Creek extends Model {
 
     const abstractThickPolygon = new Geometry.ThickPolygon(xyPolygon, { depth: CREEK_DEPTH })
     const concreteThickPolygon = new FeatureInstance(abstractThickPolygon, xyz(X_OFFSET, 0, 0), BLUE,
-      { name: this.name || 'Creek', layer: Creek.layer })
+      { name: this.name, layer: LAYER.WATER })
     return concreteThickPolygon
   }
 }
-
-Creek.layer = Feature.registerLayer('water', { category: 'Landscape' })
 
 export { Creek }

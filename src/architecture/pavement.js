@@ -5,8 +5,9 @@
  * For more information, please refer to <http://unlicense.org>
  */
 
-import { Feature, FeatureInstance } from '../core/feature.js'
+import { FeatureInstance } from '../core/feature.js'
 import { Geometry } from '../core/geometry.js'
+import { LAYER } from './layer.js'
 import { METRIC } from './metric.js'
 import { Model } from './model.js'
 import { Outline } from '../core/outline.js'
@@ -67,7 +68,7 @@ class Pavement extends Model {
     const z = placement.xyz.z
     const abstractThickPolygon = new Geometry.ThickPolygon(xyPolygon, { incline: incline, depth: depth })
     const concreteThickPolygon = new FeatureInstance(abstractThickPolygon, { ...xyPolygon[0], z }, color,
-      { layer: Pavement.layer })
+      { layer: LAYER.PAVEMENT })
     this.add(concreteThickPolygon)
     const squareFeet = xyPolygon.area()
 
@@ -75,7 +76,5 @@ class Pavement extends Model {
     this.setValueForMetric(metric, squareFeet)
   }
 }
-
-Pavement.layer = Feature.registerLayer('streets, etc.', { category: 'Pavement' })
 
 export { Pavement }

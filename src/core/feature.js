@@ -14,7 +14,7 @@ class Feature {
    * @param {Layer} [layer]
    * @param {Layer} [copyLayer] - the Layer assigned to an InstancedFeature based on this Feature
    */
-  constructor (name, { layer = DEFAULT_LAYER, copyLayer } = {}) {
+  constructor (name, { layer = NULL_LAYER, copyLayer } = {}) {
     this.name = name
     this._layer = layer
     this._copyLayer = copyLayer
@@ -47,7 +47,11 @@ class Feature {
   }
 
   layerIndex () {
-    return this._layer.index
+    if (this._layer) {
+      return this._layer.index
+    } else {
+      return 0
+    }
   }
 
   static registerLayer (displayName, { description, category } = {}) {
@@ -69,8 +73,8 @@ class Feature {
   }
 }
 
-const DEFAULT_LAYER = Feature.registerLayer('layer 0',
-  { description: 'Default layer for Features', category: 'Abstract' })
+const NULL_LAYER = Feature.registerLayer('null layer',
+  { description: 'Default layer for Features' })
 
 /**
  * A point (or vector) in a 3D space

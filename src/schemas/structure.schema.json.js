@@ -45,6 +45,7 @@ export default /* eslint-disable */
     "context": { "$ref": "definitions.json#/def/context" },
     "type": { "const": "structure.schema.json" },
     "name": { "$ref": "definitions.json#/def/name" },
+    "layer": { "type": "string" },
     "metadata": { "$ref": "metadata.schema.json" },
     "comments": { "$ref": "definitions.json#/def/comments" },
     "unit": { "$ref": "definitions.json#/def/unit" },

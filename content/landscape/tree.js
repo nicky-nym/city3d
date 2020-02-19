@@ -6,8 +6,9 @@
  */
 
 import { xy, xyzAdd } from '../../src/core/util.js'
-import { Feature, FeatureInstance } from '../../src/core/feature.js'
+import { FeatureInstance } from '../../src/core/feature.js'
 import { Geometry } from '../../src/core/geometry.js'
+import { LAYER } from '../../src/architecture/layer.js'
 import { Model } from '../../src/architecture/model.js'
 import { UNIT } from '../../src/core/unit.js'
 import { Ray } from '../../src/core/ray.js'
@@ -17,7 +18,7 @@ const CROWN_HEIGHT = UNIT.feet(9)
 
 class Tree extends Model {
   constructor ({ placement = new Ray(), trunkHeight = TRUNK_HEIGHT, name = 'Tree' } = {}) {
-    super({ name, layer: Tree.layer })
+    super({ name, layer: LAYER.PLANTS })
     const at = placement.xyz
     this.add(this.makeTrunk(at, trunkHeight))
     at.z += trunkHeight
@@ -58,7 +59,5 @@ class Tree extends Model {
     return concreteThickPolygon
   }
 }
-
-Tree.layer = Feature.registerLayer('trees & plants', { category: 'Landscape' })
 
 export { Tree }

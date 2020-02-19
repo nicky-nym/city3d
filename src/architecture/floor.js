@@ -5,8 +5,9 @@
  * For more information, please refer to <http://unlicense.org>
  */
 
-import { Feature, FeatureInstance } from '../core/feature.js'
+import { FeatureInstance } from '../core/feature.js'
 import { Geometry } from '../core/geometry.js'
+import { LAYER } from './layer.js'
 import { METRIC } from './metric.js'
 import { Model } from './model.js'
 import { Outline } from '../core/outline.js'
@@ -110,7 +111,7 @@ class Floor extends Model {
     const z = placement.xyz.z
     const abstractThickPolygon = new Geometry.ThickPolygon(xyPolygon, { incline, depth, openings })
     const concreteThickPolygon = new FeatureInstance(abstractThickPolygon, { ...xyPolygon[0], z }, color,
-      { layer: Floor.layer })
+      { layer: LAYER.FLOORS })
     this.add(concreteThickPolygon)
     const squareFeet = xyPolygon.area()
 
@@ -126,7 +127,5 @@ class Floor extends Model {
     }
   }
 }
-
-Floor.layer = Feature.registerLayer('floors & ramps', { category: 'Buildings' })
 
 export { Floor }

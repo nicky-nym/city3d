@@ -6,7 +6,8 @@
  */
 
 import { array, cornersFromShape, countTo, randomInt, xyzAdd } from '../core/util.js'
-import { Feature, FeatureGroup } from '../core/feature.js'
+import { FeatureGroup } from '../core/feature.js'
+import { LAYER } from './layer.js'
 import { Model } from './model.js'
 import { Ray } from '../core/ray.js'
 import { Roof } from './roof.js'
@@ -56,7 +57,7 @@ class Building extends Structure {
    */
   constructor (options = {}) {
     const { placement, deprecatedSpec, ...remainingOptions } = options
-    super({ placement, deprecatedSpec, ...remainingOptions, copyLayer: Building.copyLayer })
+    super({ placement, deprecatedSpec, ...remainingOptions, copyLayer: LAYER.COPIES })
 
     if (deprecatedSpec) {
       this._makeModelFromDeprecatedSpec(deprecatedSpec, placement)
@@ -210,7 +211,5 @@ class Building extends Structure {
     this.addLevelOfDetail(lowGroup, 2000)
   }
 }
-
-Building.copyLayer = Feature.registerLayer('copies', { category: 'Buildings' })
 
 export { Building }

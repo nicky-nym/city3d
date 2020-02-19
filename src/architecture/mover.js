@@ -1,5 +1,5 @@
 /** @file mover.js
- * @author Authored in 2019 at <https://github.com/nicky-nym/city3d>
+ * @author Authored in 2019, 2020 at <https://github.com/nicky-nym/city3d>
  * @license UNLICENSE
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -7,6 +7,7 @@
 
 import * as THREE from '../../node_modules/three/build/three.module.js'
 import { Feature } from '../core/feature.js'
+import { LAYER } from './layer.js'
 import { xyzAdd } from '../core/util.js'
 
 const UP = new THREE.Vector3(0, 0, 1)
@@ -45,7 +46,7 @@ class Mover extends Feature {
    * @param {THREE.Object3D} [threeComponent] - three.js representation of the Mover
    */
   constructor (route, speed, threeComponent, name) {
-    super(name || (threeComponent && threeComponent.name), { layer: Mover.layer })
+    super(name || (threeComponent && threeComponent.name), { layer: LAYER.VEHICLES })
     this.route = route
     const waypoints = route.waypoints()
     this.speed = speed
@@ -107,7 +108,5 @@ class Mover extends Feature {
     return this._threeComponent
   }
 }
-
-Mover.layer = Feature.registerLayer('movers & vehicles', { category: 'Entourage' })
 
 export { Mover }
