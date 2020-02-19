@@ -74,7 +74,7 @@ export default /* eslint-disable */
       }
     ]}
   }, {
-    name: 'boulevard)',
+    name: 'boulevard',
     height: 15,
     floors: [{ 
       outline: {

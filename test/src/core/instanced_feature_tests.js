@@ -5,6 +5,7 @@
  * For more information, please refer to <http://unlicense.org>
  */
 
+import { City } from '../../../src/architecture/city.js'
 import { Facing } from '../../../src/core/facing.js'
 import { Feature, InstancedFeature } from '../../../src/core/feature.js'
 import { Ray } from '../../../src/core/ray.js'
@@ -14,6 +15,22 @@ import { SpecReader } from '../../../src/architecture/spec_reader.js'
 
 describe('InstancedFeature', function () {
   const specReader = new SpecReader()
+
+  describe('#fullName()', function () {
+    const city = new City({ name: 'Testopia' })
+
+    it('should return the correct full name when added to a city', function () {
+      const tree = specReader.makeModelFromSpecName('Tree', { x: 0, y: 0, z: 0 })
+      const instancedTree = new InstancedFeature(tree, [
+        new Ray(Facing.NORTH, { x: -60, y: 50, z: 0 }),
+        new Ray(Facing.SOUTH, { x: -60, y: 11, z: 0 }, { mirror: true })
+      ])
+      city.add(instancedTree)
+
+      // Note: it's tree, not instancedTree, that is assigned to the userData that ThreeOutput uses.
+      tree.fullName().should.equal('Tree of Testopia')
+    })
+  })
 
   describe('#layerIndex()', function () {
     const layerMap = Feature.getRegisteredLayersByCategory()
