@@ -117,6 +117,7 @@ class InstancedFeature extends Feature {
   constructor (feature, placements, { materialCost = 'lowest', useNormals = false } = {}) {
     super()
     this.feature = feature
+    this.feature.parent = this
     this.placements = placements
     this.materialCost = materialCost
     this.useNormals = useNormals
