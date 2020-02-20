@@ -14,9 +14,9 @@ import { Geometry } from '../../src/core/geometry.js'
 import { Structure } from '../../src/architecture/structure.js'
 
 // TODO: refactor to merge this with _makeLine() in Swingset & UtilityPole
-function _makeLine (waypoints, placement, color) {
+function _makeLine (waypoints, placement, radius, color) {
   const adjustedWaypoints = placement.applyRay(waypoints)
-  const line = new Geometry.Line(adjustedWaypoints)
+  const line = new Geometry.Line(adjustedWaypoints, radius)
   return new FeatureInstance(line, adjustedWaypoints[0], color, { layer: Structure.layer })
 }
 
@@ -93,8 +93,9 @@ class EiffelTower extends Structure {
   }
 
   _line (points, ray) {
+    const radius = 2
     const IRON = 0x333333
-    this.add(_makeLine(points, ray, IRON))
+    this.add(_makeLine(points, ray, radius, IRON))
   }
 }
 

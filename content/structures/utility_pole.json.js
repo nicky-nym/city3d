@@ -19,6 +19,7 @@ export default /* eslint-disable */
   lines: [{
     name: 'pole',
     material: 'wood',
+    radius: 0.5,
     vertices: [
       { x: 0, y: 0, z: -6 },
       { x: 0, y: 0, z: 35 }
@@ -26,6 +27,7 @@ export default /* eslint-disable */
   }, {
     name: 'upper crossarm',
     material: 'wood',
+    radius: 0.25,
     vertices: [
       { x: -4.5, y: 0, z: 33 },
       { x: +4.5, y: 0, z: 33 }
@@ -33,6 +35,7 @@ export default /* eslint-disable */
   }, {
     name: 'lower crossarm',
     material: 'wood',
+    radius: 0.2,
     vertices: [
       { x: -4, y: 0, z: 30 },
       { x: +4, y: 0, z: 30 }

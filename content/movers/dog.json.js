@@ -17,24 +17,41 @@ export default /* eslint-disable */
   lines: [{
     name: 'hind legs',
     material: 'wood',
+    radius: 0.1,
     vertices: [
       { x: -1, y: -0.5, z: 0 },
       { x: -1, y: 0, z: 1.5 },
       { x: -1, y: +0.5, z: 0 }
     ]
   }, {
-    name: 'tail, body, and head',
+    name: 'tail',
     material: 'wood',
+    radius: 0.05,
     vertices: [
-      { x: -1.8, y: 0.2, z: 1 },
+      { x: -2.2, y: 0.2, z: 1 },
+      { x: -1, y: 0, z: 1.9 }
+    ]
+  }, {
+    name: 'body',
+    material: 'wood',
+    radius: 0.5,
+    vertices: [
       { x: -1, y: 0, z: 1.5 },
-      { x: +1, y: 0, z: 1.5 },
-      { x: +1.1, y: 0, z: 2 },
-      { x: +1.8, y: 0, z: 1.8 }
+      { x: +1, y: 0, z: 1.5 }
+    ]
+  }, {
+    name: 'head',
+    material: 'wood',
+    radius: 0.25,
+    vertices: [
+      { x: +1, y: 0, z: 1.9 },
+      { x: +1.2, y: 0, z: 2.4 },
+      { x: +1.9, y: 0, z: 2.1 }
     ]
   }, {
     name: 'front legs',
     material: 'wood',
+    radius: 0.1,
     vertices: [
       { x: +1, y: -0.5, z: 0 },
       { x: +1, y: 0, z: 1.5 },
