@@ -63,7 +63,8 @@ class SoccerField extends Model {
 
   addMarkings (atXyz) {
     const CHALK = 0xffffff
-    const xyzSum = xyzAdd(atXyz, xyz(TURF_MARGIN, TURF_MARGIN, 0))
+    const CHALK_RADIUS = 0.2
+    const xyzSum = xyzAdd(atXyz, xyz(TURF_MARGIN, TURF_MARGIN, 0.3))
     const ray = new Ray(Facing.NORTH, xyzSum)
 
     const touchlinesAndGoallines = xywh2rect(0, 0, FIELD.x, FIELD.y)
@@ -76,17 +77,18 @@ class SoccerField extends Model {
     const rightGoalBox = xywh2rect(FIELD.x - GOAL_BOX.x, (FIELD.y - GOAL_BOX.y) / 2, GOAL_BOX.x, GOAL_BOX.y)
     const rightPenaltyBox = xywh2rect(FIELD.x - PENALTY_BOX.x, (FIELD.y - PENALTY_BOX.y) / 2, PENALTY_BOX.x, PENALTY_BOX.y)
 
-    this.addLine(touchlinesAndGoallines, ray, CHALK)
-    this.addLine(halfLine, ray, CHALK)
-    this.addLine(leftGoalBox, ray, CHALK)
-    this.addLine(leftPenaltyBox, ray, CHALK)
-    this.addLine(rightGoalBox, ray, CHALK)
-    this.addLine(rightPenaltyBox, ray, CHALK)
+    this.addLine(touchlinesAndGoallines, ray, CHALK_RADIUS, CHALK, true)
+    this.addLine(halfLine, ray, CHALK_RADIUS, CHALK, true)
+    this.addLine(leftGoalBox, ray, CHALK_RADIUS, CHALK, true)
+    this.addLine(leftPenaltyBox, ray, CHALK_RADIUS, CHALK, true)
+    this.addLine(rightGoalBox, ray, CHALK_RADIUS, CHALK, true)
+    this.addLine(rightPenaltyBox, ray, CHALK_RADIUS, CHALK, true)
   }
 
   addGoals (atXyz) {
     const WHITE = 0xffffff
-    const xyzSum = xyzAdd(atXyz, xyz(TURF_MARGIN, TURF_MARGIN, 0))
+    const GOAL_RADIUS = 0.3
+    const xyzSum = xyzAdd(atXyz, xyz(TURF_MARGIN, TURF_MARGIN, 0.3))
     const ray = new Ray(Facing.NORTH, xyzSum)
     const leftGoalPosts = [
       xyz(0, (FIELD.y - GOAL_POSTS.y) / 2, 0),
@@ -100,8 +102,8 @@ class SoccerField extends Model {
       xyz(FIELD.x, (FIELD.y + GOAL_POSTS.y) / 2, GOAL_POSTS.z),
       xyz(FIELD.x, (FIELD.y + GOAL_POSTS.y) / 2, 0)
     ]
-    this.addLine(leftGoalPosts, ray, WHITE)
-    this.addLine(rightGoalPosts, ray, WHITE)
+    this.addLine(leftGoalPosts, ray, GOAL_RADIUS, WHITE, true)
+    this.addLine(rightGoalPosts, ray, GOAL_RADIUS, WHITE, true)
   }
 }
 

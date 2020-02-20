@@ -39,9 +39,12 @@ class Model extends FeatureLODGroup {
     }
   }
 
-  addLine (waypoints, ray, color) {
+  addLine (waypoints, ray, radius, color, cap = false) {
     const adjustedWaypoints = ray.applyRay(waypoints)
-    const line = new Geometry.Line(adjustedWaypoints)
+    if (cap) {
+      adjustedWaypoints.push(adjustedWaypoints[0])
+    }
+    const line = new Geometry.Line(adjustedWaypoints, radius)
     const instance = new FeatureInstance(line, adjustedWaypoints[0], color)
     this.add(instance)
   }
