@@ -115,6 +115,13 @@ function addInstancedBuildings (district) {
     new Ray(Facing.SOUTH, { x: 380, y: -700, z: 0 }),
     new Ray(Facing.SOUTH, { x: 480, y: -700, z: 0 }, { mirror: true })
   ], { materialCost: 'high', useNormals: true }))
+
+  const parcel353 = specReader.makeModelFromSpecName('Parcel 353', { x: 0, y: 0, z: 0 })
+  district.add(new CITY.InstancedFeature(parcel353, [
+    new Ray(Facing.SOUTH, { x: -268, y: 160, z: 0 }),
+    new Ray(Facing.SOUTH, { x: -268, y: 220, z: 0 }),
+    new Ray(Facing.SOUTH, { x: -268, y: 280, z: 0 })
+  ], { materialCost: 'high', useNormals: true }))
 }
 
 function addKalpanaOrbital (district) {

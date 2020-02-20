@@ -394,8 +394,18 @@ class ThreeOutputScene extends THREE.Scene {
 
     const visitor = feature => {
       if (feature instanceof FeatureInstance) {
+        let geometry
+        const offset = feature.p0
+        for (let p = feature.parent; p !== instancedFeature; p = p.parent) {
+          if (p.offset) {
+            offset.x += p.offset.x
+            offset.y += p.offset.y
+            offset.z += p.offset.z
+          }
+        }
+
         if (feature.geometry instanceof Geometry.TriangularPolyhedron) {
-          const geometry = new THREE.BufferGeometry()
+          geometry = new THREE.BufferGeometry()
           const positions = []
           const vertices = feature.geometry.vertices
           vertices.forEach(v => positions.push(v.x, v.y, v.z))
@@ -403,7 +413,6 @@ class ThreeOutputScene extends THREE.Scene {
           if (useNormals) {
             geometry.computeVertexNormals() // not indexed, so computes normals per triangle
           }
-          geometries.push(geometry)
         } else if (feature.geometry instanceof Geometry.ThickPolygon) {
           const thickPolygon = feature.geometry
           const xyPolygon = thickPolygon.xyPolygon
@@ -418,7 +427,7 @@ class ThreeOutputScene extends THREE.Scene {
             shape.holes.push(path)
           }
 
-          const geometry = new THREE.ExtrudeBufferGeometry(shape, {
+          geometry = new THREE.ExtrudeBufferGeometry(shape, {
             depth: thickPolygon.depth,
             bevelEnabled: false
           })
@@ -445,16 +454,26 @@ class ThreeOutputScene extends THREE.Scene {
             const R2 = new THREE.Matrix4().makeRotationZ(thickPolygon.zRotation)
             geometry.applyMatrix4(R2)
           }
-          geometry.translate(feature.p0.x, feature.p0.y, feature.p0.z)
-          geometries.push(geometry)
+          geometry.translate(offset.x, offset.y, offset.z)
+        } else if (feature.geometry instanceof Geometry.OutlinePolygon) {
+          console.warn('makeInstancedMesh() currently ignores outlines')
         } else if (feature.geometry instanceof Geometry.Line) {
-          const geometry = this.makeMergedCylinderGeometriesFromLines(feature.geometry)
-          geometry.translate(feature.p0.x, feature.p0.y, feature.p0.z)
-          geometries.push(geometry)
+          geometry = this.makeMergedCylinderGeometriesFromLines(feature.geometry)
+          geometry.deleteAttribute('uv')
+          if (!useNormals) {
+            geometry.deleteAttribute('normal')
+          }
+          geometry = geometry.toNonIndexed()
+          geometry.translate(offset.x, offset.y, offset.z)
+        } else {
+          console.error('unknown geometry')
         }
         // TODO:
         // const side = feature.side == 'front' ? THREE.FrontSide : THREE.DoubleSide
-        materials.push(this._material(materialCost, feature.hexColor, true))
+        if (geometry) {
+          materials.push(this._material(materialCost, feature.hexColor, true))
+          geometries.push(geometry)
+        }
       }
     }
 
