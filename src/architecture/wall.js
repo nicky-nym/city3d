@@ -210,7 +210,8 @@ class Wall extends Model {
         xyPolygon = new Geometry.XYPolygon([xy(0, 0), xy(0, peakHeight), xy(length, height), xy(length, 0)])
         incline = peakHeight // Adjust to match the length of the first edge.
       } else {
-        xyPolygon = new Geometry.XYPolygon([xy(0, 0), xy(0, height), xy(length, peakHeight), xy(length, 0)])
+        const h1 = height || Number.EPSILON // Length of first edge (which will become height). The direction of this edge is used to determine rotation, so we can't just leave it out if height = 0.
+        xyPolygon = new Geometry.XYPolygon([xy(0, 0), xy(0, h1), xy(length, peakHeight), xy(length, 0)])
       }
     } else {
       throw new Error('bad roofline type in spec for new Wall()')
