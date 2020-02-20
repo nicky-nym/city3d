@@ -9,7 +9,7 @@ export default /* eslint-disable */
     date: '2020'
   },
   unit: 'feet',
-  anchorPoint: { x: 12, y: 12, z: 0 },
+  anchorPoint: { x: 0, y: 0, z: 0 },
   def: {
     /* longhouse */
     A: { x: 0, y: 0 },

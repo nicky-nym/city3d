@@ -51,7 +51,14 @@ class Pavement extends Model {
    * @param {Ray} placement - location and compass direction
    */
   makeModelFromSpec (spec, placement) {
-    const { name, outline, surface } = spec
+    const color = COLORS_BY_SURFACE[spec.surface.material]
+    const layer = LAYER.PAVEMENT
+    const metric = METRIC.TRANSPORTATION_AREA
+    this._makeGeometry(spec, placement, layer, metric, color)
+  }
+
+  _makeGeometry (spec, placement, layer, metric, color) {
+    const { name, outline } = spec
     // EXAMPLE:
     // name: 'Gravel driveway',
     // outline: { shape: 'rectangle', size: { x: 16, y: 7 } },
@@ -62,17 +69,14 @@ class Pavement extends Model {
     const corners = Outline.cornersFromSpec(outline)
     const adjustedCorners = placement.applyRay(corners)
     const xyPolygon = new Geometry.XYPolygon(adjustedCorners)
-    const color = COLORS_BY_SURFACE[surface.material]
     const depth = -0.5
     const incline = 0
     const z = placement.xyz.z
     const abstractThickPolygon = new Geometry.ThickPolygon(xyPolygon, { incline: incline, depth: depth })
-    const concreteThickPolygon = new FeatureInstance(abstractThickPolygon, { ...xyPolygon[0], z }, color,
-      { layer: LAYER.PAVEMENT })
+    const concreteThickPolygon = new FeatureInstance(abstractThickPolygon, { ...xyPolygon[0], z }, color, { layer })
     this.add(concreteThickPolygon)
     const squareFeet = xyPolygon.area()
 
-    const metric = METRIC.TRANSPORTATION_AREA
     this.setValueForMetric(metric, squareFeet)
   }
 }

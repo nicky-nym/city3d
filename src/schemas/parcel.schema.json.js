@@ -47,6 +47,7 @@ export default /* eslint-disable */
     },
     "contents": { "$ref": "definitions.json#/def/contents" },
     "pavement": { "$ref": "definitions.json#/def/pavement" },
+    "water": { "$ref": "definitions.json#/def/water" },
     "extras": { "$ref": "definitions.json#/def/extras" }
   }
 }

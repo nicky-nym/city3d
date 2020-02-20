@@ -49,6 +49,22 @@ export default /* eslint-disable */
         }
       }
     },
+    "water": {
+      "description": "water bodies, like creeks, canals, ponds, and swimming pools",
+      "type": "array",
+      "items": { 
+        "type": "object",
+        "required": [],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "outline": {
+            "$ref": "outline.schema.json"
+          }
+        }
+      }
+    },
     "def": {
       "description": "schema definitions for property values that are shared across schemas",
       "type": "object"
