@@ -2,7 +2,7 @@ export default /* eslint-disable */
 {
   context: 'city3d',
   type: 'building.schema.json',
-  name: 'Lattice Building',
+  name: 'Highroad Longhouse',
   metadata: {
     license: 'UNLICENSE: This is free and unencumbered software released into the public domain. For more information, please refer to <http://unlicense.org>',
     creator: 'Authored at <https://github.com/nicky-nym/city3d>',
@@ -16,11 +16,6 @@ export default /* eslint-disable */
     B: { x: 30, y: 0 },
     C: { x: 30, y: 590 },
     D: { x: 0, y: 590 },
-    /* chimney */
-    a: { x: 9, y: 9 },
-    b: { x: 15, y: 9 },
-    c: { x: 15, y: 15 },
-    d: { x: 9, y: 15 },
     LONGHOUSE_WINDOWS: {
       repeat: {
         spacing: 5,
@@ -30,6 +25,11 @@ export default /* eslint-disable */
           at: { x: 0, y: 7, from: 'center'}
         }
       }
+    },
+    LONGHOUSE_END_OPENING: {
+      motion: 'awning',
+      outline: { shape: 'rectangle', size: { x: 29, y: 11.25 } },
+      at: { x: 0, from: 'center'}
     },
     BOULEVARD_WINDOWS: {
       repeat: {
@@ -41,9 +41,14 @@ export default /* eslint-disable */
         }
       }
     },
+    BOULEVARD_END_OPENING: {
+      motion: 'awning',
+      outline: { shape: 'rectangle', size: { x: 29, y: 15 } },
+      at: { x: 0, from: 'center'}
+    }
   },
   storeys: [{
-    name: 'ground floor (north-south)',
+    name: 'lower floors (north-south)',
     repeat: 2,
     height: 11.25,
     floors: [{ 
@@ -62,12 +67,14 @@ export default /* eslint-disable */
       exterior: [{
         name: 'front wall',
         begin: { $ref: '#/def/A' },
-        end: { $ref: '#/def/B' }
+        end: { $ref: '#/def/B' },
+        doors: [{ $ref: '#/def/LONGHOUSE_END_OPENING' }]
       }, {
         end: { $ref: '#/def/C' },
         windows: [{ $ref: '#/def/LONGHOUSE_WINDOWS' }]
       }, {
-        end: { $ref: '#/def/D' }
+        end: { $ref: '#/def/D' },
+        doors: [{ $ref: '#/def/LONGHOUSE_END_OPENING' }]
       }, {
         end: { $ref: '#/def/A' },
         windows: [{ $ref: '#/def/LONGHOUSE_WINDOWS' }]
@@ -92,12 +99,14 @@ export default /* eslint-disable */
       exterior: [{
         name: 'front wall',
         begin: { $ref: '#/def/A' },
-        end: { $ref: '#/def/B' }
+        end: { $ref: '#/def/B' },
+        doors: [{ $ref: '#/def/BOULEVARD_END_OPENING' }]
       }, {
         end: { $ref: '#/def/C' },
         windows: [{ $ref: '#/def/BOULEVARD_WINDOWS' }]
       }, {
-        end: { $ref: '#/def/D' }
+        end: { $ref: '#/def/D' },
+        doors: [{ $ref: '#/def/BOULEVARD_END_OPENING' }]
       }, {
         end: { $ref: '#/def/A' },
         windows: [{ $ref: '#/def/BOULEVARD_WINDOWS' }]
@@ -106,6 +115,6 @@ export default /* eslint-disable */
     roof: {
       form: 'flat',
       parapetHeight: 4
-    },
+    }
   }]
 }
