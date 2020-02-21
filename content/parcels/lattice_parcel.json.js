@@ -64,6 +64,9 @@ export default /* eslint-disable */
     copy: { $ref: 'Highroad Longhouse' },
     at: { x: 60, y: 95, rotated: 0 }
   }, {
+    copy: { $ref: 'Longhouse Ramps' },
+    at: { x: 55, y: 55, rotated: 0 }
+  }, {
     copy: { $ref: 'Highroad Bridge' },
     at: { x: 690, y: -5, rotated: 0 }
   }, {
