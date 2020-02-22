@@ -1,4 +1,4 @@
-/** @file placement.schema_tests.js
+/** @file pose.schema_tests.js
  * @author Authored in 2020 at <https://github.com/nicky-nym/city3d>
  * @license UNLICENSE
  * This is free and unencumbered software released into the public domain.
@@ -11,11 +11,11 @@ import { SCHEMA } from '../../../src/schemas/schema.js'
 /* global describe, it */
 
 describe('SCHEMA', function () {
-  describe('SCHEMA.PLACEMENT', function () {
+  describe('SCHEMA.POSE', function () {
     const ajv = new Ajv()
-    const validator = ajv.compile(SCHEMA.PLACEMENT)
+    const validator = ajv.compile(SCHEMA.POSE)
 
-    it('should accept a simple valid placement object', function () {
+    it('should accept a simple valid pose object', function () {
       const goodJSON = {
         x: 1,
         y: 2,

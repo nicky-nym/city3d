@@ -41,7 +41,7 @@ export default /* eslint-disable */
     },
     "at": {
       "description": "where the copy goes, and the direction it is oriented in",
-      "$ref": "placement.schema.json"
+      "$ref": "pose.schema.json"
     },
     // "repeat": {
     //   "description": "to make multiple copies at once, set the number of rows and columns",
@@ -56,7 +56,7 @@ export default /* eslint-disable */
           "type": "number"
         },
         "offset": {
-          "$ref": "placement.schema.json"
+          "$ref": "pose.schema.json"
         }
       }    },
     "copy": {

@@ -46,7 +46,7 @@ export default /* eslint-disable */
       "$ref": "grid.schema.json"
     },
     "at": {
-      "$ref": "placement.schema.json"
+      "$ref": "pose.schema.json"
     },
     "casing": { 
       "type": "object",

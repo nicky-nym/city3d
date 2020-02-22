@@ -20,7 +20,7 @@ import LINE from './line.schema.json.js'
 import OUTLINE from './outline.schema.json.js'
 import PARCEL from './parcel.schema.json.js'
 import PITCH from './pitch.schema.json.js'
-import PLACEMENT from './placement.schema.json.js'
+import POSE from './pose.schema.json.js'
 import ROOF from './roof.schema.json.js'
 import ROOM from './room.schema.json.js'
 import STOREY from './storey.schema.json.js'
@@ -48,7 +48,7 @@ const SCHEMA = {
   OUTLINE,
   PARCEL,
   PITCH,
-  PLACEMENT,
+  POSE,
   ROOF,
   ROOM,
   STOREY,

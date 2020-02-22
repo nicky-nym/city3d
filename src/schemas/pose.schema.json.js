@@ -1,8 +1,8 @@
 export default /* eslint-disable */
 {
-  "$id": "placement.schema.json",
+  "$id": "pose.schema.json",
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "placement",
+  "title": "pose",
   "description": "The specification of how to place an object in 3D space",
   "type": "object",
   "examples": [

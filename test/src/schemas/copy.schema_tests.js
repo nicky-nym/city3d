@@ -14,7 +14,7 @@ describe('SCHEMA', function () {
   describe('SCHEMA.COPY', function () {
     const ajv = new Ajv()
     ajv.addSchema(SCHEMA.GRID, SCHEMA.GRID.$id)
-    ajv.addSchema(SCHEMA.PLACEMENT, SCHEMA.PLACEMENT.$id)
+    ajv.addSchema(SCHEMA.POSE, SCHEMA.POSE.$id)
     const validator = ajv.compile(SCHEMA.COPY)
 
     it('should accept a simple valid copy spec', function () {

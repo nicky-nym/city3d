@@ -42,7 +42,7 @@ export default /* eslint-disable */
       "enum": ["left", "center", "right"]
     },
     "at": {
-      "$ref": "placement.schema.json"
+      "$ref": "pose.schema.json"
     },
     "casing": { 
       "type": "object",
