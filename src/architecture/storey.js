@@ -191,7 +191,7 @@ class Storey extends Model {
       if (stairs) {} // do not include at LOD.LOW
       if (rooms) {} // do not include at LOD.LOW
       if (ceiling) {} // do not include at LOD.LOW
-      if (walls) {
+      if (walls && walls.exterior && walls.exterior.length) {
         const totalHeight = height * repeat
         const corners = []
         corners.push(walls.exterior[0].begin)

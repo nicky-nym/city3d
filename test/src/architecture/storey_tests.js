@@ -61,4 +61,37 @@ describe('Storey', function () {
       storey.floorDepth().should.equal(0.8)
     })
   })
+
+  describe('#makeModelFromSpec', function () {
+    it('should return a Storey if passed a good spec.', function () {
+      // TODO: This is a copy of goodJSON from storey.schema_tests.js, but it might be a better idea
+      // to use the examples in storey.schema.json.js instead, both here and in storey.schema_tests.js,
+      // since it would not only keep the tests in sync, but would also validate the examples.
+      const goodJSON = {
+        context: 'city3d',
+        type: 'storey.schema.json',
+        name: 'Third floor',
+        unit: 'feet',
+        height: 8,
+        floors: [{
+          outline: {
+            shape: 'rectangle',
+            size: { x: 200, y: 200 }
+          }
+        }],
+        rooms: [],
+        roof: { form: 'pitched', pitch: { rise: 8, run: 12 } },
+        ceiling: {},
+        walls: {
+          exterior: []
+        }
+      }
+      const storey = new Storey()
+
+      storey.makeModelFromSpec(goodJSON, ray)
+
+      storey.should.exist
+      storey.should.be.an.instanceof(Storey)
+    })
+  })
 })

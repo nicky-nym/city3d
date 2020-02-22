@@ -113,7 +113,7 @@ class Roof extends Model {
 
   /**
    * Generate Geometry objects corresponding to a specification.
-   * @param {object} spec - an specification object that is valid against roof.schema.json.js
+   * @param {object} spec - a specification object that is valid against roof.schema.json.js
    * @param {Ray} [placement] - the location and orientation of this part
    */
   makeModelFromSpec (spec, placement, walls) {
