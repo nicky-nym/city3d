@@ -66,7 +66,7 @@ class Parcel extends Model {
 
     if (contents) {
       for (const copySpec of contents) {
-        const at = placement.applyRay(copySpec.at)
+        const at = placement.applyRay(copySpec.pose)
         const specName = copySpec.copy.$ref
         const modelObject = specReader.makeModelFromSpecName(specName, at)
         this.add(modelObject)

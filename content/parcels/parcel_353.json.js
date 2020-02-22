@@ -80,28 +80,28 @@ export default /* eslint-disable */
   },
   contents: [{
     copy: { $ref: 'Garage' },
-    at: { x: -185, y: 23, rotated: 90 }
+    pose: { x: -185, y: 23, rotated: 90 }
   }, {
     copy: { $ref: 'Cottage' },
-    at: { x: -154, y: 23, rotated: 90 }
+    pose: { x: -154, y: 23, rotated: 90 }
   }, {
     copy: { $ref: 'House 353' },
-    at: { x: 0, y: 0, rotated: 90 }
+    pose: { x: 0, y: 0, rotated: 90 }
   }, {
     copy: { $ref: 'Swing set' },
-    at: { x: -210, y: 25, rotated: 90 }
+    pose: { x: -210, y: 25, rotated: 90 }
   }, {
     copy: { $ref: 'Tree' },
-    at: { x: -90, y: 40 }
+    pose: { x: -90, y: 40 }
   }, {
     copy: { $ref: 'Table' },
-    at: { x: -80, y: 24 }
+    pose: { x: -80, y: 24 }
   }, {
     copy: { $ref: 'Dog' },
-    at: { x: -10, y: 30 }
+    pose: { x: -10, y: 30 }
   }, {
     copy: { $ref: 'Person' },
-    at: { x: -2, y: 30 }
+    pose: { x: -2, y: 30 }
   }],
   // TODO: implement this!
   /*

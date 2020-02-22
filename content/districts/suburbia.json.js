@@ -29,14 +29,14 @@ export default /* eslint-disable */
   },
   parcels: [{
     copy: { $ref: 'Parcel 353' },
-    at: { x: 240, y: 0 }
+    pose: { x: 240, y: 0 }
   }, {
     copy: { $ref: 'Parcel 353' },
-    at: { x: 240, y: 50 }
+    pose: { x: 240, y: 50 }
   }],
   contents: [{
     copy: { $ref: 'Utility pole' },
-    at: { x: 245, y: 20 },
+    pose: { x: 245, y: 20 },
     repeat: { count: 5, offset: { y: 120 } }
   }],
   pavement: [{

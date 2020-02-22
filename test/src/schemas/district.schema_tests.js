@@ -29,7 +29,7 @@ describe('SCHEMA', function () {
         parcels: [],
         contents: [{
           copy: { $ref: 'CITY.structures.eiffel_tower' },
-          at: { x: 0.2, y: 0.4 }
+          pose: { x: 0.2, y: 0.4 }
         }]
       }
       validator(goodJSON).should.equal(true)

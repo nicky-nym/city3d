@@ -17,9 +17,9 @@ export default /* eslint-disable */
   parcels: [],
   contents: [{
     copy: { $ref: 'Wurster Hall' },
-    at: { x: 40, y: 30 }
+    pose: { x: 40, y: 30 }
   }, {
     copy: { $ref: 'Wurster Hall' },
-    at: { x: 380, y: 30, rotated: 180, mirrored: false }
+    pose: { x: 380, y: 30, rotated: 180, mirrored: false }
   }]
 }

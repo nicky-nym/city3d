@@ -76,7 +76,7 @@ class District extends Model {
 
     if (parcels) {
       for (const copySpec of parcels) {
-        const at = placement.applyRay(copySpec.at)
+        const at = placement.applyRay(copySpec.pose)
         const specName = copySpec.copy.$ref
         const modelObject = specReader.makeModelFromSpecName(specName, at)
         this.add(modelObject)
@@ -158,7 +158,7 @@ class District extends Model {
       y: i * offset.y,
       z: i * offset.z
     }
-    const iAt = xyzAdd(copySpec.at, iOffset)
+    const iAt = xyzAdd(copySpec.pose, iOffset)
     const at = placement.applyRay(iAt)
     const modelObject = specReader.makeModelFromSpecName(specName, at)
     this.add(modelObject)

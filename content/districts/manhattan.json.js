@@ -45,7 +45,7 @@ export default /* eslint-disable */
   parcels: [],
   contents: [{
     copy: { $ref: 'Highrise building' },
-    at: { x: 80, y: 48 },
+    pose: { x: 80, y: 48 },
     repeat: [
       { count: 6, offset: { x: 100 } },
       { count: 2, offset: { y: 100 } }

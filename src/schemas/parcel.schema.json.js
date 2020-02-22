@@ -16,13 +16,13 @@ export default /* eslint-disable */
       },
       contents: [{
         copy: { $ref: 'CITY.buildings.garage' },
-        at: { x: 34, y: 152 }
+        pose: { x: 34, y: 152 }
       }, {
         copy: { $ref: 'CITY.buildings.cottage' },
-        at: { x: 34, y: 120 }
+        pose: { x: 34, y: 120 }
       }, {
         copy: { $ref: 'CITY.buildings.house' },
-        at: { x: 30, y: 40 }
+        pose: { x: 30, y: 40 }
       }],
       extras: { budget: {}, authors: {} }
     },

@@ -11,12 +11,12 @@ export default /* eslint-disable */
       copy: {
         $ref: 'CITY.buildings.cottage'
       },
-      at: { x: 1, y: 2, z: 0 }
+      pose: { x: 1, y: 2, z: 0 }
     },
     {
       name: '1418 Ivy Street',
       copy: { $ref: 'CITY.buildings.cottage' },
-      at: {
+      pose: {
         x: 1, y: 2, z: 0, rotated: 90, mirrored: true
       },
       settings: {
@@ -29,7 +29,7 @@ export default /* eslint-disable */
     {
       name: 'telephone poles',
       copy: { $ref: 'CITY.structures.utility_pole' },
-      at: { x: 0, y: 0, z: 0 },
+      pose: { x: 0, y: 0, z: 0 },
       repeat: { count: 5, offset: { y: 160 } }
     }
   ],
@@ -39,7 +39,7 @@ export default /* eslint-disable */
       "description": "the name of this particular copy, if this copy has it's own name",
       "type": "string",
     },
-    "at": {
+    "pose": {
       "description": "where the copy goes, and the direction it is oriented in",
       "$ref": "pose.schema.json"
     },

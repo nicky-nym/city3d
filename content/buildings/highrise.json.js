@@ -99,7 +99,7 @@ export default /* eslint-disable */
       use: 'assignable',
       contents: [{
         copy: { $ref: 'CITY.fixtures.desk' },
-        at: { x: 17, y: 10 }
+        pose: { x: 17, y: 10 }
       }]
     }]
   }, {

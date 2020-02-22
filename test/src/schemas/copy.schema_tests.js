@@ -23,7 +23,7 @@ describe('SCHEMA', function () {
         copy: {
           $ref: 'CITY.buildings.cottage'
         },
-        at: { x: 1, y: 2, z: 0 }
+        pose: { x: 1, y: 2, z: 0 }
       }
       validator(goodJSON).should.equal(true)
     })
@@ -32,7 +32,7 @@ describe('SCHEMA', function () {
       const goodJSON = {
         name: '1418 Ivy Street',
         copy: { $ref: 'CITY.buildings.cottage' },
-        at: {
+        pose: {
           x: 1, y: 2, z: 0, rotated: 90, mirrored: true
         },
         settings: {
@@ -49,7 +49,7 @@ describe('SCHEMA', function () {
       const goodJSON = {
         name: 'telephone poles',
         copy: { $ref: 'CITY.structures.utility_pole' },
-        at: { x: 0, y: 0, z: 0 },
+        pose: { x: 0, y: 0, z: 0 },
         repeat: { count: 5, offset: { y: 160 } }
       }
       validator(goodJSON).should.equal(true)
@@ -72,7 +72,7 @@ describe('SCHEMA', function () {
     it('should reject a copy spec with no copy: property', function () {
       const badJSON = {
         name: '1414 Ivy Street',
-        at: { x: 1, y: 2, z: 0 }
+        pose: { x: 1, y: 2, z: 0 }
       }
       validator(badJSON).should.equal(false)
     })
