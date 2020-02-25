@@ -44,6 +44,7 @@ export default /* eslint-disable */
     "repeat": { "$ref": "definitions.json#/def/number" },
     "altitude": { "$ref": "definitions.json#/def/number" },
     "height": { "$ref": "definitions.json#/def/number" },
+    "incline": { "$ref": "definitions.json#/def/number" },
     "floors": {
       "type": "array",
       "items": {

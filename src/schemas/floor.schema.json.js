@@ -31,6 +31,7 @@ export default /* eslint-disable */
     "metadata": { "$ref": "metadata.schema.json" },
     "comments": { "$ref": "definitions.json#/def/comments" },
     "unit": { "$ref": "definitions.json#/def/unit" },
+    "incline": { "$ref": "definitions.json#/def/number" },
     "outline": {
       "$ref": "outline.schema.json"
     },

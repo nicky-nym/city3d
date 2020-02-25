@@ -81,7 +81,7 @@ class Floor extends Model {
    * @param {Ray} placement - location and compass direction
    */
   makeModelFromSpec (spec, placement) {
-    let { name, unit, outline, /* surface, */ openings } = spec
+    let { name, unit, outline, incline = 0, /* surface, */ openings } = spec
     // EXAMPLE:
     // name: 'Expansive hardwood floor',
     // unit: 'feet',
@@ -107,7 +107,7 @@ class Floor extends Model {
     const xyPolygon = new Geometry.XYPolygon(adjustedCorners)
     const color = BROWN // COLORS_BY_USE[use]
     const depth = -0.5
-    const incline = 0
+    // const incline = 0
     const z = placement.xyz.z
     const abstractThickPolygon = new Geometry.ThickPolygon(xyPolygon, { incline, depth, openings })
     const concreteThickPolygon = new FeatureInstance(abstractThickPolygon, { ...xyPolygon[0], z }, color,

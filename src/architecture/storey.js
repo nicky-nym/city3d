@@ -173,7 +173,7 @@ class Storey extends Model {
    * @param {Ray} [placement] - the location and orientation of this part
    */
   makeModelForOneLOD (parentGroup, levelOfDetail, spec, placement) {
-    const { name, unit, altitude = 0, height = 0, repeat = 1, floors, stairs, ceiling, walls, rooms, roof } = spec
+    const { name, unit, altitude = 0, height = 0, repeat = 1, incline = 0, floors, stairs, ceiling, walls, rooms, roof } = spec
 
     this.name = name || this.name
     this._altitude = altitude
@@ -205,6 +205,7 @@ class Storey extends Model {
       for (const i of countTo(repeat)) { // eslint-disable-line no-unused-vars
         if (floors) {
           for (const floorSpec of floors) {
+            floorSpec.incline = floorSpec.incline || incline
             const floor = new Floor({ spec: floorSpec, placement: at })
             parentGroup.add(floor)
           }

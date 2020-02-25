@@ -191,8 +191,8 @@ export default /* eslint-disable */
     }],
   }, {
     name: 'ramp up from landing to highroad',
-    altitude: 15,
-    incline: 7.5,
+    altitude: 22.5,
+    incline: -7.5,
     floors: [{ 
       outline: {
         shape: 'polygon',
@@ -206,8 +206,8 @@ export default /* eslint-disable */
     }],
   }, {
     name: 'ramp down from landing to lowroad',
-    altitude: 15,
-    incline: -7.5,
+    altitude: 7.5,
+    incline: 7.5,
     floors: [{ 
       outline: {
         shape: 'polygon',
