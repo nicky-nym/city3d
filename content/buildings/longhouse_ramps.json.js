@@ -46,14 +46,19 @@ export default /* eslint-disable */
     C: { x: 50, y: 90 },
     D: { x: 35, y: 90 },
     E: { x: 30, y: 45 },
+    AB: { x: 30, y: 0, z: 22.5 },
+    CD: { x: 45, y: 90, z: 22.5 },
 
     /* ramp down from highroad exit to landing */
     F: { x: 50, y: 270 },
-    G: { x: 30, y: 270 },
+    G: { x: 35, y: 270 },
+    FG: { x: 45, y: 270, z: 15 },
 
     /* ramp up from lowroad exit to landing */
     H: { x: 65, y: 90 },
     I: { x: 65, y: 270 },
+    CH: { x: 60, y: 90, z: 7.5 },
+    IF: { x: 60, y: 270, z: 15 },
 
     /* landing */
     J: { x: 70, y: 270 },
@@ -67,6 +72,10 @@ export default /* eslint-disable */
     P: { x: 73, y: 69 },
     Q: { x: 60, y: 55 },
     R: { x: 80, y: 40 },
+    LM: { x: 170, y: 30, z: 7.5 },
+    LN: { x: 130, y: 40, z: 7.5 },
+    OR: { x: 86, y: 52, z: 7.5 },
+    PQ: { x: 68, y: 64, z: 7.5 },
 
     /* landing, south access walkway */
     S: { x: 129, y: 279 },
@@ -106,14 +115,19 @@ export default /* eslint-disable */
     c: { x: 50, y: 670 - 90 },
     d: { x: 35, y: 670 - 90 },
     e: { x: 30, y: 670 - 45 },
+    ab: { x: 30, y: 670 - 0, z: 22.5 },
+    cd: { x: 45, y: 670 - 90, z: 22.5 },
 
     /* ramp up from landing to highroad */
     f: { x: 50, y: 670 - 270 },
     g: { x: 30, y: 670 - 270 },
+    fg: { x: 45, y: 670 - 270, z: 15 },
 
     /* ramp down from landing to lowroad */
     h: { x: 65, y: 670 - 90 },
     i: { x: 65, y: 670 - 270 },
+    ch: { x: 60, y: 670 - 90, z: 7.5 },
+    'if': { x: 60, y: 670 - 270, z: 15 },
 
     /* landing */
     j: { x: 70, y: 670 - 270 },
@@ -127,13 +141,43 @@ export default /* eslint-disable */
     p: { x: 73, y: 670 - 69 },
     q: { x: 60, y: 670 - 55 },
     r: { x: 80, y: 670 - 40 },
+    lm: { x: 170, y: 670 - 30, z: 7.5 },
+    ln: { x: 130, y: 670 - 40, z: 7.5 },
+    or: { x: 86, y: 670 - 52, z: 7.5 },
+    pq: { x: 68, y: 670 - 64, z: 7.5 },
 
     /* landing, north access walkway */
     s: { x: 129, y: 670 - 279 },
     t: { x: 129, y: 670 - 285 },
-    u: { x: 85, y: 670 - 285 },
-
+    u: { x: 85, y: 670 - 285 }
   },
+  routes: [{
+    name: 'ramp from highroad to lowroad (via landing)',
+    waypoints: [
+      { $ref: '#/def/AB' },
+      { $ref: '#/def/CD' },
+      { $ref: '#/def/FG' },
+      { $ref: '#/def/if' },
+      { $ref: '#/def/ch' },
+      { $ref: '#/def/pq' },
+      { $ref: '#/def/or' },
+      { $ref: '#/def/ln' },
+      { $ref: '#/def/lm' }
+    ]
+  }, {
+    name: 'ramp up from lowroad to highroad (via landing)',
+    waypoints: [
+      { $ref: '#/def/LM' },
+      { $ref: '#/def/LN' },
+      { $ref: '#/def/OR' },
+      { $ref: '#/def/PQ' },
+      { $ref: '#/def/CH' },
+      { $ref: '#/def/IF' },
+      { $ref: '#/def/fg' },
+      { $ref: '#/def/cd' },
+      { $ref: '#/def/ab' }
+    ]
+  }],
   storeys: [{
     name: 'exit from highroad (toward landing)',
     altitude: 22.5,

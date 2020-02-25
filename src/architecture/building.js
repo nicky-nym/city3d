@@ -11,6 +11,7 @@ import { LAYER } from './layer.js'
 import { Model } from './model.js'
 import { Ray } from '../core/ray.js'
 import { Roof } from './roof.js'
+import { Route } from '../routes/route.js'
 import { Storey } from './storey.js'
 import { Structure } from './structure.js'
 import { Use } from '../architecture/use.js'
@@ -70,7 +71,7 @@ class Building extends Structure {
    * @param {Ray} [placement] - the location and orientation of this part
    */
   makeModelFromSpec (spec, placement) {
-    const { name, unit, /* anchorPoint, */ storeys } = spec
+    const { name, unit, /* anchorPoint, */ storeys, routes = [] } = spec
 
     this.name = name || this.name
 
@@ -86,12 +87,18 @@ class Building extends Structure {
       altitude: 0,
       height: 0
     }
+
     for (const storeySpec of storeys) {
       Model.mergeValueIfAbsent(storeySpec, priors)
       const storey = new Storey({ spec: storeySpec, placement: anchor })
       this.add(storey)
       priors.altitude = storey.altitude() + (storey.height() * storey.repeat())
       priors.height = storey.height()
+    }
+
+    for (const routeSpec of routes) {
+      const waypoints = anchor.applyRay(routeSpec.waypoints)
+      this.add(new Route(waypoints, Use.BIKEPATH))
     }
   }
 

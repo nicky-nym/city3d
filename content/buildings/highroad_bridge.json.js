@@ -32,6 +32,12 @@ export default /* eslint-disable */
       at: { x: 0, from: 'center'}
     }
   },
+  routes: [
+    { waypoints: [ { x: 6, y: 0, z: 22.5 }, { x: 6, y: 60, z: 22.5 } ]},
+    { waypoints: [ { x: 12, y: 0, z: 22.5 }, { x: 12, y: 60, z: 22.5 } ]},
+    { waypoints: [ { x: 18, y: 0, z: 22.5 }, { x: 18, y: 60, z: 22.5 } ]},
+    { waypoints: [ { x: 24, y: 0, z: 22.5 }, { x: 24, y: 60, z: 22.5 } ]},
+  ],
   storeys: [{
     name: 'boulevard',
     altitude: 22.5,

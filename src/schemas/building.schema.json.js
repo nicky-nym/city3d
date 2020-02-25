@@ -52,6 +52,12 @@ export default /* eslint-disable */
       "description": "the point that serves as the center of the building when the building is place on a parcel",
       "$ref": "xy.schema.json"
     },
+    "routes": {
+      "type": "array",
+      "items": {
+        "$ref": "route.schema.json"
+      }
+    },
     "storeys": {
       "type": "array",
       "items": {

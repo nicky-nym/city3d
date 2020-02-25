@@ -47,6 +47,12 @@ export default /* eslint-disable */
       at: { x: 0, from: 'center'}
     }
   },
+  routes: [
+    { waypoints: [ { y: 6, x: 0, z: 7.5 }, { y: 6, x: 590, z: 7.5 } ]},
+    { waypoints: [ { y: 12, x: 0, z: 7.5 }, { y: 12, x: 590, z: 7.5 } ]},
+    { waypoints: [ { y: 18, x: 0, z: 7.5 }, { y: 18, x: 590, z: 7.5 } ]},
+    { waypoints: [ { y: 24, x: 0, z: 7.5 }, { y: 24, x: 590, z: 7.5 } ]},
+  ],
   storeys: [{
     name: 'ground floor (east-west)',
     repeat: 1,

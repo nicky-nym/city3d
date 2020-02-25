@@ -23,6 +23,7 @@ import PITCH from './pitch.schema.json.js'
 import POSE from './pose.schema.json.js'
 import ROOF from './roof.schema.json.js'
 import ROOM from './room.schema.json.js'
+import ROUTE from './route.schema.json.js'
 import STOREY from './storey.schema.json.js'
 import STRUCTURE from './structure.schema.json.js'
 import SURFACE from './surface.schema.json.js'
@@ -51,6 +52,7 @@ const SCHEMA = {
   POSE,
   ROOF,
   ROOM,
+  ROUTE,
   STOREY,
   STRUCTURE,
   SURFACE,
