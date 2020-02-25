@@ -15,6 +15,7 @@ import { Storey } from './storey.js'
 import { hypotenuse } from '../core/util.js'
 
 const LIGHT_GRAY = 0x808080
+const GREEN = 0x003300
 
 /**
  * The overall shape of the roof as a whole, including all the different roof faces and/or surfaces.
@@ -142,39 +143,65 @@ class Roof extends Model {
 
     form = form || FORM.FLAT
     if (form === FORM.FLAT) {
-      const openingSpecs = openings || []
-      openings = []
-      for (const opening of openingSpecs) {
-        const corners = Outline.cornersFromSpec(opening)
-        const adjustedCorners = placement.applyRay(corners)
-        openings.push(adjustedCorners)
-        this._makeParapet(parapetHeight, placement, corners)
-      }
-      const corners = outline.corners()
-      this._makeSlab(corners, placement, 0, openings)
-      this._makeParapet(parapetHeight, placement, corners)
+      this._makeFlatRoof(placement, outline, openings, parapetHeight)
+    } else if (form === FORM.LIVING) {
+      this._makeLivingRoof(placement, outline, openings, parapetHeight)
     } else if (form === FORM.PITCHED) {
       this._makePitchedRoof(eaves, pitch, placement, walls, outline)
     } else if (form === FORM.HIPPED) {
       this._makeHippedRoof(eaves, pitch, placement, walls, outline)
     } else if (form === FORM.SHED) {
       this._makeShedRoof(eaves, pitch, placement, walls, outline)
-    } else if (form === FORM.LIVING) {
-      // TODO: write this code!
-      throw new Error('TODO: "living" Roof code has not yet been written')
     } else if (form === FORM.VAULTED) {
       // TODO: write this code!
       throw new Error('TODO: "vaulted" Roof code has not yet been written')
     }
   }
 
-  _makeSlab (corners, placement, incline = 0, openings = []) {
+  _makeBasicSlab (corners, placement, incline = 0) {
+    this._makeSlab(corners, placement, ROOF_THICKNESS, LIGHT_GRAY, incline)
+  }
+
+  _makeSlab (corners, placement, depth, color, incline = 0, openings = []) {
     const adjustedCorners = placement.applyRay(corners)
     const xyPolygon = new Geometry.XYPolygon(adjustedCorners)
-    const abstractThickPolygon = new Geometry.ThickPolygon(xyPolygon, { incline, depth: ROOF_THICKNESS, openings })
+    const abstractThickPolygon = new Geometry.ThickPolygon(xyPolygon, { incline, depth, openings })
     const p0 = { ...adjustedCorners[0], z: placement.xyz.z }
-    const concreteThickPolygon = new FeatureInstance(abstractThickPolygon, p0, LIGHT_GRAY)
+    const concreteThickPolygon = new FeatureInstance(abstractThickPolygon, p0, color)
     this.add(concreteThickPolygon)
+  }
+
+  // TODO: do a DRY refactor to extract common code from _makeFlatRoof, _makeLivingRoof
+  _makeFlatRoof (placement, outline, openings, parapetHeight) {
+    const openingSpecs = openings || []
+    openings = []
+    for (const opening of openingSpecs) {
+      const corners = Outline.cornersFromSpec(opening)
+      const adjustedCorners = placement.applyRay(corners)
+      openings.push(adjustedCorners)
+      this._makeParapet(parapetHeight, placement, corners)
+    }
+    const corners = outline.corners()
+    this._makeSlab(corners, placement, ROOF_THICKNESS, LIGHT_GRAY, 0, openings)
+    this._makeParapet(parapetHeight, placement, corners)
+  }
+
+  // TODO: do a DRY refactor to extract common code from _makeFlatRoof, _makeLivingRoof
+  _makeLivingRoof (placement, outline, openings, parapetHeight) {
+    const grassPlacement = placement.copy()
+    grassPlacement.xyz.z += parapetHeight
+
+    const openingSpecs = openings || []
+    openings = []
+    for (const opening of openingSpecs) {
+      const corners = Outline.cornersFromSpec(opening)
+      const adjustedCorners = placement.applyRay(corners)
+      openings.push(adjustedCorners)
+      this._makeParapet(parapetHeight, placement, corners)
+    }
+    const corners = outline.corners()
+    this._makeSlab(corners, grassPlacement, ROOF_THICKNESS, GREEN, 0, openings)
+    this._makeParapet(parapetHeight, placement, corners)
   }
 
   // TODO: do a DRY refactor to extract common code from _makeShedRoof, _makeHippedRoof, _makePitchedRoof
@@ -216,7 +243,7 @@ class Roof extends Model {
           { x: midpoint.x + stretch.x - insetX, y: midpoint.y + stretch.y - insetY },
           { x: begin.x - insetX, y: begin.y - insetY }
         ]
-        this._makeSlab(cornersForLeftFace, at, incline)
+        this._makeBasicSlab(cornersForLeftFace, at, incline)
 
         const cornersForRightFace = [
           { x: endPoint.x - insetX, y: endPoint.y - insetY },
@@ -224,7 +251,7 @@ class Roof extends Model {
           { x: midpoint.x - stretch.x, y: midpoint.y - stretch.y },
           endPoint
         ]
-        this._makeSlab(cornersForRightFace, at, incline)
+        this._makeBasicSlab(cornersForRightFace, at, incline)
       }
       previousWall = currentWall
     }
@@ -275,7 +302,7 @@ class Roof extends Model {
         leftishPeak,
         leftCorner
       ]
-      this._makeSlab(cornersForLeftFace, at, incline)
+      this._makeBasicSlab(cornersForLeftFace, at, incline)
       if (middleLength) {
         const middleSlabCorners = [
           leftishCorner,
@@ -283,14 +310,14 @@ class Roof extends Model {
           rightishPeak,
           rightishCorner
         ]
-        this._makeSlab(middleSlabCorners, at, incline)
+        this._makeBasicSlab(middleSlabCorners, at, incline)
       }
       const cornersForRightFace = [
         rightishCorner,
         rightishPeak,
         rightCorner
       ]
-      this._makeSlab(cornersForRightFace, at, incline)
+      this._makeBasicSlab(cornersForRightFace, at, incline)
       previousWall = currentWall
     }
   }
@@ -334,7 +361,7 @@ class Roof extends Model {
             { x: begin.x - stretch.x, y: begin.y - stretch.y },
             endPoint
           ]
-          this._makeSlab(cornersForFace, at, incline)
+          this._makeBasicSlab(cornersForFace, at, incline)
         } else {
           const cornersForFace = [
             begin,
@@ -342,7 +369,7 @@ class Roof extends Model {
             { x: endPoint.x + stretch.x - insetX, y: endPoint.y + stretch.y - insetY },
             { x: begin.x - insetX, y: begin.y - insetY }
           ]
-          this._makeSlab(cornersForFace, at, incline)
+          this._makeBasicSlab(cornersForFace, at, incline)
         }
       }
       previousWall = currentWall

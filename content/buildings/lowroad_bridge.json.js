@@ -64,10 +64,30 @@ export default /* eslint-disable */
         end: { $ref: '#/def/A' },
         doors: [{ $ref: '#/def/BOULEVARD_END_OPENING' }]
       }
-    ]},
-    roof: {
-      form: 'flat',
-      parapetHeight: 4
+    ]}
+  }, {
+    name: 'roof parapet',
+    height: 4,
+    floors: [{ 
+      outline: {
+        shape: 'polygon',
+        corners: [
+          { $ref: '#/def/A' },
+          { $ref: '#/def/B' },
+          { $ref: '#/def/C' },
+          { $ref: '#/def/D' },
+          { $ref: '#/def/A' }
+        ]
+      }
+    }],
+    walls: {
+      exterior: [{
+        begin: { $ref: '#/def/A' },
+        end: { $ref: '#/def/B' }
+      }, {
+        begin: { $ref: '#/def/C' },
+        end: { $ref: '#/def/D' }
+      }]
     }
   }]
 }

@@ -199,8 +199,27 @@ export default /* eslint-disable */
       }
     ]},
     roof: {
-      form: 'flat',
+      form: 'living',
       parapetHeight: 4
+    }
+  }, {
+    name: 'roof parapet',
+    altitude: 41.5,
+    height: 4,
+    walls: {
+      exterior: [{
+        begin: { $ref: '#/def/B' },
+        end: { $ref: '#/def/C' }
+      }, {
+        begin: { $ref: '#/def/D' },
+        end: { $ref: '#/def/E' }
+      }, {
+        begin: { $ref: '#/def/F' },
+        end: { $ref: '#/def/G' }
+      }, {
+        begin: { $ref: '#/def/H' },
+        end: { $ref: '#/def/A' }
+      }]
     }
   }]
 }
