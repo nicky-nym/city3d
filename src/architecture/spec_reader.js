@@ -8,7 +8,6 @@
 import { StockCatalog } from '../../content/stock_catalog.js'
 import { Building } from './building.js'
 import { District } from './district.js'
-import { Facing } from '../core/facing.js'
 import { Parcel } from './parcel.js'
 import { Ray } from '../core/ray.js'
 import { Structure } from './structure.js'
@@ -141,22 +140,22 @@ class SpecReader {
   /**
    * Given a specification object, return a tree of corresponding model objects.
    */
-  makeModelFromSpec (specification, at) {
+  makeModelFromSpec (specification, pose) {
     let spec = this.copySpec(specification)
     if (spec.context !== 'city3d') {
       throw new Error(`Unrecognised "context" string in spec object ${spec.context}`)
     }
     spec = SpecReader._resolveLocalRefDirectives(spec, spec)
     spec = SpecReader._resolveRandomDirectives(spec, spec)
-    const placement = new Ray(Facing.NORTH, at)
+    const placement = Ray.fromPose(pose)
     if (spec.type === 'building.schema.json') {
       return new Building({ spec, placement })
     } else if (spec.type === 'structure.schema.json') {
       return new Structure({ spec, placement, specReader: this })
     } else if (spec.type === 'parcel.schema.json') {
-      return new Parcel({ spec, placement, specReader: this })
+      return new Parcel({ spec, pose, specReader: this })
     } else if (spec.type === 'district.schema.json') {
-      return new District({ spec, placement, specReader: this })
+      return new District({ spec, pose, specReader: this })
     } else {
       throw new Error(`Unrecognised "type" string in spec object ${spec.type}`)
     }
@@ -165,9 +164,9 @@ class SpecReader {
   /**
    * Given the name of a specification object, return a tree of corresponding model objects.
    */
-  makeModelFromSpecName (specName, at) {
+  makeModelFromSpecName (specName, pose) {
     const specObject = this._catalog.getSpec(specName)
-    return this.makeModelFromSpec(specObject, at)
+    return this.makeModelFromSpec(specObject, pose)
   }
 }
 

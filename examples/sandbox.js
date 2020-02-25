@@ -17,7 +17,7 @@ window.DEBUG = true
 function addLatticeburg (city) {
   const latticeburg = new CITY.LatticeDistrict({
     name: 'Latticeburg',
-    placement: new Ray(Facing.NORTH, xyz(838, 338, 0)),
+    pose: xyz(838, 338, 0),
     deprecatedSpec: {
       outline: rectangleOfSize(xy(2000, 2000))
     }
@@ -139,8 +139,8 @@ function addMovers (district) {
   district.add(new CITY.Route([xyz(-150, -100, 0), xyz(-100, -200, 0), xyz(-80, -150, 0), xyz(-150, -100, 0)]))
 }
 
-function addObjectFromSpec (district, specReader, specName, at) {
-  const modelObject = specReader.makeModelFromSpecName(specName, at)
+function addObjectFromSpec (district, specReader, specName, pose) {
+  const modelObject = specReader.makeModelFromSpecName(specName, pose)
   district.add(modelObject)
 }
 

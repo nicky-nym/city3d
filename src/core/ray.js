@@ -18,6 +18,17 @@ class Ray {
     this.mirror = mirror
   }
 
+  static fromPose (pose) {
+    let { x, y, z, rotated, mirrored, subPose } = pose
+    let ray = new Ray(rotated, { x, y, z }, { mirror: mirrored })
+    while (subPose) {
+      const subXyz = ray.applyRay(subPose)
+      ray = new Ray(ray.az, subXyz)
+      subPose = subPose.subPose
+    }
+    return ray
+  }
+
   copy () {
     return new Ray(this.az, { ...this.xyz })
   }

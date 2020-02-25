@@ -12,6 +12,7 @@ import { FeatureGroup } from '../../../src/core/feature.js'
 import { METRIC } from '../../../src/architecture/metric.js'
 import { Parcel } from '../../../src/architecture/parcel.js'
 import { Facing } from '../../../src/core/facing.js'
+import { Pose } from '../../../src/core/pose.js'
 import { Ray } from '../../../src/core/ray.js'
 import { Storey } from '../../../src/architecture/storey.js'
 import { Use } from '../../../src/architecture/use.js'
@@ -53,10 +54,11 @@ describe('District', function () {
 
   describe('#getValueForMetric()', function () {
     let city
-    let ray
     let district
     let parcel
     let corners
+    const pose = Pose.origin()
+    let ray = Ray.fromPose(pose)
     const parcelRect = [xy(0, 0), xy(50, 0), xy(50, 20), xy(0, 20)]
     const roomRect = [xyz(5, 5, 0), xyz(45, 5, 0), xyz(45, 15, 0), xyz(5, 15, 0)]
 
@@ -65,18 +67,17 @@ describe('District', function () {
       corners = rectangleOfSize(xy(1000, 1000))
       district = new District({
         name: 'test district',
-        placement: ray,
+        pose: Pose.origin(),
         deprecatedSpec: {
           outline: corners
         }
       })
       city.add(district)
-      ray = new Ray()
     })
 
     it('should add the expected metrics when a Parcel and a room are created', function () {
       const deprecatedSpec = { outline: parcelRect }
-      district.add(new Parcel({ deprecatedSpec, placement: ray }))
+      district.add(new Parcel({ deprecatedSpec, pose }))
       district.add(new Storey({ placement: ray, outline: roomRect, deprecatedSpec: { use: Use.ROOM } }))
 
       const floorArea = 40 * 10
@@ -98,7 +99,7 @@ describe('District', function () {
     })
     it('should compute the correct values and units for FAR metrics for a rectangular Parcel and room', function () {
       const deprecatedSpec = { outline: parcelRect }
-      const parcel = new Parcel({ deprecatedSpec, placement: ray })
+      const parcel = new Parcel({ deprecatedSpec, pose })
       parcel.add(new Storey({ placement: ray, outline: roomRect, deprecatedSpec: { use: Use.ROOM } }))
       district.add(parcel)
 
@@ -125,16 +126,15 @@ describe('District', function () {
 
       beforeEach(function () {
         const deprecatedSpec = { outline: parcelRect }
-        parcel = new Parcel({ deprecatedSpec, placement: ray })
+        parcel = new Parcel({ deprecatedSpec, pose })
         district = new District({
           name: 'test district',
-          placement: ray,
+          pose: Pose.origin(),
           deprecatedSpec: {
             outline: corners
           }
         })
         city = new City({ name: 'Testopia' })
-        ray = new Ray()
         district.add(parcel)
         city.add(district)
         ray = new Ray(Facing.NORTH, xyz(5, 5, 0))

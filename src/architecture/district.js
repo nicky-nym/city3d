@@ -5,7 +5,7 @@
  * For more information, please refer to <http://unlicense.org>
  */
 
-import { array, countTo, xyz, xyzAdd } from '../core/util.js'
+import { array, countTo, xyzAdd } from '../core/util.js'
 import { FeatureInstance } from '../core/feature.js'
 import { Geometry } from '../core/geometry.js'
 import { LAYER } from './layer.js'
@@ -13,6 +13,7 @@ import { METRIC } from './metric.js'
 import { Model } from './model.js'
 import { Outline } from '../core/outline.js'
 import { Pavement } from './pavement.js'
+import { Pose } from '../core/pose.js'
 import { Ray } from '../core/ray.js'
 
 const MARTIAN_ORANGE = 0xdf4911
@@ -25,14 +26,14 @@ class District extends Model {
   /**
    * Create a new instance of a specified District, and generate the Geometry objects for it.
    * @param {string} [name] - a display name for this individual instance at a given placement
-   * @param {Ray} [placement] - the location and orientation of this parcel
+   * @param {Pose} [pose] - the location and orientation of this parcel
    * @param {object} [deprecatedSpec] - an old 2019 spec format that we're phasing out
    * @param {object} [spec] - a specification object that is valid against district.schema.json.js
    * @param {SpecReader} [specReader] - an instance of a SpecReader, for adding content models in the district
    */
   constructor ({
     name,
-    placement = new Ray(),
+    pose,
     deprecatedSpec,
     spec,
     specReader
@@ -40,27 +41,25 @@ class District extends Model {
     name = name || (spec && spec.name)
     super({ name })
     if (deprecatedSpec) {
-      this._makeModelFromDeprecatedSpec(deprecatedSpec, placement)
+      this._makeModelFromDeprecatedSpec(deprecatedSpec, pose)
     }
     if (spec) {
-      this.makeModelFromSpec(spec, placement, specReader)
+      this.makeModelFromSpec(spec, pose, specReader)
     }
   }
 
-  placement () {
-    return this._placement
-  }
-
+  // TODO: delete this once it is no longer used by lattice.js
   goto ({ x = 0, y = 0, z = 0 } = {}, facing) {
-    return this._placement.add(xyz(x, y, z), facing)
+    // return this._placement.add(xyz(x, y, z), facing)
+    return Pose.combine(this._pose, { x, y, z })
   }
 
   /**
    * Generate Geometry objects corresponding to a specification.
    * @param {object} spec - an specification object that is valid against district.schema.json.js
-   * @param {Ray} [placement] - the location and orientation of this part
+   * @param {Pose} [pose] - the location and orientation of this part
    */
-  makeModelFromSpec (spec, placement, specReader) {
+  makeModelFromSpec (spec, pose, specReader) {
     const { name, unit, /* anchorPoint, */ border, parcels, contents, pavement } = spec
 
     this.name = name || this.name
@@ -72,13 +71,13 @@ class District extends Model {
     const outline = new Outline(border)
     const corners = outline.corners()
     const deprecatedSpec = { outline: corners }
-    this._makeModelFromDeprecatedSpec(deprecatedSpec, placement)
+    this._makeModelFromDeprecatedSpec(deprecatedSpec, pose)
 
     if (parcels) {
       for (const copySpec of parcels) {
-        const at = placement.applyRay(copySpec.pose)
+        const mergedPose = Pose.combine(pose, copySpec.pose)
         const specName = copySpec.copy.$ref
-        const modelObject = specReader.makeModelFromSpecName(specName, at)
+        const modelObject = specReader.makeModelFromSpecName(specName, mergedPose)
         this.add(modelObject)
       }
     }
@@ -88,10 +87,10 @@ class District extends Model {
         const specName = copySpec.copy.$ref
         if (copySpec.repeat) {
           const repeatSpecs = District._copySpecFragment(array(copySpec.repeat))
-          this._applyRepeats(repeatSpecs, placement, specReader, specName, copySpec)
+          this._applyRepeats(repeatSpecs, pose, specReader, specName, copySpec)
         } else {
           const offset = { x: 0, y: 0, z: 0 }
-          this._makeModelOnce(1, offset, placement, specReader, specName, copySpec)
+          this._makeModelOnce(1, offset, pose, specReader, specName, copySpec)
         }
       }
     }
@@ -110,8 +109,9 @@ class District extends Model {
             y: i * offset.y,
             z: i * offset.z
           }
-          const at = placement.add(iOffset, placement.az)
-          const surface = new Pavement({ spec, placement: at })
+          const mergedPose = Pose.combine(pose, iOffset)
+          const placement = Ray.fromPose(mergedPose)
+          const surface = new Pavement({ spec, placement })
           this.add(surface)
         }
       }
@@ -122,7 +122,7 @@ class District extends Model {
     return JSON.parse(JSON.stringify(specFragment))
   }
 
-  _applyRepeats (repeatSpecs, placement, specReader, specName, copySpec) {
+  _applyRepeats (repeatSpecs, pose, specReader, specName, copySpec) {
     let count = 1
     let offset = { x: 0, y: 0, z: 0 }
     if (repeatSpecs.length === 0) {
@@ -131,46 +131,44 @@ class District extends Model {
       const repeatSpec = repeatSpecs[0]
       count = repeatSpec.count
       offset = xyzAdd(offset, repeatSpec.offset)
-      // console.log(`District make '${specName}' x ${count}`)
       for (let i = 0; i < count; i++) {
-        this._makeModelOnce(i, offset, placement, specReader, specName, copySpec)
+        this._makeModelOnce(i, offset, pose, specReader, specName, copySpec)
       }
     } else if (repeatSpecs.length > 1) {
       const lastSpec = repeatSpecs.pop()
       count = lastSpec.count
       offset = xyzAdd(offset, lastSpec.offset)
-      // console.log(`District make '${specName}' x ${count} x ${repeatSpecs.length}`)
       for (let i = 0; i < count; i++) {
         const iOffset = {
           x: i * offset.x,
           y: i * offset.y,
           z: i * offset.z
         }
-        const at = placement.add(iOffset, placement.az)
-        this._applyRepeats(repeatSpecs, at, specReader, specName, copySpec)
+        const mergedPose = Pose.combine(iOffset, pose)
+        this._applyRepeats(repeatSpecs, mergedPose, specReader, specName, copySpec)
       }
     }
   }
 
-  _makeModelOnce (i, offset, placement, specReader, specName, copySpec) {
+  _makeModelOnce (i, offset, pose, specReader, specName, copySpec) {
     const iOffset = {
       x: i * offset.x,
       y: i * offset.y,
       z: i * offset.z
     }
     const iAt = xyzAdd(copySpec.pose, iOffset)
-    const at = placement.applyRay(iAt)
-    const modelObject = specReader.makeModelFromSpecName(specName, at)
+    const mergedPose = Pose.combine(pose, iAt)
+    const modelObject = specReader.makeModelFromSpecName(specName, mergedPose)
     this.add(modelObject)
   }
 
-  _makeModelFromDeprecatedSpec (deprecatedSpec, placement) {
-    this._placement = Object.freeze(placement || new Ray())
-    const adjustedCorners = placement.applyRay(deprecatedSpec.outline)
+  _makeModelFromDeprecatedSpec (deprecatedSpec, pose) {
+    this._pose = pose
+    const adjustedCorners = Pose.relocate(pose, deprecatedSpec.outline)
     adjustedCorners.push(adjustedCorners[0])
     const xyPolygon = new Geometry.XYPolygon(adjustedCorners)
     const abstractOutlinePolygon = new Geometry.OutlinePolygon(xyPolygon)
-    const [{ x, y }, z] = [adjustedCorners[0], placement.xyz.z]
+    const [{ x, y }, z] = [adjustedCorners[0], pose.z]
     for (const i of countTo(3)) {
       const concreteOutlinePolygon = new FeatureInstance(abstractOutlinePolygon, { x, y, z: z + (i * 3) }, MARTIAN_ORANGE, { layer: LAYER.DISTRICTS })
       this.add(concreteOutlinePolygon)

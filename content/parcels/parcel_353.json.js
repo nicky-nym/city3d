@@ -80,16 +80,16 @@ export default /* eslint-disable */
   },
   contents: [{
     copy: { $ref: 'Garage' },
-    pose: { x: -185, y: 23, rotated: 90 }
+    pose: { x: -185, y: 23, rotated: 0 }
   }, {
     copy: { $ref: 'Cottage' },
-    pose: { x: -154, y: 23, rotated: 90 }
+    pose: { x: -154, y: 23, rotated: 0 }
   }, {
     copy: { $ref: 'House 353' },
-    pose: { x: 0, y: 0, rotated: 90 }
+    pose: { x: 0, y: 0, rotated: 0 }
   }, {
     copy: { $ref: 'Swing set' },
-    pose: { x: -210, y: 25, rotated: 90 }
+    pose: { x: -210, y: 25, rotated: 0 }
   }, {
     copy: { $ref: 'Tree' },
     pose: { x: -90, y: 40 }
