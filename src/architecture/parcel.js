@@ -25,7 +25,7 @@ class Parcel extends Model {
   /**
    * Create a new instance of a specified Parcel, and generate the Geometry objects for it.
    * @param {string} [name] - a display name for this individual instance at a given placement
-   * @param {Pose} [pose] - the location and orientation of this parcel
+   * @param {pose} [pose] - the location and orientation of this parcel
    * @param {object} [deprecatedSpec] - an old 2019 spec format that we're phasing out
    * @param {object} [spec] - a specification object that is valid against parcel.schema.json.js
    * @param {SpecReader} [specReader] - an instance of a SpecReader, for adding content models in the parcel
@@ -50,7 +50,7 @@ class Parcel extends Model {
   /**
    * Generate Geometry objects corresponding to a specification.
    * @param {object} spec - an specification object that is valid against parcel.schema.json.js
-   * @param {Pose} [pose] - the location and orientation of this part
+   * @param {pose} [pose] - the location and orientation of this part
    */
   makeModelFromSpec (spec, pose, specReader) {
     const { name, unit, /* anchorPoint, */ border, contents, pavement, water } = spec
