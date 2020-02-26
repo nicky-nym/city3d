@@ -67,6 +67,7 @@ describe('SCHEMA', function () {
                 style: 'clapboard',
                 material: 'fiber-cement'
               },
+              // TODO: FIXME (doors & windows shouldn't be here, but outside doesn't care)
               doors: [{
                 name: 'garage door',
                 leafCount: { rows: 5 },

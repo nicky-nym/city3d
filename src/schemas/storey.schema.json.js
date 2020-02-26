@@ -22,7 +22,7 @@ export default /* eslint-disable */
     {
       height: 8,
       altitude: 40,
-      floors: [{  }],
+      floors: [],
       rooms: [],
       roof: { form: 'pitched', pitch: { rise: 8, run: 12 } },
       ceiling: {},

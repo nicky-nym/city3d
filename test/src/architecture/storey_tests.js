@@ -11,7 +11,7 @@ import { Storey } from '../../../src/architecture/storey.js'
 import { Use } from '../../../src/architecture/use.js'
 import { xy } from '../../../src/core/util.js'
 
-/* global describe, it, beforeEach */
+/* global describe, it, beforeEach, expect */
 /* eslint-disable no-unused-expressions */
 
 describe('Storey', function () {
@@ -63,10 +63,9 @@ describe('Storey', function () {
   })
 
   describe('#makeModelFromSpec', function () {
-    it('should return a Storey if passed a good spec.', function () {
-      // TODO: This is a copy of goodJSON from storey.schema_tests.js, but it might be a better idea
-      // to use the examples in storey.schema.json.js instead, both here and in storey.schema_tests.js,
-      // since it would not only keep the tests in sync, but would also validate the examples.
+    it('should succeed if passed a good spec.', function () {
+      // See also model_tests.js, which tests all the examples in storey.schema.json.js.
+      // TODO: test the result.
       const goodJSON = {
         context: 'city3d',
         type: 'storey.schema.json',
@@ -88,10 +87,7 @@ describe('Storey', function () {
       }
       const storey = new Storey()
 
-      storey.makeModelFromSpec(goodJSON, ray)
-
-      storey.should.exist
-      storey.should.be.an.instanceof(Storey)
+      expect(() => storey.makeModelFromSpec(goodJSON, ray)).to.not.throw()
     })
   })
 })

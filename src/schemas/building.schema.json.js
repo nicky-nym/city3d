@@ -33,7 +33,7 @@ export default /* eslint-disable */
         rooms: [],
         roof: { form: 'pitched', pitch: { rise: 8, run: 12 } },
         ceiling: {},
-        walls: []
+        walls: {}
       }],
       extras: { permitInfo: {}, budget: {}, authors: {} }
     }

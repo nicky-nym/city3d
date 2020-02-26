@@ -19,7 +19,7 @@ export default /* eslint-disable */
       pitch: { rise: 8, run: 12 },
       eaves: 1,
       surface: {
-        style: 'shingles',
+        style: 'shingled',
         material: 'asphalt composition'
       },
       extras: { budget: {}, authors: {} }

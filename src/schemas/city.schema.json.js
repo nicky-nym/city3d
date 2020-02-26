@@ -28,9 +28,6 @@ export default /* eslint-disable */
     {
       name: 'London'
     },
-    { 
-      districts: [{}]
-    },
     { }
   ],
   "required": [],

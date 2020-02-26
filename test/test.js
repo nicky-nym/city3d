@@ -6,3 +6,4 @@
  */
 
 import 'chai/register-should'
+import 'chai/register-expect'

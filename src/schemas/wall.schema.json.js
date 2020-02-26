@@ -14,11 +14,10 @@ export default /* eslint-disable */
       roofline: 'gabled',
       doors: [{
         name: 'garage door',
-        yLeafCount: 5,
+        leafCount: { rows: 5 },
         motion: 'overhead',
-        shape: { shape: 'rectangle', data: { x: 16, y: 7 } },
-        center: { x: 12 },
-        casing: { width: { x: 0.5 } }
+        outline: { shape: 'rectangle', data: { x: 16, y: 7 } },
+        casing: { width: 0.5 }
       }],
       windows: [],
       outside: {

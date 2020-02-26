@@ -54,7 +54,7 @@ class Roof extends Model {
    * @param {object} [spec] - an specification object that is valid against roof.schema.json.js
    * @param {Wall[]} [walls] - an array of Wall instances
    */
-  constructor ({ placement, deprecatedSpec, spec, walls }) {
+  constructor ({ placement, deprecatedSpec, spec, walls } = {}) {
     super({ name: 'Roof', layer: LAYER.ROOFS })
     if (deprecatedSpec) {
       this._makeModelFromDeprecatedSpec(deprecatedSpec, placement)

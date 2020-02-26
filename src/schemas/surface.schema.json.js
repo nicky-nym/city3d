@@ -15,7 +15,7 @@ export default /* eslint-disable */
       material: 'fiber-cement'
     },
     {
-      style: 'shingles',
+      style: 'shingled',
       material: 'asphalt composition'
     },
     {
