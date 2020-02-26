@@ -50,7 +50,7 @@ class Structure extends Model {
     if (spec && spec.layer) {
       layer = Layer.getLayer(spec.layer)
     }
-    super({ placement, spec, ...remainingOptions, layer })
+    super({ spec, ...remainingOptions, layer })
 
     placement = placement || new Ray()
     this.offset = { ...xyz(0, 0, 0), ...placement.xyz }
