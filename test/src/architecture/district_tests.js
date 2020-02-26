@@ -1,5 +1,5 @@
 /** @file district_tests.js
- * @author Authored in 2019 at <https://github.com/nicky-nym/city3d>
+ * @author Authored in 2019, 2020 at <https://github.com/nicky-nym/city3d>
  * @license UNLICENSE
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -61,6 +61,12 @@ describe('District', function () {
     let ray = Ray.fromPose(pose)
     const parcelRect = [xy(0, 0), xy(50, 0), xy(50, 20), xy(0, 20)]
     const roomRect = [xyz(5, 5, 0), xyz(45, 5, 0), xyz(45, 15, 0), xyz(5, 15, 0)]
+    const parcelSpec = {
+      border: {
+        shape: 'polygon',
+        corners: parcelRect
+      }
+    }
 
     beforeEach(function () {
       city = new City({ name: 'Testopia' })
@@ -76,8 +82,7 @@ describe('District', function () {
     })
 
     it('should add the expected metrics when a Parcel and a room are created', function () {
-      const deprecatedSpec = { outline: parcelRect }
-      district.add(new Parcel({ deprecatedSpec, pose }))
+      district.add(new Parcel({ spec: parcelSpec, pose }))
       district.add(new Storey({ placement: ray, outline: roomRect, deprecatedSpec: { use: Use.ROOM } }))
 
       const floorArea = 40 * 10
@@ -98,8 +103,7 @@ describe('District', function () {
       district.getValueForMetric(METRIC.GROSS_FLOOR_AREA_RATIO).should.equal(expectedFAR)
     })
     it('should compute the correct values and units for FAR metrics for a rectangular Parcel and room', function () {
-      const deprecatedSpec = { outline: parcelRect }
-      const parcel = new Parcel({ deprecatedSpec, pose })
+      const parcel = new Parcel({ spec: parcelSpec, pose })
       parcel.add(new Storey({ placement: ray, outline: roomRect, deprecatedSpec: { use: Use.ROOM } }))
       district.add(parcel)
 
@@ -120,13 +124,11 @@ describe('District', function () {
     })
 
     describe('For a three storey building on a Parcel bordered by streets', function () {
-      const parcelRect = [xy(0, 0), xy(50, 0), xy(50, 20), xy(0, 20)]
       const streetRect = [xy(0, 0), xy(50, 0), xy(50, 20), xy(0, 20)]
       const storeyRect = [xyz(0, 0, 0), xyz(40, 0, 0), xyz(40, 10, 0), xyz(0, 10, 0)]
 
       beforeEach(function () {
-        const deprecatedSpec = { outline: parcelRect }
-        parcel = new Parcel({ deprecatedSpec, pose })
+        parcel = new Parcel({ spec: parcelSpec, pose })
         district = new District({
           name: 'test district',
           pose: Pose.origin(),

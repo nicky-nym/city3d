@@ -26,22 +26,17 @@ class Parcel extends Model {
    * Create a new instance of a specified Parcel, and generate the Geometry objects for it.
    * @param {string} [name] - a display name for this individual instance at a given placement
    * @param {pose} [pose] - the location and orientation of this parcel
-   * @param {object} [deprecatedSpec] - an old 2019 spec format that we're phasing out
    * @param {object} [spec] - a specification object that is valid against parcel.schema.json.js
    * @param {SpecReader} [specReader] - an instance of a SpecReader, for adding content models in the parcel
    */
   constructor ({
     name = 'Parcel',
     pose,
-    deprecatedSpec,
     spec,
     specReader
   } = {}) {
     name = name || (spec && spec.name)
     super({ name })
-    if (deprecatedSpec) {
-      this._makeModelFromDeprecatedSpec(deprecatedSpec, pose)
-    }
     if (spec) {
       this.makeModelFromSpec(spec, pose, specReader)
     }
@@ -61,10 +56,12 @@ class Parcel extends Model {
       // TODO: write this code!
       throw new Error('TODO: need to convert values into feet')
     }
-    const outline = new Outline(border)
-    const corners = outline.corners()
-    const deprecatedSpec = { outline: corners }
-    this._makeModelFromDeprecatedSpec(deprecatedSpec, pose)
+
+    if (border) {
+      const outline = new Outline(border)
+      const corners = outline.corners()
+      this._makeBorder(pose, corners)
+    }
 
     if (contents) {
       for (const copySpec of contents) {
@@ -92,9 +89,8 @@ class Parcel extends Model {
     }
   }
 
-  // TODO: delete this code when it is no longer used by any content model classes
-  _makeModelFromDeprecatedSpec (parcelSpec, pose) {
-    const adjustedCorners = Pose.relocate(pose, parcelSpec.outline)
+  _makeBorder (pose, corners) {
+    const adjustedCorners = Pose.relocate(pose, corners)
     adjustedCorners.push(adjustedCorners[0])
     const xyPolygon = new Geometry.XYPolygon(adjustedCorners)
     const abstractOutlinePolygon = new Geometry.OutlinePolygon(xyPolygon)

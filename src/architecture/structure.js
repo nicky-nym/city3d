@@ -45,7 +45,7 @@ const COLORS_BY_USE = {
  */
 class Structure extends Model {
   constructor (options = {}) {
-    let { placement, spec, ...remainingOptions } = options
+    let { pose, placement, spec, ...remainingOptions } = options
     let layer = null
     if (spec && spec.layer) {
       layer = Layer.getLayer(spec.layer)
