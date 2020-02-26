@@ -149,7 +149,7 @@ class SpecReader {
     spec = SpecReader._resolveRandomDirectives(spec, spec)
     const placement = Ray.fromPose(pose)
     if (spec.type === 'building.schema.json') {
-      return new Building({ spec, placement })
+      return new Building({ spec, pose })
     } else if (spec.type === 'structure.schema.json') {
       return new Structure({ spec, placement, specReader: this })
     } else if (spec.type === 'parcel.schema.json') {

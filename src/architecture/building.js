@@ -53,11 +53,15 @@ function _openingsFromWallsSpec (wallsSpec) {
 class Building extends Structure {
   /**
    * Create a new instance of a specified Building, and generate the Geometry objects for it.
-   * @param {Ray} [placement] - the location and orientation of this part
+   * @param {pose} [pose] - the location and orientation of this building
    * @param {object} [deprecatedSpec] - an old 2019 spec format that we're phasing out
    */
   constructor (options = {}) {
-    const { placement, deprecatedSpec, ...remainingOptions } = options
+    const { pose, deprecatedSpec, ...remainingOptions } = options
+    let placement
+    if (pose) {
+      placement = Ray.fromPose(pose)
+    }
     super({ placement, deprecatedSpec, ...remainingOptions, copyLayer: LAYER.COPIES })
 
     if (deprecatedSpec) {
@@ -69,6 +73,7 @@ class Building extends Structure {
    * Generate Geometry objects corresponding to a specification.
    * @param {object} spec - an specification object that is valid against building.schema.json.js
    * @param {Ray} [placement] - the location and orientation of this part
+   * @param {pose} [pose] - the location and orientation of this parcel
    */
   makeModelFromSpec (spec, placement) {
     const { name, unit, /* anchorPoint, */ storeys, routes = [] } = spec
