@@ -9,7 +9,6 @@ import { StockCatalog } from '../../content/stock_catalog.js'
 import { Building } from './building.js'
 import { District } from './district.js'
 import { Parcel } from './parcel.js'
-import { Ray } from '../core/ray.js'
 import { Structure } from './structure.js'
 
 /**
@@ -147,11 +146,10 @@ class SpecReader {
     }
     spec = SpecReader._resolveLocalRefDirectives(spec, spec)
     spec = SpecReader._resolveRandomDirectives(spec, spec)
-    const placement = Ray.fromPose(pose)
     if (spec.type === 'building.schema.json') {
       return new Building({ spec, pose })
     } else if (spec.type === 'structure.schema.json') {
-      return new Structure({ spec, placement, specReader: this })
+      return new Structure({ spec, pose, specReader: this })
     } else if (spec.type === 'parcel.schema.json') {
       return new Parcel({ spec, pose, specReader: this })
     } else if (spec.type === 'district.schema.json') {

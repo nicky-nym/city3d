@@ -52,6 +52,9 @@ class Structure extends Model {
     }
     super({ spec, ...remainingOptions, layer })
 
+    if (pose) {
+      placement = Ray.fromPose(pose)
+    }
     placement = placement || new Ray()
     this.offset = { ...xyz(0, 0, 0), ...placement.xyz }
     placement.xyz = xyz(0, 0, 0)
