@@ -69,7 +69,6 @@ class Building extends Structure {
   /**
    * Generate Geometry objects corresponding to a specification.
    * @param {object} spec - an specification object that is valid against building.schema.json.js
-   * @param {Ray} [placement] - the location and orientation of this part
    * @param {pose} [pose] - the location and orientation of this parcel
    */
   makeModelFromSpec (spec, placement) {
@@ -82,17 +81,18 @@ class Building extends Structure {
       throw new Error('TODO: need to convert values into feet')
     }
 
-    const anchor = placement.copy()
     // TODO: get this working:
+    // const anchor = placement.copy()
     // anchor.xyz = xyzSubtract(anchor.xyz, anchorPoint)
+    const pose = placement
     const priors = {
       altitude: 0,
       height: 0
     }
-
+    placement = Ray.fromPose(pose || Pose.origin())
     for (const storeySpec of storeys) {
       Model.mergeValueIfAbsent(storeySpec, priors)
-      const storey = new Storey({ spec: storeySpec, placement: anchor })
+      const storey = new Storey({ spec: storeySpec, placement })
       this.add(storey)
       priors.altitude = storey.altitude() + (storey.height() * storey.repeat())
       priors.height = storey.height()

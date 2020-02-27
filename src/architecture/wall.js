@@ -13,7 +13,7 @@ import { METRIC } from './metric.js'
 import { Model } from './model.js'
 import { Pitch } from '../core/pitch.js'
 import { Window } from './window.js'
-import { xy, hypotenuse } from '../core/util.js'
+import { xy, xyRotate, hypotenuse } from '../core/util.js'
 
 const ALMOST_WHITE = 0x999999
 const DEFAULT_WALL_THICKNESS = 0.5
@@ -142,9 +142,11 @@ class Wall extends Model {
       throw new Error('TODO: need to convert values into feet')
     }
 
-    // TODO: get this working...
-    this._begin = begin // xyzAdd(begin, placement.xyz)
-    this._end = end // xyzAdd(end, placement.xyz)
+    this._begin = begin
+    this._end = end
+    begin = xyRotate(begin, placement.az)
+    end = xyRotate(end, placement.az)
+
     this._roofline = roofline
     this._pitch = pitch
     this._height = height

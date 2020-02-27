@@ -62,11 +62,12 @@ class Structure extends Model {
     if (placement) {
       pose = placement.asPose()
     }
-    this.offset = Ray.fromPose(pose).xyz
-    this._pose = Object.freeze(Pose.origin())
 
+    this.offset = Ray.fromPose(pose).asPose()
+    this._pose = Pose.origin()
+    this._pose.rotated = this.offset.rotated
     if (spec) {
-      this.makeModelFromSpec(spec, Ray.fromPose(this._pose))
+      this.makeModelFromSpec(spec, this._pose)
     }
   }
 
@@ -103,7 +104,7 @@ class Structure extends Model {
     const options = spec.layer ? { layer: spec.layer } : { layer: LAYER.STRUCTURES }
     for (const lineSpec of lines) {
       const vertices = lineSpec.vertices
-      const adjustedWaypoints = placement.applyRay(vertices)
+      const adjustedWaypoints = Pose.relocate(placement, vertices)
       const line = new Geometry.Line(adjustedWaypoints, lineSpec.radius)
       const result = new FeatureInstance(line, adjustedWaypoints[0], 0x663300, options)
       this.add(result)

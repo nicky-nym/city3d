@@ -71,19 +71,22 @@ export default /* eslint-disable */
     pose: { x: 690, y: -5, rotated: 0 }
   }, {
     copy: { $ref: 'Highroad Longhouse' },
-    pose: { x: 690, y: 95, rotated: 180 }
+    pose: { x: 720, y: 730 - 45, rotated: 180 }
+  }, {
+    copy: { $ref: 'Longhouse Ramps' },
+    pose: { x: 730 - 5, y: 730 - 5, rotated: 180 }
   }, {
     copy: { $ref: 'Lowroad Bridge' },
-    pose: { x: -5, y: 60, rotated: 0 }
+    pose: { x: 55, y: 90, rotated: 180 }
   }, {
     copy: { $ref: 'Lowroad Longhouse' },
-    pose: { x: 95, y: 60, rotated: 0 }
+    pose: { x: 730 - 45, y: 90, rotated: 180 }
   }, {
     copy: { $ref: 'Lowroad Bridge' },
     pose: { x: -5, y: 690, rotated: 0 }
   }, {
     copy: { $ref: 'Lowroad Longhouse' },
-    pose: { x: 95, y: 690, rotated: 180 }
+    pose: { x: 95, y: 690, rotated: 0 }
   }, {
     copy: { $ref: 'Longhouse Junction' },
     pose: { x: 55, y: 55, rotated: 0 }

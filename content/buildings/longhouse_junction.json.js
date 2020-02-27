@@ -62,10 +62,10 @@ export default /* eslint-disable */
     }
   },
   routes: [
-    { waypoints: [ { y: 11, x: 0, z: 7.5 }, { y: 11, x: 40, z: 7.5 } ]},
-    { waypoints: [ { y: 17, x: 0, z: 7.5 }, { y: 17, x: 40, z: 7.5 } ]},
-    { waypoints: [ { y: 23, x: 0, z: 7.5 }, { y: 23, x: 40, z: 7.5 } ]},
-    { waypoints: [ { y: 29, x: 0, z: 7.5 }, { y: 29, x: 40, z: 7.5 } ]},
+    { waypoints: [ { y: 11, x: 40, z: 7.5 }, { y: 11, x: 0, z: 7.5 } ]},
+    { waypoints: [ { y: 17, x: 40, z: 7.5 }, { y: 17, x: 0, z: 7.5 } ]},
+    { waypoints: [ { y: 23, x: 40, z: 7.5 }, { y: 23, x: 0, z: 7.5 } ]},
+    { waypoints: [ { y: 29, x: 40, z: 7.5 }, { y: 29, x: 0, z: 7.5 } ]},
 
     { waypoints: [ { x: 11, y: 0, z: 22.5 }, { x: 11, y: 40, z: 22.5 } ]},
     { waypoints: [ { x: 17, y: 0, z: 22.5 }, { x: 17, y: 40, z: 22.5 } ]},
