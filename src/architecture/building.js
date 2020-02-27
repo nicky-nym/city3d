@@ -122,7 +122,7 @@ class Building extends Structure {
       for (const i in countTo(numStoreys)) {
         point.z = z
         const floorName = `Floor ${i}`
-        const placement = this.goto(point)
+        const placement = new Ray(0, xyzAdd(point, this.pose()))
         const storey = new Storey({
           name: floorName,
           placement,
@@ -133,7 +133,7 @@ class Building extends Structure {
         z = z + storeyHeight
       }
       point.z = z
-      const placement = this.goto(point, facing)
+      const placement = new Ray(facing, xyzAdd(point, this.pose()))
       if (roof.custom) {
         this.add(new Roof({ placement, deprecatedSpec: roof }))
       } else {
@@ -153,7 +153,7 @@ class Building extends Structure {
       if (!childSpec.roof) {
         childSpec.roof = roof
       }
-      const placement = this.goto(parentOffset)
+      const placement = new Ray(0, xyzAdd(parentOffset, this.pose()))
       const child = new Building({ placement, deprecatedSpec: childSpec })
       this.add(child)
     }
@@ -168,7 +168,7 @@ class Building extends Structure {
     const facing = this.placement().az
     if (shape) {
       const corners = cornersFromShape(shape)
-      const placement = this.goto(point, facing)
+      const placement = new Ray(facing, xyzAdd(point, this.pose()))
       const depth = storeyHeight * numStoreys
       const box = this.makePlaceholder(placement, Use.WALL, corners, depth, placement)
       group.add(box)

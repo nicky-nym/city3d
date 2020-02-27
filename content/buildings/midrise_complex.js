@@ -313,7 +313,7 @@ class MidriseComplex extends Structure {
     let placement
 
     // Landing
-    placement = this.goto({ x: x, y: y, z: z }, Facing.NORTH)
+    placement = this.deprecatedGoto({ x: x, y: y, z: z }, Facing.NORTH)
     this.add(new Byway({ placement, outline: OCTAGONAL_LANDING, deprecatedSpec: { use: Use.WALKWAY } }))
     this.mediumGroup.add(new Byway({ placement, outline: OCTAGONAL_LANDING, deprecatedSpec: { use: Use.WALKWAY } }))
     if (z % STOREY_HEIGHT === 0) {
@@ -322,7 +322,7 @@ class MidriseComplex extends Structure {
 
     // Ramps
     for (const bearing of rampBearings) {
-      placement = this.goto({ x: x, y: y, z: z }, bearing)
+      placement = this.deprecatedGoto({ x: x, y: y, z: z }, bearing)
       this.add(new Byway({ placement, outline: RAMP_CORNERS, deprecatedSpec: { use: Use.WALKWAY, incline: RAMP_RISE_HEIGHT } }))
       this.mediumGroup.add(new Byway({ placement, outline: RAMP_CORNERS, deprecatedSpec: { use: Use.WALKWAY, incline: RAMP_RISE_HEIGHT } }))
     }
@@ -331,28 +331,28 @@ class MidriseComplex extends Structure {
     if (z % STOREY_HEIGHT === 0) {
       for (const bearing of rampBearings) {
         // parcel
-        placement = this.goto({ x: x, y: y, z: 0 }, bearing)
+        placement = this.deprecatedGoto({ x: x, y: y, z: 0 }, bearing)
         this.add(new Storey({ placement, outline: BASEMENT, deprecatedSpec: { use: Use.PARCEL } }))
 
         // lower floors
         for (const altitude of count(0, z, STOREY_HEIGHT)) {
-          placement = this.goto({ x: x, y: y, z: altitude }, bearing)
+          placement = this.deprecatedGoto({ x: x, y: y, z: altitude }, bearing)
           this.add(new Storey({ placement, outline: BASEMENT, deprecatedSpec: { use: Use.ROOM } }))
         }
 
         // upper floors
         for (const altitude of count(z, ROOFLINE, STOREY_HEIGHT)) {
-          placement = this.goto({ x: x, y: y, z: altitude }, bearing)
+          placement = this.deprecatedGoto({ x: x, y: y, z: altitude }, bearing)
           this.add(new Storey({ placement, outline: APARTMENT, deprecatedSpec: { use: Use.ROOM, wall: STOREY_HEIGHT, openings: APARTMENT_WINDOWS } }))
         }
-        placement = this.goto({ x: x, y: y, z: z }, bearing)
+        placement = this.deprecatedGoto({ x: x, y: y, z: z }, bearing)
         this.mediumGroup.add(this.makePlaceholder(placement, Use.WALL, APARTMENT, ROOFLINE - z))
         this.lowGroup.add(this.makePlaceholder(placement, Use.WALL, APARTMENT, ROOFLINE - z))
 
         // roof
         const midpoint = (APARTMENT_WIDTH + D2) / 2
         const peak = xyz(midpoint, midpoint, randomInt(0, 4) * 7)
-        placement = this.goto({ x: x, y: y, z: ROOFLINE }, bearing)
+        placement = this.deprecatedGoto({ x: x, y: y, z: ROOFLINE }, bearing)
         this._addRoofAroundFloor(placement, ATTIC, peak)
       }
     }

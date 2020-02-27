@@ -183,7 +183,7 @@ class LatticeBlock extends Structure {
     // console.log(`LatticeBlock constructor: `, parentOffset)
     this._parentOffset = parentOffset
 
-    placement = this.goto({ z: -0.1 }, Facing.NORTH)
+    placement = this.deprecatedGoto({ z: -0.1 }, Facing.NORTH)
     this.add(new Storey({ placement, use: Use.PARCEL, outline: PARCEL }))
 
     this.addBoulevard({ x: 0, y: 0, z: NORTH_SOUTH_ALTITUDE, facing: Facing.NORTH })
@@ -191,7 +191,7 @@ class LatticeBlock extends Structure {
     this.addLonghouse({ x: 0, y: 0, z: 0, height: 11.25, facing: Facing.NORTH })
     this.addLonghouse({ x: 0, y: 0, z: 11.25, height: 11.25, facing: Facing.NORTH })
 
-    placement = this.goto({ z: NORTH_SOUTH_ALTITUDE }, Facing.NORTH)
+    placement = this.deprecatedGoto({ z: NORTH_SOUTH_ALTITUDE }, Facing.NORTH)
     this.addRamps(placement)
 
     this.addBoulevard({ x: BLOCK_LENGTH, y: BLOCK_LENGTH, z: NORTH_SOUTH_ALTITUDE, facing: Facing.SOUTH })
@@ -199,7 +199,7 @@ class LatticeBlock extends Structure {
     this.addLonghouse({ x: BLOCK_LENGTH, y: BLOCK_LENGTH, z: 0, height: 11.25, facing: Facing.SOUTH })
     this.addLonghouse({ x: BLOCK_LENGTH, y: BLOCK_LENGTH, z: 11.25, height: 11.25, facing: Facing.SOUTH })
 
-    placement = this.goto({ x: BLOCK_LENGTH, y: BLOCK_LENGTH, z: NORTH_SOUTH_ALTITUDE }, Facing.SOUTH)
+    placement = this.deprecatedGoto({ x: BLOCK_LENGTH, y: BLOCK_LENGTH, z: NORTH_SOUTH_ALTITUDE }, Facing.SOUTH)
     this.addRamps(placement)
 
     this.addBoulevard({ x: 0, y: BLOCK_LENGTH, z: EAST_WEST_ALTITUDE, facing: Facing.EAST })
@@ -207,7 +207,7 @@ class LatticeBlock extends Structure {
     this.addLonghouse({ x: 0, y: BLOCK_LENGTH, z: 0, height: 7.5, facing: Facing.EAST })
     this.addLonghouse({ x: 0, y: BLOCK_LENGTH, z: NORTH_SOUTH_ALTITUDE, height: 15, facing: Facing.EAST })
 
-    placement = this.goto({ x: 0, y: 0, z: EAST_WEST_ALTITUDE }, Facing.EAST)
+    placement = this.deprecatedGoto({ x: 0, y: 0, z: EAST_WEST_ALTITUDE }, Facing.EAST)
 
     this.addBoulevard({ x: BLOCK_LENGTH, y: 0, z: EAST_WEST_ALTITUDE, facing: Facing.WEST })
     this._addHighline({ x: BLOCK_LENGTH, y: 0, z: HIGHLINE_ALTITUDE, facing: Facing.WEST })
@@ -243,7 +243,7 @@ class LatticeBlock extends Structure {
       xy(30, 0)
     ]
 
-    const placement = this.goto({ x: x, y: y, z: z }, facing)
+    const placement = this.deprecatedGoto({ x: x, y: y, z: z }, facing)
     return this.makePlaceholder(placement, Use.WALL, SIDE, HIGHLINE_ALTITUDE, { name })
   }
 
@@ -260,13 +260,13 @@ class LatticeBlock extends Structure {
       xy(LANE_WIDTH, BLOCK_LENGTH),
       xy(0, BLOCK_LENGTH)]
     let placement
-    placement = this.goto({ x: x, y: y, z: z }, facing)
+    placement = this.deprecatedGoto({ x: x, y: y, z: z }, facing)
     this.addByway(placement, Use.BARE, LANE) // median strip
     let delta = 0
     for (const i of countTo(NUM_LANES)) { // eslint-disable-line no-unused-vars
       delta += LANE_WIDTH
       const dxy = xyRotate(xy(delta, 0), facing)
-      placement = this.goto({ x: x + dxy.x, y: y + dxy.y, z: z }, facing)
+      placement = this.deprecatedGoto({ x: x + dxy.x, y: y + dxy.y, z: z }, facing)
       this.addByway(placement, Use.BIKEPATH, LANE)
       this.addRoute(placement, [
         xyz(LANE_WIDTH / 2, 0, 0),
@@ -275,7 +275,7 @@ class LatticeBlock extends Structure {
     }
     delta += LANE_WIDTH
     const dxy = xyRotate(xy(delta, 0), facing)
-    placement = this.goto({ x: x + dxy.x, y: y + dxy.y, z: z }, facing)
+    placement = this.deprecatedGoto({ x: x + dxy.x, y: y + dxy.y, z: z }, facing)
     this.addByway(placement, Use.BARE, LANE) // shoulder
     return this
   }
@@ -348,7 +348,7 @@ class LatticeBlock extends Structure {
     ]
     const HIGHLINE_SOIL_THICKNESS = 4
     const HIGHLINE_WALL_HEIGHT = 3 + HIGHLINE_SOIL_THICKNESS
-    const placement = this.goto({ x: x, y: y, z: z }, facing)
+    const placement = this.deprecatedGoto({ x: x, y: y, z: z }, facing)
 
     this.add(new Storey({ placement, outline: RETAINING_WALL, deprecatedSpec: { use: Use.BARE, wall: HIGHLINE_WALL_HEIGHT, cap: false } }))
     this.add(new Storey({ placement, outline: HIGHLINE_SOIL, deprecatedSpec: { use: Use.PARCEL, depth: HIGHLINE_SOIL_THICKNESS } }))
@@ -367,7 +367,7 @@ class LatticeBlock extends Structure {
     const WINDOW_RECTS = count(5, 585, 5).map(x => xywh2rect(x, 3, 4, height - 5))
     const WINDOWS = [[2, WINDOW_RECTS]]
 
-    const placement = this.goto({ x: x, y: y, z: z }, facing)
+    const placement = this.deprecatedGoto({ x: x, y: y, z: z }, facing)
     this.add(new Storey({ placement, outline: LONGHOUSE, deprecatedSpec: { use: Use.ROOM, wall: height, openings: WINDOWS } }))
     return this
   }
@@ -386,7 +386,7 @@ class Lattice extends Structure {
     for (const row of countTo(num_rows)) {
       for (const col of countTo(num_cols)) {
         const at = xy(row * BLOCK_LENGTH, col * BLOCK_LENGTH)
-        const placement = this.goto(at)
+        const placement = this.deprecatedGoto(at)
         this.add(new LatticeBlock(this.offset, { name: `Block ${row}-${col}`, placement }))
       }
     }

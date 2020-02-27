@@ -80,8 +80,12 @@ class Structure extends Model {
     return Ray.fromPose(this._pose)
   }
 
-  goto ({ x = 0, y = 0, z = 0 } = {}, facing) {
-    return new Ray(facing, xyzAdd(xyz(x, y, z), this._pose))
+  deprecatedGoto ({ x = 0, y = 0, z = 0 } = {}, facing) {
+    return new Ray(facing, xyzAdd(xyz(x, y, z), this.pose()))
+  }
+
+  pose () {
+    return this._pose
   }
 
   makePlaceholder (placement, use, corners, depth, { z = 0, name } = {}) {
