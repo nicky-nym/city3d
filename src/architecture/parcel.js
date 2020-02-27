@@ -13,7 +13,6 @@ import { METRIC } from './metric.js'
 import { Outline } from '../core/outline.js'
 import { Pavement } from './pavement.js'
 import { Pose } from '../core/pose.js'
-import { Ray } from '../core/ray.js'
 import { Water } from './water.js'
 
 const MARTIAN_ORANGE = 0xdf4911
@@ -74,16 +73,14 @@ class Parcel extends Model {
 
     if (pavement) {
       for (const spec of pavement) {
-        const placement = Ray.fromPose(pose)
-        const surface = new Pavement({ spec, placement })
+        const surface = new Pavement({ spec, pose })
         this.add(surface)
       }
     }
 
     if (water) {
       for (const spec of water) {
-        const placement = Ray.fromPose(pose)
-        const surface = new Water({ spec, placement })
+        const surface = new Water({ spec, pose })
         this.add(surface)
       }
     }

@@ -16,15 +16,15 @@ class Water extends Pavement {
   /**
    * Creates an instance for a body of water.
    * @param {string} [name]
-   * @param {Ray} placement - location and compass direction
+   * @param {pose} [pose] - the location and orientation
    * @param {object} [spec] - a specification object
    */
   constructor ({
     name = 'Water',
-    placement,
+    pose,
     spec
   } = {}) {
-    super({ name, placement, spec })
+    super({ name, pose, spec })
   }
 
   /**
@@ -32,11 +32,11 @@ class Water extends Pavement {
    * @param {object} spec - an specification object
    * @param {Ray} placement - location and compass direction
    */
-  makeModelFromSpec (spec, placement) {
+  makeModelFromSpec (spec, pose) {
     const BLUE = 0x0000ff
     const layer = LAYER.WATER
     const metric = METRIC.WATER_AREA
-    this._makeGeometry(spec, placement, layer, metric, BLUE)
+    this._makeGeometry(spec, pose, layer, metric, BLUE)
   }
 }
 

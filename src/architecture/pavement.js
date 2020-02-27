@@ -11,6 +11,7 @@ import { LAYER } from './layer.js'
 import { METRIC } from './metric.js'
 import { Model } from './model.js'
 import { Outline } from '../core/outline.js'
+import { Pose } from '../core/pose.js'
 
 const BLACKTOP = 0x1a1a1a // very dark grey
 const DARK_GRAY = 0x404040
@@ -31,33 +32,33 @@ class Pavement extends Model {
   /**
    * Creates an instance for a section of pavement.
    * @param {string} [name]
-   * @param {Ray} placement - location and compass direction
+   * @param {pose} [pose] - the location and orientation
    * @param {object} [spec] - a specification object
    */
   constructor ({
     name = 'Pavement',
-    placement,
+    pose,
     spec
   } = {}) {
     super({ name })
     if (spec) {
-      this.makeModelFromSpec(spec, placement)
+      this.makeModelFromSpec(spec, pose)
     }
   }
 
   /**
    * Generate Geometry objects corresponding to a specification.
    * @param {object} spec - an specification object
-   * @param {Ray} placement - location and compass direction
+   * @param {pose} [pose] - the location and orientation
    */
-  makeModelFromSpec (spec, placement) {
+  makeModelFromSpec (spec, pose) {
     const color = COLORS_BY_SURFACE[spec.surface.material]
     const layer = LAYER.PAVEMENT
     const metric = METRIC.TRANSPORTATION_AREA
-    this._makeGeometry(spec, placement, layer, metric, color)
+    this._makeGeometry(spec, pose, layer, metric, color)
   }
 
-  _makeGeometry (spec, placement, layer, metric, color) {
+  _makeGeometry (spec, pose, layer, metric, color) {
     const { name, outline } = spec
     // EXAMPLE:
     // name: 'Gravel driveway',
@@ -67,11 +68,11 @@ class Pavement extends Model {
     this.name = name || this.name
 
     const corners = Outline.cornersFromSpec(outline)
-    const adjustedCorners = placement.applyRay(corners)
+    const adjustedCorners = Pose.relocate(pose, corners)
     const xyPolygon = new Geometry.XYPolygon(adjustedCorners)
     const depth = -0.5
     const incline = 0
-    const z = placement.xyz.z
+    const z = pose.z
     const abstractThickPolygon = new Geometry.ThickPolygon(xyPolygon, { incline: incline, depth: depth })
     const concreteThickPolygon = new FeatureInstance(abstractThickPolygon, { ...xyPolygon[0], z }, color, { layer })
     this.add(concreteThickPolygon)
