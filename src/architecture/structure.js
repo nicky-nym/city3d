@@ -57,22 +57,16 @@ class Structure extends Model {
       throw new Error('Structure constructor was passed both "pose" and "placement"')
     }
     if (!pose && !placement) {
-      placement = placement || new Ray()
+      pose = Pose.origin()
     }
-    if (pose) {
-      placement = Ray.fromPose(pose)
-    } else if (placement) {
-      pose = { ...placement.xyz }
-      pose.rotated = placement.az
-      pose.mirrored = placement.mirror
+    if (placement) {
+      pose = placement.asPose()
     }
     this.offset = Ray.fromPose(pose).xyz
-    placement.xyz = xyz(0, 0, 0)
-    pose = Pose.origin()
-    this._pose = Object.freeze(pose)
+    this._pose = Object.freeze(Pose.origin())
 
     if (spec) {
-      this.makeModelFromSpec(spec, Ray.fromPose(pose))
+      this.makeModelFromSpec(spec, Ray.fromPose(this._pose))
     }
   }
 

@@ -5,7 +5,7 @@
  * For more information, please refer to <http://unlicense.org>
  */
 
-import { xyzAdd, xyRotate } from '../core/util.js'
+import { xyz, xyzAdd, xyRotate } from '../core/util.js'
 import { Facing } from './facing.js'
 
 /**
@@ -27,6 +27,13 @@ class Ray {
       subPose = subPose.subPose
     }
     return ray
+  }
+
+  asPose () {
+    const pose = { ...xyzAdd(xyz(0, 0, 0), this.xyz) }
+    pose.rotated = this.az
+    pose.mirrored = this.mirror
+    return pose
   }
 
   copy () {
