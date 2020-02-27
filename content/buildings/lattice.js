@@ -180,6 +180,7 @@ const HIGHLINE_ALTITUDE = 37.5
 class LatticeBlock extends Structure {
   constructor (parentOffset, { name, placement } = {}) {
     super({ name, placement })
+    // console.log(`LatticeBlock constructor: `, parentOffset)
     this._parentOffset = parentOffset
 
     placement = this.goto({ z: -0.1 }, Facing.NORTH)
@@ -280,7 +281,10 @@ class LatticeBlock extends Structure {
   }
 
   addRoute (placement, xyzList) {
+    // console.log(`Lattice addRoute() this._parentOffset: `, this._parentOffset)
+    // console.log(`Lattice addRoute() this.offset: `, this.offset)
     const offset = xyzAdd(this.offset, this._parentOffset)
+    // console.log(`Lattice addRoute() offset: `, offset)
     const at = placement.add(offset, placement.az)
     const waypoints = at.applyRay(xyzList)
     this.add(new Route(waypoints, Use.BIKEPATH))

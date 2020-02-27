@@ -10,8 +10,9 @@ import { Geometry } from '../core/geometry.js'
 import { Layer } from '../core/layer.js'
 import { LAYER } from './layer.js'
 import { Model } from './model.js'
+import { Pose } from '../core/pose.js'
 import { Ray } from '../core/ray.js'
-import { xyz } from '../core/util.js'
+import { xyz, xyzAdd } from '../core/util.js'
 
 const WHITE = 0xffffff
 const RED = 0xcc0000 // eslint-disable-line no-unused-vars
@@ -52,24 +53,35 @@ class Structure extends Model {
     }
     super({ spec, ...remainingOptions, layer })
 
+    if (pose && placement) {
+      throw new Error('Structure constructor was passed both "pose" and "placement"')
+    }
+    if (!pose && !placement) {
+      placement = placement || new Ray()
+    }
     if (pose) {
       placement = Ray.fromPose(pose)
+    } else if (placement) {
+      pose = { ...placement.xyz }
+      pose.rotated = placement.az
+      pose.mirrored = placement.mirror
     }
-    placement = placement || new Ray()
-    this.offset = { ...xyz(0, 0, 0), ...placement.xyz }
+    this.offset = Ray.fromPose(pose).xyz
     placement.xyz = xyz(0, 0, 0)
-    this._placement = Object.freeze(placement || new Ray())
+    pose = Pose.origin()
+    this._pose = Object.freeze(pose)
+
     if (spec) {
-      this.makeModelFromSpec(spec, placement)
+      this.makeModelFromSpec(spec, Ray.fromPose(pose))
     }
   }
 
   placement () {
-    return this._placement
+    return Ray.fromPose(this._pose)
   }
 
   goto ({ x = 0, y = 0, z = 0 } = {}, facing) {
-    return this._placement.add(xyz(x, y, z), facing)
+    return new Ray(facing, xyzAdd(xyz(x, y, z), this._pose))
   }
 
   makePlaceholder (placement, use, corners, depth, { z = 0, name } = {}) {
