@@ -14,7 +14,6 @@ import { Model } from './model.js'
 import { Outline } from '../core/outline.js'
 import { Pavement } from './pavement.js'
 import { Pose } from '../core/pose.js'
-// import { Ray } from '../core/ray.js'
 
 const MARTIAN_ORANGE = 0xdf4911
 
@@ -110,7 +109,6 @@ class District extends Model {
             z: i * offset.z
           }
           const mergedPose = Pose.combine(pose, iOffset)
-          // const placement = Ray.fromPose(mergedPose)
           const surface = new Pavement({ spec, pose: mergedPose })
           this.add(surface)
         }

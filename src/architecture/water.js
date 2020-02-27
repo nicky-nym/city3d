@@ -30,7 +30,7 @@ class Water extends Pavement {
   /**
    * Generate Geometry objects corresponding to a specification.
    * @param {object} spec - an specification object
-   * @param {Ray} placement - location and compass direction
+   * @param {pose} [pose] - the location and orientation
    */
   makeModelFromSpec (spec, pose) {
     const BLUE = 0x0000ff

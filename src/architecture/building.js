@@ -15,6 +15,7 @@ import { Route } from '../routes/route.js'
 import { Storey } from './storey.js'
 import { Structure } from './structure.js'
 import { Use } from '../architecture/use.js'
+import { Pose } from '../core/pose.js'
 
 function _intFromSpec (specValue) {
   if (isNaN(specValue)) {
@@ -58,14 +59,10 @@ class Building extends Structure {
    */
   constructor (options = {}) {
     const { pose, deprecatedSpec, ...remainingOptions } = options
-    let placement
-    if (pose) {
-      placement = Ray.fromPose(pose)
-    }
-    super({ placement, deprecatedSpec, ...remainingOptions, copyLayer: LAYER.COPIES })
+    super({ pose, deprecatedSpec, ...remainingOptions, copyLayer: LAYER.COPIES })
 
     if (deprecatedSpec) {
-      this._makeModelFromDeprecatedSpec(deprecatedSpec, placement)
+      this._makeModelFromDeprecatedSpec(deprecatedSpec, pose)
     }
   }
 
@@ -102,7 +99,8 @@ class Building extends Structure {
     }
 
     for (const routeSpec of routes) {
-      const waypoints = anchor.applyRay(routeSpec.waypoints)
+      const at = placement.add(this.offset, placement.az)
+      const waypoints = at.applyRay(routeSpec.waypoints)
       this.add(new Route(waypoints, Use.BIKEPATH))
     }
   }
@@ -207,7 +205,8 @@ class Building extends Structure {
   }
 
   // TODO: delete this code when it is no longer used by any content model classes
-  _makeModelFromDeprecatedSpec (buildingSpec, placement) {
+  _makeModelFromDeprecatedSpec (buildingSpec, pose) {
+    const placement = Ray.fromPose(pose || Pose.origin())
     const at = (placement && placement.xyz) || { x: 0, y: 0, z: 0 }
     const resolvedSpec = this._instantiateSpec(buildingSpec)
     this._makeHighResBuildingFromSpec(resolvedSpec, at)
