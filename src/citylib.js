@@ -39,7 +39,6 @@ import { Route } from './routes/route.js'
 import { Tabulator } from './metrics/tabulator.js'
 
 // buildings
-import { Lattice } from '../content/buildings/lattice.js'
 import { MidriseComplex } from '../content/buildings/midrise_complex.js'
 
 // structures
@@ -56,11 +55,7 @@ import { Kalpana } from '../content/movers/kalpana.js'
 import { Kayak } from '../content/movers/kayak.js'
 import { Vehicle } from '../content/movers/vehicle.js'
 
-// districts
-import { LatticeDistrict } from '../content/districts/lattice_district.js'
-
 export const CITY = {
-  Lattice,
   Building,
   Byway,
   City,
@@ -72,7 +67,6 @@ export const CITY = {
   Kalpana,
   Kayak,
   InstancedFeature,
-  LatticeDistrict,
   MemoryOutput,
   MidriseComplex,
   MetricsOutput,

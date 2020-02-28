@@ -116,7 +116,7 @@ function addKalpanaOrbital (district) {
 }
 
 function addLatticeburg (specReader) {
-  const latticeburg = new CITY.Model({ name: 'New Latticeburg' })
+  const latticeburg = new CITY.Model({ name: 'Latticeburg' })
   const POPULATION = 1000
   latticeburg.setValueForMetric(METRIC.POPULATION, POPULATION)
   latticeburg.add(new CITY.SoccerField({ at: { x: 1620 - 740, y: 515 - 140, z: 0 } }))

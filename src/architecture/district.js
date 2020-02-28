@@ -49,12 +49,6 @@ class District extends Model {
     }
   }
 
-  // TODO: delete this once it is no longer used by lattice.js
-  goto ({ x = 0, y = 0, z = 0 } = {}, facing) {
-    // return this._placement.add(xyz(x, y, z), facing)
-    return Pose.combine(this._pose, { x, y, z })
-  }
-
   /**
    * Generate Geometry objects corresponding to a specification.
    * @param {object} spec - an specification object that is valid against district.schema.json.js
