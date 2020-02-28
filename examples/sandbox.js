@@ -8,24 +8,12 @@
 import { CITY } from '../src/citylib.js'
 import { Facing } from '../src/core/facing.js'
 import { METRIC } from '../src/architecture/metric.js'
+import { MidriseComplex } from '../content/buildings/midrise_complex.js'
 import { Ray } from '../src/core/ray.js'
 import { SpecReader } from '../src/architecture/spec_reader.js'
-import { xy, xyz, rectangleOfSize } from '../src/core/util.js'
+import { xyz } from '../src/core/util.js'
 
 window.DEBUG = true
-
-function addLatticeburg (city) {
-  const latticeburg = new CITY.LatticeDistrict({
-    name: 'Latticeburg',
-    pose: xyz(838, 338, 0),
-    deprecatedSpec: {
-      outline: rectangleOfSize(xy(2000, 2000))
-    }
-  })
-  latticeburg.makeFeatures()
-  latticeburg.add(new CITY.SoccerField({ at: { x: 1620, y: 515, z: 0 } }))
-  city.add(latticeburg)
-}
 
 function addCreek (district) {
   const creek = new CITY.Creek('River Tethys')
@@ -75,10 +63,6 @@ function addTrees (district) {
     new Ray(Facing.NORTH, { x: -60, y: 50, z: 0 }),
     new Ray(Facing.SOUTH, { x: -60, y: 11, z: 0 }, { mirror: true })
   ], { materialCost: 'medium', useNormals: true })) // these are the defaults
-}
-
-function addEiffelTower (district) {
-  district.add(new CITY.EiffelTower({ placement: new Ray(Facing.NORTH, { x: 1790, y: 1290, z: 0 }) }))
 }
 
 function addPyramid (district) {
@@ -131,6 +115,18 @@ function addKalpanaOrbital (district) {
   district.add(new CITY.Kalpana())
 }
 
+function addLatticeburg (specReader) {
+  const latticeburg = new CITY.Model({ name: 'New Latticeburg' })
+  const POPULATION = 1000
+  latticeburg.setValueForMetric(METRIC.POPULATION, POPULATION)
+  latticeburg.add(new CITY.SoccerField({ at: { x: 1620 - 740, y: 515 - 140, z: 0 } }))
+  addObjectFromSpec(latticeburg, specReader, 'Lattice Parcel', { x: 0, y: 100, z: 0 })
+  addObjectFromSpec(latticeburg, specReader, 'Lattice Parcel', { x: 0, y: 830, z: 0 })
+  latticeburg.add(new MidriseComplex({ placement: new Ray(Facing.NORTH, { x: 198, y: 298, z: 0 }), numRowPairs: 4, numColPairs: 4 }))
+  latticeburg.add(new CITY.EiffelTower({ placement: new Ray(Facing.NORTH, { x: 390, y: 1220, z: 0 }) }))
+  return latticeburg
+}
+
 function addMovers (district) {
   const parkedVehicles = new CITY.FeatureGroup('parked vehicles')
   for (let i = -50; i > -200; i -= 10) {
@@ -158,14 +154,11 @@ function main () {
   addObjectFromSpec(city, specReader, 'Suburbia', { x: -550, y: 100, z: 0 })
   addObjectFromSpec(city, specReader, 'Campus', { x: 50, y: -400, z: 0 })
   addObjectFromSpec(city, specReader, 'Manhattan', { x: -1200, y: 800, z: 0 })
-  addLatticeburg(city)
+  const latticeburg = addLatticeburg(specReader)
 
   const extras = new CITY.Model({ name: 'extras' })
   addObjectFromSpec(extras, specReader, 'Hotel on Boardwalk', { x: -300, y: -60, z: 0 })
   addObjectFromSpec(extras, specReader, 'House on Park Place', { x: -300, y: -100, z: 0 })
-  addObjectFromSpec(extras, specReader, 'Lattice Parcel', { x: 0, y: 100, z: 0 })
-  addObjectFromSpec(extras, specReader, 'Lattice Parcel', { x: 0, y: 830, z: 0 })
-  addEiffelTower(extras)
   addPyramid(extras)
   addKalpanaOrbital(extras)
   addMovers(extras)
@@ -175,6 +168,7 @@ function main () {
   // display the city on the web page
   const districts = []
   districts.push(tethys)
+  districts.push(latticeburg)
   districts.push(...city.getDistricts())
   districts.push(extras)
 
