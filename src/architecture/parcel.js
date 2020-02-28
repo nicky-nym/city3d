@@ -87,7 +87,7 @@ class Parcel extends Model {
       }
     }
 
-    // TODO: refactor to combine this with code in building.js
+    // TODO: refactor to combine code in building.js, parcel.js, district.js
     if (routes) {
       for (const routeSpec of routes) {
         // const at = placement.add(this.offset, placement.az)

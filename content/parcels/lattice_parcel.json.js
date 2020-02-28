@@ -184,5 +184,5 @@ export default /* eslint-disable */
     { mode: 'canal', waypoints: [ { x: 40, y: 0 }, { x: 40, y: 730 } ]},
     { mode: 'canal', waypoints: [ { x: 0, y: 20 }, { x: 730, y: 20 } ]},
     { mode: 'canal', waypoints: [ { x: 730, y: 40 }, { x: 0, y: 40 } ]}
-  ],
+  ]
 }

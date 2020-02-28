@@ -14,6 +14,8 @@ import { Model } from './model.js'
 import { Outline } from '../core/outline.js'
 import { Pavement } from './pavement.js'
 import { Pose } from '../core/pose.js'
+import { Route } from '../routes/route.js'
+import { Use } from '../architecture/use.js'
 
 const MARTIAN_ORANGE = 0xdf4911
 
@@ -59,7 +61,7 @@ class District extends Model {
    * @param {pose} [pose] - the location and orientation of this part
    */
   makeModelFromSpec (spec, pose, specReader) {
-    const { name, unit, /* anchorPoint, */ border, parcels, contents, pavement } = spec
+    const { name, unit, /* anchorPoint, */ border, parcels, contents, pavement, routes } = spec
 
     this.name = name || this.name
 
@@ -91,6 +93,21 @@ class District extends Model {
           const offset = { x: 0, y: 0, z: 0 }
           this._makeModelOnce(1, offset, pose, specReader, specName, copySpec)
         }
+      }
+    }
+
+    // TODO: refactor to combine code in building.js, parcel.js, district.js
+    if (routes) {
+      for (const routeSpec of routes) {
+        // const at = placement.add(this.offset, placement.az)
+        const waypoints = Pose.relocate(pose, routeSpec.waypoints)
+        let use
+        if (routeSpec.mode && routeSpec.mode === 'canal') {
+          use = Use.CANAL
+        } else {
+          use = Use.BIKEPATH
+        }
+        this.add(new Route(waypoints, use))
       }
     }
 
