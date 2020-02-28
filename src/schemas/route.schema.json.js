@@ -15,7 +15,8 @@ export default /* eslint-disable */
       ]
     },
     {
-      name: 'western bike trail',
+      name: 'historic canal',
+      mode: 'canal',
       waypoints: [
         { $ref: '#/def/A' },
         { $ref: '#/def/B' },
@@ -27,6 +28,9 @@ export default /* eslint-disable */
   "required": [],
   "properties": {
     "name": { "$ref": "definitions.json#/def/name" },
+    "mode": {
+      "enum": ["canal", "walkway", "bikeway", "roadway"]
+    },
     "waypoints": {
       "type": "array",
       "minItems": 2,

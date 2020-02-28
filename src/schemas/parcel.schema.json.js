@@ -48,6 +48,12 @@ export default /* eslint-disable */
     "contents": { "$ref": "definitions.json#/def/contents" },
     "pavement": { "$ref": "definitions.json#/def/pavement" },
     "water": { "$ref": "definitions.json#/def/water" },
+    "routes": {
+      "type": "array",
+      "items": {
+        "$ref": "route.schema.json"
+      }
+    },
     "extras": { "$ref": "definitions.json#/def/extras" }
   }
 }

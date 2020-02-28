@@ -47,6 +47,17 @@ export default /* eslint-disable */
     N: { x: 50, y: 730 },
     O: { x: 10, y: 730 },
     P: { x: 10, y: 50 }
+    // canal
+    /*
+    HHI: { x: 20, y: 0 },
+    HII: { x: 40, y: 0 },
+    OON: { x: 20, y: 730 },
+    ONN: { x: 40, y: 730 },
+    EEF: { x: 0, y: 40 },
+    EFF: { x: 0, y: 20 },
+    LLK: { x: 730, y: 40 },
+    LKK: { x: 730, y: 20 },
+    */
   },
   border: {
     shape: 'polygon',
@@ -161,5 +172,17 @@ export default /* eslint-disable */
         { $ref: '#/def/P' }
       ]
     }
-  }]
+  }],
+  routes: [
+    /* TODO:
+    { waypoints: [ { $ref: '#/def/OON' }, { $ref: '#/def/HHI' } ]},
+    { waypoints: [ { $ref: '#/def/HII' }, { $ref: '#/def/ONN' } ]},
+    { waypoints: [ { $ref: '#/def/LLK' }, { $ref: '#/def/EEF' } ]},
+    { waypoints: [ { $ref: '#/def/EFF' }, { $ref: '#/def/LKK' } ]},
+    */
+    { mode: 'canal', waypoints: [ { x: 20, y: 730 },  { x: 20, y: 0 } ]},
+    { mode: 'canal', waypoints: [ { x: 40, y: 0 }, { x: 40, y: 730 } ]},
+    { mode: 'canal', waypoints: [ { x: 0, y: 20 }, { x: 730, y: 20 } ]},
+    { mode: 'canal', waypoints: [ { x: 730, y: 40 }, { x: 0, y: 40 } ]}
+  ],
 }

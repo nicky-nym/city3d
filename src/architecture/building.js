@@ -98,10 +98,17 @@ class Building extends Structure {
       priors.height = storey.height()
     }
 
+    // TODO: refactor to combine this with code in parcel.js
     for (const routeSpec of routes) {
       const at = placement.add(this.offset, placement.az)
       const waypoints = at.applyRay(routeSpec.waypoints)
-      this.add(new Route(waypoints, Use.BIKEPATH))
+      let use
+      if (routeSpec.mode && routeSpec.mode === 'canal') {
+        use = Use.CANAL
+      } else {
+        use = Use.BIKEPATH
+      }
+      this.add(new Route(waypoints, use))
     }
   }
 

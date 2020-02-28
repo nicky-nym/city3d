@@ -13,6 +13,8 @@ import { METRIC } from './metric.js'
 import { Outline } from '../core/outline.js'
 import { Pavement } from './pavement.js'
 import { Pose } from '../core/pose.js'
+import { Route } from '../routes/route.js'
+import { Use } from '../architecture/use.js'
 import { Water } from './water.js'
 
 const MARTIAN_ORANGE = 0xdf4911
@@ -47,7 +49,7 @@ class Parcel extends Model {
    * @param {pose} [pose] - the location and orientation of this part
    */
   makeModelFromSpec (spec, pose, specReader) {
-    const { name, unit, /* anchorPoint, */ border, contents, pavement, water } = spec
+    const { name, unit, /* anchorPoint, */ border, contents, pavement, water, routes } = spec
 
     this.name = name || this.name
 
@@ -82,6 +84,21 @@ class Parcel extends Model {
       for (const spec of water) {
         const surface = new Water({ spec, pose })
         this.add(surface)
+      }
+    }
+
+    // TODO: refactor to combine this with code in building.js
+    if (routes) {
+      for (const routeSpec of routes) {
+        // const at = placement.add(this.offset, placement.az)
+        const waypoints = Pose.relocate(pose, routeSpec.waypoints)
+        let use
+        if (routeSpec.mode && routeSpec.mode === 'canal') {
+          use = Use.CANAL
+        } else {
+          use = Use.BIKEPATH
+        }
+        this.add(new Route(waypoints, use))
       }
     }
   }
