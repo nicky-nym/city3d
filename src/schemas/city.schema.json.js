@@ -26,9 +26,10 @@ export default /* eslint-disable */
       extras: { budget: {}, authors: {} }
     },
     {
+      context: 'city3d',
+      type: 'city.schema.json',
       name: 'London'
-    },
-    { }
+    }
   ],
   "required": [],
   "additionalProperties": false,

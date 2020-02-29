@@ -7,6 +7,8 @@ export default /* eslint-disable */
   "type": "object",
   "examples": [
     {
+      context: 'city3d',
+      type: 'route.schema.json',
       name: 'driveway to house',
       waypoints: [
         { x: 1, y: 2 },
@@ -15,6 +17,8 @@ export default /* eslint-disable */
       ]
     },
     {
+      context: 'city3d',
+      type: 'route.schema.json',
       name: 'historic canal',
       mode: 'canal',
       waypoints: [

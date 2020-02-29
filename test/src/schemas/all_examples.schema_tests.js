@@ -35,6 +35,9 @@ describe('SCHEMA', function () {
         schema.examples.forEach(example => {
           const msg = `example.name = ${example.name}`
           validator(example).should.equal(true, msg)
+          if (example.type) {
+            example.type.should.equal(schema.$id, msg)
+          }
         })
       })
     })

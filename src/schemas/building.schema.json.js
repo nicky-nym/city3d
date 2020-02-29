@@ -23,6 +23,8 @@ export default /* eslint-disable */
       extras: { permitInfo: {}, budget: {}, authors: {} }
     },
     {
+      context: 'city3d',
+      type: 'building.schema.json',
       name: 'Garage',
       unit: 'feet',
       storeys: [{

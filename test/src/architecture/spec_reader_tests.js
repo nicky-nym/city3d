@@ -5,12 +5,34 @@
  * For more information, please refer to <http://unlicense.org>
  */
 
+import Ajv from '../../../node_modules/ajv/dist/ajv.min.js'
+import { Pose } from '../../../src/core/pose.js'
+import { SCHEMA } from '../../../src/schemas/schema.js'
 import { SpecReader } from '../../../src/architecture/spec_reader.js'
 
-/* global describe, it */
+/* global describe, it, before, after, expect */
 /* eslint-disable no-unused-expressions */
 
+const notYetWorking = [
+  'district.schema.json', // needs unit conversion
+  'floor.schema.json', // still takes placement (rather than pose)
+  'roof.schema.json', // still takes placement (rather than pose)
+  'storey.schema.json', // still takes placement (rather than pose)
+  'wall.schema.json' // still takes placement (rather than pose)
+]
+
 describe('SpecReader', function () {
+  const ajv = new Ajv()
+  const schemas = Object.keys(SCHEMA).filter(item => item !== 'DEFINITIONS').map(item => SCHEMA[item])
+
+  before(function () {
+    Object.keys(SCHEMA).forEach(item => ajv.addSchema(SCHEMA[item], SCHEMA[item].$id))
+  })
+
+  after(function () {
+    Object.keys(SCHEMA).forEach(item => ajv.removeSchema(SCHEMA[item]))
+  })
+
   describe('#_isVanillaObject', function () {
     it('should accept a simple object', function () {
       SpecReader._isVanillaObject({}).should.be.true
@@ -102,6 +124,75 @@ describe('SpecReader', function () {
 
       const newBeginning = result.storeys[0].walls.exterior[0].begin
       newBeginning.should.equal(root.def.A)
+    })
+  })
+
+  describe('#canInstantiateType', function () {
+    it('should return "true" for a type that can be instantiated.', function () {
+      SpecReader.canInstantiateType('building.schema.json').should.be.true
+    })
+
+    it('should return "false" for a known type that can not be instantiated.', function () {
+      SpecReader.canInstantiateType('metadata.schema.json').should.be.false
+    })
+
+    it('should throw expected exception for an unknown type.', function () {
+      const expectedSubstring = 'Unknown type'
+
+      expect(() => SpecReader.canInstantiateType('orange.schema.json')).to.throw(expectedSubstring)
+    })
+
+    schemas.forEach(schema => {
+      describe(schema.$id, function () {
+        it('should not throw for schemas in SCHEMA.', function () {
+          expect(() => SpecReader.canInstantiateType(schema.$id)).not.to.throw()
+        })
+      })
+    })
+  })
+
+  describe('#makeObjectFromSpec', function () {
+    const reader = new SpecReader()
+
+    it('should throw expected exception if the spec type is unknown.', function () {
+      const spec = {
+        context: 'city3d',
+        type: 'aether.schema.json',
+        style: 'luminiferous'
+      }
+      const expectedSubstring = 'Unknown type'
+
+      expect(() => reader.makeObjectFromSpec(spec, new Pose())).to.throw(expectedSubstring)
+    })
+
+    it('should throw expected exception if the spec type has no registered class.', function () {
+      const spec = {
+        context: 'city3d',
+        type: 'surface.schema.json',
+        style: 'clapboard',
+        material: 'fiber-cement'
+      }
+      const expectedSubstring = 'No class registered for type'
+
+      expect(() => reader.makeObjectFromSpec(spec, new Pose())).to.throw(expectedSubstring)
+    })
+
+    schemas.forEach(schema => {
+      describe(schema.$id, function () {
+        if (SpecReader.canInstantiateType(schema.$id)) {
+          it('should succeed for every example.', function () {
+            if (notYetWorking.includes(schema.$id)) {
+              this.skip()
+            }
+
+            schema.examples.forEach(example => {
+              const msg = `example.name = '${example.name}'`
+
+              expect(() => reader.makeObjectFromSpec(example, new Pose()), msg).to.not.throw()
+            })
+          })
+        }
+      })
     })
   })
 })

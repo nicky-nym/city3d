@@ -15,18 +15,17 @@ export default /* eslint-disable */
         size: { x: 50, y: 211 }
       },
       contents: [{
-        copy: { $ref: 'CITY.buildings.garage' },
+        copy: { $ref: 'Garage' },
         pose: { x: 34, y: 152 }
       }, {
-        copy: { $ref: 'CITY.buildings.cottage' },
+        copy: { $ref: 'Cottage' },
         pose: { x: 34, y: 120 }
       }, {
-        copy: { $ref: 'CITY.buildings.house' },
+        copy: { $ref: 'House 353' },
         pose: { x: 30, y: 40 }
       }],
       extras: { budget: {}, authors: {} }
-    },
-    { }
+    }
   ],
   "required": [],
   "additionalProperties": false,

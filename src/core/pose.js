@@ -28,7 +28,7 @@ import { UNIT } from '../core/unit.js'
  */
 
 /**
- * Pose is a class for representing how an instance of a 3D object is place in a position.
+ * Pose is a class for representing how an instance of a 3D object is placed in a position.
  * See: pose.schema.json.js
  */
 class Pose {
