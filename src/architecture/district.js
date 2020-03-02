@@ -111,20 +111,14 @@ class District extends Model {
 
     if (pavement) {
       for (const spec of pavement) {
-        let count = 1
-        let offset = { x: 0, y: 0, z: 0 }
         if (spec.repeat) {
-          count = spec.repeat.count
-          offset = xyzAdd(offset, spec.repeat.offset)
-        }
-        for (const i of countTo(count)) {
-          const iOffset = {
-            x: i * offset.x,
-            y: i * offset.y,
-            z: i * offset.z
-          }
-          const mergedPose = Pose.combine(pose, iOffset)
-          const surface = new Pavement({ spec, pose: mergedPose })
+          const repeatSpecs = District._copySpecFragment(array(spec.repeat))
+          let allPoses = District._makePosesFromRepeatSpec(repeatSpecs)
+          const surface = new Pavement({ spec, pose: Pose.origin() })
+          allPoses = allPoses.map(p => Pose.combine(p, pose))
+          this.add(new InstancedFeature(surface, allPoses, { materialCost: 'high', useNormals: true }))
+        } else {
+          const surface = new Pavement({ spec, pose })
           this.add(surface)
         }
       }
@@ -136,8 +130,22 @@ class District extends Model {
   }
 
   // Generalization of outer product: M[i][j] = f(A[i], B[j])
-  _outer (f, A, B) {
+  static _outer (f, A, B) {
     return A.map(a => B.map(b => f(a, b)))
+  }
+
+  static _makePosesFromRepeatSpec (repeatSpecs) {
+    let allPoses
+    repeatSpecs.forEach(spec => {
+      const { x, y, z, rotated } = { ...Pose.origin(), ...spec.offset }
+      const lineOfPoses = countTo(spec.count).map(i => ({ x: i * x, y: i * y, z: i * z, rotated: i * rotated }))
+      if (allPoses) {
+        allPoses = District._outer(Pose.combine, allPoses, lineOfPoses).flat()
+      } else {
+        allPoses = lineOfPoses
+      }
+    })
+    return allPoses
   }
 
   _applyRepeats (repeatSpecs, pose, specReader, specName, copySpec) {
@@ -146,17 +154,7 @@ class District extends Model {
     if (USE_INSTANCED_FEATURE) {
       if (repeatSpecs.length === 0) return
 
-      let allPoses
-      repeatSpecs.forEach(spec => {
-        const { x, y, z, rotated } = { ...Pose.origin(), ...spec.offset }
-        const lineOfPoses = countTo(spec.count).map(i => ({ x: i * x, y: i * y, z: i * z, rotated: i * rotated }))
-        if (allPoses) {
-          allPoses = this._outer(Pose.combine, allPoses, lineOfPoses).flat()
-        } else {
-          allPoses = lineOfPoses
-        }
-      })
-
+      let allPoses = District._makePosesFromRepeatSpec(repeatSpecs)
       const modelObject = specReader.makeModelFromSpecName(specName, Pose.origin())
       const mergedPose = Pose.combine(pose, copySpec.pose)
       allPoses = allPoses.map(p => Pose.combine(p, mergedPose))

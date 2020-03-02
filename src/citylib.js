@@ -22,6 +22,7 @@ import { Use } from './architecture/use.js'
 
 // core
 import { FeatureGroup, InstancedFeature } from './core/feature.js'
+import { Pose } from './core/pose.js'
 
 // outputs
 import { Output } from './outputs/output.js'
@@ -74,6 +75,7 @@ export const CITY = {
   Opening,
   Output,
   Parcel,
+  Pose,
   PyramidOfKhufu,
   Roof,
   Route,

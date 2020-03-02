@@ -61,6 +61,8 @@ export default /* eslint-disable */
     copy: { $ref: 'Parcel 353' },
     pose: { x: 240, y: 0 },
     repeat: [
+      { count: 5, offset: { x: -500 } },
+      { count: 5, offset: { y: -500 } },
       { count: 2, offset: { y: 300 } },
       { count: 5, offset: { y: 50 } },
       { count: 2, offset: { x: 50, y: 50, rotated: 180 } }
@@ -96,7 +98,11 @@ export default /* eslint-disable */
         { $ref: '#/def/K' },
         { $ref: '#/def/L' }
       ]
-    }
+    },
+    repeat: [
+      { count: 5, offset: { x: -500 } },
+      { count: 5, offset: { y: -500 } }
+    ]
   }, {
     name: 'sidewalk',
     surface: { material: 'concrete' },
@@ -110,7 +116,11 @@ export default /* eslint-disable */
         { $ref: '#/def/C' },
         { $ref: '#/def/B' }
       ]
-    }
+    },
+    repeat: [
+      { count: 5, offset: { x: -500 } },
+      { count: 5, offset: { y: -500 } }
+    ]
   }, {
     name: 'sidewalk',
     surface: { material: 'concrete' },
@@ -124,7 +134,11 @@ export default /* eslint-disable */
         { $ref: '#/def/F' },
         { $ref: '#/def/E' }
       ]
-    }
+    },
+    repeat: [
+      { count: 5, offset: { x: -500 } },
+      { count: 5, offset: { y: -500 } }
+    ]
   }, {
     name: 'sidewalk',
     surface: { material: 'concrete' },
@@ -138,7 +152,11 @@ export default /* eslint-disable */
         { $ref: '#/def/I' },
         { $ref: '#/def/H' }
       ]
-    }
+    },
+    repeat: [
+      { count: 5, offset: { x: -500 } },
+      { count: 5, offset: { y: -500 } }
+    ]
   }, {
     name: 'sidewalk',
     surface: { material: 'concrete' },
@@ -152,6 +170,10 @@ export default /* eslint-disable */
         { $ref: '#/def/L' },
         { $ref: '#/def/K' }
       ]
-    }
+    },
+    repeat: [
+      { count: 5, offset: { x: -500 } },
+      { count: 5, offset: { y: -500 } }
+    ]
   }]
 }

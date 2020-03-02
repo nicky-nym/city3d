@@ -66,31 +66,26 @@ function addTrees (district) {
 }
 
 function addPyramid (district) {
-  district.add(new CITY.PyramidOfKhufu({ placement: new Ray(Facing.NORTH, { x: -600, y: -600, z: 0 }) }))
+  district.add(new CITY.PyramidOfKhufu({ placement: new Ray(Facing.NORTH, { x: -500, y: 2000, z: 0 }) }))
 }
 
 function addInstancedBuildings (district) {
   const specReader = new SpecReader()
 
+  const cottagePoses = [
+    { x: -440, y: 250, z: 0, rotated: Facing.NORTH },
+    { x: -360, y: 250, z: 0, rotated: Facing.NORTH, mirrored: true },
+    { x: -350, y: 220, z: 0, rotated: Facing.EAST },
+    { x: -450, y: 200, z: 0, rotated: Facing.WEST },
+    { x: -410, y: 150, z: 0, rotated: Facing.SOUTHWEST },
+    { x: -390, y: 150, z: 0, rotated: Facing.SOUTHEAST, mirrored: true }
+  ]
   const cottage1 = specReader.makeModelFromSpecName('Cottage', { x: 0, y: 0, z: 0 })
-  district.add(new CITY.InstancedFeature(cottage1, [
-    new Ray(Facing.NORTH, { x: -440, y: 850, z: 0 }),
-    new Ray(Facing.NORTH, { x: -360, y: 850, z: 0 }, { mirror: true }),
-    new Ray(Facing.EAST, { x: -350, y: 820, z: 0 }),
-    new Ray(Facing.WEST, { x: -450, y: 800, z: 0 }),
-    new Ray(Facing.SOUTHWEST, { x: -410, y: 750, z: 0 }),
-    new Ray(Facing.SOUTHEAST, { x: -390, y: 750, z: 0 }, { mirror: true })
-  ], { materialCost: 'high', useNormals: true }))
-
+  const cottagePoses1 = cottagePoses.map(p => CITY.Pose.combine(p, { x: 0, y: 0, z: 0 }))
+  district.add(new CITY.InstancedFeature(cottage1, cottagePoses1, { materialCost: 'high', useNormals: true }))
   const cottage2 = specReader.makeModelFromSpecName('Cottage', { x: 0, y: 0, z: 0 })
-  district.add(new CITY.InstancedFeature(cottage2, [
-    new Ray(Facing.NORTH, { x: -220, y: 850, z: 0 }),
-    new Ray(Facing.NORTH, { x: -140, y: 850, z: 0 }, { mirror: true }),
-    new Ray(Facing.EAST, { x: -130, y: 820, z: 0 }),
-    new Ray(Facing.WEST, { x: -230, y: 800, z: 0 }),
-    new Ray(Facing.SOUTHWEST, { x: -190, y: 750, z: 0 }),
-    new Ray(Facing.SOUTHEAST, { x: -170, y: 750, z: 0 }, { mirror: true })
-  ], { materialCost: 'lowest', useNormals: false }))
+  const cottagePoses2 = cottagePoses.map(p => CITY.Pose.combine(p, { x: 220, y: 0, z: 0 }))
+  district.add(new CITY.InstancedFeature(cottage2, cottagePoses2, { materialCost: 'lowest', useNormals: false }))
 
   const wursterHall = specReader.makeModelFromSpecName('Wurster Hall', { x: 0, y: 0, z: 0 })
   district.add(new CITY.InstancedFeature(wursterHall, [
@@ -141,7 +136,7 @@ function main () {
   const city = new CITY.City({ name: 'Paracosm' })
   city.add(tethys)
   const specReader = new SpecReader()
-  addObjectFromSpec(city, specReader, 'Suburbia', { x: -550, y: 100, z: 0 })
+  addObjectFromSpec(city, specReader, 'Suburbia', { x: -550, y: -800, z: 0 })
   addObjectFromSpec(city, specReader, 'Campus', { x: 50, y: -400, z: 0 })
   addObjectFromSpec(city, specReader, 'Manhattan', { x: -1200, y: 800, z: 0 })
   const latticeburg = addLatticeburg(specReader)
