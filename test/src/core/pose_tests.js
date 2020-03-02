@@ -207,4 +207,72 @@ describe('Pose', function () {
       resultXyz.should.eql(x5y10)
     })
   })
+
+  describe('#collapse', function () {
+    const X1 = 2
+    const Y1 = 5
+    const Z1 = 6
+    const R1 = 28
+    const X2 = 4
+    const Y2 = 4
+    const Z2 = 1
+    const R2 = 48
+    const X3 = 9
+    const Y3 = 8
+    const Z3 = 0
+    const R3 = 23
+    const P1 = { x: X1, y: Y1, z: Z1, rotated: R1, mirrored: true }
+    const P2 = { x: X2, y: Y2, z: Z2, rotated: R2, mirrored: false, subPose: P1 }
+    const P3 = { x: X3, y: Y3, z: Z3, rotated: R3, mirrored: true, subPose: P2 }
+
+    it('should collapse origin pose to origin pose', function () {
+      const collapsedOriginPose = Pose.collapse(Pose.origin())
+
+      collapsedOriginPose.should.eql(Pose.origin())
+    })
+
+    it('should collapse flat pose (pose without subPose) to itself', function () {
+      const collapsedFlatPose = Pose.collapse(P1)
+
+      collapsedFlatPose.should.eql(P1)
+    })
+
+    it('should add translations for nested pose', function () {
+      const collapsedNestedPose = Pose.collapse(P3)
+
+      collapsedNestedPose.x.should.equal(X1 + X2 + X3)
+      collapsedNestedPose.y.should.equal(Y1 + Y2 + Y3)
+      collapsedNestedPose.z.should.equal(Z1 + Z2 + Z3)
+    })
+
+    it('should add rotations for nested pose', function () {
+      const collapsedNestedPose = Pose.collapse(P3)
+
+      collapsedNestedPose.rotated.should.equal(R1 + R2 + R3)
+    })
+
+    it('should collapse mirrored part of flat poses correctly', function () {
+      const P4 = { ...P1, mirrored: false }
+      Pose.collapse(P4).mirrored.should.be.false
+      P4.mirrored = true
+      Pose.collapse(P4).mirrored.should.be.true
+      delete P4.mirrored
+      Pose.collapse(P4).mirrored.should.be.false
+    })
+
+    it('should collapse non-mirrored pose with mirrored subPose to mirrored pose', function () {
+      Pose.collapse(P2).mirrored.should.be.true
+    })
+
+    it('should work for double mirrors', function () {
+      Pose.collapse(P3).mirrored.should.be.false
+    })
+
+    it('should collapse mirrors correctly when one mirror is undefined', function () {
+      const P4 = { ...P3 }
+      delete P4.mirrored
+
+      Pose.collapse(P4).mirrored.should.be.true
+    })
+  })
 })

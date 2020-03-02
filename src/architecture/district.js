@@ -6,7 +6,7 @@
  */
 
 import { array, countTo, xyzAdd } from '../core/util.js'
-import { FeatureInstance } from '../core/feature.js'
+import { FeatureInstance, InstancedFeature } from '../core/feature.js'
 import { Geometry } from '../core/geometry.js'
 import { LAYER } from './layer.js'
 import { METRIC } from './metric.js'
@@ -70,10 +70,14 @@ class District extends Model {
 
     if (parcels) {
       for (const copySpec of parcels) {
-        const mergedPose = Pose.combine(pose, copySpec.pose)
         const specName = copySpec.copy.$ref
-        const modelObject = specReader.makeModelFromSpecName(specName, mergedPose)
-        this.add(modelObject)
+        if (copySpec.repeat) {
+          const repeatSpecs = District._copySpecFragment(array(copySpec.repeat))
+          this._applyRepeats(repeatSpecs, pose, specReader, specName, copySpec)
+        } else {
+          const offset = { x: 0, y: 0, z: 0 }
+          this._makeModelOnce(1, offset, pose, specReader, specName, copySpec)
+        }
       }
     }
 
@@ -131,30 +135,57 @@ class District extends Model {
     return JSON.parse(JSON.stringify(specFragment))
   }
 
+  // Generalization of outer product: M[i][j] = f(A[i], B[j])
+  _outer (f, A, B) {
+    return A.map(a => B.map(b => f(a, b)))
+  }
+
   _applyRepeats (repeatSpecs, pose, specReader, specName, copySpec) {
-    let count = 1
-    let offset = { x: 0, y: 0, z: 0 }
-    if (repeatSpecs.length === 0) {
-      return null
-    } else if (repeatSpecs.length === 1) {
-      const repeatSpec = repeatSpecs[0]
-      count = repeatSpec.count
-      offset = xyzAdd(offset, repeatSpec.offset)
-      for (let i = 0; i < count; i++) {
-        this._makeModelOnce(i, offset, pose, specReader, specName, copySpec)
-      }
-    } else if (repeatSpecs.length > 1) {
-      const lastSpec = repeatSpecs.pop()
-      count = lastSpec.count
-      offset = xyzAdd(offset, lastSpec.offset)
-      for (let i = 0; i < count; i++) {
-        const iOffset = {
-          x: i * offset.x,
-          y: i * offset.y,
-          z: i * offset.z
+    const USE_INSTANCED_FEATURE = true
+
+    if (USE_INSTANCED_FEATURE) {
+      if (repeatSpecs.length === 0) return
+
+      let allPoses
+      repeatSpecs.forEach(spec => {
+        const { x, y, z, rotated } = { ...Pose.origin(), ...spec.offset }
+        const lineOfPoses = countTo(spec.count).map(i => ({ x: i * x, y: i * y, z: i * z, rotated: i * rotated }))
+        if (allPoses) {
+          allPoses = this._outer(Pose.combine, allPoses, lineOfPoses).flat()
+        } else {
+          allPoses = lineOfPoses
         }
-        const mergedPose = Pose.combine(iOffset, pose)
-        this._applyRepeats(repeatSpecs, mergedPose, specReader, specName, copySpec)
+      })
+
+      const modelObject = specReader.makeModelFromSpecName(specName, Pose.origin())
+      const mergedPose = Pose.combine(pose, copySpec.pose)
+      allPoses = allPoses.map(p => Pose.combine(p, mergedPose))
+      this.add(new InstancedFeature(modelObject, allPoses, { materialCost: 'high', useNormals: true }))
+    } else {
+      let count = 1
+      let offset = { x: 0, y: 0, z: 0 }
+      if (repeatSpecs.length === 0) {
+        return null
+      } else if (repeatSpecs.length === 1) {
+        const repeatSpec = repeatSpecs[0]
+        count = repeatSpec.count
+        offset = xyzAdd(offset, repeatSpec.offset)
+        for (let i = 0; i < count; i++) {
+          this._makeModelOnce(i, offset, pose, specReader, specName, copySpec)
+        }
+      } else if (repeatSpecs.length > 1) {
+        const lastSpec = repeatSpecs.pop()
+        count = lastSpec.count
+        offset = xyzAdd(offset, lastSpec.offset)
+        for (let i = 0; i < count; i++) {
+          const iOffset = {
+            x: i * offset.x,
+            y: i * offset.y,
+            z: i * offset.z
+          }
+          const mergedPose = Pose.combine(iOffset, pose)
+          this._applyRepeats(repeatSpecs, mergedPose, specReader, specName, copySpec)
+        }
       }
     }
   }

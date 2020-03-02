@@ -64,7 +64,7 @@ class Pose {
   }
 
   /**
-   * Places points according to the pose settings
+   * Adds one pose to another pose as a subpose.
    * @param {pose} parentPose - any pose object
    * @param {pose} childPose - any second pose object
    * @returns {pose} a new pose that will apply both parent and child poses
@@ -77,6 +77,19 @@ class Pose {
     }
     copy.subPose = Pose.copy(childPose)
     return topCopy
+  }
+
+  static collapse (pose) {
+    let finalPose = { ...Pose.origin(), ...pose }
+    delete finalPose.subPose
+    let subPose = pose.subPose
+    while (subPose) {
+      const rotated = finalPose.rotated + (subPose.rotated || 0)
+      const mirrored = finalPose.mirrored ? !subPose.mirrored : !!subPose.mirrored
+      finalPose = { ...Pose._xyzAdd(finalPose, subPose), rotated, mirrored }
+      subPose = subPose.subPose
+    }
+    return finalPose
   }
 
   static _relocatePoint (pose, xyz) {

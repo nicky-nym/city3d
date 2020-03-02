@@ -47,8 +47,8 @@ export default /* eslint-disable */
     copy: { $ref: 'Highrise building' },
     pose: { x: 80, y: 48 },
     repeat: [
-      { count: 6, offset: { x: 100 } },
-      { count: 2, offset: { y: 100 } }
+      { count: 6, offset: { x: 100, rotated: 0 } },
+      { count: 2, offset: { x: 100, y: 200, rotated: 180 } } // x, y adjusted for rotation
     ]
   }],
   /* TODO: rotate street grid by -29 degrees */

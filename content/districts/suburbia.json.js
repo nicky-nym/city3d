@@ -59,10 +59,12 @@ export default /* eslint-disable */
   },
   parcels: [{
     copy: { $ref: 'Parcel 353' },
-    pose: { x: 240, y: 0 }
-  }, {
-    copy: { $ref: 'Parcel 353' },
-    pose: { x: 240, y: 50 }
+    pose: { x: 240, y: 0 },
+    repeat: [
+      { count: 2, offset: { y: 300 } },
+      { count: 5, offset: { y: 50 } },
+      { count: 2, offset: { x: 50, y: 50, rotated: 180 } }
+    ]
   }],
   contents: [{
     copy: { $ref: 'Utility pole' },

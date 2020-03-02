@@ -386,7 +386,7 @@ class ThreeOutputScene extends THREE.Scene {
 
   makeInstancedMesh (instancedFeature) {
     const feature = instancedFeature.feature
-    const placements = instancedFeature.placements
+    const poses = instancedFeature.poses
     const materialCost = instancedFeature.materialCost
     const useNormals = instancedFeature.useNormals
     const geometries = []
@@ -502,12 +502,12 @@ class ThreeOutputScene extends THREE.Scene {
       }
     })
 
-    const mesh = new THREE.InstancedMesh(mergedGeometry, clonedMaterials, placements.length)
+    const mesh = new THREE.InstancedMesh(mergedGeometry, clonedMaterials, poses.length)
     const dummy = new THREE.Object3D()
-    placements.forEach((p, i) => {
-      dummy.scale.x = p.mirror ? -1 : 1
-      dummy.rotation.z = p.az * Math.PI / 180
-      dummy.position.set(p.xyz.x, p.xyz.y, p.xyz.z)
+    poses.forEach((p, i) => {
+      dummy.scale.x = p.mirrored ? -1 : 1
+      dummy.rotation.z = (p.rotated || 0) * Math.PI / 180
+      dummy.position.set(p.x, p.y, p.z)
       dummy.updateMatrix()
       mesh.setMatrixAt(i, dummy.matrix)
     })

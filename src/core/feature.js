@@ -6,6 +6,7 @@
  */
 
 import { Layer } from './layer.js'
+import { Pose } from './pose.js'
 
 class Feature {
   /**
@@ -107,24 +108,24 @@ class FeatureInstance extends Feature {
 
 /**
  * InstancedFeature is a class for representing multiple instances of a Feature, with an array
- * of placements specifying the location and orientation of each instance.
+ * of poses specifying the location and orientation of each instance.
  */
 class InstancedFeature extends Feature {
   /**
    * @param {Feature} feature
-   * @param {Ray[]} placements
+   * @param {pose[]} poses
    */
-  constructor (feature, placements, { materialCost = 'lowest', useNormals = false } = {}) {
+  constructor (feature, poses, { materialCost = 'lowest', useNormals = false } = {}) {
     super()
     this.feature = feature
     this.feature.parent = this
-    this.placements = placements
+    this.poses = poses.map(q => Pose.collapse(q.asPose ? q.asPose() : q))
     this.materialCost = materialCost
     this.useNormals = useNormals
   }
 
   layerIndex () {
-    return this.feature._copyLayer ? this.feature._copyLayer.index : this.feature._layer.index
+    return this.feature._copyLayer ? this.feature._copyLayer.index : this.feature.layerIndex()
   }
 }
 

@@ -74,22 +74,22 @@ function addInstancedBuildings (district) {
 
   const cottage1 = specReader.makeModelFromSpecName('Cottage', { x: 0, y: 0, z: 0 })
   district.add(new CITY.InstancedFeature(cottage1, [
-    new Ray(Facing.NORTH, { x: -440, y: 550, z: 0 }),
-    new Ray(Facing.NORTH, { x: -360, y: 550, z: 0 }, { mirror: true }),
-    new Ray(Facing.EAST, { x: -350, y: 520, z: 0 }),
-    new Ray(Facing.WEST, { x: -450, y: 500, z: 0 }),
-    new Ray(Facing.SOUTHWEST, { x: -410, y: 450, z: 0 }),
-    new Ray(Facing.SOUTHEAST, { x: -390, y: 450, z: 0 }, { mirror: true })
+    new Ray(Facing.NORTH, { x: -440, y: 850, z: 0 }),
+    new Ray(Facing.NORTH, { x: -360, y: 850, z: 0 }, { mirror: true }),
+    new Ray(Facing.EAST, { x: -350, y: 820, z: 0 }),
+    new Ray(Facing.WEST, { x: -450, y: 800, z: 0 }),
+    new Ray(Facing.SOUTHWEST, { x: -410, y: 750, z: 0 }),
+    new Ray(Facing.SOUTHEAST, { x: -390, y: 750, z: 0 }, { mirror: true })
   ], { materialCost: 'high', useNormals: true }))
 
   const cottage2 = specReader.makeModelFromSpecName('Cottage', { x: 0, y: 0, z: 0 })
   district.add(new CITY.InstancedFeature(cottage2, [
-    new Ray(Facing.NORTH, { x: -220, y: 550, z: 0 }),
-    new Ray(Facing.NORTH, { x: -140, y: 550, z: 0 }, { mirror: true }),
-    new Ray(Facing.EAST, { x: -130, y: 520, z: 0 }),
-    new Ray(Facing.WEST, { x: -230, y: 500, z: 0 }),
-    new Ray(Facing.SOUTHWEST, { x: -190, y: 450, z: 0 }),
-    new Ray(Facing.SOUTHEAST, { x: -170, y: 450, z: 0 }, { mirror: true })
+    new Ray(Facing.NORTH, { x: -220, y: 850, z: 0 }),
+    new Ray(Facing.NORTH, { x: -140, y: 850, z: 0 }, { mirror: true }),
+    new Ray(Facing.EAST, { x: -130, y: 820, z: 0 }),
+    new Ray(Facing.WEST, { x: -230, y: 800, z: 0 }),
+    new Ray(Facing.SOUTHWEST, { x: -190, y: 750, z: 0 }),
+    new Ray(Facing.SOUTHEAST, { x: -170, y: 750, z: 0 }, { mirror: true })
   ], { materialCost: 'lowest', useNormals: false }))
 
   const wursterHall = specReader.makeModelFromSpecName('Wurster Hall', { x: 0, y: 0, z: 0 })
@@ -98,16 +98,6 @@ function addInstancedBuildings (district) {
     new Ray(Facing.NORTH, { x: 780, y: -650, z: 0 }, { mirror: true }),
     new Ray(Facing.SOUTH, { x: 380, y: -700, z: 0 }),
     new Ray(Facing.SOUTH, { x: 480, y: -700, z: 0 }, { mirror: true })
-  ], { materialCost: 'high', useNormals: true }))
-
-  const parcel353 = specReader.makeModelFromSpecName('Parcel 353', { x: 0, y: 0, z: 0 })
-  district.add(new CITY.InstancedFeature(parcel353, [
-    new Ray(Facing.NORTH, { x: -310, y: 200, z: 0 }),
-    new Ray(Facing.NORTH, { x: -310, y: 250, z: 0 }),
-    new Ray(Facing.NORTH, { x: -310, y: 300, z: 0 }),
-    new Ray(Facing.SOUTH, { x: -268, y: 150, z: 0 }),
-    new Ray(Facing.SOUTH, { x: -268, y: 210, z: 0 }),
-    new Ray(Facing.SOUTH, { x: -268, y: 270, z: 0 })
   ], { materialCost: 'high', useNormals: true }))
 }
 
