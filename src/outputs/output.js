@@ -25,7 +25,12 @@ class Output {
    */
   static addOutput (outputInstance) {
     const outputDiv = document.createElement('div')
-    document.body.appendChild(outputDiv)
+    const city3dDiv = document.getElementById('city3d')
+    if (city3dDiv) {
+      city3dDiv.appendChild(outputDiv)
+    } else {
+      document.body.appendChild(outputDiv)
+    }
 
     // hack to make scrollbars go away
     // document.body.style.overflow = 'hidden'

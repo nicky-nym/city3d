@@ -56,7 +56,7 @@ class ThreeOutput extends Output {
     infoIconDiv.style.cursor = 'pointer'
     infoIconDiv.style.zIndex = '10000'
     const infoIcon = document.createElement('img')
-    infoIcon.src = '../src/outputs/images/Information_icon.svg'
+    infoIcon.src = '/assets/images/icons/Information_icon.svg'
     infoIcon.style.cssText = 'width: 31px; height: 31px'
     infoIconDiv.appendChild(infoIcon)
     outputDivElement.appendChild(infoIconDiv)
@@ -70,7 +70,7 @@ class ThreeOutput extends Output {
     // textures
     const loader = new THREE.TextureLoader()
     const textures = new Map()
-    textures.set('ground', loader.load('../src/outputs/textures/metallic-green-glitter-texture.jpg'))
+    textures.set('ground', loader.load('/assets/images/textures/metallic-green-glitter-texture.jpg'))
 
     // scene
     this._scene = new ThreeOutputScene(textures)
