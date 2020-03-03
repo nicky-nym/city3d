@@ -5,7 +5,7 @@
   "main": "citylib.js",
   "scripts": {
     "rollup": "rollup --config rollup.config.js",
-    "test": "mocha -r esm --recursive && standard 'src/**/*.js' 'test/**/*.js' 'content/**/*.js'"
+    "test": "mocha -r esm --recursive && standard"
   },
   "repository": {
     "type": "git",
