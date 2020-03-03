@@ -58,7 +58,11 @@ export default /* eslint-disable */
         "offset": {
           "$ref": "pose.schema.json"
         }
-      }    },
+      }
+    },
+    "numRandomPartitions": {
+      "description": "number of partitions into which copy poses can be randomly put",
+    },
     "copy": {
       "description": "an identifier that specifies what model this is a copy of",
       "type": "object",

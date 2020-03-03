@@ -10,31 +10,51 @@ export default /* eslint-disable */
   },
   unit: 'feet',
   anchorPoint: { x: 360, y: 270, z: 0 },
+  comments: [
+    '                                       ',
+    '                                Q   R  ',
+    '                                |   |  ',
+    '                                :   :  ',
+    '                                |   |  ',
+    '       K---L----------------I---C---D  ',
+    '       |   |     north      |   |   |  ',
+    '       |   P----------------O   | a |  ',
+    '       | w |                | e | v |  ',
+    '       | e |                | a | e |  ',
+    '       | s |                | s | n |  ',
+    '       | t |                | t | u |  ',
+    '       |   M----------------N   | e |  ',
+    '       |   |     south      |   |   |  ',
+    '  T-..-F---J----------------H---G   |  ',
+    '  |    |         street         |   |  ',
+    '  S-..-E------------------------B---A  ',
+    '                                       '
+  ],
   def: {
     /* avenue */
     A: { x: 0, y: 0 },
-    B: { x: 60, y: 0 },
-    C: { x: 60, y: 264 },
+    B: { x: -60, y: 0 },
+    C: { x: -60, y: 264 },
     D: { x: 0, y: 264 },
     /* street */
-    E: { x: 700, y: 0 },
-    F: { x: 700, y: 32 },
-    G: { x: 60, y: 32 },
-    /* sidewalk, west */
-    H: { x: 80, y: 32 },
-    I: { x: 80, y: 264 },
+    E: { x: -700, y: 0 },
+    F: { x: -700, y: 32 },
+    G: { x: -60, y: 32 },
     /* sidewalk, east */
-    J: { x: 680, y: 32 },
-    K: { x: 700, y: 264 },
-    L: { x: 680, y: 264 },
+    H: { x: -80, y: 32 },
+    I: { x: -80, y: 264 },
+    /* sidewalk, west */
+    J: { x: -680, y: 32 },
+    K: { x: -700, y: 264 },
+    L: { x: -680, y: 264 },
     /* sidewalk, south */
-    M: { x: 680, y: 48 },
-    N: { x: 80, y: 48 },
+    M: { x: -680, y: 48 },
+    N: { x: -80, y: 48 },
     /* sidewalk, north */
-    O: { x: 80, y: 248 },
-    P: { x: 680, y: 248 },
+    O: { x: -80, y: 248 },
+    P: { x: -680, y: 248 },
     /* full-length avenue */
-    Q: { x: 60, y: 216 * 264 },
+    Q: { x: -60, y: 216 * 264 },
     R: { x: 0, y: 216 * 264 },
     /* full-length street */
     S: { x: 10 * -700, y: 0 },
@@ -45,9 +65,12 @@ export default /* eslint-disable */
   parcels: [],
   contents: [{
     copy: { $ref: 'Highrise building' },
-    pose: { x: 80, y: 48 },
+    pose: { x: -180, y: 48 },
+    numRandomPartitions: 5,
     repeat: [
-      { count: 6, offset: { x: 100, rotated: 0 } },
+      { count: 4, offset: { x: -700 } },
+      { count: 6, offset: { y: 264 } },
+      { count: 6, offset: { x: -100 } },
       { count: 2, offset: { x: 100, y: 200, rotated: 180 } } // x, y adjusted for rotation
     ]
   }],
@@ -63,7 +86,11 @@ export default /* eslint-disable */
         { $ref: '#/def/C' },
         { $ref: '#/def/D' }
       ]
-    }
+    },
+    repeat: [
+      { count: 4, offset: { x: -700 } },
+      { count: 6, offset: { y: 264 } }
+    ]
   }, {
     name: 'street',
     surface: { material: 'asphalt' },
@@ -75,7 +102,11 @@ export default /* eslint-disable */
         { $ref: '#/def/F' },
         { $ref: '#/def/G' }
       ]
-    }
+    },
+    repeat: [
+      { count: 4, offset: { x: -700 } },
+      { count: 6, offset: { y: 264 } }
+    ]
   }, {
     name: 'sidewalk, west',
     surface: { material: 'concrete' },
@@ -87,7 +118,11 @@ export default /* eslint-disable */
         { $ref: '#/def/I' },
         { $ref: '#/def/C' }
       ]
-    }
+    },
+    repeat: [
+      { count: 4, offset: { x: -700 } },
+      { count: 6, offset: { y: 264 } }
+    ]
   }, {
     name: 'sidewalk, east',
     surface: { material: 'concrete' },
@@ -99,7 +134,11 @@ export default /* eslint-disable */
         { $ref: '#/def/K' },
         { $ref: '#/def/L' }
       ]
-    }
+    },
+    repeat: [
+      { count: 4, offset: { x: -700 } },
+      { count: 6, offset: { y: 264 } }
+    ]
   }, {
     name: 'sidewalk, south',
     surface: { material: 'concrete' },
@@ -111,7 +150,11 @@ export default /* eslint-disable */
         { $ref: '#/def/M' },
         { $ref: '#/def/N' }
       ]
-    }
+    },
+    repeat: [
+      { count: 4, offset: { x: -700 } },
+      { count: 6, offset: { y: 264 } }
+    ]
   }, {
     name: 'sidewalk, north',
     surface: { material: 'concrete' },
@@ -123,7 +166,11 @@ export default /* eslint-disable */
         { $ref: '#/def/L' },
         { $ref: '#/def/I' }
       ]
-    }
+    },
+    repeat: [
+      { count: 4, offset: { x: -700 } },
+      { count: 6, offset: { y: 264 } }
+    ]
   }, {
     name: '11 parallel avenues',
     surface: { material: 'asphalt' },

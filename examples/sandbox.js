@@ -66,7 +66,7 @@ function addTrees (district) {
 }
 
 function addPyramid (district) {
-  district.add(new CITY.PyramidOfKhufu({ placement: new Ray(Facing.NORTH, { x: -500, y: 2000, z: 0 }) }))
+  district.add(new CITY.PyramidOfKhufu({ placement: new Ray(Facing.NORTH, { x: 500, y: -1500, z: 0 }) }))
 }
 
 function addInstancedBuildings (district) {
@@ -138,7 +138,7 @@ function main () {
   const specReader = new SpecReader()
   addObjectFromSpec(city, specReader, 'Suburbia', { x: -550, y: -800, z: 0 })
   addObjectFromSpec(city, specReader, 'Campus', { x: 50, y: -400, z: 0 })
-  addObjectFromSpec(city, specReader, 'Manhattan', { x: -1200, y: 800, z: 0 })
+  addObjectFromSpec(city, specReader, 'Manhattan', { x: -200, y: 800, z: 0 })
   const latticeburg = addLatticeburg(specReader)
 
   const extras = new CITY.Model({ name: 'extras' })

@@ -149,43 +149,25 @@ class District extends Model {
   }
 
   _applyRepeats (repeatSpecs, pose, specReader, specName, copySpec) {
-    const USE_INSTANCED_FEATURE = true
+    if (repeatSpecs.length === 0) return
 
-    if (USE_INSTANCED_FEATURE) {
-      if (repeatSpecs.length === 0) return
-
-      let allPoses = District._makePosesFromRepeatSpec(repeatSpecs)
-      const modelObject = specReader.makeModelFromSpecName(specName, Pose.origin())
-      const mergedPose = Pose.combine(pose, copySpec.pose)
-      allPoses = allPoses.map(p => Pose.combine(p, mergedPose))
-      this.add(new InstancedFeature(modelObject, allPoses, { materialCost: 'high', useNormals: true }))
+    let allPoses = District._makePosesFromRepeatSpec(repeatSpecs)
+    const mergedPose = Pose.combine(pose, copySpec.pose)
+    allPoses = allPoses.map(p => Pose.combine(p, mergedPose))
+    const numPartitions = copySpec.numRandomPartitions || 1
+    const partitions = countTo(numPartitions).map(_ => [])
+    if (numPartitions > 1) {
+      allPoses.forEach(p => {
+        const i = Math.floor(Math.random() * numPartitions)
+        partitions[i].push(p)
+      })
     } else {
-      let count = 1
-      let offset = { x: 0, y: 0, z: 0 }
-      if (repeatSpecs.length === 0) {
-        return null
-      } else if (repeatSpecs.length === 1) {
-        const repeatSpec = repeatSpecs[0]
-        count = repeatSpec.count
-        offset = xyzAdd(offset, repeatSpec.offset)
-        for (let i = 0; i < count; i++) {
-          this._makeModelOnce(i, offset, pose, specReader, specName, copySpec)
-        }
-      } else if (repeatSpecs.length > 1) {
-        const lastSpec = repeatSpecs.pop()
-        count = lastSpec.count
-        offset = xyzAdd(offset, lastSpec.offset)
-        for (let i = 0; i < count; i++) {
-          const iOffset = {
-            x: i * offset.x,
-            y: i * offset.y,
-            z: i * offset.z
-          }
-          const mergedPose = Pose.combine(iOffset, pose)
-          this._applyRepeats(repeatSpecs, mergedPose, specReader, specName, copySpec)
-        }
-      }
+      partitions[0] = allPoses
     }
+    partitions.forEach(p => {
+      const modelObject = specReader.makeModelFromSpecName(specName, Pose.origin())
+      this.add(new InstancedFeature(modelObject, p, { materialCost: 'high', useNormals: true }))
+    })
   }
 
   _makeModelOnce (i, offset, pose, specReader, specName, copySpec) {
