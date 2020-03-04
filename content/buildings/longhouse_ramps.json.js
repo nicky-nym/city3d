@@ -46,36 +46,36 @@ export default /* eslint-disable */
     C: { x: 50, y: 90 },
     D: { x: 35, y: 90 },
     E: { x: 30, y: 45 },
-    AB: { x: 30, y: 0, z: 22.5 },
-    CD: { x: 45, y: 90, z: 22.5 },
+    AB: { x: 30, y: 0, z: 30 },
+    CD: { x: 45, y: 90, z: 30 },
 
     /* ramp down from highroad exit to landing */
     F: { x: 50, y: 270 },
     G: { x: 35, y: 270 },
-    FG: { x: 45, y: 270, z: 15 },
+    FG: { x: 45, y: 270, z: 22.5 },
 
     /* ramp up from lowroad exit to landing */
     H: { x: 65, y: 90 },
     I: { x: 65, y: 270 },
-    CH: { x: 60, y: 90, z: 7.5 },
-    IF: { x: 60, y: 270, z: 15 },
+    CH: { x: 60, y: 90, z: 15 },
+    IF: { x: 60, y: 270, z: 22.5 },
 
     /* landing */
     J: { x: 70, y: 270 },
     K: { x: 85, y: 270 },
 
     /* exit from lowroad (toward landing) */
-    L: { x: 130, y: 30 },
-    M: { x: 200, y: 30 },
+    L: { x: 110, y: 35 },
+    M: { x: 180, y: 35 },
     N: { x: 130, y: 45 },
     O: { x: 89, y: 58 },
     P: { x: 73, y: 69 },
     Q: { x: 60, y: 55 },
-    R: { x: 80, y: 40 },
-    LM: { x: 170, y: 30, z: 7.5 },
-    LN: { x: 130, y: 40, z: 7.5 },
-    OR: { x: 86, y: 52, z: 7.5 },
-    PQ: { x: 68, y: 64, z: 7.5 },
+    R: { x: 80, y: 44 },
+    LM: { x: 170, y: 30, z: 15 },
+    LN: { x: 130, y: 40, z: 15 },
+    OR: { x: 86, y: 52, z: 15 },
+    PQ: { x: 68, y: 64, z: 15 },
 
     /* landing, south access walkway */
     S: { x: 134, y: 284 },
@@ -83,10 +83,10 @@ export default /* eslint-disable */
     U: { x: 85, y: 290 },
 
     /* lower plaza */
-    V: { x: 490, y: 30 },
+    V: { x: 490, y: 35 },
     W: { x: 490, y: 45 },
     X: { x: 180, y: 45 },
-    Y: { x: 180, y: 30 },
+    Y: { x: 180, y: 35 },
 
     /* lower plaza access walkways */
     Z0a: { x: (96 * 0) + 188 + 6, y: 45 },
@@ -115,36 +115,36 @@ export default /* eslint-disable */
     c: { x: 50, y: 670 - 90 },
     d: { x: 35, y: 670 - 90 },
     e: { x: 30, y: 670 - 45 },
-    ab: { x: 30, y: 670 - 0, z: 22.5 },
-    cd: { x: 45, y: 670 - 90, z: 22.5 },
+    ab: { x: 30, y: 670 - 0, z: 30 },
+    cd: { x: 45, y: 670 - 90, z: 30 },
 
     /* ramp up from landing to highroad */
     f: { x: 50, y: 670 - 270 },
     g: { x: 30, y: 670 - 270 },
-    fg: { x: 45, y: 670 - 270, z: 15 },
+    fg: { x: 45, y: 670 - 270, z: 22.5 },
 
     /* ramp down from landing to lowroad */
     h: { x: 65, y: 670 - 90 },
     i: { x: 65, y: 670 - 270 },
-    ch: { x: 60, y: 670 - 90, z: 7.5 },
-    'if': { x: 60, y: 670 - 270, z: 15 },
+    ch: { x: 60, y: 670 - 90, z: 15 },
+    'if': { x: 60, y: 670 - 270, z: 22.5 },
 
     /* landing */
     j: { x: 70, y: 670 - 270 },
     k: { x: 85, y: 670 - 270 },
 
     /* entrance to lowroad (from landing) */
-    l: { x: 130, y: 670 - 30 },
-    m: { x: 200, y: 670 - 30 },
+    l: { x: 110, y: 670 - 35 },
+    m: { x: 180, y: 670 - 35 },
     n: { x: 130, y: 670 - 45 },
     o: { x: 89, y: 670 - 58 },
     p: { x: 73, y: 670 - 69 },
     q: { x: 60, y: 670 - 55 },
-    r: { x: 80, y: 670 - 40 },
-    lm: { x: 170, y: 670 - 30, z: 7.5 },
-    ln: { x: 130, y: 670 - 40, z: 7.5 },
-    or: { x: 86, y: 670 - 52, z: 7.5 },
-    pq: { x: 68, y: 670 - 64, z: 7.5 },
+    r: { x: 80, y: 670 - 43 },
+    lm: { x: 170, y: 670 - 30, z: 15 },
+    ln: { x: 130, y: 670 - 40, z: 15 },
+    or: { x: 86, y: 670 - 52, z: 15 },
+    pq: { x: 68, y: 670 - 64, z: 15 },
 
     /* landing, north access walkway */
     s: { x: 134, y: 670 - 284 },
@@ -180,7 +180,7 @@ export default /* eslint-disable */
   }],
   storeys: [{
     name: 'exit from highroad (toward landing)',
-    altitude: 22.5,
+    altitude: 30,
     floors: [{ 
       outline: {
         shape: 'polygon',
@@ -193,9 +193,17 @@ export default /* eslint-disable */
         ]
       }
     }],
+    walls: {
+      exterior: [{
+        name: 'railing',
+        height: 4,
+        begin: { $ref: '#/def/B' },
+        end: { $ref: '#/def/C' }
+      }
+    ]},
   }, {
     name: 'ramp down from highroad exit to landing',
-    altitude: 22.5,
+    altitude: 30,
     incline: -7.5,
     floors: [{ 
       outline: {
@@ -208,9 +216,17 @@ export default /* eslint-disable */
         ]
       }
     }],
+    walls: {
+      exterior: [{
+        name: 'railing',
+        height: 4,
+        begin: { $ref: '#/def/C' },
+        end: { $ref: '#/def/F' }
+      }
+    ]},
   }, {
     name: 'ramp up from lowroad exit to landing',
-    altitude: 7.5,
+    altitude: 15,
     incline: 7.5,
     floors: [{ 
       outline: {
@@ -223,9 +239,22 @@ export default /* eslint-disable */
         ]
       }
     }],
+    walls: {
+      exterior: [{
+        name: 'railing',
+        height: 11.5,
+        begin: { $ref: '#/def/H' },
+        end: { $ref: '#/def/I' }
+      }, {
+        name: 'railing',
+        height: 19,
+        begin: { $ref: '#/def/F' },
+        end: { $ref: '#/def/C' }
+      }
+    ]},
   }, {
     name: 'landing', 
-    altitude: 15,
+    altitude: 22.5,
     floors: [{ 
       outline: {
         shape: 'polygon',
@@ -236,10 +265,29 @@ export default /* eslint-disable */
           { $ref: '#/def/g' }
         ]
       }
-    }]
+    }],
+    walls: {
+      exterior: [{
+        name: 'railing',
+        height: 4,
+        begin: { $ref: '#/def/I' },
+        end: { $ref: '#/def/K' }
+      }, {
+        name: 'railing',
+        height: 4,
+        begin: { $ref: '#/def/U' },
+        end: { $ref: '#/def/u' }
+      }, {
+        name: 'railing',
+        height: 4,
+        begin: { $ref: '#/def/k' },
+        end: { $ref: '#/def/i' }
+      }
+    ]},
   }, {
     name: 'exit from lowroad (toward landing)', 
-    altitude: 7.5,
+    altitude: 15,
+    height: 4,
     floors: [{ 
       outline: {
         shape: 'polygon',
@@ -255,10 +303,31 @@ export default /* eslint-disable */
           { $ref: '#/def/R' }
         ]
       }
-    }]
+    }],
+    walls: {
+      exterior: [{
+        name: 'railing',
+        begin: { $ref: '#/def/M' },
+        end: { $ref: '#/def/N' }
+      }, {
+        end: { $ref: '#/def/O' }
+      }, {
+        end: { $ref: '#/def/P' }
+      }, {
+        end: { $ref: '#/def/H' }
+      }, {
+        name: 'railing',
+        begin: { $ref: '#/def/C' },
+        end: { $ref: '#/def/Q' }
+      }, {
+        end: { $ref: '#/def/R' }
+      }, {
+        end: { $ref: '#/def/L' }
+      }
+    ]}
   }, {
     name: 'landing, south access walkway',
-    altitude: 15,
+    altitude: 22.5,
     incline: 2.5,
     floors: [{ 
       outline: {
@@ -271,9 +340,22 @@ export default /* eslint-disable */
         ]
       }
     }],
+    walls: {
+      exterior: [{
+        name: 'railing',
+        height: 4,
+        begin: { $ref: '#/def/K' },
+        end: { $ref: '#/def/S' }
+      }, {
+        name: 'railing',
+        height: 4,
+        begin: { $ref: '#/def/T' },
+        end: { $ref: '#/def/U' }
+      }
+    ]},
   }, {
     name: 'entrance to highroad (from landing)',
-    altitude: 22.5,
+    altitude: 30,
     floors: [{ 
       outline: {
         shape: 'polygon',
@@ -286,9 +368,17 @@ export default /* eslint-disable */
         ]
       }
     }],
+    walls: {
+      exterior: [{
+        name: 'railing',
+        height: 4,
+        begin: { $ref: '#/def/c' },
+        end: { $ref: '#/def/b' }
+      }
+    ]},
   }, {
     name: 'ramp up from landing to highroad',
-    altitude: 22.5,
+    altitude: 30,
     incline: -7.5,
     floors: [{ 
       outline: {
@@ -301,9 +391,17 @@ export default /* eslint-disable */
         ]
       }
     }],
+    walls: {
+      exterior: [{
+        name: 'railing',
+        height: 4,
+        begin: { $ref: '#/def/f' },
+        end: { $ref: '#/def/c' }
+      }
+    ]},
   }, {
     name: 'ramp down from landing to lowroad',
-    altitude: 7.5,
+    altitude: 15,
     incline: 7.5,
     floors: [{ 
       outline: {
@@ -316,9 +414,23 @@ export default /* eslint-disable */
         ]
       }
     }],
+    walls: {
+      exterior: [{
+        name: 'railing',
+        height: 11.5,
+        begin: { $ref: '#/def/i' },
+        end: { $ref: '#/def/h' }
+      }, {
+        name: 'railing',
+        height: 19,
+        begin: { $ref: '#/def/c' },
+        end: { $ref: '#/def/f' }
+      }]
+    },
   }, {
     name: 'entrance to lowroad (from landing)',
-    altitude: 7.5,
+    altitude: 15,
+    height: 4,
     floors: [{ 
       outline: {
         shape: 'polygon',
@@ -334,10 +446,31 @@ export default /* eslint-disable */
           { $ref: '#/def/l' }
         ]
       }
-    }]
+    }],
+    walls: {
+      exterior: [{
+        name: 'railing',
+        begin: { $ref: '#/def/h' },
+        end: { $ref: '#/def/p' }
+      }, {
+        end: { $ref: '#/def/o' }
+      }, {
+        end: { $ref: '#/def/n' }
+      }, {
+        end: { $ref: '#/def/m' }
+      }, {
+        name: 'railing',
+        begin: { $ref: '#/def/l' },
+        end: { $ref: '#/def/r' }
+      }, {
+        end: { $ref: '#/def/q' }
+      }, {
+        end: { $ref: '#/def/c' }
+      }
+    ]},
   }, {
     name: 'landing, north access walkway',
-    altitude: 15,
+    altitude: 22.5,
     incline: 2.5,
     floors: [{ 
       outline: {
@@ -350,9 +483,23 @@ export default /* eslint-disable */
         ]
       }
     }],
+    walls: {
+      exterior: [{
+        name: 'railing',
+        height: 4,
+        begin: { $ref: '#/def/u' },
+        end: { $ref: '#/def/t' }
+      }, {
+        name: 'railing',
+        height: 4,
+        begin: { $ref: '#/def/s' },
+        end: { $ref: '#/def/k' }
+      }
+    ]}
   }, {
     name: 'lower plaza',
-    altitude: 7.5,
+    altitude: 15,
+    height: 4,
     floors: [{ 
       outline: {
         shape: 'polygon',
@@ -364,9 +511,33 @@ export default /* eslint-disable */
         ]
       }
     }],
+    walls: {
+      exterior: [{
+        name: 'railing',
+        begin: { $ref: '#/def/V' },
+        end: { $ref: '#/def/W' }
+      }, {
+        end: { $ref: '#/def/Z3a' }
+      }, {
+        begin: { $ref: '#/def/Z3d' },
+        end: { $ref: '#/def/Z2a' }
+      }, {
+        begin: { $ref: '#/def/Z2d' },
+        end: { $ref: '#/def/Z1a' }
+      }, {
+        begin: { $ref: '#/def/Z1d' },
+        end: { $ref: '#/def/Z0a' }
+      }, {
+        begin: { $ref: '#/def/Z0d' },
+        end: { $ref: '#/def/X' }
+      }, {
+        end: { $ref: '#/def/Y' }
+      }
+    ]}
   }, {
     name: 'lower plaza walkway 0 of 4',
-    altitude: 7.5,
+    altitude: 15,
+    height: 4,
     floors: [{ 
       outline: {
         shape: 'polygon',
@@ -378,9 +549,21 @@ export default /* eslint-disable */
         ]
       }
     }],
+    walls: {
+      exterior: [{
+        name: 'railing',
+        begin: { $ref: '#/def/Z0a' },
+        end: { $ref: '#/def/Z0b' }
+      }, {
+        name: 'railing',
+        begin: { $ref: '#/def/Z0c' },
+        end: { $ref: '#/def/Z0d' }
+      }
+    ]}
   }, {
     name: 'lower plaza walkway 1 of 4',
-    altitude: 7.5,
+    altitude: 15,
+    height: 4,
     floors: [{ 
       outline: {
         shape: 'polygon',
@@ -392,9 +575,21 @@ export default /* eslint-disable */
         ]
       }
     }],
+    walls: {
+      exterior: [{
+        name: 'railing',
+        begin: { $ref: '#/def/Z1a' },
+        end: { $ref: '#/def/Z1b' }
+      }, {
+        name: 'railing',
+        begin: { $ref: '#/def/Z1c' },
+        end: { $ref: '#/def/Z1d' }
+      }
+    ]}
   }, {
     name: 'lower plaza walkway 2 of 4',
-    altitude: 7.5,
+    altitude: 15,
+    height: 4,
     floors: [{ 
       outline: {
         shape: 'polygon',
@@ -406,9 +601,21 @@ export default /* eslint-disable */
         ]
       }
     }],
+    walls: {
+      exterior: [{
+        name: 'railing',
+        begin: { $ref: '#/def/Z2a' },
+        end: { $ref: '#/def/Z2b' }
+      }, {
+        name: 'railing',
+        begin: { $ref: '#/def/Z2c' },
+        end: { $ref: '#/def/Z2d' }
+      }
+    ]}
   }, {
     name: 'lower plaza walkway 3 of 4',
-    altitude: 7.5,
+    altitude: 15,
+    height: 4,
     floors: [{ 
       outline: {
         shape: 'polygon',
@@ -420,5 +627,16 @@ export default /* eslint-disable */
         ]
       }
     }],
+    walls: {
+      exterior: [{
+        name: 'railing',
+        begin: { $ref: '#/def/Z3a' },
+        end: { $ref: '#/def/Z3b' }
+      }, {
+        name: 'railing',
+        begin: { $ref: '#/def/Z3c' },
+        end: { $ref: '#/def/Z3d' }
+      }
+    ]}
   }]
 }

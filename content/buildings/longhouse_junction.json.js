@@ -55,6 +55,11 @@ export default /* eslint-disable */
       outline: { shape: 'rectangle', size: { x: 5, y: 8 } },
       at: { x: 0, y: 8, from: 'center'}
     },
+    CORNER_OPENING: {
+      motion: 'open',
+      outline: { shape: 'rectangle', size: { x: 6, y: 14.5 } },
+      at: { x: 0, from: 'center'}
+    },
     BOULEVARD_END_OPENING: {
       motion: 'awning',
       outline: { shape: 'rectangle', size: { x: 29, y: 15 } },
@@ -62,20 +67,20 @@ export default /* eslint-disable */
     }
   },
   routes: [
-    { waypoints: [ { y: 11, x: 40, z: 7.5 }, { y: 11, x: 0, z: 7.5 } ]},
-    { waypoints: [ { y: 17, x: 40, z: 7.5 }, { y: 17, x: 0, z: 7.5 } ]},
-    { waypoints: [ { y: 23, x: 40, z: 7.5 }, { y: 23, x: 0, z: 7.5 } ]},
-    { waypoints: [ { y: 29, x: 40, z: 7.5 }, { y: 29, x: 0, z: 7.5 } ]},
+    { waypoints: [ { y: 11, x: 40, z: 15 }, { y: 11, x: 0, z: 15 } ]},
+    { waypoints: [ { y: 17, x: 40, z: 15 }, { y: 17, x: 0, z: 15 } ]},
+    { waypoints: [ { y: 23, x: 40, z: 15 }, { y: 23, x: 0, z: 15 } ]},
+    { waypoints: [ { y: 29, x: 40, z: 15 }, { y: 29, x: 0, z: 15 } ]},
 
-    { waypoints: [ { x: 11, y: 0, z: 22.5 }, { x: 11, y: 40, z: 22.5 } ]},
-    { waypoints: [ { x: 17, y: 0, z: 22.5 }, { x: 17, y: 40, z: 22.5 } ]},
-    { waypoints: [ { x: 23, y: 0, z: 22.5 }, { x: 23, y: 40, z: 22.5 } ]},
-    { waypoints: [ { x: 29, y: 0, z: 22.5 }, { x: 29, y: 40, z: 22.5 } ]}
+    { waypoints: [ { x: 11, y: 0, z: 30 }, { x: 11, y: 40, z: 30 } ]},
+    { waypoints: [ { x: 17, y: 0, z: 30 }, { x: 17, y: 40, z: 30 } ]},
+    { waypoints: [ { x: 23, y: 0, z: 30 }, { x: 23, y: 40, z: 30 } ]},
+    { waypoints: [ { x: 29, y: 0, z: 30 }, { x: 29, y: 40, z: 30 } ]}
   ],
   storeys: [{
     name: 'ground floor (east-west)',
     repeat: 1,
-    height: 7.5,
+    height: 15,
     floors: [{ 
       outline: {
         shape: 'polygon',
@@ -188,25 +193,25 @@ export default /* eslint-disable */
         doors: [{ $ref: '#/def/BOULEVARD_END_OPENING' }]
       }, {
         end: { $ref: '#/def/C' },
-        windows: [{ $ref: '#/def/CORNER_WINDOW' }]
+        doors: [{ $ref: '#/def/CORNER_OPENING' }]
       }, {
         end: { $ref: '#/def/D' },
         doors: [{ $ref: '#/def/BOULEVARD_END_OPENING' }]
       }, {
         end: { $ref: '#/def/E' },
-        windows: [{ $ref: '#/def/CORNER_WINDOW' }]
+        doors: [{ $ref: '#/def/CORNER_OPENING' }]
       }, {
         end: { $ref: '#/def/F' },
         doors: [{ $ref: '#/def/BOULEVARD_END_OPENING' }]
       }, {
         end: { $ref: '#/def/G' },
-        windows: [{ $ref: '#/def/CORNER_WINDOW' }]
+        doors: [{ $ref: '#/def/CORNER_OPENING' }]
       }, {
         end: { $ref: '#/def/H' },
         doors: [{ $ref: '#/def/BOULEVARD_END_OPENING' }]
       }, {
         end: { $ref: '#/def/A' },
-        windows: [{ $ref: '#/def/CORNER_WINDOW' }]
+        doors: [{ $ref: '#/def/CORNER_OPENING' }]
       }
     ]},
     roof: {
@@ -215,7 +220,7 @@ export default /* eslint-disable */
     }
   }, {
     name: 'roof parapet',
-    altitude: 41.5,
+    altitude: 49,
     height: 4,
     walls: {
       exterior: [{

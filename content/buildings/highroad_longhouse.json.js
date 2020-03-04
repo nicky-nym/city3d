@@ -21,15 +21,15 @@ export default /* eslint-disable */
         spacing: 5,
         feature: {
           motion: 'awning',
-          outline: { shape: 'rectangle', size: { x: 4, y: 7 } },
-          at: { x: 0, y: 7, from: 'center'}
+          outline: { shape: 'rectangle', size: { x: 4, y: 6 } },
+          at: { x: 0, y: 6, from: 'center'}
         }
       }
     },
-    LONGHOUSE_END_OPENING: {
+    LONGHOUSE_END_WINDOW: {
       motion: 'awning',
-      outline: { shape: 'rectangle', size: { x: 29, y: 11.25 } },
-      at: { x: 0, from: 'center'}
+      outline: { shape: 'rectangle', size: { x: 29, y: 3 } },
+      at: { x: 0, y: 7.5, from: 'center'}
     },
     BOULEVARD_WINDOWS: {
       repeat: {
@@ -48,15 +48,15 @@ export default /* eslint-disable */
     }
   },
   routes: [
-    { waypoints: [ { x: 6, y: 0, z: 22.5 }, { x: 6, y: 590, z: 22.5 } ]},
-    { waypoints: [ { x: 12, y: 0, z: 22.5 }, { x: 12, y: 590, z: 22.5 } ]},
-    { waypoints: [ { x: 18, y: 0, z: 22.5 }, { x: 18, y: 590, z: 22.5 } ]},
-    { waypoints: [ { x: 24, y: 0, z: 22.5 }, { x: 24, y: 590, z: 22.5 } ]},
+    { waypoints: [ { x: 6, y: 0, z: 30 }, { x: 6, y: 590, z: 30 } ]},
+    { waypoints: [ { x: 12, y: 0, z: 30 }, { x: 12, y: 590, z: 30 } ]},
+    { waypoints: [ { x: 18, y: 0, z: 30 }, { x: 18, y: 590, z: 30 } ]},
+    { waypoints: [ { x: 24, y: 0, z: 30 }, { x: 24, y: 590, z: 30 } ]},
   ],
   storeys: [{
     name: 'lower floors (north-south)',
-    repeat: 2,
-    height: 11.25,
+    repeat: 3,
+    height: 10,
     floors: [{ 
       outline: {
         shape: 'polygon',
@@ -74,13 +74,13 @@ export default /* eslint-disable */
         name: 'front wall',
         begin: { $ref: '#/def/A' },
         end: { $ref: '#/def/B' },
-        doors: [{ $ref: '#/def/LONGHOUSE_END_OPENING' }]
+        windows: [{ $ref: '#/def/LONGHOUSE_END_WINDOW' }]
       }, {
         end: { $ref: '#/def/C' },
         windows: [{ $ref: '#/def/LONGHOUSE_WINDOWS' }]
       }, {
         end: { $ref: '#/def/D' },
-        doors: [{ $ref: '#/def/LONGHOUSE_END_OPENING' }]
+        windows: [{ $ref: '#/def/LONGHOUSE_END_WINDOW' }]
       }, {
         end: { $ref: '#/def/A' },
         windows: [{ $ref: '#/def/LONGHOUSE_WINDOWS' }]
@@ -124,7 +124,7 @@ export default /* eslint-disable */
     }
   }, {
     name: 'roof parapet',
-    altitude: 41.5,
+    altitude: 49,
     height: 4,
     walls: {
       exterior: [{

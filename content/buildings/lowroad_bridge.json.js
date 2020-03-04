@@ -33,14 +33,32 @@ export default /* eslint-disable */
     }
   },
   routes: [
-    { waypoints: [ { y: 6, x: 0, z: 7.5 }, { y: 6, x: 60, z: 7.5 } ]},
-    { waypoints: [ { y: 12, x: 0, z: 7.5 }, { y: 12, x: 60, z: 7.5 } ]},
-    { waypoints: [ { y: 18, x: 0, z: 7.5 }, { y: 18, x: 60, z: 7.5 } ]},
-    { waypoints: [ { y: 24, x: 0, z: 7.5 }, { y: 24, x: 60, z: 7.5 } ]},
+    /* lowroad bridge */
+    { waypoints: [ { y: 6, x: 0, z: 15 }, { y: 6, x: 60, z: 15 } ]},
+    { waypoints: [ { y: 12, x: 0, z: 15 }, { y: 12, x: 60, z: 15 } ]},
+    { waypoints: [ { y: 18, x: 0, z: 15 }, { y: 18, x: 60, z: 15 } ]},
+    { waypoints: [ { y: 24, x: 0, z: 15 }, { y: 24, x: 60, z: 15 } ]},
+    /* highroad u-turns */
+    { waypoints: [
+      { y: 0, x: 71, z: 30 },
+      { y: 5, x: 65, z: 30 },
+      { y: 12, x: 40, z: 30 },
+      { y: 12, x: 20, z: 30 },
+      { y: 5, x: -5, z: 30 },
+      { y: 0, x: -11, z: 30 }
+    ]},
+    { waypoints: [
+      { y: 30, x: -11, z: 30 },
+      { y: 25, x: -5, z: 30 },
+      { y: 18, x: 20, z: 30 },
+      { y: 18, x: 40, z: 30 },
+      { y: 25, x: 65, z: 30 },
+      { y: 30, x: 71, z: 30 }
+    ]}
   ],
   storeys: [{
     name: 'boulevard',
-    altitude: 7.5,
+    altitude: 15,
     height: 15,
     floors: [{ 
       outline: {

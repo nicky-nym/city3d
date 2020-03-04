@@ -107,7 +107,7 @@ function addLatticeburg (specReader) {
   latticeburg.add(new CITY.SoccerField({ at: { x: 1620 - 740, y: 515 - 140, z: 0 } }))
   addObjectFromSpec(latticeburg, specReader, 'Lattice Parcel', { x: 0, y: 100, z: 0 })
   addObjectFromSpec(latticeburg, specReader, 'Lattice Parcel', { x: 0, y: 830, z: 0 })
-  latticeburg.add(new MidriseComplex({ placement: new Ray(Facing.NORTH, { x: 198, y: 298, z: 0 }), numRowPairs: 4, numColPairs: 4 }))
+  latticeburg.add(new MidriseComplex({ placement: new Ray(Facing.NORTH, { x: 198, y: 298, z: 7.5 }), numRowPairs: 4, numColPairs: 4 }))
   latticeburg.add(new CITY.EiffelTower({ placement: new Ray(Facing.NORTH, { x: 390, y: 1220, z: 0 }) }))
   return latticeburg
 }

@@ -33,14 +33,14 @@ export default /* eslint-disable */
     }
   },
   routes: [
-    { waypoints: [ { x: 6, y: 0, z: 22.5 }, { x: 6, y: 60, z: 22.5 } ]},
-    { waypoints: [ { x: 12, y: 0, z: 22.5 }, { x: 12, y: 60, z: 22.5 } ]},
-    { waypoints: [ { x: 18, y: 0, z: 22.5 }, { x: 18, y: 60, z: 22.5 } ]},
-    { waypoints: [ { x: 24, y: 0, z: 22.5 }, { x: 24, y: 60, z: 22.5 } ]},
+    { waypoints: [ { x: 6, y: 0, z: 30 }, { x: 6, y: 60, z: 30 } ]},
+    { waypoints: [ { x: 12, y: 0, z: 30 }, { x: 12, y: 60, z: 30 } ]},
+    { waypoints: [ { x: 18, y: 0, z: 30 }, { x: 18, y: 60, z: 30 } ]},
+    { waypoints: [ { x: 24, y: 0, z: 30 }, { x: 24, y: 60, z: 30 } ]},
   ],
   storeys: [{
     name: 'boulevard',
-    altitude: 22.5,
+    altitude: 30,
     height: 15,
     floors: [{ 
       outline: {
@@ -77,7 +77,7 @@ export default /* eslint-disable */
     }
   }, {
     name: 'roof parapet',
-    altitude: 41.5,
+    altitude: 49,
     height: 4,
     walls: {
       exterior: [{

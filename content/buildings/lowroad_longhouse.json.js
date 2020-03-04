@@ -41,6 +41,16 @@ export default /* eslint-disable */
         }
       }
     },
+    BOULEVARD_SIDE_OPENINGS: {
+      repeat: {
+        spacing: 29.5,
+        feature: {
+          motion: 'open',
+          outline: { shape: 'rectangle', size: { x: 29, y: 14.5 } },
+          at: { x: 0, from: 'center'}
+        }
+      }
+    },
     BOULEVARD_END_OPENING: {
       motion: 'awning',
       outline: { shape: 'rectangle', size: { x: 29, y: 15 } },
@@ -48,15 +58,15 @@ export default /* eslint-disable */
     }
   },
   routes: [
-    { waypoints: [ { y: 6, x: 0, z: 7.5 }, { y: 6, x: 590, z: 7.5 } ]},
-    { waypoints: [ { y: 12, x: 0, z: 7.5 }, { y: 12, x: 590, z: 7.5 } ]},
-    { waypoints: [ { y: 18, x: 0, z: 7.5 }, { y: 18, x: 590, z: 7.5 } ]},
-    { waypoints: [ { y: 24, x: 0, z: 7.5 }, { y: 24, x: 590, z: 7.5 } ]},
+    { waypoints: [ { y: 6, x: 0, z: 15 }, { y: 6, x: 590, z: 15 } ]},
+    { waypoints: [ { y: 12, x: 0, z: 15 }, { y: 12, x: 590, z: 15 } ]},
+    { waypoints: [ { y: 18, x: 0, z: 15 }, { y: 18, x: 590, z: 15 } ]},
+    { waypoints: [ { y: 24, x: 0, z: 15 }, { y: 24, x: 590, z: 15 } ]},
   ],
   storeys: [{
     name: 'ground floor (east-west)',
     repeat: 1,
-    height: 7.5,
+    height: 15,
     floors: [{ 
       outline: {
         shape: 'polygon',
@@ -106,7 +116,7 @@ export default /* eslint-disable */
         name: 'front wall',
         begin: { $ref: '#/def/A' },
         end: { $ref: '#/def/B' },
-        windows: [{ $ref: '#/def/BOULEVARD_WINDOWS' }]
+        windows: [{ $ref: '#/def/BOULEVARD_SIDE_OPENINGS' }]
       }, {
         end: { $ref: '#/def/C' },
         doors: [{ $ref: '#/def/BOULEVARD_END_OPENING' }]
@@ -120,7 +130,6 @@ export default /* eslint-disable */
     ]}
   }, {
     name: 'top floor (east-west)',
-    repeat: 1,
     height: 15,
     floors: [{ 
       outline: {
@@ -157,7 +166,7 @@ export default /* eslint-disable */
     }
   }, {
     name: 'roof parapet',
-    altitude: 41.5,
+    altitude: 49,
     height: 4,
     walls: {
       exterior: [{
