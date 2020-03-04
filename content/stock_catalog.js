@@ -16,6 +16,7 @@ import HIGHROAD_LONGHOUSE from './buildings/highroad_longhouse.json.js'
 import HOTEL_ON_BOARDWALK from './buildings/hotel_on_boardwalk.json.js'
 import HOUSE_ON_PARK_PLACE from './buildings/house_on_park_place.json.js'
 import HOUSE_353 from './buildings/house_353.json.js'
+import HOUSE_1127 from './buildings/house_1127.json.js'
 import LONGHOUSE_JUNCTION from './buildings/longhouse_junction.json.js'
 import LONGHOUSE_RAMPS from './buildings/longhouse_ramps.json.js'
 import LOWROAD_BRIDGE from './buildings/lowroad_bridge.json.js'
@@ -61,6 +62,7 @@ class StockCatalog extends Catalog {
       HOTEL_ON_BOARDWALK,
       HOUSE_ON_PARK_PLACE,
       HOUSE_353,
+      HOUSE_1127,
       LONGHOUSE_JUNCTION,
       LONGHOUSE_RAMPS,
       LOWROAD_BRIDGE,

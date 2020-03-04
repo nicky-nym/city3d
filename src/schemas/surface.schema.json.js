@@ -39,7 +39,8 @@ export default /* eslint-disable */
         "shingled",
         "standing seam",
         "parquet",
-        "batten"
+        "batten",
+        "rusticated"
       ]
     },
     "material": {
