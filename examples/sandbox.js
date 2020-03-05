@@ -144,7 +144,7 @@ function main () {
   const extras = new CITY.Model({ name: 'extras' })
   addObjectFromSpec(extras, specReader, 'Hotel on Boardwalk', { x: -300, y: 60, z: 0 })
   addObjectFromSpec(extras, specReader, 'House on Park Place', { x: -300, y: 100, z: 0 })
-  addObjectFromSpec(extras, specReader, 'House 1127', { x: -350, y: -100, z: 0 })
+  addObjectFromSpec(extras, specReader, 'Parcel 1127', { x: -600, y: -230, z: 0 })
   addPyramid(extras)
   addKalpanaOrbital(extras)
   addMovers(extras)
