@@ -73,12 +73,12 @@ function addInstancedBuildings (district) {
   const specReader = new SpecReader()
 
   const cottagePoses = [
-    { x: -440, y: 250, z: 0, rotated: Facing.NORTH },
-    { x: -360, y: 250, z: 0, rotated: Facing.NORTH, mirrored: true },
-    { x: -350, y: 220, z: 0, rotated: Facing.EAST },
-    { x: -450, y: 200, z: 0, rotated: Facing.WEST },
-    { x: -410, y: 150, z: 0, rotated: Facing.SOUTHWEST },
-    { x: -390, y: 150, z: 0, rotated: Facing.SOUTHEAST, mirrored: true }
+    { x: -540, y: -200, z: 0, rotated: Facing.NORTH },
+    { x: -460, y: -200, z: 0, rotated: Facing.NORTH, mirrored: true },
+    { x: -450, y: -170, z: 0, rotated: Facing.EAST },
+    { x: -550, y: -150, z: 0, rotated: Facing.WEST },
+    { x: -510, y: -100, z: 0, rotated: Facing.SOUTHWEST },
+    { x: -490, y: -100, z: 0, rotated: Facing.SOUTHEAST, mirrored: true }
   ]
   const cottage1 = specReader.makeModelFromSpecName('Cottage', { x: 0, y: 0, z: 0 })
   const cottagePoses1 = cottagePoses.map(p => CITY.Pose.combine(p, { x: 0, y: 0, z: 0 }))
@@ -138,13 +138,11 @@ function main () {
   const specReader = new SpecReader()
   addObjectFromSpec(city, specReader, 'Suburbia', { x: -550, y: -800, z: 0 })
   addObjectFromSpec(city, specReader, 'Campus', { x: 50, y: -400, z: 0 })
-  addObjectFromSpec(city, specReader, 'Manhattan', { x: -200, y: 800, z: 0 })
+  addObjectFromSpec(city, specReader, 'Manhattan', { x: -610, y: 800, z: 0 })
+  addObjectFromSpec(city, specReader, 'Layered buildings', { x: -600, y: 40, z: 0 })
   const latticeburg = addLatticeburg(specReader)
 
   const extras = new CITY.Model({ name: 'extras' })
-  addObjectFromSpec(extras, specReader, 'Hotel on Boardwalk', { x: -300, y: 60, z: 0 })
-  addObjectFromSpec(extras, specReader, 'House on Park Place', { x: -300, y: 100, z: 0 })
-  addObjectFromSpec(extras, specReader, 'Parcel 1127', { x: -600, y: -230, z: 0 })
   addPyramid(extras)
   addKalpanaOrbital(extras)
   addMovers(extras)
