@@ -200,6 +200,8 @@ export default /* eslint-disable */
           at: { x: 0, y: 5, from: 'center' },
           casing: { width: 0.5 }
         }]
+      }, {
+        end: { $ref: '#/def/A' },
       }]
     }
   }, {

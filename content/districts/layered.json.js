@@ -23,10 +23,16 @@ export default /* eslint-disable */
   }, {
     copy: { $ref: 'Parcel 353' },
     pose: { x: 400, y: 300 }
+  }, {
+    copy: { $ref: 'Parcel 353' },
+    pose: { x: 400, y: 350 }
   }],
   contents: [{
     copy: { $ref: 'Carriage House' },
-    pose: { x: 303, y: 330 }
+    pose: { x: 193, y: 323, rotated: 90 }
+  }, {
+    copy: { $ref: 'Carriage House' },
+    pose: { x: 303, y: 380 }
   }, {
     copy: { $ref: 'House on Park Place' },
     pose: { x: 200, y: 500 }

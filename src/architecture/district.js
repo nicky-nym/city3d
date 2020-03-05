@@ -5,7 +5,7 @@
  * For more information, please refer to <http://unlicense.org>
  */
 
-import { array, countTo, xyzAdd } from '../core/util.js'
+import { array, countTo } from '../core/util.js'
 import { FeatureInstance, InstancedFeature } from '../core/feature.js'
 import { Geometry } from '../core/geometry.js'
 import { LAYER } from './layer.js'
@@ -176,8 +176,8 @@ class District extends Model {
       y: i * offset.y,
       z: i * offset.z
     }
-    const iAt = xyzAdd(copySpec.pose, iOffset)
-    const mergedPose = Pose.combine(pose, iAt)
+    const copyPose = Pose.combine(copySpec.pose, iOffset)
+    const mergedPose = Pose.combine(pose, copyPose)
     const modelObject = specReader.makeModelFromSpecName(specName, mergedPose)
     this.add(modelObject)
   }

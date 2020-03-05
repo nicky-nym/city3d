@@ -23,7 +23,7 @@ class Ray {
     let ray = new Ray(rotated, { x, y, z }, { mirror: mirrored })
     while (subPose) {
       const subXyz = ray.applyRay(subPose)
-      ray = new Ray(ray.az + subPose.rotated || 0, subXyz)
+      ray = new Ray(ray.az + (subPose.rotated || 0), subXyz)
       subPose = subPose.subPose
     }
     return ray
