@@ -18,35 +18,38 @@ export default /* eslint-disable */
     copy: { $ref: 'Parcel 353' },
     pose: { x: 400, y: 50 }
   }, {
-    copy: { $ref: 'Parcel 353' },
-    pose: { x: 400, y: 100 }
-  }, {
     copy: { $ref: 'Parcel 1127' },
-    pose: { x: 50, y: 150 }
+    pose: { x: 50, y: 100 }
+  }, {
+    copy: { $ref: 'Parcel 353' },
+    pose: { x: 400, y: 300 }
   }],
   contents: [{
-    copy: { $ref: 'House on Park Place' },
-    pose: { x: 200, y: 400 }
+    copy: { $ref: 'Carriage House' },
+    pose: { x: 303, y: 330 }
   }, {
     copy: { $ref: 'House on Park Place' },
-    pose: { x: 230, y: 400 }
+    pose: { x: 200, y: 500 }
   }, {
     copy: { $ref: 'House on Park Place' },
-    pose: { x: 260, y: 400 }
+    pose: { x: 230, y: 500 }
   }, {
     copy: { $ref: 'House on Park Place' },
-    pose: { x: 290, y: 400 }
+    pose: { x: 260, y: 500 }
+  }, {
+    copy: { $ref: 'House on Park Place' },
+    pose: { x: 290, y: 500 }
   }, {
     copy: { $ref: 'Hotel on Boardwalk' },
-    pose: { x: 340, y: 400 }
+    pose: { x: 340, y: 500 }
   }, {
     copy: { $ref: 'Wurster Hall' },
-    pose: { x: 40, y: 500 }
+    pose: { x: 40, y: 600 }
   }, {
     copy: { $ref: 'Highrise building' },
-    pose: { x: 120, y: 900 }
+    pose: { x: 120, y: 1000 }
   }, {
     copy: { $ref: 'Highrise building' },
-    pose: { x: 320, y: 900 }
+    pose: { x: 320, y: 1000 }
   }]
 }

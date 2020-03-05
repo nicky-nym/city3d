@@ -92,10 +92,10 @@ export default /* eslint-disable */
     pose: { x: -210, y: 25, rotated: 0 }
   }, {
     copy: { $ref: 'Tree' },
-    pose: { x: -90, y: 40 }
+    pose: { x: -215, y: 40 }
   }, {
     copy: { $ref: 'Table' },
-    pose: { x: -80, y: 24 }
+    pose: { x: -210, y: 10 }
   }, {
     copy: { $ref: 'Dog' },
     pose: { x: -10, y: 30 }

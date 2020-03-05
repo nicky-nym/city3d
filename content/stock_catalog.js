@@ -8,6 +8,7 @@
 import { Catalog } from './catalog.js'
 
 // buildings
+import CARRIAGE_HOUSE from './buildings/carriage_house.json.js'
 import COTTAGE from './buildings/cottage.json.js'
 import GARAGE from './buildings/garage.json.js'
 import HIGHRISE from './buildings/highrise.json.js'
@@ -56,6 +57,7 @@ class StockCatalog extends Catalog {
     super()
     this.registerSpec([
       // buildings
+      CARRIAGE_HOUSE,
       COTTAGE,
       GARAGE,
       HIGHRISE,
