@@ -35,6 +35,7 @@ import SUBURBIA from './districts/suburbia.json.js'
 import LATTICE_PARCEL from './parcels/lattice_parcel.json.js'
 import PARCEL_353 from './parcels/parcel_353.json.js'
 import PARCEL_1127 from './parcels/parcel_1127.json.js'
+import MIDRISE_PARCEL from './parcels/midrise_parcel.json.js'
 
 // landscape
 import TREE from './landscape/tree.json.js'
@@ -83,6 +84,7 @@ class StockCatalog extends Catalog {
 
       // parcels
       LATTICE_PARCEL,
+      MIDRISE_PARCEL,
       PARCEL_353,
       PARCEL_1127,
 

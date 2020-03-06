@@ -26,6 +26,9 @@ export default /* eslint-disable */
   }, {
     copy: { $ref: 'Parcel 353' },
     pose: { x: 400, y: 350 }
+  }, {
+    copy: { $ref: 'Midrise Parcel' },
+    pose: { x: 460, y: 600 }
   }],
   contents: [{
     copy: { $ref: 'Carriage House' },
@@ -50,10 +53,7 @@ export default /* eslint-disable */
     pose: { x: 340, y: 500 }
   }, {
     copy: { $ref: 'Midrise building' },
-    pose: { x: 460, y: 500 }
-  }, {
-    copy: { $ref: 'Midrise building' },
-    pose: { x: 508, y: 500, rotated: 270 }
+    pose: { x: 100, y: 500 }
   }, {
     copy: { $ref: 'Wurster Hall' },
     pose: { x: 40, y: 600 }
