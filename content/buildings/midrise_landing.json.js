@@ -44,14 +44,8 @@ export default /* eslint-disable */
   routes: [{
     name: 'route across landing',
     waypoints: [
-      { $ref: '#/def/AB' },
-      { $ref: '#/def/EF' }
-    ]
-  }, {
-    name: 'route across landing',
-    waypoints: [
       { $ref: '#/def/CD' },
-      { $ref: '#/def/GH' }
+      { $ref: '#/def/EF' }
     ]
   }],
   storeys: [{

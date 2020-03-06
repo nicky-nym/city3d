@@ -38,19 +38,19 @@ export default /* eslint-disable */
     pose: { x: 0, y: 24 }
   }, {
     copy: { $ref: 'Midrise Landing' },
-    pose: { x: 0, y: 48, z: 2.5 }
+    pose: { x: 0, y: 48, z: 2.5, rotated: 270 }
   }, {
     copy: { $ref: 'Midrise Ramp' },
     pose: { x: 24, y: 48, z: 2.5, rotated: 270 }
   }, {
     copy: { $ref: 'Midrise Landing' },
-    pose: { x: 48, y: 48, z: 5 }
+    pose: { x: 48, y: 48, z: 5, rotated: 180 }
   }, {
     copy: { $ref: 'Midrise Ramp' },
     pose: { x: 48, y: 24, z: 5, rotated: 180 }
   }, {
     copy: { $ref: 'Midrise Landing' },
-    pose: { x: 48, y: 0, z: 7.5 }
+    pose: { x: 48, y: 0, z: 7.5, rotated: 90 }
   }, {
     copy: { $ref: 'Midrise Ramp' },
     pose: { x: 24, y: 0, z: 7.5, rotated: 90 }
