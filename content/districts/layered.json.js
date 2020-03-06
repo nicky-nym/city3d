@@ -12,7 +12,7 @@ export default /* eslint-disable */
   anchorPoint: { x: 360, y: 270, z: 0 },
   border: {
     shape: 'rectangle',
-    size: { x: 440, y: 1200 }
+    size: { x: 540, y: 1200 }
   },
   parcels: [{
     copy: { $ref: 'Parcel 353' },
@@ -48,6 +48,12 @@ export default /* eslint-disable */
   }, {
     copy: { $ref: 'Hotel on Boardwalk' },
     pose: { x: 340, y: 500 }
+  }, {
+    copy: { $ref: 'Midrise building' },
+    pose: { x: 460, y: 500 }
+  }, {
+    copy: { $ref: 'Midrise building' },
+    pose: { x: 508, y: 500, rotated: 270 }
   }, {
     copy: { $ref: 'Wurster Hall' },
     pose: { x: 40, y: 600 }

@@ -22,6 +22,7 @@ import LONGHOUSE_JUNCTION from './buildings/longhouse_junction.json.js'
 import LONGHOUSE_RAMPS from './buildings/longhouse_ramps.json.js'
 import LOWROAD_BRIDGE from './buildings/lowroad_bridge.json.js'
 import LOWROAD_LONGHOUSE from './buildings/lowroad_longhouse.json.js'
+import MIDRISE_BUILDING from './buildings/midrise_building.json.js'
 import WURSTER_HALL from './buildings/wurster_hall.json.js'
 
 // districts
@@ -71,6 +72,7 @@ class StockCatalog extends Catalog {
       LONGHOUSE_RAMPS,
       LOWROAD_BRIDGE,
       LOWROAD_LONGHOUSE,
+      MIDRISE_BUILDING,
       WURSTER_HALL,
 
       // districts
