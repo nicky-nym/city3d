@@ -34,11 +34,6 @@ export default /* eslint-disable */
     F: { x: -15, y: +21 },
     G: { x: -21, y: +15 },
     H: { x: -21, y: -15 },
-    /* cupola */
-    a: { x: -2, y: -2 },
-    b: { x: +2, y: -2 },
-    c: { x: +2, y: +2 },
-    d: { x: -2, y: +2 },
     OCTAGON: {
       shape: 'polygon',
       corners: [

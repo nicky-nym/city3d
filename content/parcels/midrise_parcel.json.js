@@ -43,6 +43,30 @@ export default /* eslint-disable */
     copy: { $ref: 'Midrise building' },
     pose: { x: -24, y: -24, rotated: 90 }
   }, {
+  //   copy: { $ref: 'Midrise Landing' },
+  //   pose: { x: 0, y: 0 }
+  // }, {
+  //   copy: { $ref: 'Midrise Ramp' },
+  //   pose: { x: 0, y: 24 }
+  // }, {
+  //   copy: { $ref: 'Midrise Landing' },
+  //   pose: { x: 0, y: 48, z: 2.5 }
+  // }, {
+  //   copy: { $ref: 'Midrise Ramp' },
+  //   pose: { x: 24, y: 48, z: 2.5, rotated: 270 }
+  // }, {
+  //   copy: { $ref: 'Midrise Landing' },
+  //   pose: { x: 48, y: 48, z: 5 }
+  // }, {
+  //   copy: { $ref: 'Midrise Ramp' },
+  //   pose: { x: 48, y: 24, z: 5, rotated: 180 }
+  // }, {
+  //   copy: { $ref: 'Midrise Landing' },
+  //   pose: { x: 48, y: 0, z: 7.5 }
+  // }, {
+  //   copy: { $ref: 'Midrise Ramp' },
+  //   pose: { x: 24, y: 0, z: 7.5, rotated: 90 }
+  // }, {
     copy: { $ref: 'Tree' },
     pose: { x: 18, y: 28, z: 54 }
   }, {

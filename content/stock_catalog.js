@@ -23,6 +23,8 @@ import LONGHOUSE_RAMPS from './buildings/longhouse_ramps.json.js'
 import LOWROAD_BRIDGE from './buildings/lowroad_bridge.json.js'
 import LOWROAD_LONGHOUSE from './buildings/lowroad_longhouse.json.js'
 import MIDRISE_BUILDING from './buildings/midrise_building.json.js'
+import MIDRISE_LANDING from './buildings/midrise_landing.json.js'
+import MIDRISE_RAMP from './buildings/midrise_ramp.json.js'
 import WURSTER_HALL from './buildings/wurster_hall.json.js'
 
 // districts
@@ -36,6 +38,7 @@ import LATTICE_PARCEL from './parcels/lattice_parcel.json.js'
 import PARCEL_353 from './parcels/parcel_353.json.js'
 import PARCEL_1127 from './parcels/parcel_1127.json.js'
 import MIDRISE_PARCEL from './parcels/midrise_parcel.json.js'
+import MIDRISE_SPIRAL_RAMP from './parcels/midrise_spiral_ramp.json.js'
 
 // landscape
 import TREE from './landscape/tree.json.js'
@@ -74,6 +77,8 @@ class StockCatalog extends Catalog {
       LOWROAD_BRIDGE,
       LOWROAD_LONGHOUSE,
       MIDRISE_BUILDING,
+      MIDRISE_LANDING,
+      MIDRISE_RAMP,
       WURSTER_HALL,
 
       // districts
@@ -85,6 +90,7 @@ class StockCatalog extends Catalog {
       // parcels
       LATTICE_PARCEL,
       MIDRISE_PARCEL,
+      MIDRISE_SPIRAL_RAMP,
       PARCEL_353,
       PARCEL_1127,
 

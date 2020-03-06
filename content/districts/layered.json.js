@@ -12,7 +12,7 @@ export default /* eslint-disable */
   anchorPoint: { x: 360, y: 270, z: 0 },
   border: {
     shape: 'rectangle',
-    size: { x: 540, y: 1200 }
+    size: { x: 600, y: 1200 }
   },
   parcels: [{
     copy: { $ref: 'Parcel 353' },
@@ -27,8 +27,35 @@ export default /* eslint-disable */
     copy: { $ref: 'Parcel 353' },
     pose: { x: 400, y: 350 }
   }, {
+    copy: { $ref: 'Midrise Spiral Ramp' },
+    pose: { x: 500, y: 500 }
+  }, {
+    copy: { $ref: 'Midrise Spiral Ramp' },
+    pose: { x: 500, y: 500, z: 10, rotated: 90 }
+  }, {
+    copy: { $ref: 'Midrise Spiral Ramp' },
+    pose: { x: 500, y: 500, z: 20, rotated: 180 }
+  }, {
+    copy: { $ref: 'Midrise Spiral Ramp' },
+    pose: { x: 500, y: 500, z: 30, rotated: 270 }
+  }, {
     copy: { $ref: 'Midrise Parcel' },
-    pose: { x: 460, y: 600 }
+    pose: { x: 500, y: 650 }
+  }, {
+    copy: { $ref: 'Midrise Spiral Ramp' },
+    pose: { x: 500, y: 800 }
+  }, {
+    copy: { $ref: 'Midrise Spiral Ramp' },
+    pose: { x: 500, y: 800, z: 10, rotated: 90 }
+  }, {
+    copy: { $ref: 'Midrise Spiral Ramp' },
+    pose: { x: 500, y: 800, z: 20, rotated: 180 }
+  }, {
+    copy: { $ref: 'Midrise Spiral Ramp' },
+    pose: { x: 500, y: 800, z: 30, rotated: 270 }
+  }, {
+    copy: { $ref: 'Midrise Parcel' },
+    pose: { x: 500, y: 800 }
   }],
   contents: [{
     copy: { $ref: 'Carriage House' },
