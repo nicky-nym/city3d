@@ -16,7 +16,7 @@
 
 |    | Current                                     | Future                    |
 |:-- | :-----                                      | :-----                    |
-|    | Basic components:<br>~ walls<br>~ floors<br>~ roofs<br>~ pavement<br>~ window & door openings<br>~ stairs | More components:<br>~railings & fences:<br>~ elevators<br>~ ceilings<br>~ light fixtures<br>~ window panes<br>~ door panels<br>~ skylights & atriums
+|    | Basic components:<br>~ walls<br>~ floors<br>~ roofs<br>~ pavement<br>~ window & door openings<br>~ stairs | More components:<br>~ railings & fences <br>~ elevators<br>~ ceilings<br>~ light fixtures<br>~ window panes<br>~ door panels<br>~ skylights & atriums
 |    | Roof features:<br>~ gables<br>~ pitched<br>~ shed<br>~ living roofs | Complex roof solver *(via straight skeletons)*
 |    | Parcels & districts                         |
 |    | Repeat patterns                             | Building materials & textures
