@@ -4,7 +4,7 @@
 
 |    | Past                                        | Future                    |
 |:-- | :-----                                      | :-----                    |
-|    | (as of March 2020)                          |
+|    | *(as of March 2020)*                        |
 |    | Lines, polygonal slabs with holes, inclines | Puffy trees & curved arches    
 |    | Rotated & mirrored objects                  | Scaled objects
 |    | Levels of Detail (LOD)                      | Materials & textures
@@ -16,8 +16,7 @@
 
 |    | Past                                        | Future                    |
 |:-- | :-----                                   | :-----                    |
-|    | (as of March 2020)                          |
-|    | Walls<br>~ floors<br>~ roofs<br>~ pavement<br>~ window & door openings<br>~ stairs | Railings & fences<br>~ Elevators<br>~ Ceilings<br>~ Light fixtures<br>~ Window panes<br>~ Doors<br>~ Skylights & atriums
+|    | Walls:<br>~ floors<br>~ roofs<br>~ pavement<br>~ window & door openings<br>~ stairs | Railings & fences:<br>~ Elevators<br>~ Ceilings<br>~ Light fixtures<br>~ Window panes<br>~ Doors<br>~ Skylights & atriums
 |    | Roof features:<br>~ gables<br>~ pitched<br>~ shed<br>~ living roofs | Complex roof solver (via straight skeletons)
 |    | Parcels & districts                      |
 |    | Repeat patterns                          | Building materials & textures
@@ -28,7 +27,6 @@
 
 |    | Past                                        | Future                    |
 |:-- | :-----                                   | :-----                    |
-|    | (as of March 2020)                          |
 |    | Bicycles, vehicles, and routes |
 |    | Landscape elements: canals, trees |
 |    | Structures:<br>~ SwingSet<br>~ EiffelTower<br>~ Pyramid<br>~ UtilityPole<br>~ Table |
@@ -38,7 +36,6 @@
 
 |    | Past                                        | Future                    |
 |:-- | :-----                                   | :-----                    |
-|    | (as of March 2020)                          |
 |    | Animated bicycles                        | Traffic flow simulation   |
 |    |                                          | Conjestion heatmaps       |
 |    |                                          | Analysis & reporting      |
@@ -48,14 +45,12 @@
 
 |    | Past                                        | Future                    |
 |:-- | :-----                                   | :-----                    |
-|    | (as of March 2020)                          |
 |    | Web browser (via Three.js & WebGL)       | VR headset                |
 
 ### UI features
 
 |    | Past                                        | Future                    |
 |:-- | :-----                                    | :-----                    |
-|    | (as of March 2020)                          |
 |    | First-person camera controls via keyboard | Camera routes (vehicles as camera dollies)
 |    | Orbit controls via mouse                  | Time-of-day & time-of-year lighting
 |    | Save & restore camera location            | Fog, rain, and other weather visual effects
@@ -67,8 +62,7 @@
 
 |    | Past                                        | Future                    |
 |:-- | :-----                                   | :-----                    |
-|    | (as of March 2020)                          |
-|    | Table views for reporting metrics        | Graphs and charts          \|
+|    | Table views for reporting metrics        | Graphs and charts          |
 |    | Simple metrics like floor area           | More metrics:<br>~ Floor Area Ratio (FAR)<br>~ Daylight Factor Estimates<br>~ Kinematic Range Estimates |
 
 
@@ -76,7 +70,6 @@
 
 |    | Past                                        | Future                    |
 |:-- | :-----                                   | :-----                    |
-|    | (as of March 2020)                          |
 |    | Unit tests (via mocha, chai, & standard) |                           |
 |    | Build step (via rollup)                  | minification (via terser) |
 |    | Schema validation (via Ajv)              |                           |
