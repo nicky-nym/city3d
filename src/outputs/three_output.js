@@ -344,6 +344,9 @@ class ThreeOutput extends Output {
           'green space heatmap': false,
           'assignable FAR heatmap': false
         }
+      },
+      analytics: {
+        sumo: this._onSumo.bind(this)
       }
     }
 
@@ -402,6 +405,9 @@ class ThreeOutput extends Output {
           ui.layers[category] = obj
         }
       }
+
+      const analyticsFolder = gui.addFolder('Analytics')
+      analyticsFolder.add(ui.analytics, 'sumo')
     }
   }
 
@@ -528,6 +534,10 @@ class ThreeOutput extends Output {
       const focus = this._camera.position.clone().add(new THREE.Vector3(diff.x, diff.y, 0))
       this._camera.lookAt(focus)
     }
+  }
+
+  _onSumo () {
+    window.alert('Hello World!')
   }
 
   animate () {
