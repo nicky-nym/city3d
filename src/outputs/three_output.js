@@ -14,6 +14,7 @@ import { xyz } from '../core/util.js'
 import { Output } from './output.js'
 import { OrbitControls } from '../../node_modules/three/examples/jsm/controls/OrbitControls.js'
 import { ThreeOutputScene } from './three_output_scene.js'
+import { SumoExporter } from '../exporters/sumo/sumo_exporter.js'
 
 const ONE_MILE = 5280
 const COLOR_BRIGHT_SKY = 0xddeeff // eslint-disable-line no-unused-vars
@@ -346,7 +347,7 @@ class ThreeOutput extends Output {
         }
       },
       analytics: {
-        sumo: this._onSumo.bind(this)
+        'download SUMO file': this._onSumo.bind(this)
       }
     }
 
@@ -407,7 +408,7 @@ class ThreeOutput extends Output {
       }
 
       const analyticsFolder = gui.addFolder('Analytics')
-      analyticsFolder.add(ui.analytics, 'sumo')
+      analyticsFolder.add(ui.analytics, 'download SUMO file')
     }
   }
 
@@ -537,7 +538,17 @@ class ThreeOutput extends Output {
   }
 
   _onSumo () {
-    window.alert('Hello World!')
+    const TODO = true
+    if (TODO) {
+      const sumo = new SumoExporter(null)
+      sumo.exportFiles()
+    } else {
+      // TODO: generate files for each model
+      for (const model of this._models) {
+        const sumo = new SumoExporter(model)
+        sumo.exportFiles()
+      }
+    }
   }
 
   animate () {
