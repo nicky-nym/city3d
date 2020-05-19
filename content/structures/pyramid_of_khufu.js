@@ -20,8 +20,8 @@ const halfBaseSpan = cubits(440) / 2
  * Class representing the Great Pyramid of Giza (aka the Pyramid of Khufu).
  */
 class PyramidOfKhufu extends Structure {
-  constructor ({ name = 'Great Pyramid of Giza', placement } = {}) {
-    super({ name, placement })
+  constructor ({ name = 'Great Pyramid of Giza', pose } = {}) {
+    super({ name, pose })
 
     const PEAK = xyz(0, 0, height)
     const NE = xyz(halfBaseSpan, halfBaseSpan, 0)

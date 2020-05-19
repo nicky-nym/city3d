@@ -11,18 +11,17 @@ import { Geometry } from '../../src/core/geometry.js'
 import { LAYER } from '../../src/architecture/layer.js'
 import { Model } from '../../src/architecture/model.js'
 import { UNIT } from '../../src/core/unit.js'
-import { Ray } from '../../src/core/ray.js'
+import { Pose } from '../../src/core/pose.js'
 
 const TRUNK_HEIGHT = UNIT.feet(8)
 const CROWN_HEIGHT = UNIT.feet(9)
 
 class Tree extends Model {
-  constructor ({ placement = new Ray(), trunkHeight = TRUNK_HEIGHT, name = 'Tree' } = {}) {
+  constructor ({ pose = Pose.origin(), trunkHeight = TRUNK_HEIGHT, name = 'Tree' } = {}) {
     super({ name, layer: LAYER.PLANTS })
-    const at = placement.xyz
-    this.add(this.makeTrunk(at, trunkHeight))
-    at.z += trunkHeight
-    this.add(this.makeCrown(at))
+    this.add(this.makeTrunk(pose, trunkHeight))
+    pose.z += trunkHeight
+    this.add(this.makeCrown(pose))
   }
 
   makeTrunk (atXy, trunkHeight) {

@@ -49,7 +49,7 @@ function addTrees (district) {
     new Ray(Facing.SOUTH, { x: 5, y: 50, z: 0 }, { mirror: true })
   ]))
 
-  district.add(new CITY.Tree({ placement: new Ray(Facing.NORTH, { x: 28, y: 52, z: 0 }), trunkHeight: 10, name: 'Topiary Tree' }))
+  district.add(new CITY.Tree({ pose: { x: 28, y: 52, z: 0 }, trunkHeight: 10, name: 'Topiary Tree' }))
   district.add(new CITY.InstancedFeature(new CITY.Tree({ trunkHeight: 12, name: 'Tree (MeshPhongMaterial, with normals)' }), [
     new Ray(Facing.NORTH, { x: 51, y: 45, z: 0 }),
     new Ray(Facing.EAST, { x: 75, y: 40, z: 0 }),
@@ -66,7 +66,7 @@ function addTrees (district) {
 }
 
 function addPyramid (district) {
-  district.add(new CITY.PyramidOfKhufu({ placement: new Ray(Facing.NORTH, { x: 500, y: -1500, z: 0 }) }))
+  district.add(new CITY.PyramidOfKhufu({ pose: { x: 500, y: -1500, z: 0 } }))
 }
 
 function addInstancedBuildings (district) {
