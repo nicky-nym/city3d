@@ -91,7 +91,6 @@ const APARTMENT_SPEC = [
 ]
 const APARTMENT = APARTMENT_SPEC.map(([point, openings]) => point)
 
-// TODO: refactor this code with code in house.js for HOUSE_WINDOWS and ADDON_WINDOWS
 const APARTMENT_WINDOWS = []
 let i = 0
 for (const [point, windows] of APARTMENT_SPEC) { // eslint-disable-line no-unused-vars
@@ -264,6 +263,7 @@ function _getLandingPattern (numRowPairs, numColPairs) {
 }
 
 class MidriseComplex extends Structure {
+  // TODO: replace this with a declarative midrise_complex.json.js
   constructor ({ name = 'Midrise Complex', placement, numRowPairs = 1, numColPairs = 1 } = {}) {
     super({ name, placement })
 
