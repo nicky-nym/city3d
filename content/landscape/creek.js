@@ -26,6 +26,16 @@ class Creek extends Model {
     super({ name })
   }
 
+  static sinusoidalPath (numSections, sectionLength) {
+    const path = []
+    for (const i of countTo(NUM_SECTIONS)) {
+      const y = SECTION_LENGTH * Math.sin(i * 4 / SECTION_LENGTH)
+      const x = X_OFFSET + i * SECTION_LENGTH
+      path.push({ x, y })
+    }
+    return path
+  }
+
   /**
    * Returns a Route that follows this Creek.
    * @param {number} [lane=2] - Choose an integer between 1 and 5 for one of five equally spaced lanes. 0 or 6 will
@@ -33,30 +43,19 @@ class Creek extends Model {
    * @returns {Route}
    */
   creekRoute (lane = 2, use = Use.CANAL) {
-    const route = []
     const offset = lane * CREEK_WIDTH / 6
-    // TODO: refactor this so that it's not a copy of the code in makeCreek()
-    for (const i of countTo(NUM_SECTIONS)) {
-      const y = SECTION_LENGTH * Math.sin(i * 4 / SECTION_LENGTH)
-      const x = X_OFFSET + i * SECTION_LENGTH
-      route.push(xyz(x, y + offset, CREEK_DEPTH))
-    }
+    const path = Creek.sinusoidalPath(NUM_SECTIONS, SECTION_LENGTH)
+    const route = path.map(xy => xyz(xy.x, xy.y + offset, CREEK_DEPTH))
     return new Route(route.slice(NUM_SECTIONS / 2), use)
   }
 
   makeCreek () {
     const BLUE = 0x0000ff
     const xyPolygon = new Geometry.XYPolygon()
-    for (const i of countTo(NUM_SECTIONS)) {
-      const y = SECTION_LENGTH * Math.sin(i * 4 / SECTION_LENGTH)
-      const x = X_OFFSET + i * SECTION_LENGTH
-      xyPolygon.push({ x, y })
-    }
-    for (const i of countTo(NUM_SECTIONS)) {
-      const y = CREEK_WIDTH + SECTION_LENGTH * Math.sin((NUM_SECTIONS - i) * 4 / SECTION_LENGTH)
-      const x = X_OFFSET + LENGTH - (i * SECTION_LENGTH)
-      xyPolygon.push({ x, y })
-    }
+    const path = Creek.sinusoidalPath(NUM_SECTIONS, SECTION_LENGTH)
+    path.forEach(xy => xyPolygon.push(xy))
+    path.reverse()
+    path.forEach(xy => xyPolygon.push({ x: xy.x, y: xy.y + CREEK_WIDTH }))
 
     const abstractThickPolygon = new Geometry.ThickPolygon(xyPolygon, { depth: CREEK_DEPTH })
     const concreteThickPolygon = new FeatureInstance(abstractThickPolygon, xyz(X_OFFSET, 0, 0), BLUE,
