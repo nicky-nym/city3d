@@ -171,8 +171,10 @@ class Roof extends Model {
     this.add(concreteThickPolygon)
   }
 
-  // TODO: do a DRY refactor to extract common code from _makeFlatRoof, _makeLivingRoof
-  _makeFlatRoof (placement, outline, openings, parapetHeight) {
+  _makeSlabAndParapetRoof (placement, outline, openings, parapetHeight, color, dz = 0) {
+    const dzPlacement = placement.copy()
+    dzPlacement.xyz.z += dz
+
     const openingSpecs = openings || []
     openings = []
     for (const opening of openingSpecs) {
@@ -182,26 +184,17 @@ class Roof extends Model {
       this._makeParapet(parapetHeight, placement, corners)
     }
     const corners = outline.corners()
-    this._makeSlab(corners, placement, ROOF_THICKNESS, LIGHT_GRAY, 0, openings)
+    this._makeSlab(corners, dzPlacement, ROOF_THICKNESS, color, 0, openings)
     this._makeParapet(parapetHeight, placement, corners)
+  }
+
+  _makeFlatRoof (placement, outline, openings, parapetHeight) {
+    this._makeSlabAndParapetRoof(placement, outline, openings, parapetHeight, LIGHT_GRAY)
   }
 
   // TODO: do a DRY refactor to extract common code from _makeFlatRoof, _makeLivingRoof
   _makeLivingRoof (placement, outline, openings, parapetHeight) {
-    const grassPlacement = placement.copy()
-    grassPlacement.xyz.z += parapetHeight
-
-    const openingSpecs = openings || []
-    openings = []
-    for (const opening of openingSpecs) {
-      const corners = Outline.cornersFromSpec(opening)
-      const adjustedCorners = placement.applyRay(corners)
-      openings.push(adjustedCorners)
-      this._makeParapet(parapetHeight, placement, corners)
-    }
-    const corners = outline.corners()
-    this._makeSlab(corners, grassPlacement, ROOF_THICKNESS, GREEN, 0, openings)
-    this._makeParapet(parapetHeight, placement, corners)
+    this._makeSlabAndParapetRoof(placement, outline, openings, parapetHeight, GREEN, parapetHeight)
   }
 
   // TODO: do a DRY refactor to extract common code from _makeShedRoof, _makeHippedRoof, _makePitchedRoof
