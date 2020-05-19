@@ -10,10 +10,11 @@ import { xyz } from '../../src/core/util.js'
 import { Facing } from '../../src/core/facing.js'
 import { FeatureInstance } from '../../src/core/feature.js'
 import { Geometry } from '../../src/core/geometry.js'
+import { Pose } from '../../src/core/pose.js'
 import { Structure } from '../../src/architecture/structure.js'
 
-function _makeLine (waypoints, placement, radius, color) {
-  const adjustedWaypoints = placement.applyRay(waypoints)
+function _makeLine (waypoints, pose, radius, color) {
+  const adjustedWaypoints = Pose.relocate(pose, waypoints)
   const line = new Geometry.Line(adjustedWaypoints, radius)
   return new FeatureInstance(line, adjustedWaypoints[0], color, { layer: Structure.layer })
 }
@@ -26,7 +27,8 @@ const platforms = [
   { height: 380, width: 129 }, // about 133 or 124 ?
   { height: 643, width: 70 },
   { height: 906, width: 57 }, // about 61 or 52 ?
-  { height: 990, width: 18 }
+  { height: 990, width: 18 },
+  { height: 990, width: 0 }
 ]
 
 /**
@@ -34,22 +36,15 @@ const platforms = [
  * TODO: replace this with a declarative eiffel_tower.json.js file
  */
 class EiffelTower extends Structure {
-  constructor ({ name = 'Eiffel tower', placement } = {}) {
-    super({ name, placement })
-
+  constructor ({ name = 'Eiffel tower', pose } = {}) {
+    super({ name, pose })
     for (const direction of [Facing.NORTH, Facing.SOUTH, Facing.EAST, Facing.WEST]) {
       this._drawQuadrant(direction)
     }
-    const mastPoints = [
-      xyz(0, 0, platforms[3].height),
-      xyz(0, 0, mastHeight)
-    ]
-    this._line(mastPoints, this.placement())
   }
 
   _drawQuadrant (direction) {
-    const ray = this.placement().copy()
-    ray.az = direction
+    const pose = { ...this.pose(), rotated: direction }
     const cornerPoints = []
     const xInsetPoints = []
     const yInsetPoints = []
@@ -66,7 +61,7 @@ class EiffelTower extends Structure {
       yInsetPoints[0],
       cornerPoints[0]
     ]
-    this._line(footingPoints, ray)
+    this._line(footingPoints, pose)
     for (const platform of platforms) {
       const { height, width } = platform
       const edge = width / 2
@@ -79,22 +74,23 @@ class EiffelTower extends Structure {
         xyz(edge, edge, height),
         xyz(edge, -edge, height)
       ]
-      this._line(platformPoints, ray)
+      this._line(platformPoints, pose)
       const platformThickness = insetDistance / 2
       platformPoints[0].z += platformThickness
       platformPoints[1].z += platformThickness
-      this._line(platformPoints, ray)
+      this._line(platformPoints, pose)
     }
-    this._line(cornerPoints, ray)
-    this._line(xInsetPoints, ray)
-    this._line(yInsetPoints, ray)
-    this._line(xyInsetPoints, ray)
+    cornerPoints.push(xyz(0, 0, mastHeight))
+    this._line(cornerPoints, pose)
+    this._line(xInsetPoints, pose)
+    this._line(yInsetPoints, pose)
+    this._line(xyInsetPoints, pose)
   }
 
-  _line (points, ray) {
+  _line (points, pose) {
     const radius = 2
     const IRON = 0x333333
-    this.add(_makeLine(points, ray, radius, IRON))
+    this.add(_makeLine(points, pose, radius, IRON))
   }
 }
 
