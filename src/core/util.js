@@ -108,10 +108,6 @@ function randomPseudoGaussian (median, standardDeviation) {
   return random
 }
 
-function x (x) {
-  return { x }
-}
-
 function xy (x, y) {
   return { x, y }
 }
@@ -169,4 +165,4 @@ function rectangleOfSize (sizeXY, at = { x: 0, y: 0 }) {
   ]
 }
 
-export { array, cornersFromShape, count, countTo, hypotenuse, length, randomInt, randomPseudoGaussian, x, xy, xyz, xyzAdd, xyzSubtract, xyRotate, xywh2rect, rectangleOfSize }
+export { array, cornersFromShape, count, countTo, hypotenuse, length, randomInt, randomPseudoGaussian, xy, xyz, xyzAdd, xyzSubtract, xyRotate, xywh2rect, rectangleOfSize }
