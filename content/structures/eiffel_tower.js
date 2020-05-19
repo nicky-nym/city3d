@@ -10,10 +10,8 @@ import { xyz } from '../../src/core/util.js'
 import { Facing } from '../../src/core/facing.js'
 import { FeatureInstance } from '../../src/core/feature.js'
 import { Geometry } from '../../src/core/geometry.js'
-// import { Ray } from '../../src/core/ray.js'
 import { Structure } from '../../src/architecture/structure.js'
 
-// TODO: refactor to merge this with _makeLine() in Swingset & UtilityPole
 function _makeLine (waypoints, placement, radius, color) {
   const adjustedWaypoints = placement.applyRay(waypoints)
   const line = new Geometry.Line(adjustedWaypoints, radius)
@@ -33,6 +31,7 @@ const platforms = [
 
 /**
  * Class representing the Eiffel tower in Paris.
+ * TODO: replace this with a declarative eiffel_tower.json.js file
  */
 class EiffelTower extends Structure {
   constructor ({ name = 'Eiffel tower', placement } = {}) {
