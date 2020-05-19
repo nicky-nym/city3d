@@ -6,11 +6,9 @@
  */
 
 import { xyz, xywh2rect, xyzAdd } from '../../src/core/util.js'
-import { Facing } from '../../src/core/facing.js'
 import { FeatureInstance } from '../../src/core/feature.js'
 import { Geometry } from '../../src/core/geometry.js'
 import { Model } from '../../src/architecture/model.js'
-import { Ray } from '../../src/core/ray.js'
 import { UNIT } from '../../src/core/unit.js'
 
 const FEET_PER_YARD = 3
@@ -64,8 +62,7 @@ class SoccerField extends Model {
   addMarkings (atXyz) {
     const CHALK = 0xffffff
     const CHALK_RADIUS = 0.2
-    const xyzSum = xyzAdd(atXyz, xyz(TURF_MARGIN, TURF_MARGIN, 0.3))
-    const ray = new Ray(Facing.NORTH, xyzSum)
+    const pose = xyzAdd(atXyz, xyz(TURF_MARGIN, TURF_MARGIN, 0.3))
 
     const touchlinesAndGoallines = xywh2rect(0, 0, FIELD.x, FIELD.y)
     const halfLine = [
@@ -77,19 +74,18 @@ class SoccerField extends Model {
     const rightGoalBox = xywh2rect(FIELD.x - GOAL_BOX.x, (FIELD.y - GOAL_BOX.y) / 2, GOAL_BOX.x, GOAL_BOX.y)
     const rightPenaltyBox = xywh2rect(FIELD.x - PENALTY_BOX.x, (FIELD.y - PENALTY_BOX.y) / 2, PENALTY_BOX.x, PENALTY_BOX.y)
 
-    this.addLine(touchlinesAndGoallines, ray, CHALK_RADIUS, CHALK, true)
-    this.addLine(halfLine, ray, CHALK_RADIUS, CHALK, true)
-    this.addLine(leftGoalBox, ray, CHALK_RADIUS, CHALK, true)
-    this.addLine(leftPenaltyBox, ray, CHALK_RADIUS, CHALK, true)
-    this.addLine(rightGoalBox, ray, CHALK_RADIUS, CHALK, true)
-    this.addLine(rightPenaltyBox, ray, CHALK_RADIUS, CHALK, true)
+    this.addLine(touchlinesAndGoallines, pose, CHALK_RADIUS, CHALK, true)
+    this.addLine(halfLine, pose, CHALK_RADIUS, CHALK, true)
+    this.addLine(leftGoalBox, pose, CHALK_RADIUS, CHALK, true)
+    this.addLine(leftPenaltyBox, pose, CHALK_RADIUS, CHALK, true)
+    this.addLine(rightGoalBox, pose, CHALK_RADIUS, CHALK, true)
+    this.addLine(rightPenaltyBox, pose, CHALK_RADIUS, CHALK, true)
   }
 
   addGoals (atXyz) {
     const WHITE = 0xffffff
     const GOAL_RADIUS = 0.3
-    const xyzSum = xyzAdd(atXyz, xyz(TURF_MARGIN, TURF_MARGIN, 0.3))
-    const ray = new Ray(Facing.NORTH, xyzSum)
+    const pose = xyzAdd(atXyz, xyz(TURF_MARGIN, TURF_MARGIN, 0.3))
     const leftGoalPosts = [
       xyz(0, (FIELD.y - GOAL_POSTS.y) / 2, 0),
       xyz(0, (FIELD.y - GOAL_POSTS.y) / 2, GOAL_POSTS.z),
@@ -102,8 +98,8 @@ class SoccerField extends Model {
       xyz(FIELD.x, (FIELD.y + GOAL_POSTS.y) / 2, GOAL_POSTS.z),
       xyz(FIELD.x, (FIELD.y + GOAL_POSTS.y) / 2, 0)
     ]
-    this.addLine(leftGoalPosts, ray, GOAL_RADIUS, WHITE, true)
-    this.addLine(rightGoalPosts, ray, GOAL_RADIUS, WHITE, true)
+    this.addLine(leftGoalPosts, pose, GOAL_RADIUS, WHITE, true)
+    this.addLine(rightGoalPosts, pose, GOAL_RADIUS, WHITE, true)
   }
 }
 

@@ -8,6 +8,7 @@
 import { FeatureGroup, FeatureInstance, FeatureLODGroup } from '../core/feature.js'
 import { Geometry } from '../core/geometry.js'
 import { Kayak } from '../../content/movers/kayak.js'
+import { Pose } from '../core/pose.js'
 import { Route } from '../routes/route.js'
 import { Use } from './use.js'
 import { Vehicle } from '../../content/movers/vehicle.js'
@@ -39,8 +40,8 @@ class Model extends FeatureLODGroup {
     }
   }
 
-  addLine (waypoints, ray, radius, color, cap = false) {
-    const adjustedWaypoints = ray.applyRay(waypoints)
+  addLine (waypoints, pose, radius, color, cap = false) {
+    const adjustedWaypoints = Pose.relocate(pose, waypoints)
     if (cap) {
       adjustedWaypoints.push(adjustedWaypoints[0])
     }
