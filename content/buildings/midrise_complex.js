@@ -4,11 +4,11 @@
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
  */
-
-import { xy, xyz, xywh2rect, count, countTo, randomInt, hypotenuse } from '../../src/core/util.js'
+import { xy, xyz, xyzAdd, xywh2rect, count, countTo, randomInt, hypotenuse } from '../../src/core/util.js'
 import { Byway } from '../../src/architecture/byway.js'
 import { Facing } from '../../src/core/facing.js'
 import { FeatureGroup } from '../../src/core/feature.js'
+import { Ray } from '../../src/core/ray.js'
 import { Roof } from '../../src/architecture/roof.js'
 import { Storey } from '../../src/architecture/storey.js'
 import { Structure } from '../../src/architecture/structure.js'
@@ -308,12 +308,16 @@ class MidriseComplex extends Structure {
     }
   }
 
+  _deprecatedGoto ({ x = 0, y = 0, z = 0 } = {}, facing) {
+    return new Ray(facing, xyzAdd(xyz(x, y, z), this.pose()))
+  }
+
   _addFeaturesAtLanding (rampBearings, at) {
     const [x, y, z] = at
     let placement
 
     // Landing
-    placement = this.deprecatedGoto({ x: x, y: y, z: z }, Facing.NORTH)
+    placement = this._deprecatedGoto({ x: x, y: y, z: z }, Facing.NORTH)
     this.add(new Byway({ placement, outline: OCTAGONAL_LANDING, deprecatedSpec: { use: Use.WALKWAY } }))
     this.mediumGroup.add(new Byway({ placement, outline: OCTAGONAL_LANDING, deprecatedSpec: { use: Use.WALKWAY } }))
     if (z % STOREY_HEIGHT === 0) {
@@ -322,7 +326,7 @@ class MidriseComplex extends Structure {
 
     // Ramps
     for (const bearing of rampBearings) {
-      placement = this.deprecatedGoto({ x: x, y: y, z: z }, bearing)
+      placement = this._deprecatedGoto({ x: x, y: y, z: z }, bearing)
       this.add(new Byway({ placement, outline: RAMP_CORNERS, deprecatedSpec: { use: Use.WALKWAY, incline: RAMP_RISE_HEIGHT } }))
       this.mediumGroup.add(new Byway({ placement, outline: RAMP_CORNERS, deprecatedSpec: { use: Use.WALKWAY, incline: RAMP_RISE_HEIGHT } }))
     }
@@ -331,28 +335,28 @@ class MidriseComplex extends Structure {
     if (z % STOREY_HEIGHT === 0) {
       for (const bearing of rampBearings) {
         // parcel
-        placement = this.deprecatedGoto({ x: x, y: y, z: 0 }, bearing)
+        placement = this._deprecatedGoto({ x: x, y: y, z: 0 }, bearing)
         this.add(new Storey({ placement, outline: BASEMENT, deprecatedSpec: { use: Use.PARCEL } }))
 
         // lower floors
         for (const altitude of count(0, z, STOREY_HEIGHT)) {
-          placement = this.deprecatedGoto({ x: x, y: y, z: altitude }, bearing)
+          placement = this._deprecatedGoto({ x: x, y: y, z: altitude }, bearing)
           this.add(new Storey({ placement, outline: BASEMENT, deprecatedSpec: { use: Use.ROOM } }))
         }
 
         // upper floors
         for (const altitude of count(z, ROOFLINE, STOREY_HEIGHT)) {
-          placement = this.deprecatedGoto({ x: x, y: y, z: altitude }, bearing)
+          placement = this._deprecatedGoto({ x: x, y: y, z: altitude }, bearing)
           this.add(new Storey({ placement, outline: APARTMENT, deprecatedSpec: { use: Use.ROOM, wall: STOREY_HEIGHT, openings: APARTMENT_WINDOWS } }))
         }
-        placement = this.deprecatedGoto({ x: x, y: y, z: z }, bearing)
+        placement = this._deprecatedGoto({ x: x, y: y, z: z }, bearing)
         this.mediumGroup.add(this.makePlaceholder(placement, Use.WALL, APARTMENT, ROOFLINE - z))
         this.lowGroup.add(this.makePlaceholder(placement, Use.WALL, APARTMENT, ROOFLINE - z))
 
         // roof
         const midpoint = (APARTMENT_WIDTH + D2) / 2
         const peak = xyz(midpoint, midpoint, randomInt(0, 4) * 7)
-        placement = this.deprecatedGoto({ x: x, y: y, z: ROOFLINE }, bearing)
+        placement = this._deprecatedGoto({ x: x, y: y, z: ROOFLINE }, bearing)
         this._addRoofAroundFloor(placement, ATTIC, peak)
       }
     }

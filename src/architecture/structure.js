@@ -12,7 +12,6 @@ import { LAYER } from './layer.js'
 import { Model } from './model.js'
 import { Pose } from '../core/pose.js'
 import { Ray } from '../core/ray.js'
-import { xyz, xyzAdd } from '../core/util.js'
 
 const WHITE = 0xffffff
 const RED = 0xcc0000 // eslint-disable-line no-unused-vars
@@ -75,10 +74,6 @@ class Structure extends Model {
     return Ray.fromPose(this._pose)
   }
 
-  deprecatedGoto ({ x = 0, y = 0, z = 0 } = {}, facing) {
-    return new Ray(facing, xyzAdd(xyz(x, y, z), this.pose()))
-  }
-
   pose () {
     return this._pose
   }
@@ -96,7 +91,7 @@ class Structure extends Model {
     return group
   }
 
-  makeModelFromSpec (spec, placement) {
+  makeModelFromSpec (spec, pose) {
     const { lines /* anchorPoint, */ } = spec
     if (spec.layer && typeof spec.layer === 'string') {
       spec.layer = Layer.getLayer(spec.layer)
@@ -104,7 +99,7 @@ class Structure extends Model {
     const options = spec.layer ? { layer: spec.layer } : { layer: LAYER.STRUCTURES }
     for (const lineSpec of lines) {
       const vertices = lineSpec.vertices
-      const adjustedWaypoints = Pose.relocate(placement, vertices)
+      const adjustedWaypoints = Pose.relocate(pose, vertices)
       const line = new Geometry.Line(adjustedWaypoints, lineSpec.radius)
       const result = new FeatureInstance(line, adjustedWaypoints[0], 0x663300, options)
       this.add(result)
