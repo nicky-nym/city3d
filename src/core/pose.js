@@ -7,6 +7,7 @@
 
 import { Facing } from '../core/facing.js'
 import { UNIT } from '../core/unit.js'
+import { Ray } from './ray.js'
 
 /**
  * A point (or vector) in a 3D space
@@ -26,6 +27,8 @@ import { UNIT } from '../core/unit.js'
  * @property {boolean} [mirrored=false] - true if transformed points are to be reflected about the x-axis
  * @property {pose} [subPose=null] - an additional pose to apply
  */
+
+const FUTURE = false
 
 /**
  * Pose is a class for representing how an instance of a 3D object is placed in a position.
@@ -56,10 +59,15 @@ class Pose {
    * @returns {xyz|xyz[]} corresponding points, placed into the pose
    */
   static relocate (pose, xyzOrList) {
-    if (Array.isArray(xyzOrList)) {
-      return xyzOrList.map(xyz => Pose._relocatePoint(pose, xyz))
+    if (FUTURE) {
+      if (Array.isArray(xyzOrList)) {
+        return xyzOrList.map(xyz => Pose._relocatePoint(pose, xyz))
+      } else {
+        return Pose._relocatePoint(pose, xyzOrList)
+      }
     } else {
-      return Pose._relocatePoint(pose, xyzOrList)
+      const placement = Ray.fromPose(pose)
+      return placement.applyRay(xyzOrList)
     }
   }
 
@@ -80,6 +88,8 @@ class Pose {
   }
 
   static collapse (pose) {
+    return Ray.fromPose(pose).asPose()
+    /*
     let finalPose = { ...Pose.origin(), ...pose }
     delete finalPose.subPose
     let subPose = pose.subPose
@@ -90,15 +100,17 @@ class Pose {
       subPose = subPose.subPose
     }
     return finalPose
+    */
   }
 
   static _relocatePoint (pose, xyz) {
     if (pose.subPose) {
-      xyz = Pose._mirrorRotateTranslate(pose.subPose, xyz)
+      xyz = Pose._relocatePoint(pose.subPose, xyz)
     }
-    return Pose._mirrorRotateTranslate(pose, xyz)
+    return Pose._rotateMirrorTranslate(pose, xyz)
   }
 
+  /*
   static _mirrorRotateTranslate (pose, xyz) {
     const mirrored = { ...xyz }
     mirrored.x = pose.mirrored ? -mirrored.x : mirrored.x
@@ -106,6 +118,26 @@ class Pose {
     rotated.z = mirrored.z
     return Pose._xyzAdd(rotated, pose)
   }
+  */
+
+  static _rotateMirrorTranslate (pose, xyz) {
+    const rotated = Pose._xyRotate(xyz, pose.rotated)
+    rotated.z = xyz.z
+    const mirrored = rotated
+    mirrored.x = pose.mirrored ? -mirrored.x : mirrored.x
+    return Pose._xyzAdd(mirrored, pose)
+  }
+
+  /*
+  static _mirrorTranslateRotate (pose, xyz) {
+    const mirrored = { ...xyz }
+    mirrored.x = pose.mirrored ? -mirrored.x : mirrored.x
+    const translated = Pose._xyzAdd(mirrored, pose)
+    const rotated = Pose._xyRotate(translated, pose.rotated)
+    rotated.z = mirrored.z
+    return rotated
+  }
+  */
 
   static _xyzAdd (xyz0, xyz1) {
     return {

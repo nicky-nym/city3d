@@ -1,5 +1,5 @@
 /** @file byway.js
- * @author Authored in 2019 at <https://github.com/nicky-nym/city3d>
+ * @author Authored in 2019, 2020 at <https://github.com/nicky-nym/city3d>
  * @license UNLICENSE
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
@@ -13,7 +13,7 @@ import { Storey } from './storey.js'
 class Byway extends Storey {
   constructor ({
     name,
-    placement,
+    pose,
     outline,
     deprecatedSpec = {}
   } = {}) {
@@ -21,7 +21,7 @@ class Byway extends Storey {
     const z = deprecatedSpec.z || 0
     const incline = deprecatedSpec.incline || 0
     const depth = deprecatedSpec.depth || -0.5
-    super({ name, placement, outline, deprecatedSpec: { use, z, incline, depth } })
+    super({ name, pose, outline, deprecatedSpec: { use, z, incline, depth } })
   }
 }
 

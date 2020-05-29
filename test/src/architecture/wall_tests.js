@@ -19,50 +19,65 @@ describe('Wall', function () {
 
   describe('#constructor', function () {
     it('should return a Wall with the right name if one was specified', function () {
-      const wall = new Wall({ name: 'Hadrian\'s Wall', deprecatedSpec: { v1: xy(0, 0), v2: xy(UNIT.km(117.5), 0), height: UNIT.meters(6) } })
+      const wall = new Wall({ name: 'Hadrian\'s Wall', spec: { begin: xy(0, 0), end: xy(UNIT.km(117.5), 0), height: UNIT.meters(6) } })
 
       wall.name.should.equal('Hadrian\'s Wall')
     })
     it('should return a Wall named "Wall" if no name was specified', function () {
-      const wall = new Wall({ deprecatedSpec: { v1: xy(0, 0), v2: xy(UNIT.km(117.5), 0), height: UNIT.meters(6) } })
+      const wall = new Wall({ spec: { begin: xy(0, 0), end: xy(UNIT.km(117.5), 0), height: UNIT.meters(6) } })
 
       wall.name.should.equal('Wall')
     })
     it('should return a Wall containing exactly one Instance', function () {
-      const wall = new Wall({ deprecatedSpec: { v1: xy(0, 0), v2: xy(UNIT.km(117.5), 0), height: UNIT.meters(6) } })
+      const wall = new Wall({ spec: { begin: xy(0, 0), end: xy(UNIT.km(117.5), 0), height: UNIT.meters(6) } })
 
       let count = 0
       wall.accept(node => { count += node instanceof FeatureInstance ? 1 : 0 })
       count.should.equal(1)
     })
     it('should return a Wall with the expected metrics for a wall with no openings', function () {
-      const wall = new Wall({ deprecatedSpec: { v1: xy(UNIT.km(3), 0), v2: xy(0, UNIT.km(4)), height: UNIT.meters(6) } })
+      const wall = new Wall({ spec: { begin: xy(UNIT.km(3), 0), end: xy(0, UNIT.km(4)), height: UNIT.meters(6) } })
 
       const expectedArea = 5 * FEET_PER_METER * 1000 * 6 * FEET_PER_METER
       wall._valuesByMetric.get(METRIC.WALL_AREA).should.be.closeTo(expectedArea, 0.1)
       wall._valuesByMetric.get(METRIC.WINDOW_AREA).should.equal(0)
     })
     it('should return a Wall with the expected metrics for a wall with one opening', function () {
-      const openings = [[xy(4, 3), xy(6, 3), xy(6, 5), xy(4, 5)]]
-      const wall = new Wall({ deprecatedSpec: { v1: xy(0, 0), v2: xy(10, 0), height: 6, openings } })
+      const windows = [{
+        outline: { shape: 'rectangle', size: { x: 2, y: 2 } },
+        at: { x: 4, y: 3, from: 'left' }
+      }]
+      const wall = new Wall({ spec: { begin: xy(0, 0), end: xy(10, 0), height: 6, windows } })
 
       wall._valuesByMetric.get(METRIC.WALL_AREA).should.equal(60)
       wall._valuesByMetric.get(METRIC.WINDOW_AREA).should.equal(4)
     })
     it('should return a Wall with the expected metrics for a wall with three openings', function () {
-      const openings = [
-        [xy(1, 3), xy(3, 3), xy(3, 5), xy(1, 5)],
-        [xy(4, 3), xy(6, 3), xy(6, 5), xy(4, 5)],
-        [xy(7, 3), xy(9, 3), xy(9, 5), xy(7, 5)]
-      ]
-      const wall = new Wall({ deprecatedSpec: { v1: xy(0, 6), v2: xy(8, 0), height: 6, openings } })
+      const square = { shape: 'rectangle', size: { x: 2, y: 2 } }
+      const windows = [{
+        outline: square, at: { x: 1, y: 3, from: 'left' }
+      }, {
+        outline: square, at: { x: 4, y: 3, from: 'left' }
+      }, {
+        outline: square, at: { x: 7, y: 3, from: 'left' }
+      }]
+      const wall = new Wall({ spec: { begin: xy(0, 6), end: xy(8, 0), height: 6, windows } })
 
       wall._valuesByMetric.get(METRIC.WALL_AREA).should.equal(60)
       wall._valuesByMetric.get(METRIC.WINDOW_AREA).should.equal(12)
     })
     it('should return a Wall with the expected metrics for a wall with a non-rectangular opening', function () {
-      const openings = [[xy(4, 3), xy(6, 3), xy(6, 5)]]
-      const wall = new Wall({ deprecatedSpec: { v1: xy(0, 0), v2: xy(10, 0), height: 6, openings } })
+      const windows = [{
+        outline: {
+          shape: 'polygon',
+          corners: [
+            { x: 4, y: 3 },
+            { x: 6, y: 3 },
+            { x: 6, y: 5 }
+          ]
+        }
+      }]
+      const wall = new Wall({ spec: { begin: xy(0, 0), end: xy(10, 0), height: 6, windows } })
 
       wall._valuesByMetric.get(METRIC.WALL_AREA).should.equal(60)
       wall._valuesByMetric.get(METRIC.WINDOW_AREA).should.equal(2)

@@ -6,7 +6,7 @@
  */
 
 import { Model } from './model.js'
-import { xywh2rect } from '../core/util.js'
+import { Outline } from '../core/outline.js'
 
 /**
 * Opening is an abstract superclass for Windows and Doors
@@ -17,6 +17,9 @@ class Opening extends Model {
   }
 
   setOutline (outline) {
+    if (!(outline instanceof Outline)) {
+      outline = new Outline(outline)
+    }
     this._outline = outline
   }
 
@@ -27,10 +30,7 @@ class Opening extends Model {
 
   openings () {
     const openings = []
-    // TODO: this assumes the outline is just a rectangled
-    // TODO: make an instance of Outline instead
-    const w = this._outline.size.x
-    const h = this._outline.size.y
+    const w = this._outline.width()
     let x = 0
     for (const at of this._atList) {
       const y = at.y || 0
@@ -41,7 +41,7 @@ class Opening extends Model {
       } else if (at.from === 'center') {
         x = (this._wallLength / 2) + at.x - (w / 2)
       }
-      openings.push(xywh2rect(x, y, w, h))
+      openings.push(this._outline.corners().map(xy => ({ x: xy.x + x, y: xy.y + y })))
     }
     return openings
   }

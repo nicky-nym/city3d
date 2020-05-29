@@ -8,32 +8,32 @@
 import { Feature } from '../../../src/core/feature.js'
 import { Model } from '../../../src/architecture/model.js'
 import { Roof } from '../../../src/architecture/roof.js'
-import { Ray } from '../../../src/core/ray.js'
+import { Pose } from '../../../src/core/pose.js'
 import { Wall } from '../../../src/architecture/wall.js'
 
 /* global describe, it, should */
 
 describe('Feature ', function () {
   const roofSpec = { flat: [] }
-  const ray = new Ray()
+  const pose = Pose.origin()
   let origNumRegisteredLayers
   let origNumCategories
   let origNumBuildingLayers
 
   describe('#layerIndex()', function () {
     it('should return valid value for a Roof', function () {
-      const roof = new Roof({ placement: ray, deprecatedSpec: roofSpec })
+      const roof = new Roof({ pose, deprecatedSpec: roofSpec })
       roof.layerIndex().should.be.within(1, 31)
     })
     it('should return same value for two different Roofs', function () {
-      const roof = new Roof({ placement: ray, deprecatedSpec: roofSpec })
-      const roof2 = new Roof({ placement: ray, deprecatedSpec: roofSpec })
+      const roof = new Roof({ pose, deprecatedSpec: roofSpec })
+      const roof2 = new Roof({ pose, deprecatedSpec: roofSpec })
 
       roof2.layerIndex().should.equal(roof.layerIndex())
     })
     it('should return different values for a Wall and a Roof', function () {
-      const roof = new Roof({ placement: ray, deprecatedSpec: roofSpec })
-      const wall = new Wall({ deprecatedSpec: { v1: new Ray(), v2: new Ray() } })
+      const roof = new Roof({ pose, deprecatedSpec: roofSpec })
+      const wall = new Wall({ spec: { begin: { x: 0, y: 0 }, end: { x: 0, y: 0 } } })
 
       wall.layerIndex().should.be.within(1, 31)
       wall.layerIndex().should.not.equal(roof.layerIndex())
@@ -132,7 +132,7 @@ describe('Feature ', function () {
     })
   })
 
-  const genericRoof = new Roof({ placement: ray, deprecatedSpec: roofSpec })
+  const genericRoof = new Roof({ pose, deprecatedSpec: roofSpec })
   const roofLayer = genericRoof._layer
   const roofLayerIndex = genericRoof.layerIndex()
 
@@ -142,7 +142,7 @@ describe('Feature ', function () {
 
     describe('#layerIndex()', function () {
       it('should return same value as for a Roof', function () {
-        const fancyRoof = new FancyRoof({ placement: new Ray(), deprecatedSpec: { flat: [] } })
+        const fancyRoof = new FancyRoof({ pose, deprecatedSpec: { flat: [] } })
 
         fancyRoof.layerIndex().should.equal(roofLayerIndex)
       })
@@ -151,8 +151,8 @@ describe('Feature ', function () {
 
   describe('With new class extending Roof and specifying a new layer', function () {
     class Dome extends Roof {
-      constructor (spec, placement, layer) {
-        super({ placement, layer, deprecatedSpec: spec })
+      constructor (spec, pose, layer) {
+        super({ pose, layer, deprecatedSpec: spec })
         this._layer = layer
       }
     }
@@ -160,7 +160,7 @@ describe('Feature ', function () {
     describe('#layerIndex()', function () {
       it('should return different value than for a Roof', function () {
         Dome.Layer = Feature.registerLayer('domes', { category: 'Buildings' })
-        const dome = new Dome(roofSpec, ray, Dome.Layer)
+        const dome = new Dome(roofSpec, pose, Dome.Layer)
 
         dome.layerIndex().should.not.equal(roofLayerIndex)
       })

@@ -6,7 +6,7 @@
  */
 
 import { FeatureInstance } from '../../../src/core/feature.js'
-import { Ray } from '../../../src/core/ray.js'
+import { Pose } from '../../../src/core/pose.js'
 import { Storey } from '../../../src/architecture/storey.js'
 import { Use } from '../../../src/architecture/use.js'
 import { xy } from '../../../src/core/util.js'
@@ -15,7 +15,7 @@ import { xy } from '../../../src/core/util.js'
 /* eslint-disable no-unused-expressions */
 
 describe('Storey', function () {
-  const ray = new Ray()
+  const pose = Pose.origin()
   const rectangle = [xy(0, 0), xy(50, 0), xy(50, 20), xy(0, 20)]
   let count
 
@@ -25,23 +25,23 @@ describe('Storey', function () {
     })
 
     it('should return a Group with the right name if one was specified', function () {
-      const room = new Storey({ name: 'lobby', placement: ray, outline: rectangle, deprecatedSpec: { use: Use.ROOM } })
+      const room = new Storey({ name: 'lobby', pose, outline: rectangle, deprecatedSpec: { use: Use.ROOM } })
 
       room.name.should.equal('lobby')
     })
     it('should return a Group named by its use if no name was specified', function () {
-      const room = new Storey({ placement: ray, outline: rectangle, deprecatedSpec: { use: Use.ROOM } })
+      const room = new Storey({ pose, outline: rectangle, deprecatedSpec: { use: Use.ROOM } })
 
       room.name.should.equal('ROOM')
     })
     it('should return a Group with one Instance when called with a rectangle and no wall value', function () {
-      const room = new Storey({ placement: ray, outline: rectangle, deprecatedSpec: { use: Use.ROOM } })
+      const room = new Storey({ pose, outline: rectangle, deprecatedSpec: { use: Use.ROOM } })
 
       room.accept(node => { count += node instanceof FeatureInstance ? 1 : 0 })
       count.should.equal(1)
     })
     it('should return a Group with five Instances when called with a rectangle and a wall value', function () {
-      const room = new Storey({ placement: ray, outline: rectangle, deprecatedSpec: { use: Use.ROOM, wall: 12 } })
+      const room = new Storey({ pose, outline: rectangle, deprecatedSpec: { use: Use.ROOM, wall: 12 } })
 
       room.accept(node => { count += node instanceof FeatureInstance ? 1 : 0 })
       count.should.equal(5)
@@ -50,13 +50,13 @@ describe('Storey', function () {
 
   describe('#floorDepth', function () {
     it('should return negative value if no depth was specified.', function () {
-      const storey = new Storey({ placement: ray, outline: rectangle, deprecatedSpec: { use: Use.BARE } })
+      const storey = new Storey({ pose, outline: rectangle, deprecatedSpec: { use: Use.BARE } })
 
       storey.floorDepth().should.be.lessThan(0)
     })
 
     it('should return the specified depth if there was one.', function () {
-      const storey = new Storey({ placement: ray, outline: rectangle, deprecatedSpec: { use: Use.BARE, depth: 0.8 } })
+      const storey = new Storey({ pose, outline: rectangle, deprecatedSpec: { use: Use.BARE, depth: 0.8 } })
 
       storey.floorDepth().should.equal(0.8)
     })
@@ -87,7 +87,7 @@ describe('Storey', function () {
       }
       const storey = new Storey()
 
-      expect(() => storey.makeModelFromSpec(goodJSON, ray)).to.not.throw()
+      expect(() => storey.makeModelFromSpec(goodJSON, pose)).to.not.throw()
     })
   })
 })

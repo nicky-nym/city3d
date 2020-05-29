@@ -71,7 +71,7 @@ export default /* eslint-disable */
       { count: 4, offset: { x: -700 } },
       { count: 6, offset: { y: 264 } },
       { count: 6, offset: { x: -100 } },
-      { count: 2, offset: { x: 100, y: 200, rotated: 180 } } // x, y adjusted for rotation
+      { count: 2, offset: { x: -60, y: 496, rotated: 180 } } // x, y adjusted for rotation
     ]
   }],
   /* TODO: rotate street grid by -29 degrees */

@@ -16,7 +16,7 @@ export default /* eslint-disable */
         floors: [{
           outline: {
             shape: 'rectangle',
-            size: { x: 200, y: 200 }  
+            size: { x: 200, y: 200 }
           }
         }]
       }],

@@ -11,6 +11,7 @@ import { LAYER } from './layer.js'
 import { METRIC } from './metric.js'
 import { Model } from './model.js'
 import { Outline } from '../core/outline.js'
+import { Pose } from '../core/pose.js'
 
 // const WHITE = 0xffffff
 // const RED = 0xcc0000 // eslint-disable-line no-unused-vars
@@ -61,26 +62,26 @@ class Floor extends Model {
   /**
    * Creates an instance for the floor of a storey.
    * @param {string} [name]
-   * @param {Ray} placement - location and compass direction
+   * @param {pose} [pose] - the location and orientation
    * @param {object} [spec] - a specification object that is valid against floor.schema.json.js
    */
   constructor ({
     name = 'Floor',
-    placement,
+    pose,
     spec
   } = {}) {
     super({ name })
     if (spec) {
-      this.makeModelFromSpec(spec, placement)
+      this.makeModelFromSpec(spec, pose)
     }
   }
 
   /**
    * Generate Geometry objects corresponding to a specification.
    * @param {object} spec - an specification object that is valid against floor.schema.json.js
-   * @param {Ray} placement - location and compass direction
+   * @param {pose} [pose] - the location and orientation
    */
-  makeModelFromSpec (spec, placement) {
+  makeModelFromSpec (spec, pose) {
     let { name, unit, outline, incline = 0, /* surface, */ openings } = spec
     // EXAMPLE:
     // name: 'Expansive hardwood floor',
@@ -99,16 +100,16 @@ class Floor extends Model {
     openings = []
     for (const opening of openingSpecs) {
       const corners = Outline.cornersFromSpec(opening)
-      const adjustedCorners = placement.applyRay(corners)
+      const adjustedCorners = Pose.relocate(pose, corners)
       openings.push(adjustedCorners)
     }
     const corners = Outline.cornersFromSpec(outline)
-    const adjustedCorners = placement.applyRay(corners)
+    const adjustedCorners = Pose.relocate(pose, corners)
     const xyPolygon = new Geometry.XYPolygon(adjustedCorners)
     const color = BROWN // COLORS_BY_USE[use]
     const depth = -0.5
     // const incline = 0
-    const z = placement.xyz.z
+    const z = pose.z
     const abstractThickPolygon = new Geometry.ThickPolygon(xyPolygon, { incline, depth, openings })
     const concreteThickPolygon = new FeatureInstance(abstractThickPolygon, { ...xyPolygon[0], z }, color,
       { layer: LAYER.FLOORS })

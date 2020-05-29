@@ -22,8 +22,9 @@ class Ray {
     let { x, y, z, rotated, mirrored, subPose } = pose
     let ray = new Ray(rotated, { x, y, z }, { mirror: mirrored })
     while (subPose) {
+      const netMirrored = subPose.mirrored ? !mirrored : mirrored
       const subXyz = ray.applyRay(subPose)
-      ray = new Ray(ray.az + (subPose.rotated || 0), subXyz)
+      ray = new Ray(ray.az + (subPose.rotated || 0), subXyz, { mirror: netMirrored })
       subPose = subPose.subPose
     }
     return ray
@@ -50,12 +51,18 @@ class Ray {
       for (const xyzPoint of xyzObjOrList) {
         const rotated = xyRotate(xyzPoint, this.az)
         rotated.z = xyzPoint.z
+        if (this.mirror) {
+          rotated.x = -rotated.x
+        }
         transformed.push(xyzAdd(rotated, this.xyz))
       }
       return transformed
     } else {
       const rotated = xyRotate(xyzObjOrList, this.az)
       rotated.z = xyzObjOrList.z
+      if (this.mirror) {
+        rotated.x = -rotated.x
+      }
       return xyzAdd(rotated, this.xyz)
     }
   }

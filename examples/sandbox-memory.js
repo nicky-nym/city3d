@@ -6,8 +6,6 @@
  */
 
 import { CITY } from '../src/citylib.js'
-import { Facing } from '../src/core/facing.js'
-import { Ray } from '../src/core/ray.js'
 
 let N = 5
 
@@ -16,13 +14,13 @@ async function addBuildings (city, threeOutput, memoryOutput) {
 
   await memoryOutput.add('after initial render')
 
-  complex = new CITY.MidriseComplex({ placement: new Ray(Facing.NORTH, { x: -1000, y: 1000 }), numRowPairs: N, numColPairs: N })
+  complex = new CITY.MidriseComplex({ pose: { x: -1000, y: 1000 }, numRowPairs: N, numColPairs: N })
   city.add(complex)
   await memoryOutput.add(`created ${N} x ${N} complex`)
   threeOutput.add(complex)
   await memoryOutput.add(`rendered ${N} x ${N} complex`)
 
-  complex = new CITY.MidriseComplex({ placement: new Ray(Facing.NORTH, { x: -1000, y: -1000 }), numRowPairs: N, numColPairs: N })
+  complex = new CITY.MidriseComplex({ pose: { x: -1000, y: -1000 }, numRowPairs: N, numColPairs: N })
   city.add(complex)
   await memoryOutput.add(`created ${N} x ${N} complex`)
   threeOutput.add(complex)
@@ -30,13 +28,13 @@ async function addBuildings (city, threeOutput, memoryOutput) {
 
   N *= 2
 
-  complex = new CITY.MidriseComplex({ placement: new Ray(Facing.NORTH, { x: 1000, y: -1000 }), numRowPairs: N, numColPairs: N })
+  complex = new CITY.MidriseComplex({ pose: { x: 1000, y: -1000 }, numRowPairs: N, numColPairs: N })
   city.add(complex)
   await memoryOutput.add(`created ${N} x ${N} complex`)
   threeOutput.add(complex)
   await memoryOutput.add(`rendered ${N} x ${N} complex`)
 
-  complex = new CITY.MidriseComplex({ placement: new Ray(Facing.NORTH, { x: 1000, y: 1000 }), numRowPairs: N, numColPairs: N })
+  complex = new CITY.MidriseComplex({ pose: { x: 1000, y: 1000 }, numRowPairs: N, numColPairs: N })
   city.add(complex)
   await memoryOutput.add(`created ${N} x ${N} complex`)
   threeOutput.add(complex)

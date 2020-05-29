@@ -82,7 +82,7 @@ describe('Pose', function () {
     })
   })
 
-  describe('#locate x5y10', function () {
+  describe('#relocate x5y10', function () {
     it('should return a matching point given an empty pose', function () {
       const resultXYZ = Pose.relocate({}, x5y10)
       resultXYZ.should.eql(x5y10)
@@ -132,8 +132,8 @@ describe('Pose', function () {
     it('should work for the "complicated" pose', function () {
       const resultXYZ = Pose.relocate(complicated, x5y10)
       const expected = {
-        x: -2.6,
-        y: +20,
+        x: 11.5,
+        y: 27.1,
         z: -2
       }
       resultXYZ.x.should.be.closeTo(expected.x, 0.1)
@@ -142,7 +142,7 @@ describe('Pose', function () {
     })
   })
 
-  describe('#locate list', function () {
+  describe('#relocate list', function () {
     const listOfPoints = [xyz(0, 0, 0), xyz(30, 20, 10)]
 
     it('should return a list of equal length', function () {
@@ -204,7 +204,8 @@ describe('Pose', function () {
     it('should work for complementary rotations', function () {
       const combined = Pose.combine({ rotated: 90 }, { rotated: 270 })
       const resultXyz = Pose.relocate(combined, x5y10)
-      resultXyz.should.eql(x5y10)
+      resultXyz.x.should.be.closeTo(x5y10.x, 0.1)
+      resultXyz.y.should.be.closeTo(x5y10.y, 0.1)
     })
   })
 
@@ -238,7 +239,22 @@ describe('Pose', function () {
     })
 
     it('should add translations for nested pose', function () {
-      const collapsedNestedPose = Pose.collapse(P3)
+      const nestedPose = {
+        x: X3,
+        y: Y3,
+        z: Z3,
+        subPose: {
+          x: X2,
+          y: Y2,
+          z: Z2,
+          subPose: {
+            x: X1,
+            y: Y1,
+            z: Z1
+          }
+        }
+      }
+      const collapsedNestedPose = Pose.collapse(nestedPose)
 
       collapsedNestedPose.x.should.equal(X1 + X2 + X3)
       collapsedNestedPose.y.should.equal(Y1 + Y2 + Y3)

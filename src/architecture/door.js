@@ -14,26 +14,26 @@ class Door extends Opening {
   /**
    * Creates an instance of a door in a wall.
    * @param {string} [name]
-   * @param {Ray} placement - location and compass direction
+   * @param {pose} [pose] - the location and orientation
    * @param {object} [spec] - a specification object that is valid against door.schema.json.js
    */
   constructor ({
     name = 'Door',
-    placement,
+    pose,
     spec
   } = {}) {
     super({ name })
     if (spec) {
-      this.makeModelFromSpec(spec, placement)
+      this.makeModelFromSpec(spec, pose)
     }
   }
 
   /**
    * Generate Geometry objects corresponding to a specification.
    * @param {object} spec - an specification object that is valid against door.schema.json.js
-   * @param {Ray} placement - location and compass direction
+   * @param {pose} [pose] - the location and orientation
    */
-  makeModelFromSpec (spec, placement) {
+  makeModelFromSpec (spec, pose) {
     const { name, unit, wallLength, /* motion, */ outline, /* leafCount, handleSide, */ at /*, casing */ } = spec
     // EXAMPLE:
     // name: 'garage door',

@@ -9,7 +9,6 @@ import { CITY } from '../src/citylib.js'
 import { Facing } from '../src/core/facing.js'
 import { METRIC } from '../src/architecture/metric.js'
 import { MidriseComplex } from '../content/buildings/midrise_complex.js'
-import { Ray } from '../src/core/ray.js'
 import { SpecReader } from '../src/architecture/spec_reader.js'
 import { xyz } from '../src/core/util.js'
 
@@ -42,26 +41,26 @@ function addTrees (district) {
   const specReader = new SpecReader()
   const tree = specReader.makeModelFromSpecName('Tree', { x: 0, y: 0, z: 0 })
   district.add(new CITY.InstancedFeature(tree, [
-    new Ray(Facing.NORTH, { x: 12, y: 10, z: 0 }),
-    new Ray(Facing.WEST, { x: 25, y: 12, z: 0 }),
-    new Ray(Facing.SOUTH, { x: 35, y: 10, z: 0 }, { mirror: true }),
-    new Ray(Facing.EAST, { x: -8, y: 51, z: 0 }),
-    new Ray(Facing.SOUTH, { x: 5, y: 50, z: 0 }, { mirror: true })
+    { x: 12, y: 10, z: 0, rotated: Facing.NORTH },
+    { x: 25, y: 12, z: 0, rotated: Facing.WEST },
+    { x: 35, y: 10, z: 0, rotated: Facing.SOUTH, mirrored: true },
+    { x: -8, y: 51, z: 0, rotated: Facing.EAST },
+    { x: 5, y: 50, z: 0, rotated: Facing.SOUTH, mirrored: true }
   ]))
 
   district.add(new CITY.Tree({ pose: { x: 28, y: 52, z: 0 }, trunkHeight: 10, name: 'Topiary Tree' }))
   district.add(new CITY.InstancedFeature(new CITY.Tree({ trunkHeight: 12, name: 'Tree (MeshPhongMaterial, with normals)' }), [
-    new Ray(Facing.NORTH, { x: 51, y: 45, z: 0 }),
-    new Ray(Facing.EAST, { x: 75, y: 40, z: 0 }),
-    new Ray(Facing.SOUTH, { x: 60, y: 10, z: 0 }, { mirror: true })
+    { x: 51, y: 45, z: 0, rotated: Facing.NORTH },
+    { x: 75, y: 40, z: 0, rotated: Facing.EAST },
+    { x: 60, y: 10, z: 0, rotated: Facing.SOUTH, mirrored: true }
   ], { materialCost: 'high', useNormals: true }))
   district.add(new CITY.InstancedFeature(new CITY.Tree({ trunkHeight: 15, name: 'Tree (MeshBasicMaterial, no normals)' }), [
-    new Ray(Facing.NORTH, { x: -30, y: 50, z: 0 }),
-    new Ray(Facing.SOUTH, { x: -30, y: 11, z: 0 }, { mirror: true })
+    { x: -30, y: 50, z: 0, rotated: Facing.NORTH },
+    { x: -30, y: 11, z: 0, rotated: Facing.SOUTH, mirrored: true }
   ], { materialCost: 'lowest', useNormals: false })) // these are the defaults
   district.add(new CITY.InstancedFeature(new CITY.Tree({ trunkHeight: 15, name: 'Tree (MeshLambertMaterial, with normals)' }), [
-    new Ray(Facing.NORTH, { x: -60, y: 50, z: 0 }),
-    new Ray(Facing.SOUTH, { x: -60, y: 11, z: 0 }, { mirror: true })
+    { x: -60, y: 50, z: 0, rotated: Facing.NORTH },
+    { x: -60, y: 11, z: 0, rotated: Facing.SOUTH, mirrored: true }
   ], { materialCost: 'medium', useNormals: true })) // these are the defaults
 }
 
@@ -81,18 +80,18 @@ function addInstancedBuildings (district) {
     { x: -490, y: -100, z: 0, rotated: Facing.SOUTHEAST, mirrored: true }
   ]
   const cottage1 = specReader.makeModelFromSpecName('Cottage', { x: 0, y: 0, z: 0 })
-  const cottagePoses1 = cottagePoses.map(p => CITY.Pose.combine(p, { x: 0, y: 0, z: 0 }))
+  const cottagePoses1 = cottagePoses.map(p => CITY.Pose.combine({ x: 0, y: 0, z: 0 }, p))
   district.add(new CITY.InstancedFeature(cottage1, cottagePoses1, { materialCost: 'high', useNormals: true }))
   const cottage2 = specReader.makeModelFromSpecName('Cottage', { x: 0, y: 0, z: 0 })
-  const cottagePoses2 = cottagePoses.map(p => CITY.Pose.combine(p, { x: 220, y: 0, z: 0 }))
+  const cottagePoses2 = cottagePoses.map(p => CITY.Pose.combine({ x: 220, y: 0, z: 0 }, p))
   district.add(new CITY.InstancedFeature(cottage2, cottagePoses2, { materialCost: 'lowest', useNormals: false }))
 
   const wursterHall = specReader.makeModelFromSpecName('Wurster Hall', { x: 0, y: 0, z: 0 })
   district.add(new CITY.InstancedFeature(wursterHall, [
-    new Ray(Facing.NORTH, { x: 80, y: -650, z: 0 }),
-    new Ray(Facing.NORTH, { x: 780, y: -650, z: 0 }, { mirror: true }),
-    new Ray(Facing.SOUTH, { x: 380, y: -700, z: 0 }),
-    new Ray(Facing.SOUTH, { x: 480, y: -700, z: 0 }, { mirror: true })
+    { x: 80, y: -650, z: 0, rotated: Facing.NORTH },
+    { x: 780, y: -650, z: 0, rotated: Facing.NORTH, mirrored: true },
+    { x: 380, y: -700, z: 0, rotated: Facing.SOUTH },
+    { x: 480, y: -700, z: 0, rotated: Facing.SOUTH, mirrored: true }
   ], { materialCost: 'high', useNormals: true }))
 }
 
@@ -107,7 +106,7 @@ function addLatticeburg (specReader) {
   latticeburg.add(new CITY.SoccerField({ at: { x: 1620 - 740, y: 515 - 140, z: 0 } }))
   addObjectFromSpec(latticeburg, specReader, 'Lattice Parcel', { x: 0, y: 100, z: 0 })
   addObjectFromSpec(latticeburg, specReader, 'Lattice Parcel', { x: 0, y: 830, z: 0 })
-  latticeburg.add(new MidriseComplex({ placement: new Ray(Facing.NORTH, { x: 198, y: 298, z: 7.5 }), numRowPairs: 4, numColPairs: 4 }))
+  latticeburg.add(new MidriseComplex({ pose: { x: 198, y: 298, z: 7.5 }, numRowPairs: 4, numColPairs: 4 }))
   latticeburg.add(new CITY.EiffelTower({ pose: { x: 390, y: 1220, z: 0 } }))
   return latticeburg
 }
@@ -128,33 +127,61 @@ function addObjectFromSpec (district, specReader, specName, pose) {
   district.add(modelObject)
 }
 
+function _addObjectWithoutSpec (name, specReader = null) {
+  if (name === 'creek') {
+    const tethys = new CITY.Model({ name: 'River Tethys' })
+    addCreek(tethys)
+    addTrees(tethys)
+    return tethys
+  } else if (name === 'Latticeburg') {
+    const latticeburg = addLatticeburg(specReader)
+    return latticeburg
+  } else if (name === 'extras') {
+    const extras = new CITY.Model({ name: 'extras' })
+    addPyramid(extras)
+    addKalpanaOrbital(extras)
+    addMovers(extras)
+    addInstancedBuildings(extras)
+    return extras
+  }
+}
+
 function main () {
-  const tethys = new CITY.Model({ name: 'River Tethys' })
-  addCreek(tethys)
-  addTrees(tethys)
-
   const city = new CITY.City({ name: 'Paracosm' })
-  city.add(tethys)
-  const specReader = new SpecReader()
-  addObjectFromSpec(city, specReader, 'Suburbia', { x: -550, y: -800, z: 0 })
-  addObjectFromSpec(city, specReader, 'Campus', { x: 50, y: -400, z: 0 })
-  addObjectFromSpec(city, specReader, 'Manhattan', { x: -610, y: 800, z: 0 })
-  addObjectFromSpec(city, specReader, 'Layered buildings', { x: -600, y: 40, z: 0 })
-  const latticeburg = addLatticeburg(specReader)
-
-  const extras = new CITY.Model({ name: 'extras' })
-  addPyramid(extras)
-  addKalpanaOrbital(extras)
-  addMovers(extras)
-  addInstancedBuildings(extras)
-  city.add(extras)
-
-  // display the city on the web page
   const districts = []
-  districts.push(tethys)
-  districts.push(latticeburg)
-  districts.push(...city.getDistricts())
-  districts.push(extras)
+  const specReader = new SpecReader()
+
+  const url = new URL(window.location.href)
+  const modelName = url.searchParams.get('model')
+
+  if (modelName) {
+    // window.alert(`showing only:\nmodel=${modelName}`)
+    if (modelName === 'creek' || modelName === 'Latticeburg' || modelName === 'extras') {
+      const model = _addObjectWithoutSpec(modelName, specReader)
+      districts.push(model)
+    } else {
+      addObjectFromSpec(city, specReader, modelName, { x: 100, y: 100, z: 0 })
+      districts.push(...city.getDistricts())
+    }
+  } else {
+    const tethys = _addObjectWithoutSpec('creek')
+    city.add(tethys)
+    districts.push(tethys)
+
+    addObjectFromSpec(city, specReader, 'Suburbia', { x: -550, y: -800, z: 0 })
+    addObjectFromSpec(city, specReader, 'Campus', { x: 50, y: -400, z: 0 })
+    addObjectFromSpec(city, specReader, 'Manhattan', { x: -610, y: 800, z: 0 })
+    addObjectFromSpec(city, specReader, 'Layered_buildings', { x: -600, y: 40, z: 0 })
+    districts.push(...city.getDistricts())
+
+    // const latticeburg = addLatticeburg(specReader)
+    const latticeburg = _addObjectWithoutSpec('Latticeburg', specReader)
+    districts.push(latticeburg)
+
+    const extras = _addObjectWithoutSpec('extras')
+    city.add(extras)
+    districts.push(extras)
+  }
 
   CITY.Output.addOutput(new CITY.ThreeOutput(districts))
   CITY.Output.addOutput(new CITY.MetricsOutput(

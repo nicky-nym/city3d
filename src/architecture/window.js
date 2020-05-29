@@ -15,26 +15,26 @@ class Window extends Opening {
   /**
    * Creates an instance of a window in a wall.
    * @param {string} [name]
-   * @param {Ray} placement - location and compass direction
+   * @param {pose} [pose] - the location and orientation
    * @param {object} [spec] - a specification object that is valid against window.schema.json.js
    */
   constructor ({
     name = 'Window',
-    placement,
+    pose,
     spec
   } = {}) {
     super({ name })
     if (spec) {
-      this.makeModelFromSpec(spec, placement)
+      this.makeModelFromSpec(spec, pose)
     }
   }
 
   /**
    * Generate Geometry objects corresponding to a specification.
    * @param {object} spec - an specification object that is valid against window.schema.json.js
-   * @param {Ray} placement - location and compass direction
+   * @param {pose} [pose] - the location and orientation
    */
-  makeModelFromSpec (spec, placement) {
+  makeModelFromSpec (spec, pose) {
     let spacing = 0
     let numWindows = 1
     if (spec.repeat) {
@@ -76,7 +76,7 @@ class Window extends Opening {
     for (const i of countTo(numWindows)) {
       const iAt = { ...at }
       iAt.x += (i + 0.5 - (numWindows / 2)) * spacing
-      iAt.y -= outline.size.y / 2
+      iAt.y -= this._outline.height() / 2
       this.pushAt(iAt)
     }
 

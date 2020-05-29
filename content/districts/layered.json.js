@@ -2,7 +2,7 @@ export default /* eslint-disable */
 {
   context: 'city3d',
   type: 'district.schema.json',
-  name: 'Layered buildings',
+  name: 'Layered_buildings',
   metadata: {
     license: 'UNLICENSE: This is free and unencumbered software released into the public domain. For more information, please refer to <http://unlicense.org>',
     creator: 'Authored at <https://github.com/nicky-nym/city3d>',

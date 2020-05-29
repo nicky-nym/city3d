@@ -59,7 +59,8 @@ class Structure extends Model {
       pose = Pose.origin()
     }
     if (placement) {
-      pose = placement.asPose()
+      throw new Error('Structure constructor was passed a "placement"')
+      // pose = placement.asPose()
     }
 
     this.offset = Ray.fromPose(pose).asPose()
@@ -71,6 +72,7 @@ class Structure extends Model {
   }
 
   placement () {
+    window.alert('Structure.placement() - TODO: delete me!')
     return Ray.fromPose(this._pose)
   }
 
@@ -78,10 +80,10 @@ class Structure extends Model {
     return this._pose
   }
 
-  makePlaceholder (placement, use, corners, depth, { z = 0, name } = {}) {
-    z = z + placement.xyz.z
+  makePlaceholder (pose, use, corners, depth, { z = 0, name } = {}) {
+    z = z + pose.z
     const group = new FeatureGroup(name)
-    const adjustedCorners = placement.applyRay(corners)
+    const adjustedCorners = Pose.relocate(pose, corners)
     const xyPolygon = new Geometry.XYPolygon(adjustedCorners)
     const color = COLORS_BY_USE[use]
     const abstractThickPolygon = new Geometry.ThickPolygon(xyPolygon, { depth })

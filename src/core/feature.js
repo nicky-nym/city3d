@@ -119,7 +119,7 @@ class InstancedFeature extends Feature {
     super()
     this.feature = feature
     this.feature.parent = this
-    this.poses = poses.map(q => Pose.collapse(q.asPose ? q.asPose() : q))
+    this.poses = poses.map(q => Pose.collapse(q))
     this.materialCost = materialCost
     this.useNormals = useNormals
   }

@@ -14,6 +14,7 @@ import { Model } from './model.js'
 import { Pitch } from '../core/pitch.js'
 import { Window } from './window.js'
 import { xy, xyRotate, hypotenuse } from '../core/util.js'
+import { Pose } from '../core/pose.js'
 
 const ALMOST_WHITE = 0x999999
 const DEFAULT_WALL_THICKNESS = 0.5
@@ -40,7 +41,7 @@ class Wall extends Model {
   /**
    * Creates an instance of a wall between two points.
    * @param {string} [name]
-   * @param {Ray} placement - location and compass direction
+   * @param {pose} [pose] - the location and orientation
    * @param {object} [deprecatedSpec] - an old 2019 spec format that we're phasing out
    * @param {object} [spec] - a specification object that is valid against wall.schema.json.js
    *
@@ -53,7 +54,7 @@ class Wall extends Model {
    */
   constructor ({
     name = 'Wall',
-    placement,
+    pose = Pose.origin(),
     deprecatedSpec, // v1, v2, height, z, depth, openings
     spec
   } = {}) {
@@ -62,7 +63,7 @@ class Wall extends Model {
       this._makeModelFromDeprecatedSpec(deprecatedSpec)
     }
     if (spec) {
-      this.makeModelFromSpec(spec, placement)
+      this.makeModelFromSpec(spec, pose)
     }
   }
 
@@ -130,9 +131,9 @@ class Wall extends Model {
   /**
    * Generate Geometry objects corresponding to a specification.
    * @param {object} spec - an specification object that is valid against wall.schema.json.js
-   * @param {Ray} placement - location and compass direction
+   * @param {pose} [pose] - the location and orientation
    */
-  makeModelFromSpec (spec, placement) {
+  makeModelFromSpec (spec, pose) {
     let { name, unit, height, begin, end, roofline, pitch, firstWall, doors, windows /* , outside, inside */ } = spec
 
     this.name = name || this.name
@@ -144,8 +145,8 @@ class Wall extends Model {
 
     this._begin = begin
     this._end = end
-    begin = xyRotate(begin, placement.az)
-    end = xyRotate(end, placement.az)
+    begin = xyRotate(begin, pose.rotated)
+    end = xyRotate(end, pose.rotated)
 
     this._roofline = roofline
     this._pitch = pitch
@@ -172,7 +173,7 @@ class Wall extends Model {
       v1: begin,
       v2: end,
       height: height,
-      z: placement.xyz.z,
+      z: pose.z,
       depth: -DEFAULT_WALL_THICKNESS,
       openings: openings
     }

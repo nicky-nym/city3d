@@ -5,17 +5,18 @@
  * For more information, please refer to <http://unlicense.org>
  */
 
+import { countTo } from '../core/util.js'
 import { FeatureGroup, FeatureInstance } from '../core/feature.js'
 import { Floor } from './floor.js'
 import { Geometry } from '../core/geometry.js'
 import { METRIC } from './metric.js'
 import { Model } from './model.js'
+import { Pose } from '../core/pose.js'
 import { Roof } from './roof.js'
 // import { Room } from './room.js'
 import { Stairs } from './stairs.js'
 // import { Use } from './use.js'
 import { Wall } from './wall.js'
-import { countTo } from '../core/util.js'
 
 const WHITE = 0xffffff
 const RED = 0xcc0000 // eslint-disable-line no-unused-vars
@@ -72,9 +73,11 @@ function _addWalls (group, xyPolygon, height, z, openingsByWall, cap) {
     i++
     if (cap || i < xyPolygon.length) {
       const next = i % xyPolygon.length
-      const near = v
-      const far = xyPolygon[next]
-      group.add(new Wall({ name: `Wall ${i}`, deprecatedSpec: { v1: near, v2: far, height, z, openings } }))
+      const begin = { ...v }
+      const end = { ...xyPolygon[next] }
+      const pose = Pose.origin()
+      pose.z = z
+      group.add(new Wall({ name: `Wall ${i}`, spec: { begin, end, height, windows: openings }, pose }))
     }
   }
 }
@@ -87,7 +90,7 @@ class Storey extends Model {
    * Creates an instance of a Storey, with walls and a floor.
    * @param {string} [name] - name of the storey
    * @param {xy[]} outline - vertices of floor, expected to be in counterclockwise order
-   * @param {Ray} placement - location and compass direction
+   * @param {pose} [pose] - the location and orientation of this storey
    * @param {object} [deprecatedSpec] - an old 2019 spec format that we're phasing out
    * @param {object} [spec] - a specification object that is valid against storey.schema.json.js
    *
@@ -103,7 +106,7 @@ class Storey extends Model {
   constructor ({
     name,
     outline,
-    placement,
+    pose = Pose.origin(),
     deprecatedSpec,
     spec
   } = {}) {
@@ -111,10 +114,10 @@ class Storey extends Model {
     name = name || (spec && spec.name) || (deprecatedSpec && deprecatedSpec.use)
     super({ name })
     if (deprecatedSpec) {
-      this._makeModelFromDeprecatedSpec(deprecatedSpec, outline, placement)
+      this._makeModelFromDeprecatedSpec(deprecatedSpec, outline, pose)
     }
     if (spec) {
-      this.makeModelFromSpec(spec, placement)
+      this.makeModelFromSpec(spec, pose)
     }
   }
 
@@ -137,27 +140,27 @@ class Storey extends Model {
   /**
    * Generate Geometry objects corresponding to a specification.
    * @param {object} spec - an specification object that is valid against storey.schema.json.js
-   * @param {Ray} [placement] - the location and orientation of this part
+   * @param {pose} [pose] - the location and orientation of this storey
    */
-  makeModelFromSpec (spec, placement) {
+  makeModelFromSpec (spec, pose) {
     const resolvedSpec = spec // this._instantiateSpec(buildingSpec)
-    this.makeModelForOneLOD(this, LOD.HIGH, resolvedSpec, placement)
+    this.makeModelForOneLOD(this, LOD.HIGH, resolvedSpec, pose)
 
     // TODO: The medium and low resolution instances constructed here are currently
     // identical, so the only difference will be in the material.
     // const mediumGroup = new FeatureGroup(this.name)
-    // this._makeLowResGroupFromSpec(resolvedSpec, mediumGroup, placement)
+    // this._makeLowResGroupFromSpec(resolvedSpec, mediumGroup, pose)
     // this.addLevelOfDetail(mediumGroup, 1000)
 
     const lowGroup = new FeatureGroup(this.name)
-    this.makeModelForOneLOD(lowGroup, LOD.LOW, resolvedSpec, placement)
+    this.makeModelForOneLOD(lowGroup, LOD.LOW, resolvedSpec, pose)
     this.addLevelOfDetail(lowGroup, 2000)
   }
 
-  _makePlaceholder (placement, corners, height) {
-    const z = placement.xyz.z
+  _makePlaceholder (pose, corners, height) {
+    const z = pose.z
     const group = new FeatureGroup()
-    const adjustedCorners = placement.applyRay(corners)
+    const adjustedCorners = Pose.relocate(pose, corners)
     const xyPolygon = new Geometry.XYPolygon(adjustedCorners)
     const color = DARK_GRAY
     const abstractThickPolygon = new Geometry.ThickPolygon(xyPolygon, { depth: height })
@@ -170,9 +173,9 @@ class Storey extends Model {
   /**
    * Generate Geometry objects corresponding to a specification.
    * @param {object} spec - an specification object that is valid against storey.schema.json.js
-   * @param {Ray} [placement] - the location and orientation of this part
+   * @param {pose} [pose] - the location and orientation of this storey
    */
-  makeModelForOneLOD (parentGroup, levelOfDetail, spec, placement) {
+  makeModelForOneLOD (parentGroup, levelOfDetail, spec, pose) {
     const { name, unit, altitude = 0, height = 0, repeat = 1, incline = 0, floors, stairs, ceiling, walls, rooms, roof } = spec
 
     this.name = name || this.name
@@ -185,7 +188,9 @@ class Storey extends Model {
       throw new Error('TODO: need to convert values into feet')
     }
 
-    const at = placement.add({ x: 0, y: 0, z: altitude }, placement.az)
+    pose = Pose.copy(pose)
+    pose.z += altitude
+
     if (levelOfDetail === LOD.LOW) {
       if (floors) {} // do not include at LOD.LOW
       if (stairs) {} // do not include at LOD.LOW
@@ -198,7 +203,7 @@ class Storey extends Model {
         for (const wallSpec of walls.exterior) {
           corners.push(wallSpec.end)
         }
-        const placeholder = this._makePlaceholder(at, corners, totalHeight)
+        const placeholder = this._makePlaceholder(pose, corners, totalHeight)
         parentGroup.add(placeholder)
       }
     } else if (levelOfDetail === LOD.HIGH) {
@@ -206,14 +211,14 @@ class Storey extends Model {
         if (floors) {
           for (const floorSpec of floors) {
             floorSpec.incline = floorSpec.incline || incline
-            const floor = new Floor({ spec: floorSpec, placement: at })
+            const floor = new Floor({ spec: floorSpec, pose })
             parentGroup.add(floor)
           }
         }
 
         if (stairs) {
           for (const stairSpec of stairs) {
-            const flight = new Stairs({ spec: stairSpec, placement: at })
+            const flight = new Stairs({ spec: stairSpec, pose })
             parentGroup.add(flight)
           }
         }
@@ -231,7 +236,7 @@ class Storey extends Model {
         const allWalls = []
         for (const wallSpec of wallSpecs) {
           Model.mergeValueIfAbsent(wallSpec, { begin, height, roofline, pitch, firstWall })
-          const wall = new Wall({ spec: wallSpec, placement: at })
+          const wall = new Wall({ spec: wallSpec, pose })
           parentGroup.add(wall)
           allWalls.push(wall)
           begin = wall.end()
@@ -239,20 +244,20 @@ class Storey extends Model {
           firstWall = false
         }
 
-        at.xyz.z += height
-        parentGroup.add(new Roof({ spec: roof, placement: at, walls: allWalls }))
+        pose.z += height
+        parentGroup.add(new Roof({ spec: roof, pose, walls: allWalls }))
 
         if (rooms) {
           for (const roomSpec of rooms) { // eslint-disable-line no-unused-vars
             // TODO: write this code!
-            // const room = new Room({ roomSpec, at })
+            // const room = new Room({ roomSpec, pose })
             // parentGroup.add(room)
           }
         }
 
         if (ceiling) {
           // TODO: write this code!
-          // parentGroup.add(new Ceiling({ ceiling, placement }))
+          // parentGroup.add(new Ceiling({ ceiling, pose }))
         }
       }
     } else {
@@ -261,7 +266,7 @@ class Storey extends Model {
   }
 
   // TODO: delete this code when it is no longer used by any content model classes
-  _makeModelFromDeprecatedSpec (storeySpec, outline, placement) {
+  _makeModelFromDeprecatedSpec (storeySpec, outline, pose) {
     const use = storeySpec.use
     let z = storeySpec.z || 0
     const incline = storeySpec.incline || 0
@@ -270,8 +275,8 @@ class Storey extends Model {
     const wall = storeySpec.wall || 0
     const openings = storeySpec.openings || []
     this._depth = depth
-    z = z + placement.xyz.z
-    const adjustedCorners = placement.applyRay(outline)
+    z = z + pose.z
+    const adjustedCorners = Pose.relocate(pose, outline)
     const xyPolygon = new Geometry.XYPolygon(adjustedCorners)
     if (cap) {
       const color = COLORS_BY_USE[use]

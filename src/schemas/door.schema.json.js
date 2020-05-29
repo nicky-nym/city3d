@@ -12,7 +12,7 @@ export default /* eslint-disable */
       name: 'garage door',
       unit: 'feet',
       motion: 'overhead',
-      outline: { shape: 'rectangle', data: { x: 16, y: 7 } },
+      outline: { shape: 'rectangle', size: { x: 16, y: 7 } },
       leafCount: { rows: 5 },
       handleSide: 'left',
       at: { x: 12 },

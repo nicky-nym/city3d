@@ -11,6 +11,7 @@ import { LAYER } from './layer.js'
 import { Model } from './model.js'
 import { Outline } from '../core/outline.js'
 import { Pitch } from '../core/pitch.js'
+import { Pose } from '../core/pose.js'
 import { Storey } from './storey.js'
 import { hypotenuse } from '../core/util.js'
 
@@ -49,34 +50,34 @@ function _midpoint (a, b) {
 class Roof extends Model {
   /**
    * Create a new instance of a specified Roof, and generate the Geometry objects for it.
-   * @param {Ray} [placement] - the location and orientation of this part
+   * @param {pose} [pose] - the location and orientation
    * @param {object} [deprecatedSpec] - an old 2019 spec format that we're phasing out
    * @param {object} [spec] - an specification object that is valid against roof.schema.json.js
    * @param {Wall[]} [walls] - an array of Wall instances
    */
-  constructor ({ placement, deprecatedSpec, spec, walls } = {}) {
+  constructor ({ pose, deprecatedSpec, spec, walls } = {}) {
     super({ name: 'Roof', layer: LAYER.ROOFS })
     if (deprecatedSpec) {
-      this._makeModelFromDeprecatedSpec(deprecatedSpec, placement)
+      this._makeModelFromDeprecatedSpec(deprecatedSpec, pose)
     }
     if (spec) {
-      this.makeModelFromSpec(spec, placement, walls)
+      this.makeModelFromSpec(spec, pose, walls)
     }
   }
 
   // TODO: delete this code when it is no longer used by any content model classes
-  _makeModelFromDeprecatedSpec (deprecatedSpec, placement) {
+  _makeModelFromDeprecatedSpec (deprecatedSpec, pose) {
     if (deprecatedSpec.custom) {
       let { vertices, indices } = deprecatedSpec.custom
-      vertices = placement.applyRay(vertices)
+      vertices = Pose.relocate(pose, vertices)
       const abstractRoof = new Geometry.TriangularPolyhedron(vertices, indices)
       const concreteRoof = new FeatureInstance(abstractRoof, { ...vertices[0] }, LIGHT_GRAY)
       this.add(concreteRoof)
     } else if (deprecatedSpec.flat) {
-      const adjustedCorners = placement.applyRay(deprecatedSpec.flat)
+      const adjustedCorners = Pose.relocate(pose, deprecatedSpec.flat)
       const xyPolygon = new Geometry.XYPolygon(adjustedCorners)
       const abstractThickPolygon = new Geometry.ThickPolygon(xyPolygon, { depth: 0.5 })
-      const p0 = { ...adjustedCorners[0], z: placement.xyz.z }
+      const p0 = { ...adjustedCorners[0], z: pose.z }
       const concreteThickPolygon = new FeatureInstance(abstractThickPolygon, p0, LIGHT_GRAY)
       this.add(concreteThickPolygon)
     } else {
@@ -84,7 +85,7 @@ class Roof extends Model {
     }
   }
 
-  _makeParapet (parapetHeight, placement, corners) {
+  _makeParapet (parapetHeight, pose, corners) {
     if (parapetHeight) {
       const parapetSpec = {
         name: 'Roof parapet',
@@ -104,10 +105,7 @@ class Roof extends Model {
       const end = corners[0]
       parapetSpec.walls.exterior.push({ end })
 
-      const parapetStory = new Storey({
-        placement,
-        spec: parapetSpec
-      })
+      const parapetStory = new Storey({ pose, spec: parapetSpec })
       this.add(parapetStory)
     }
   }
@@ -115,9 +113,9 @@ class Roof extends Model {
   /**
    * Generate Geometry objects corresponding to a specification.
    * @param {object} spec - a specification object that is valid against roof.schema.json.js
-   * @param {Ray} [placement] - the location and orientation of this part
+   * @param {pose} [pose] - the location and orientation
    */
-  makeModelFromSpec (spec, placement, walls) {
+  makeModelFromSpec (spec, pose, walls) {
     let { name, unit, outline, openings, parapetHeight, form, pitch, eaves /* surface */ } = spec
 
     this.name = name || this.name
@@ -143,62 +141,62 @@ class Roof extends Model {
 
     form = form || FORM.FLAT
     if (form === FORM.FLAT) {
-      this._makeFlatRoof(placement, outline, openings, parapetHeight)
+      this._makeFlatRoof(pose, outline, openings, parapetHeight)
     } else if (form === FORM.LIVING) {
-      this._makeLivingRoof(placement, outline, openings, parapetHeight)
+      this._makeLivingRoof(pose, outline, openings, parapetHeight)
     } else if (form === FORM.PITCHED) {
-      this._makePitchedRoof(eaves, pitch, placement, walls, outline)
+      this._makePitchedRoof(eaves, pitch, pose, walls, outline)
     } else if (form === FORM.HIPPED) {
-      this._makeHippedRoof(eaves, pitch, placement, walls, outline)
+      this._makeHippedRoof(eaves, pitch, pose, walls, outline)
     } else if (form === FORM.SHED) {
-      this._makeShedRoof(eaves, pitch, placement, walls, outline)
+      this._makeShedRoof(eaves, pitch, pose, walls, outline)
     } else if (form === FORM.VAULTED) {
       // TODO: write this code!
       throw new Error('TODO: "vaulted" Roof code has not yet been written')
     }
   }
 
-  _makeBasicSlab (corners, placement, incline = 0) {
-    this._makeSlab(corners, placement, ROOF_THICKNESS, LIGHT_GRAY, incline)
+  _makeBasicSlab (corners, pose, incline = 0) {
+    this._makeSlab(corners, pose, ROOF_THICKNESS, LIGHT_GRAY, incline)
   }
 
-  _makeSlab (corners, placement, depth, color, incline = 0, openings = []) {
-    const adjustedCorners = placement.applyRay(corners)
+  _makeSlab (corners, pose, depth, color, incline = 0, openings = []) {
+    const adjustedCorners = Pose.relocate(pose, corners)
     const xyPolygon = new Geometry.XYPolygon(adjustedCorners)
     const abstractThickPolygon = new Geometry.ThickPolygon(xyPolygon, { incline, depth, openings })
-    const p0 = { ...adjustedCorners[0], z: placement.xyz.z }
+    const p0 = { ...adjustedCorners[0], z: pose.z }
     const concreteThickPolygon = new FeatureInstance(abstractThickPolygon, p0, color)
     this.add(concreteThickPolygon)
   }
 
-  _makeSlabAndParapetRoof (placement, outline, openings, parapetHeight, color, dz = 0) {
-    const dzPlacement = placement.copy()
-    dzPlacement.xyz.z += dz
+  _makeSlabAndParapetRoof (pose, outline, openings, parapetHeight, color, dz = 0) {
+    const dzPose = Pose.copy(pose)
+    dzPose.z += dz
 
     const openingSpecs = openings || []
     openings = []
     for (const opening of openingSpecs) {
       const corners = Outline.cornersFromSpec(opening)
-      const adjustedCorners = placement.applyRay(corners)
+      const adjustedCorners = Pose.relocate(pose, corners)
       openings.push(adjustedCorners)
-      this._makeParapet(parapetHeight, placement, corners)
+      this._makeParapet(parapetHeight, pose, corners)
     }
     const corners = outline.corners()
-    this._makeSlab(corners, dzPlacement, ROOF_THICKNESS, color, 0, openings)
-    this._makeParapet(parapetHeight, placement, corners)
+    this._makeSlab(corners, dzPose, ROOF_THICKNESS, color, 0, openings)
+    this._makeParapet(parapetHeight, pose, corners)
   }
 
-  _makeFlatRoof (placement, outline, openings, parapetHeight) {
-    this._makeSlabAndParapetRoof(placement, outline, openings, parapetHeight, LIGHT_GRAY)
+  _makeFlatRoof (pose, outline, openings, parapetHeight) {
+    this._makeSlabAndParapetRoof(pose, outline, openings, parapetHeight, LIGHT_GRAY)
   }
 
   // TODO: do a DRY refactor to extract common code from _makeFlatRoof, _makeLivingRoof
-  _makeLivingRoof (placement, outline, openings, parapetHeight) {
-    this._makeSlabAndParapetRoof(placement, outline, openings, parapetHeight, GREEN, parapetHeight)
+  _makeLivingRoof (pose, outline, openings, parapetHeight) {
+    this._makeSlabAndParapetRoof(pose, outline, openings, parapetHeight, GREEN, parapetHeight)
   }
 
   // TODO: do a DRY refactor to extract common code from _makeShedRoof, _makeHippedRoof, _makePitchedRoof
-  _makePitchedRoof (eaves, pitch, placement, walls, outline) {
+  _makePitchedRoof (eaves, pitch, pose, walls, outline) {
     const corners = outline.corners()
     let leftCorner = null
     let rightCorner = null
@@ -228,8 +226,8 @@ class Roof extends Model {
         }
         const incline = halfLength * pitch.slope()
 
-        const at = placement.copy()
-        at.xyz.z -= eaves * pitch.slope()
+        const at = Pose.copy(pose)
+        at.z -= eaves * pitch.slope()
         const cornersForLeftFace = [
           begin,
           { x: midpoint.x + stretch.x, y: midpoint.y + stretch.y },
@@ -251,9 +249,9 @@ class Roof extends Model {
   }
 
   // TODO: do a DRY refactor to extract common code from _makeShedRoof, _makeHippedRoof, _makePitchedRoof
-  _makeHippedRoof (eaves, pitch, placement, walls, outline) {
-    const at = placement.copy()
-    at.xyz.z -= eaves * pitch.slope()
+  _makeHippedRoof (eaves, pitch, pose, walls, outline) {
+    const at = Pose.copy(pose)
+    at.z -= eaves * pitch.slope()
     const corners = outline.corners()
     let previousWall = walls[walls.length - 1]
     let currentWall = null
@@ -316,7 +314,7 @@ class Roof extends Model {
   }
 
   // TODO: do a DRY refactor to extract common code from _makeShedRoof, _makeHippedRoof, _makePitchedRoof
-  _makeShedRoof (eaves, pitch, placement, walls, outline) {
+  _makeShedRoof (eaves, pitch, pose, walls, outline) {
     const corners = outline.corners()
     let leftCorner = null
     let rightCorner = null
@@ -344,8 +342,8 @@ class Roof extends Model {
         }
         const incline = length * pitch.slope()
 
-        const at = placement.copy()
-        at.xyz.z -= eaves * pitch.slope()
+        const at = Pose.copy(pose)
+        at.z -= eaves * pitch.slope()
 
         if (currentWall.isFirstWall()) {
           const cornersForFace = [

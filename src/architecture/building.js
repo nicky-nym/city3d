@@ -17,7 +17,10 @@ import { Structure } from './structure.js'
 import { Use } from '../architecture/use.js'
 import { Pose } from '../core/pose.js'
 
+const FUTURE = false
+
 function _intFromSpec (specValue) {
+  window.alert('DEAD CODE?')
   if (isNaN(specValue)) {
     if (specValue.type === 'randomInt') {
       return randomInt(specValue.min, specValue.max)
@@ -58,11 +61,12 @@ class Building extends Structure {
    * @param {object} [deprecatedSpec] - an old 2019 spec format that we're phasing out
    */
   constructor (options = {}) {
-    const { pose, deprecatedSpec, ...remainingOptions } = options
+    const { pose = Pose.origin(), deprecatedSpec, ...remainingOptions } = options
     super({ pose, deprecatedSpec, ...remainingOptions, copyLayer: LAYER.COPIES })
 
     if (deprecatedSpec) {
-      this._makeModelFromDeprecatedSpec(deprecatedSpec, pose)
+      const placement = Ray.fromPose(pose)
+      this._makeModelFromDeprecatedSpec(deprecatedSpec, placement)
     }
   }
 
@@ -71,7 +75,7 @@ class Building extends Structure {
    * @param {object} spec - an specification object that is valid against building.schema.json.js
    * @param {pose} [pose] - the location and orientation of this parcel
    */
-  makeModelFromSpec (spec, placement) {
+  makeModelFromSpec (spec, pose) {
     const { name, unit, /* anchorPoint, */ storeys, routes = [] } = spec
 
     this.name = name || this.name
@@ -84,15 +88,15 @@ class Building extends Structure {
     // TODO: get this working:
     // const anchor = placement.copy()
     // anchor.xyz = xyzSubtract(anchor.xyz, anchorPoint)
-    const pose = placement
+
     const priors = {
       altitude: 0,
       height: 0
     }
-    placement = Ray.fromPose(pose || Pose.origin())
+
     for (const storeySpec of storeys) {
       Model.mergeValueIfAbsent(storeySpec, priors)
-      const storey = new Storey({ spec: storeySpec, placement })
+      const storey = new Storey({ spec: storeySpec, pose })
       this.add(storey)
       priors.altitude = storey.altitude() + (storey.height() * storey.repeat())
       priors.height = storey.height()
@@ -100,8 +104,9 @@ class Building extends Structure {
 
     // TODO: refactor to combine this with code in parcel.js
     for (const routeSpec of routes) {
-      const at = placement.add(this.offset, placement.az)
+      const at = new Ray(pose.rotated, xyzAdd(pose, this.offset))
       const waypoints = at.applyRay(routeSpec.waypoints)
+
       let use
       if (routeSpec.mode && routeSpec.mode === 'canal') {
         use = Use.CANAL
@@ -117,9 +122,19 @@ class Building extends Structure {
     roof = { parapetHeight: 0, ...roof }
     parentOffset = xyzAdd(parentOffset, offset)
     let point = { ...parentOffset }
-    const ray = new Ray(this.placement().az)
-    point = ray.applyRay(point)
-    const facing = this.placement().az
+
+    let facing
+    if (FUTURE) {
+      const pose = Pose.origin()
+      pose.rotated = this.pose().rotated
+      point = Pose.relocate(pose, point)
+      facing = this.pose().rotated
+    } else {
+      const ray = new Ray(Ray.fromPose(this._pose).az)
+      point = ray.applyRay(point)
+      facing = this.placement().az
+    }
+
     if (shape) {
       const corners = cornersFromShape(shape)
       const openings = _openingsFromWallsSpec(walls)
@@ -127,10 +142,18 @@ class Building extends Structure {
       for (const i in countTo(numStoreys)) {
         point.z = z
         const floorName = `Floor ${i}`
-        const placement = new Ray(0, xyzAdd(point, this.pose()))
+
+        let dxyzPose
+        if (FUTURE) {
+          dxyzPose = xyzAdd(point, this.pose())
+        } else {
+          const placement = new Ray(0, xyzAdd(point, this.pose()))
+          dxyzPose = placement.asPose()
+        }
+
         const storey = new Storey({
           name: floorName,
-          placement,
+          pose: dxyzPose,
           outline: corners,
           deprecatedSpec: { use: Use.ROOM, wall: storeyHeight, openings: openings }
         })
@@ -138,12 +161,21 @@ class Building extends Structure {
         z = z + storeyHeight
       }
       point.z = z
-      const placement = new Ray(facing, xyzAdd(point, this.pose()))
+
+      let deltaPose
+      if (FUTURE) {
+        deltaPose = xyzAdd(point, this.pose())
+        deltaPose.rotated = facing
+      } else {
+        const placement = new Ray(facing, xyzAdd(point, this.pose()))
+        deltaPose = placement.asPose()
+      }
+
       if (roof.custom) {
-        this.add(new Roof({ placement, deprecatedSpec: roof }))
+        this.add(new Roof({ pose: deltaPose, deprecatedSpec: roof }))
       } else {
         const roofPlace = new Storey({
-          placement,
+          pose: deltaPose,
           outline: corners,
           deprecatedSpec: { use: Use.ROOF, wall: roof.parapetHeight }
         })
@@ -158,8 +190,16 @@ class Building extends Structure {
       if (!childSpec.roof) {
         childSpec.roof = roof
       }
-      const placement = new Ray(0, xyzAdd(parentOffset, this.pose()))
-      const child = new Building({ placement, deprecatedSpec: childSpec })
+
+      let child
+      if (FUTURE) {
+        const deltaPose = Pose.combine(Pose.copy(this.pose()), parentOffset)
+        child = new Building({ pose: deltaPose, deprecatedSpec: childSpec })
+      } else {
+        const placement = new Ray(0, xyzAdd(parentOffset, this.pose()))
+        child = new Building({ placement, deprecatedSpec: childSpec })
+      }
+
       this.add(child)
     }
   }
@@ -168,15 +208,28 @@ class Building extends Structure {
     const { storeyHeight, children, numStoreys, shape, offset } = spec
     parentOffset = xyzAdd(parentOffset, offset)
     let point = { ...parentOffset }
-    const ray = new Ray(this.placement().az)
-    point = ray.applyRay(point)
-    const facing = this.placement().az
-    if (shape) {
-      const corners = cornersFromShape(shape)
-      const placement = new Ray(facing, xyzAdd(point, this.pose()))
-      const depth = storeyHeight * numStoreys
-      const box = this.makePlaceholder(placement, Use.WALL, corners, depth, placement)
-      group.add(box)
+    if (FUTURE) {
+      const pose = Pose.origin()
+      pose.rotated = this.pose().rotated
+      point = Pose.relocate(pose, point)
+      if (shape) {
+        const corners = cornersFromShape(shape)
+        const depth = storeyHeight * numStoreys
+        const deltaPose = Pose.combine(this.pose(), point)
+        const box = this.makePlaceholder(deltaPose, Use.WALL, corners, depth)
+        group.add(box)
+      }
+    } else {
+      const ray = new Ray(this.placement().az)
+      point = ray.applyRay(point)
+      const facing = this.placement().az
+      if (shape) {
+        const corners = cornersFromShape(shape)
+        const placement = new Ray(facing, xyzAdd(point, this.pose()))
+        const depth = storeyHeight * numStoreys
+        const box = this.makePlaceholder(placement, Use.WALL, corners, depth, placement)
+        group.add(box)
+      }
     }
     for (const childSpec of array(children)) {
       const subgroup = new FeatureGroup(childSpec.name)
@@ -187,7 +240,9 @@ class Building extends Structure {
 
   // Random values in the spec need to be chosen once per building, so they will be
   // the same for all levels of detail.
+
   _instantiateSpec (template, defaults = {}) {
+    window.alert('DEAD CODE?')
     const spec = { ...template }
     if (template.shape) {
       if (template.numStoreys === undefined) {
@@ -212,9 +267,9 @@ class Building extends Structure {
   }
 
   // TODO: delete this code when it is no longer used by any content model classes
-  _makeModelFromDeprecatedSpec (buildingSpec, pose) {
-    const placement = Ray.fromPose(pose || Pose.origin())
-    const at = (placement && placement.xyz) || { x: 0, y: 0, z: 0 }
+  _makeModelFromDeprecatedSpec (buildingSpec, at) {
+    // const placement = Ray.fromPose(pose || Pose.origin())
+    // const at = (placement && placement.xyz) || { x: 0, y: 0, z: 0 }
     const resolvedSpec = this._instantiateSpec(buildingSpec)
     this._makeHighResBuildingFromSpec(resolvedSpec, at)
 

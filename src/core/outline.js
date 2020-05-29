@@ -32,10 +32,30 @@ class Outline {
    */
   constructor (outlineSpec, inset) {
     this._corners = Outline.cornersFromSpec(outlineSpec, inset)
+    this._width = Outline.widthFromCorners(this._corners)
+    this._height = Outline.heightFromCorners(this._corners)
   }
 
   corners () {
     return this._corners
+  }
+
+  width () {
+    return this._width
+  }
+
+  height () {
+    return this._height
+  }
+
+  static widthFromCorners (corners) {
+    const xList = corners.map(xy => xy.x)
+    return Math.max(...xList) - Math.min(...xList)
+  }
+
+  static heightFromCorners (corners) {
+    const yList = corners.map(xy => xy.y)
+    return Math.max(...yList) - Math.min(...yList)
   }
 
   /**
