@@ -44,22 +44,15 @@ const COLORS_BY_USE = {
  */
 class Structure extends Model {
   constructor (options = {}) {
-    let { pose, placement, spec, ...remainingOptions } = options
+    let { pose, spec, ...remainingOptions } = options
     let layer = null
     if (spec && spec.layer) {
       layer = Layer.getLayer(spec.layer)
     }
     super({ spec, ...remainingOptions, layer })
 
-    if (pose && placement) {
-      throw new Error('Structure constructor was passed both "pose" and "placement"')
-    }
-    if (!pose && !placement) {
+    if (!pose) {
       pose = Pose.origin()
-    }
-    if (placement) {
-      throw new Error('Structure constructor was passed a "placement"')
-      // pose = placement.asPose()
     }
 
     this.offset = Pose.collapse(pose)
