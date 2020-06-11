@@ -11,7 +11,6 @@ import { Layer } from '../core/layer.js'
 import { LAYER } from './layer.js'
 import { Model } from './model.js'
 import { Pose } from '../core/pose.js'
-import { Ray } from '../core/ray.js'
 
 const WHITE = 0xffffff
 const RED = 0xcc0000 // eslint-disable-line no-unused-vars
@@ -70,11 +69,6 @@ class Structure extends Model {
     if (spec) {
       this.makeModelFromSpec(spec, this._pose)
     }
-  }
-
-  placement () {
-    window.alert('Structure.placement() - TODO: delete me!')
-    return Ray.fromPose(this._pose)
   }
 
   pose () {

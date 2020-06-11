@@ -8,8 +8,6 @@ import { xy, xyz, xyzAdd, count, countTo, randomInt, hypotenuse } from '../../sr
 import { Byway } from '../../src/architecture/byway.js'
 import { Facing } from '../../src/core/facing.js'
 import { FeatureGroup } from '../../src/core/feature.js'
-import { Pose } from '../../src/core/pose.js'
-import { Ray } from '../../src/core/ray.js'
 import { Roof } from '../../src/architecture/roof.js'
 import { Storey } from '../../src/architecture/storey.js'
 import { Structure } from '../../src/architecture/structure.js'
@@ -315,15 +313,12 @@ class MidriseComplex extends Structure {
   }
 
   _deprecatedGoto ({ x = 0, y = 0, z = 0 } = {}, facing) {
-    const FUTURE = false
-    if (FUTURE) {
-      const pose = Pose.combine(Pose.copy(this.pose()), xyz(x, y, z))
-      pose.rotated = facing
-      return pose
-    } else {
-      const ray = new Ray(facing, xyzAdd(xyz(x, y, z), this.pose()))
-      return ray.asPose()
-    }
+    // const pose = Pose.combine(Pose.copy(this.pose()), xyz(x, y, z))
+    // pose.rotated = facing
+    // return pose
+    const pose = xyzAdd(xyz(x, y, z), this.pose())
+    pose.rotated = facing
+    return pose
   }
 
   _addFeaturesAtLanding (rampBearings, at) {
