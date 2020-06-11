@@ -97,7 +97,6 @@ class District extends Model {
     // TODO: refactor to combine code in building.js, parcel.js, district.js
     if (routes) {
       for (const routeSpec of routes) {
-        // const at = placement.add(this.offset, placement.az)
         const waypoints = Pose.relocate(pose, routeSpec.waypoints)
         let use
         if (routeSpec.mode && routeSpec.mode === 'canal') {

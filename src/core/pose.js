@@ -5,9 +5,9 @@
  * For more information, please refer to <http://unlicense.org>
  */
 
+import { xyzAdd, xyRotate } from '../core/util.js'
 import { Facing } from '../core/facing.js'
 import { UNIT } from '../core/unit.js'
-import { Ray } from './ray.js'
 
 /**
  * A point (or vector) in a 3D space
@@ -27,8 +27,6 @@ import { Ray } from './ray.js'
  * @property {boolean} [mirrored=false] - true if transformed points are to be reflected about the x-axis
  * @property {pose} [subPose=null] - an additional pose to apply
  */
-
-const FUTURE = false
 
 /**
  * Pose is a class for representing how an instance of a 3D object is placed in a position.
@@ -59,6 +57,7 @@ class Pose {
    * @returns {xyz|xyz[]} corresponding points, placed into the pose
    */
   static relocate (pose, xyzOrList) {
+    const FUTURE = false
     if (FUTURE) {
       if (Array.isArray(xyzOrList)) {
         return xyzOrList.map(xyz => Pose._relocatePoint(pose, xyz))
@@ -66,8 +65,8 @@ class Pose {
         return Pose._relocatePoint(pose, xyzOrList)
       }
     } else {
-      const placement = Ray.fromPose(pose)
-      return placement.applyRay(xyzOrList)
+      const collapsedPose = Pose.collapse(pose)
+      return Pose.applyPose(collapsedPose, xyzOrList)
     }
   }
 
@@ -87,20 +86,63 @@ class Pose {
     return topCopy
   }
 
-  static collapse (pose) {
-    return Ray.fromPose(pose).asPose()
-    /*
-    let finalPose = { ...Pose.origin(), ...pose }
-    delete finalPose.subPose
-    let subPose = pose.subPose
+  static applyPose (pose, xyzObjOrList) {
+    if (Array.isArray(xyzObjOrList)) {
+      const transformed = []
+      for (const xyzPoint of xyzObjOrList) {
+        const rotated = xyRotate(xyzPoint, pose.rotated)
+        rotated.z = xyzPoint.z
+        if (pose.mirrored) {
+          rotated.x = -rotated.x
+        }
+        transformed.push(xyzAdd(rotated, pose))
+      }
+      return transformed
+    } else {
+      const rotated = xyRotate(xyzObjOrList, pose.rotated)
+      rotated.z = xyzObjOrList.z
+      if (pose.mirrored) {
+        rotated.x = -rotated.x
+      }
+      return xyzAdd(rotated, pose)
+    }
+  }
+
+  static _collapsePose (pose) {
+    let { x, y, z, rotated, mirrored, subPose } = pose
+    let poseIn = {
+      rotated: rotated || Facing.NORTH,
+      x,
+      y,
+      z,
+      mirrored: mirrored || false
+    }
     while (subPose) {
-      const rotated = finalPose.rotated + (subPose.rotated || 0)
-      const mirrored = finalPose.mirrored ? !subPose.mirrored : !!subPose.mirrored
-      finalPose = { ...Pose._xyzAdd(finalPose, subPose), rotated, mirrored }
+      const netMirrored = subPose.mirrored ? !mirrored : mirrored
+
+      const rotated = xyRotate(subPose, poseIn.rotated)
+      rotated.z = subPose.z
+      if (poseIn.mirrored) {
+        rotated.x = -rotated.x
+      }
+      const subXyz = xyzAdd(rotated, poseIn)
+
+      poseIn = {
+        rotated: poseIn.rotated + (subPose.rotated || 0),
+        x: subXyz.x,
+        y: subXyz.y,
+        z: subXyz.z,
+        mirrored: netMirrored
+      }
+
       subPose = subPose.subPose
     }
-    return finalPose
-    */
+    const newPose = Pose.copy(poseIn)
+    return newPose
+  }
+
+  static collapse (pose) {
+    return Pose._collapsePose(pose)
   }
 
   static _relocatePoint (pose, xyz) {

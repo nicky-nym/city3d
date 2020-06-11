@@ -63,7 +63,8 @@ class Structure extends Model {
       // pose = placement.asPose()
     }
 
-    this.offset = Ray.fromPose(pose).asPose()
+    this.offset = Pose.collapse(pose)
+
     this._pose = Pose.origin()
     this._pose.rotated = this.offset.rotated
     if (spec) {
