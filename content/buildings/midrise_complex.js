@@ -280,36 +280,15 @@ class MidriseComplex extends Structure {
   }
 
   _addRoofAroundFloor (pose, shape, peakXyz) {
-    let roofSpec = {}
-    if (peakXyz.z === 0) {
-      roofSpec = {
-        flat: shape
-      }
-      this.add(new Roof({ pose, deprecatedSpec: roofSpec }))
-      this.mediumGroup.add(new Roof({ pose, deprecatedSpec: roofSpec }))
-      this.lowGroup.add(new Roof({ pose, deprecatedSpec: roofSpec }))
-    } else {
-      this.add(new Storey({ pose, outline: shape, deprecatedSpec: { use: Use.BARE } }))
-      this.mediumGroup.add(new Storey({ pose, outline: shape, deprecatedSpec: { use: Use.BARE } }))
-      this.lowGroup.add(new Storey({ pose, outline: shape, deprecatedSpec: { use: Use.BARE } }))
-      let i = 0
-      for (const corner of shape) {
-        const next = i + 1 < shape.length ? i + 1 : 0
-        i++
-        const vertices = [
-          xyz(corner.x, corner.y, 0),
-          xyz(shape[next].x, shape[next].y, 0),
-          peakXyz
-        ]
-        const indices = [[0, 1, 2]]
-        roofSpec = {
-          custom: { vertices, indices }
-        }
-        this.add(new Roof({ pose, deprecatedSpec: roofSpec }))
-        this.mediumGroup.add(new Roof({ pose, deprecatedSpec: roofSpec }))
-        this.lowGroup.add(new Roof({ pose, deprecatedSpec: roofSpec }))
-      }
+    const spec = {
+      name: 'Roof',
+      form: 'flat',
+      outline: { shape: 'polygon', corners: shape },
+      eaves: 0
     }
+    this.add(new Roof({ pose, spec }))
+    this.mediumGroup.add(new Roof({ pose, spec }))
+    this.lowGroup.add(new Roof({ pose, spec }))
   }
 
   _deprecatedGoto ({ x = 0, y = 0, z = 0 } = {}, facing) {

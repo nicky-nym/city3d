@@ -51,37 +51,13 @@ class Roof extends Model {
   /**
    * Create a new instance of a specified Roof, and generate the Geometry objects for it.
    * @param {pose} [pose] - the location and orientation
-   * @param {object} [deprecatedSpec] - an old 2019 spec format that we're phasing out
    * @param {object} [spec] - an specification object that is valid against roof.schema.json.js
    * @param {Wall[]} [walls] - an array of Wall instances
    */
-  constructor ({ pose, deprecatedSpec, spec, walls } = {}) {
+  constructor ({ pose, spec, walls } = {}) {
     super({ name: 'Roof', layer: LAYER.ROOFS })
-    if (deprecatedSpec) {
-      this._makeModelFromDeprecatedSpec(deprecatedSpec, pose)
-    }
     if (spec) {
       this.makeModelFromSpec(spec, pose, walls)
-    }
-  }
-
-  // TODO: delete this code when it is no longer used by any content model classes
-  _makeModelFromDeprecatedSpec (deprecatedSpec, pose) {
-    if (deprecatedSpec.custom) {
-      let { vertices, indices } = deprecatedSpec.custom
-      vertices = Pose.relocate(pose, vertices)
-      const abstractRoof = new Geometry.TriangularPolyhedron(vertices, indices)
-      const concreteRoof = new FeatureInstance(abstractRoof, { ...vertices[0] }, LIGHT_GRAY)
-      this.add(concreteRoof)
-    } else if (deprecatedSpec.flat) {
-      const adjustedCorners = Pose.relocate(pose, deprecatedSpec.flat)
-      const xyPolygon = new Geometry.XYPolygon(adjustedCorners)
-      const abstractThickPolygon = new Geometry.ThickPolygon(xyPolygon, { depth: 0.5 })
-      const p0 = { ...adjustedCorners[0], z: pose.z }
-      const concreteThickPolygon = new FeatureInstance(abstractThickPolygon, p0, LIGHT_GRAY)
-      this.add(concreteThickPolygon)
-    } else {
-      throw new Error('bad roof type in spec for new Roof()')
     }
   }
 
