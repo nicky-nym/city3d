@@ -6,15 +6,17 @@
  */
 
 import { UNIT } from '../../src/core/unit.js'
-import { xyz } from '../../src/core/util.js'
+import { xy } from '../../src/core/util.js'
 import { Roof } from '../../src/architecture/roof.js'
 import { Structure } from '../../src/architecture/structure.js'
+import { Wall } from '../../src/architecture/wall.js'
 
 const FEET_PER_CUBIT = 1.717
 const cubits = UNIT.define('cubits', length => length * FEET_PER_CUBIT)
 
 const height = cubits(280)
-const halfBaseSpan = cubits(440) / 2
+const baseSpan = cubits(440)
+const halfBaseSpan = baseSpan / 2
 
 /**
  * Class representing the Great Pyramid of Giza (aka the Pyramid of Khufu).
@@ -23,23 +25,26 @@ class PyramidOfKhufu extends Structure {
   constructor ({ name = 'Great Pyramid of Giza', pose } = {}) {
     super({ name, pose })
 
-    const PEAK = xyz(0, 0, height)
-    const NE = xyz(halfBaseSpan, halfBaseSpan, 0)
-    const SE = xyz(halfBaseSpan, -halfBaseSpan, 0)
-    const SW = xyz(-halfBaseSpan, -halfBaseSpan, 0)
-    const NW = xyz(-halfBaseSpan, halfBaseSpan, 0)
+    const NE = xy(halfBaseSpan, halfBaseSpan)
+    const SE = xy(halfBaseSpan, -halfBaseSpan)
+    const SW = xy(-halfBaseSpan, -halfBaseSpan)
+    const NW = xy(-halfBaseSpan, halfBaseSpan)
 
-    const vertices = [PEAK, NE, SE, SW, NW]
-    const indices = [
-      [0, 1, 2],
-      [0, 2, 3],
-      [0, 3, 4],
-      [0, 4, 1]
-    ]
-    const roofSpec = {
-      custom: { vertices, indices }
+    const spec = {
+      name: 'Roof',
+      form: 'hipped',
+      outline: { shape: 'polygon', corners: [NW, SW, SE, NE] },
+      pitch: { rise: height, run: halfBaseSpan },
+      eaves: 0
     }
-    this.add(new Roof({ pose: this.pose(), deprecatedSpec: roofSpec }))
+    // TODO: refactor Roof so that we don't need to pass in any walls
+    const walls = [
+      new Wall({ spec: { begin: NW, end: SW } }),
+      new Wall({ spec: { begin: SW, end: SE } }),
+      new Wall({ spec: { begin: SE, end: NE } }),
+      new Wall({ spec: { begin: NE, end: NW } })
+    ]
+    this.add(new Roof({ pose: this.pose(), spec, walls }))
   }
 }
 

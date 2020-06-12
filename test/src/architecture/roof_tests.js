@@ -1,12 +1,11 @@
 /** @file roof_tests.js
- * @author Authored in 2019 at <https://github.com/nicky-nym/city3d>
+ * @author Authored in 2019, 2020 at <https://github.com/nicky-nym/city3d>
  * @license UNLICENSE
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
  */
 
 import { Roof } from '../../../src/architecture/roof.js'
-import { UNIT } from '../../../src/core/unit.js'
 import { xy } from '../../../src/core/util.js'
 
 /* global describe, it, beforeEach */
@@ -25,130 +24,85 @@ describe('Roof', function () {
 
     const flatRoofSpec = {
       name: 'Flat roof',
-      roof: {
-        eaves: UNIT.feet(1)
-      },
-      shape: { type: 'rectangle', data: xy(10, 20) }
+      form: 'flat',
+      eaves: 1,
+      outline: { shape: 'rectangle', size: xy(10, 20) }
     }
 
     const shedRoofSpec = {
       name: 'Shed roof',
-      roof: {
-        pitched: UNIT.degrees(60),
-        ridgeSetback: UNIT.feet(10),
-        eaves: UNIT.feet(1)
-      },
-      shape: { type: 'rectangle', data: xy(10, 20) },
-      walls: [
-        { type: 'rectangular' },
-        { type: 'gabled' },
-        { type: 'rectangular' },
-        { type: 'gabled' }
-      ]
+      form: 'shed',
+      pitch: { rise: 9, run: 12 },
+      eaves: 1,
+      outline: { shape: 'rectangle', size: xy(10, 20) }
     }
 
     const gableRoofSpec = {
       name: 'Gable roof',
-      roof: {
-        pitched: UNIT.degrees(60),
-        eaves: UNIT.feet(1)
-      },
-      shape: { type: 'rectangle', data: xy(10, 20) },
-      walls: [
-        { type: 'rectangular' },
-        { type: 'gabled' },
-        { type: 'rectangular' },
-        { type: 'gabled' }
-      ]
+      form: 'pitched',
+      pitch: { rise: 9, run: 12 },
+      eaves: 1,
+      outline: { shape: 'rectangle', size: xy(10, 20) }
     }
 
     const saltboxRoofSpec = {
       name: 'Saltbox roof',
-      roof: {
-        pitched: UNIT.degrees(60),
-        ridgeSetback: UNIT.feet(7),
-        eaves: UNIT.feet(1)
-      },
-      shape: { type: 'rectangle', data: xy(10, 20) },
-      walls: [
-        { type: 'rectangular' },
-        { type: 'gabled' },
-        { type: 'rectangular' },
-        { type: 'gabled' }
-      ]
+      form: 'pitched',
+      pitch: { rise: 9, run: 12 },
+      eaves: 1,
+      outline: { shape: 'rectangle', size: xy(10, 20) }
     }
 
     const hipRoofSpec = {
       name: 'Hip roof',
-      roof: {
-        pitched: UNIT.degrees(60),
-        eaves: UNIT.feet(1)
-      },
-      shape: { type: 'rectangle', data: xy(10, 20) }
+      form: 'hipped',
+      pitch: { rise: 9, run: 12 },
+      eaves: 1,
+      outline: { shape: 'rectangle', size: xy(10, 20) }
     }
 
     const gambrelRoofSpec = {
       name: 'Gambrel roof',
-      roof: {
-        pitched: [UNIT.degrees(30), UNIT.degrees(60)],
-        eaves: UNIT.feet(1)
-      },
-      shape: { type: 'rectangle', data: xy(10, 20) },
-      walls: [
-        { type: 'rectangular' },
-        { type: 'gabled' },
-        { type: 'rectangular' },
-        { type: 'gabled' }
-      ]
+      form: 'pitched',
+      pitch: [{ rise: 18, run: 12 }, { rise: 6, run: 12 }],
+      eaves: 1,
+      outline: { shape: 'rectangle', size: xy(10, 20) }
     }
 
     const mansardRoofSpec = {
       name: 'Mansard roof',
-      pitched: [UNIT.degrees(30), UNIT.degrees(60)],
-      eaves: UNIT.feet(1),
-      shape: { type: 'rectangle', data: xy(10, 20) }
+      form: 'hipped',
+      pitch: [{ rise: 18, run: 12 }, { rise: 6, run: 12 }],
+      eaves: 1,
+      outline: { shape: 'rectangle', size: xy(10, 20) }
     }
 
     const jerkinheadRoofSpec = {
       name: 'Jerkinhead roof',
-      roof: {
-        pitched: UNIT.degrees(60),
-        eaves: UNIT.feet(1)
-      },
-      shape: { type: 'rectangle', data: xy(10, 20) },
-      walls: [
-        { type: 'rectangular' },
-        { type: 'jerkinhead' },
-        { type: 'rectangular' },
-        { type: 'jerkinhead' }
-      ]
+      form: 'jerkinhead',
+      pitch: { rise: 9, run: 12 },
+      eaves: 1,
+      outline: { shape: 'rectangle', size: xy(10, 20) }
     }
 
     const dutchGableRoofSpec = {
       name: 'Dutch Gable roof',
-      roof: {
-        pitched: UNIT.degrees(60),
-        eaves: UNIT.feet(1)
-      },
-      shape: { type: 'rectangle', data: xy(10, 20) },
-      walls: [
-        { type: 'rectangular' },
-        { type: 'dutch' },
-        { type: 'rectangular' },
-        { type: 'dutch' }
-      ]
+      form: 'dutch',
+      pitch: { rise: 9, run: 12 },
+      eaves: 1,
+      outline: { shape: 'rectangle', size: xy(10, 20) }
     }
 
     beforeEach(function () {
-      flatRoof = new Roof({ deprecatedSpec: flatRoofSpec })
-      shedRoof = new Roof({ deprecatedSpec: shedRoofSpec })
-      gableRoof = new Roof({ deprecatedSpec: gableRoofSpec })
-      saltboxRoof = new Roof({ deprecatedSpec: saltboxRoofSpec })
-      hipRoof = new Roof({ deprecatedSpec: hipRoofSpec })
-      gambrelRoof = new Roof({ deprecatedSpec: gambrelRoofSpec })
-      mansardRoof = new Roof({ deprecatedSpec: mansardRoofSpec })
-      jerkinheadRoof = new Roof({ deprecatedSpec: jerkinheadRoofSpec })
-      dutchGableRoof = new Roof({ deprecatedSpec: dutchGableRoofSpec })
+      flatRoof = new Roof({ spec: flatRoofSpec })
+      shedRoof = new Roof({ spec: shedRoofSpec })
+      gableRoof = new Roof({ spec: gableRoofSpec })
+      saltboxRoof = new Roof({ spec: saltboxRoofSpec })
+      hipRoof = new Roof({ spec: hipRoofSpec })
+      gambrelRoof = new Roof({ spec: gambrelRoofSpec })
+      mansardRoof = new Roof({ spec: mansardRoofSpec })
+      jerkinheadRoof = new Roof({ spec: jerkinheadRoofSpec })
+      dutchGableRoof = new Roof({ spec: dutchGableRoofSpec })
     })
 
     describe('#getFaceCount()', function () {
