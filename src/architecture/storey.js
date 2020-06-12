@@ -111,7 +111,7 @@ class Storey extends Model {
     spec
   } = {}) {
     // name = name || `${Use[use]}${outline.name ? ` (${outline.name})` : ''}`
-    name = name || (spec && spec.name) || (deprecatedSpec && deprecatedSpec.use)
+    name = name || (spec && spec.name) || (deprecatedSpec && deprecatedSpec.use) || 'Storey'
     super({ name })
     if (deprecatedSpec) {
       this._makeModelFromDeprecatedSpec(deprecatedSpec, outline, pose)

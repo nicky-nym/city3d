@@ -113,7 +113,7 @@ describe('Building', function () {
         const storeys = []
         building.accept(node => { if (node instanceof Storey) storeys.push(node) })
         storeys.should.have.length(1)
-        storeys[0].fullName().toLowerCase().should.equal('triplex')
+        storeys[0].fullName().toLowerCase().should.equal('storey of triplex')
       })
       it('should create levels of detail with exactly one Geometry Instance', function () {
         const building = new Building({ spec: simpleThreeStoreySpec })

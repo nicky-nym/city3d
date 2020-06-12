@@ -5,10 +5,9 @@
  * For more information, please refer to <http://unlicense.org>
  */
 
-import { FeatureInstance } from '../../../src/core/feature.js'
+import { FeatureInstance, Feature } from '../../../src/core/feature.js'
 import { Pose } from '../../../src/core/pose.js'
 import { Storey } from '../../../src/architecture/storey.js'
-import { Use } from '../../../src/architecture/use.js'
 import { xy } from '../../../src/core/util.js'
 
 /* global describe, it, beforeEach, expect */
@@ -16,7 +15,23 @@ import { xy } from '../../../src/core/util.js'
 
 describe('Storey', function () {
   const pose = Pose.origin()
-  const rectangle = [xy(0, 0), xy(50, 0), xy(50, 20), xy(0, 20)]
+  const A = xy(0, 0)
+  const B = xy(50, 0)
+  const C = xy(50, 20)
+  const D = xy(0, 20)
+  const rectangle = [A, B, C, D]
+  const outline = {
+    shape: 'polygon',
+    corners: rectangle
+  }
+  const walls = {
+    exterior: [
+      { begin: A, end: B },
+      { end: C },
+      { end: D },
+      { end: A }
+    ]
+  }
   let count
 
   describe('#constructor', function () {
@@ -25,40 +40,30 @@ describe('Storey', function () {
     })
 
     it('should return a Group with the right name if one was specified', function () {
-      const room = new Storey({ name: 'lobby', pose, outline: rectangle, deprecatedSpec: { use: Use.ROOM } })
+      const spec = { name: 'lobby', floors: [{ outline }] }
+      const room = new Storey({ spec, pose })
 
       room.name.should.equal('lobby')
     })
-    it('should return a Group named by its use if no name was specified', function () {
-      const room = new Storey({ pose, outline: rectangle, deprecatedSpec: { use: Use.ROOM } })
+    it('should return a Group named "Storey" if no name was specified', function () {
+      const spec = { floors: [{ outline }] }
+      const room = new Storey({ spec, pose })
 
-      room.name.should.equal('ROOM')
+      room.name.should.equal('Storey')
     })
     it('should return a Group with one Instance when called with a rectangle and no wall value', function () {
-      const room = new Storey({ pose, outline: rectangle, deprecatedSpec: { use: Use.ROOM } })
+      const spec = { floors: [{ outline }] }
+      const room = new Storey({ spec, pose })
 
       room.accept(node => { count += node instanceof FeatureInstance ? 1 : 0 })
       count.should.equal(1)
     })
-    it('should return a Group with five Instances when called with a rectangle and a wall value', function () {
-      const room = new Storey({ pose, outline: rectangle, deprecatedSpec: { use: Use.ROOM, wall: 12 } })
+    it('should return a Group with eight Features when called with a rectangle and four walls', function () {
+      const spec = { floors: [{ outline }], walls }
+      const room = new Storey({ spec, pose })
 
-      room.accept(node => { count += node instanceof FeatureInstance ? 1 : 0 })
-      count.should.equal(5)
-    })
-  })
-
-  describe('#floorDepth', function () {
-    it('should return negative value if no depth was specified.', function () {
-      const storey = new Storey({ pose, outline: rectangle, deprecatedSpec: { use: Use.BARE } })
-
-      storey.floorDepth().should.be.lessThan(0)
-    })
-
-    it('should return the specified depth if there was one.', function () {
-      const storey = new Storey({ pose, outline: rectangle, deprecatedSpec: { use: Use.BARE, depth: 0.8 } })
-
-      storey.floorDepth().should.equal(0.8)
+      room.accept(node => { count += node instanceof Feature ? 1 : 0 })
+      count.should.equal(8)
     })
   })
 
@@ -72,6 +77,7 @@ describe('Storey', function () {
         name: 'Third floor',
         unit: 'feet',
         height: 8,
+        altitude: 40,
         floors: [{
           outline: {
             shape: 'rectangle',
