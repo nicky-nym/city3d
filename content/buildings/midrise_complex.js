@@ -291,7 +291,7 @@ class MidriseComplex extends Structure {
     this.lowGroup.add(new Roof({ pose, spec }))
   }
 
-  _deprecatedGoto ({ x = 0, y = 0, z = 0 } = {}, facing) {
+  _shiftedPose ({ x = 0, y = 0, z = 0 } = {}, facing) {
     // const pose = Pose.combine(Pose.copy(this.pose()), xyz(x, y, z))
     // pose.rotated = facing
     // return pose
@@ -305,7 +305,7 @@ class MidriseComplex extends Structure {
     let pose
 
     // Landing
-    pose = this._deprecatedGoto({ x: x, y: y, z: z }, Facing.NORTH)
+    pose = this._shiftedPose({ x: x, y: y, z: z }, Facing.NORTH)
     this.add(new Byway({ pose, outline: OCTAGONAL_LANDING, deprecatedSpec: { use: Use.WALKWAY } }))
     this.mediumGroup.add(new Byway({ pose, outline: OCTAGONAL_LANDING, deprecatedSpec: { use: Use.WALKWAY } }))
     if (z % STOREY_HEIGHT === 0) {
@@ -314,7 +314,7 @@ class MidriseComplex extends Structure {
 
     // Ramps
     for (const bearing of rampBearings) {
-      pose = this._deprecatedGoto({ x: x, y: y, z: z }, bearing)
+      pose = this._shiftedPose({ x: x, y: y, z: z }, bearing)
       this.add(new Byway({ pose, outline: RAMP_CORNERS, deprecatedSpec: { use: Use.WALKWAY, incline: RAMP_RISE_HEIGHT } }))
       this.mediumGroup.add(new Byway({ pose, outline: RAMP_CORNERS, deprecatedSpec: { use: Use.WALKWAY, incline: RAMP_RISE_HEIGHT } }))
     }
@@ -323,28 +323,28 @@ class MidriseComplex extends Structure {
     if (z % STOREY_HEIGHT === 0) {
       for (const bearing of rampBearings) {
         // parcel
-        pose = this._deprecatedGoto({ x: x, y: y, z: 0 }, bearing)
+        pose = this._shiftedPose({ x: x, y: y, z: 0 }, bearing)
         this.add(new Storey({ pose, outline: BASEMENT, deprecatedSpec: { use: Use.PARCEL } }))
 
         // lower floors
         for (const altitude of count(0, z, STOREY_HEIGHT)) {
-          pose = this._deprecatedGoto({ x: x, y: y, z: altitude }, bearing)
+          pose = this._shiftedPose({ x: x, y: y, z: altitude }, bearing)
           this.add(new Storey({ pose, outline: BASEMENT, deprecatedSpec: { use: Use.ROOM } }))
         }
 
         // upper floors
         for (const altitude of count(z, ROOFLINE, STOREY_HEIGHT)) {
-          pose = this._deprecatedGoto({ x: x, y: y, z: altitude }, bearing)
+          pose = this._shiftedPose({ x: x, y: y, z: altitude }, bearing)
           this.add(new Storey({ pose, outline: APARTMENT, deprecatedSpec: { use: Use.ROOM, wall: STOREY_HEIGHT, openings: APARTMENT_WINDOWS } }))
         }
-        pose = this._deprecatedGoto({ x: x, y: y, z: z }, bearing)
+        pose = this._shiftedPose({ x: x, y: y, z: z }, bearing)
         this.mediumGroup.add(this.makePlaceholder(pose, Use.WALL, APARTMENT, ROOFLINE - z))
         this.lowGroup.add(this.makePlaceholder(pose, Use.WALL, APARTMENT, ROOFLINE - z))
 
         // roof
         const midpoint = (APARTMENT_WIDTH + D2) / 2
         const peak = xyz(midpoint, midpoint, randomInt(0, 4) * 7)
-        pose = this._deprecatedGoto({ x: x, y: y, z: ROOFLINE }, bearing)
+        pose = this._shiftedPose({ x: x, y: y, z: ROOFLINE }, bearing)
         this._addRoofAroundFloor(pose, ATTIC, peak)
       }
     }
