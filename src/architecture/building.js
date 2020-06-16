@@ -25,11 +25,10 @@ class Building extends Structure {
   /**
    * Create a new instance of a specified Building, and generate the Geometry objects for it.
    * @param {pose} [pose] - the location and orientation of this building
-   * @param {object} [deprecatedSpec] - an old 2019 spec format that we're phasing out
    */
   constructor (options = {}) {
-    const { pose = Pose.origin(), deprecatedSpec, ...remainingOptions } = options
-    super({ pose, deprecatedSpec, ...remainingOptions, copyLayer: LAYER.COPIES })
+    const { pose = Pose.origin(), ...remainingOptions } = options
+    super({ pose, ...remainingOptions, copyLayer: LAYER.COPIES })
   }
 
   /**
