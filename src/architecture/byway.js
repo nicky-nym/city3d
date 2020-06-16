@@ -15,13 +15,9 @@ class Byway extends Storey {
     name,
     pose,
     outline,
-    deprecatedSpec = {}
+    spec
   } = {}) {
-    const use = deprecatedSpec.use
-    const z = deprecatedSpec.z || 0
-    const incline = deprecatedSpec.incline || 0
-    const depth = deprecatedSpec.depth || -0.5
-    super({ name, pose, outline, deprecatedSpec: { use, z, incline, depth } })
+    super({ name, pose, outline, spec })
   }
 }
 

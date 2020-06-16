@@ -306,8 +306,16 @@ class MidriseComplex extends Structure {
 
     // Landing
     pose = this._shiftedPose({ x: x, y: y, z: z }, Facing.NORTH)
-    this.add(new Byway({ pose, outline: OCTAGONAL_LANDING, deprecatedSpec: { use: Use.WALKWAY } }))
-    this.mediumGroup.add(new Byway({ pose, outline: OCTAGONAL_LANDING, deprecatedSpec: { use: Use.WALKWAY } }))
+    const landingSpec = {
+      floors: [{
+        outline: {
+          shape: 'polygon',
+          corners: OCTAGONAL_LANDING
+        }
+      }]
+    }
+    this.add(new Byway({ pose, spec: landingSpec }))
+    this.mediumGroup.add(new Byway({ pose, spec: landingSpec }))
     if (z % STOREY_HEIGHT === 0) {
       this.add(new Storey({ pose, outline: DIAMOND_CENTER, deprecatedSpec: { use: Use.BARE, wall: 3 } }))
     }
@@ -315,8 +323,17 @@ class MidriseComplex extends Structure {
     // Ramps
     for (const bearing of rampBearings) {
       pose = this._shiftedPose({ x: x, y: y, z: z }, bearing)
-      this.add(new Byway({ pose, outline: RAMP_CORNERS, deprecatedSpec: { use: Use.WALKWAY, incline: RAMP_RISE_HEIGHT } }))
-      this.mediumGroup.add(new Byway({ pose, outline: RAMP_CORNERS, deprecatedSpec: { use: Use.WALKWAY, incline: RAMP_RISE_HEIGHT } }))
+      const rampSpec = {
+        floors: [{
+          incline: RAMP_RISE_HEIGHT,
+          outline: {
+            shape: 'polygon',
+            corners: RAMP_CORNERS
+          }
+        }]
+      }
+      this.add(new Byway({ pose, spec: rampSpec }))
+      this.mediumGroup.add(new Byway({ pose, spec: rampSpec }))
     }
 
     // Floors, Walls, and Roof

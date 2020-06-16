@@ -13,7 +13,6 @@ import { METRIC } from '../../../src/architecture/metric.js'
 import { Parcel } from '../../../src/architecture/parcel.js'
 import { Pose } from '../../../src/core/pose.js'
 import { Storey } from '../../../src/architecture/storey.js'
-import { Use } from '../../../src/architecture/use.js'
 import { xy, xyz, rectangleOfSize } from '../../../src/core/util.js'
 
 /* global describe, it, beforeEach */
@@ -82,7 +81,6 @@ describe('District', function () {
     let city
     let district
     let parcel
-    let corners
     let pose = Pose.origin()
     const parcelRect = [xy(0, 0), xy(50, 0), xy(50, 20), xy(0, 20)]
     const parcelSpec = {
@@ -113,12 +111,14 @@ describe('District', function () {
 
     beforeEach(function () {
       city = new City({ name: 'Testopia' })
-      corners = rectangleOfSize(xy(1000, 1000))
       district = new District({
-        name: 'test district',
         pose: Pose.origin(),
-        deprecatedSpec: {
-          outline: corners
+        spec: {
+          name: 'test district',
+          border: {
+            shape: 'polygon',
+            corners: rectangleOfSize(xy(1000, 1000))
+          }
         }
       })
       city.add(district)
@@ -169,7 +169,6 @@ describe('District', function () {
     })
 
     describe('For a three storey building on a Parcel bordered by streets', function () {
-      const streetRect = [xy(0, 0), xy(50, 0), xy(50, 20), xy(0, 20)]
       const storeyRect = [xy(0, 0), xy(40, 0), xy(40, 10), xy(0, 10)]
       const storeySpec = {
         height: 10,
@@ -188,14 +187,32 @@ describe('District', function () {
           ]
         }
       }
-
+      const streetRect = [xy(0, 0), xy(50, 0), xy(50, 20), xy(0, 20)]
+      const streetSpec = {
+        floors: [{
+          outline: {
+            shape: 'polygon',
+            corners: streetRect
+          }
+        }]
+      }
       beforeEach(function () {
         parcel = new Parcel({ spec: parcelSpec, pose })
+        // district = new District({
+        //   name: 'test district',
+        //   pose: Pose.origin(),
+        //   deprecatedSpec: {
+        //     outline: corners
+        //   }
+        // })
         district = new District({
-          name: 'test district',
           pose: Pose.origin(),
-          deprecatedSpec: {
-            outline: corners
+          spec: {
+            name: 'test district',
+            border: {
+              shape: 'polygon',
+              corners: rectangleOfSize(xy(1000, 1000))
+            }
           }
         })
         city = new City({ name: 'Testopia' })
@@ -208,9 +225,9 @@ describe('District', function () {
         pose = xyz(5, 5, 20)
         parcel.add(new Storey({ pose, spec: storeySpec }))
         pose = xyz(0, 20, 0)
-        parcel.add(new Byway({ pose, outline: streetRect, deprecatedSpec: { use: Use.STREET } }))
+        parcel.add(new Byway({ pose, spec: streetSpec }))
         pose = xyz(0, -20, 0)
-        parcel.add(new Byway({ pose, outline: streetRect, deprecatedSpec: { use: Use.STREET } }))
+        parcel.add(new Byway({ pose, spec: streetSpec }))
       })
 
       it.skip('should compute the correct values for different areas', function () {
