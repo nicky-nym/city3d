@@ -28,22 +28,17 @@ class District extends Model {
    * Create a new instance of a specified District, and generate the Geometry objects for it.
    * @param {string} [name] - a display name for this individual instance at a given placement
    * @param {pose} [pose] - the location and orientation of this parcel
-   * @param {object} [deprecatedSpec] - an old 2019 spec format that we're phasing out
    * @param {object} [spec] - a specification object that is valid against district.schema.json.js
    * @param {SpecReader} [specReader] - an instance of a SpecReader, for adding content models in the district
    */
   constructor ({
     name,
     pose,
-    deprecatedSpec,
     spec,
     specReader
   } = {}) {
     name = name || (spec && spec.name)
     super({ name })
-    if (deprecatedSpec) {
-      this._makeModelFromDeprecatedSpec(deprecatedSpec, pose)
-    }
     if (spec) {
       this.makeModelFromSpec(spec, pose, specReader)
     }
@@ -65,8 +60,7 @@ class District extends Model {
     }
     const outline = new Outline(border)
     const corners = outline.corners()
-    const deprecatedSpec = { outline: corners }
-    this._makeModelFromDeprecatedSpec(deprecatedSpec, pose)
+    this._makeDistrictFence(pose, corners)
 
     if (parcels) {
       for (const copySpec of parcels) {
@@ -181,9 +175,9 @@ class District extends Model {
     this.add(modelObject)
   }
 
-  _makeModelFromDeprecatedSpec (deprecatedSpec, pose) {
+  _makeDistrictFence (pose, corners) {
     this._pose = pose
-    const adjustedCorners = Pose.relocate(pose, deprecatedSpec.outline)
+    const adjustedCorners = Pose.relocate(pose, corners)
     adjustedCorners.push(adjustedCorners[0])
     const xyPolygon = new Geometry.XYPolygon(adjustedCorners)
     const abstractOutlinePolygon = new Geometry.OutlinePolygon(xyPolygon)

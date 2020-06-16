@@ -198,13 +198,6 @@ describe('District', function () {
       }
       beforeEach(function () {
         parcel = new Parcel({ spec: parcelSpec, pose })
-        // district = new District({
-        //   name: 'test district',
-        //   pose: Pose.origin(),
-        //   deprecatedSpec: {
-        //     outline: corners
-        //   }
-        // })
         district = new District({
           pose: Pose.origin(),
           spec: {
