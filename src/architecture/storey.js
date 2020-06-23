@@ -9,7 +9,6 @@ import { countTo } from '../core/util.js'
 import { FeatureGroup, FeatureInstance } from '../core/feature.js'
 import { Floor } from './floor.js'
 import { Geometry } from '../core/geometry.js'
-import { METRIC } from './metric.js'
 import { Model } from './model.js'
 import { Pose } from '../core/pose.js'
 import { Roof } from './roof.js'
@@ -18,20 +17,21 @@ import { Stairs } from './stairs.js'
 // import { Use } from './use.js'
 import { Wall } from './wall.js'
 
-const WHITE = 0xffffff
+// const WHITE = 0xffffff
 const RED = 0xcc0000 // eslint-disable-line no-unused-vars
-const BLACKTOP = 0x1a1a1a // very dark grey
+// const BLACKTOP = 0x1a1a1a // very dark grey
 const GREEN = 0x00ff00 // eslint-disable-line no-unused-vars
-const BLUE = 0x0000ff
-const YELLOW = 0xffff00
+// const BLUE = 0x0000ff
+// const YELLOW = 0xffff00
 
-const GREEN_GRASS = 0x003300
-const BROWN = 0x806633
+// const GREEN_GRASS = 0x003300
+// const BROWN = 0x806633
 const DARK_GRAY = 0x404040
-const LIGHT_GRAY = 0xdddddd
+// const LIGHT_GRAY = 0xdddddd
 const BLUE_GLASS = 0x9a9aff // eslint-disable-line no-unused-vars
-const MARTIAN_ORANGE = 0xdf4911
+// const MARTIAN_ORANGE = 0xdf4911
 
+/*
 const COLORS_BY_USE = {
   STREET: BLACKTOP,
   BIKEPATH: MARTIAN_ORANGE,
@@ -59,27 +59,11 @@ const METRICS_BY_USE = {
   CANAL: METRIC.WATER_AREA,
   ROOF: METRIC.ROOF_AREA
 }
+*/
 
 const LOD = {
   HIGH: 'high',
   LOW: 'low'
-}
-
-function _addWalls (group, xyPolygon, height, z, openingsByWall, cap) {
-  let i = 0
-  for (const v of xyPolygon) {
-    const entryForThisWall = openingsByWall.find(item => item[0] === i)
-    const openings = entryForThisWall ? entryForThisWall[1] : []
-    i++
-    if (cap || i < xyPolygon.length) {
-      const next = i % xyPolygon.length
-      const begin = { ...v }
-      const end = { ...xyPolygon[next] }
-      const pose = Pose.origin()
-      pose.z = z
-      group.add(new Wall({ name: `Wall ${i}`, spec: { begin, end, height, windows: openings }, pose }))
-    }
-  }
 }
 
 /**
@@ -91,31 +75,16 @@ class Storey extends Model {
    * @param {string} [name] - name of the storey
    * @param {xy[]} outline - vertices of floor, expected to be in counterclockwise order
    * @param {pose} [pose] - the location and orientation of this storey
-   * @param {object} [deprecatedSpec] - an old 2019 spec format that we're phasing out
    * @param {object} [spec] - a specification object that is valid against storey.schema.json.js
-   *
-   * @param {string} deprecatedSpec.use - e.g. Use.ROOM
-   * @param {number} [deprecatedSpec.z=0] - z-offset of the wall
-   * @param {number} [deprecatedSpec.incline=0] - z-offset of second corner relative to first
-   * @param {number} [deprecatedSpec.depth=-0.5] - floor is between z and z + depth, so positive means bottom of floor is at
-   *                                z and negative means top of floor is at z.
-   * @param {boolean} [deprecatedSpec.cap=true] - whether to include floor
-   * @param {number} [deprecatedSpec.wall=0] - height of walls
-   * @param {xy[][]} [deprecatedSpec.openings=[]] - array of openings, where each is specified by an array of xy values
    */
   constructor ({
     name,
     outline,
     pose = Pose.origin(),
-    deprecatedSpec,
     spec
   } = {}) {
-    // name = name || `${Use[use]}${outline.name ? ` (${outline.name})` : ''}`
-    name = name || (spec && spec.name) || (deprecatedSpec && deprecatedSpec.use) || 'Storey'
+    name = name || (spec && spec.name) || 'Storey'
     super({ name })
-    if (deprecatedSpec) {
-      this._makeModelFromDeprecatedSpec(deprecatedSpec, outline, pose)
-    }
     if (spec) {
       this.makeModelFromSpec(spec, pose)
     }
@@ -262,43 +231,6 @@ class Storey extends Model {
       }
     } else {
       throw new Error('Unrecognized "level-of-detail" level in Storey.js')
-    }
-  }
-
-  // TODO: delete this code when it is no longer used by any content model classes
-  _makeModelFromDeprecatedSpec (storeySpec, outline, pose) {
-    const use = storeySpec.use
-    let z = storeySpec.z || 0
-    const incline = storeySpec.incline || 0
-    const depth = storeySpec.depth || -0.5
-    const cap = storeySpec.cap || true
-    const wall = storeySpec.wall || 0
-    const openings = storeySpec.openings || []
-    this._depth = depth
-    z = z + pose.z
-    const adjustedCorners = Pose.relocate(pose, outline)
-    const xyPolygon = new Geometry.XYPolygon(adjustedCorners)
-    if (cap) {
-      const color = COLORS_BY_USE[use]
-      const abstractThickPolygon = new Geometry.ThickPolygon(xyPolygon, { incline: incline, depth: depth })
-      const concreteThickPolygon = new FeatureInstance(abstractThickPolygon, { ...xyPolygon[0], z }, color,
-        { layer: Floor.layer })
-      this.add(concreteThickPolygon)
-      const squareFeet = xyPolygon.area()
-
-      const metric = METRICS_BY_USE[use]
-      if (metric) {
-        // TODO: This code isn't right.
-        // We should only set GROSS_FLOOR_AREA here.
-        // Things like CIRCULATION_AREA should be set on a Room by Room basis, not per Storey.
-        this.setValueForMetric(metric, squareFeet)
-        if (metric === METRIC.CIRCULATION_AREA || metric === METRIC.MECHANICAL_AREA || metric === METRIC.NET_ASSIGNABLE_AREA) {
-          this.setValueForMetric(METRIC.GROSS_FLOOR_AREA, squareFeet)
-        }
-      }
-    }
-    if (wall !== 0) {
-      _addWalls(this, xyPolygon, wall, z, openings, cap)
     }
   }
 }
