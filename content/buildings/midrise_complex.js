@@ -42,21 +42,27 @@ const OCTAGONAL_LANDING = [
   xy(-D2, +D1),
   xy(-D1, +D2)
 ]
-const DIAMOND_CENTER = [
-  xy(-3, 0),
-  xy(0, -3),
-  xy(+3, 0),
-  xy(0, +3)
-]
-const BASEMENT = [
-  xy(D1, 0),
-  xy(2 * D1 + RAMP_RUN_LENGTH, 0),
-  xy(2 * D1 + RAMP_RUN_LENGTH, 2 * D1 + RAMP_RUN_LENGTH),
-  xy(0, 2 * D1 + RAMP_RUN_LENGTH),
-  xy(0, D1),
-  xy(D2, D1),
-  xy(D1, D2)
-]
+const DIAMOND_OUTLINE = {
+  shape: 'polygon',
+  corners: [
+    xy(-3, 0),
+    xy(0, -3),
+    xy(+3, 0),
+    xy(0, +3)
+  ]
+}
+const BASEMENT_OUTLINE = {
+  shape: 'polygon',
+  corners: [
+    xy(D1, 0),
+    xy(2 * D1 + RAMP_RUN_LENGTH, 0),
+    xy(2 * D1 + RAMP_RUN_LENGTH, 2 * D1 + RAMP_RUN_LENGTH),
+    xy(0, 2 * D1 + RAMP_RUN_LENGTH),
+    xy(0, D1),
+    xy(D2, D1),
+    xy(D1, D2)
+  ]
+}
 const APARTMENT_WIDTH = D1 + RAMP_RUN_LENGTH + (D1 + D2) / 2
 
 const DOOR_HEIGHT = UNIT.feet(6 + 8 / 12)
@@ -94,6 +100,10 @@ const APARTMENT_SPEC = [
   [xy(D2, D1), DOORS]
 ]
 const APARTMENT = APARTMENT_SPEC.map(([point, openings]) => point)
+const APARTMENT_OUTLINE = {
+  shape: 'polygon',
+  corners: APARTMENT
+}
 
 const APARTMENT_WINDOWS = []
 let i = 0
@@ -317,7 +327,19 @@ class MidriseComplex extends Structure {
     this.add(new Byway({ pose, spec: landingSpec }))
     this.mediumGroup.add(new Byway({ pose, spec: landingSpec }))
     if (z % STOREY_HEIGHT === 0) {
-      this.add(new Storey({ pose, outline: DIAMOND_CENTER, deprecatedSpec: { use: Use.BARE, wall: 3 } }))
+      const spec = {
+        floors: [{ outline: DIAMOND_OUTLINE }],
+        height: 3,
+        walls: {
+          exterior: [
+            { begin: xy(-3, 0), end: xy(0, -3) },
+            { end: xy(+3, 0) },
+            { end: xy(0, +3) },
+            { end: xy(-3, 0) }
+          ]
+        }
+      }
+      this.add(new Storey({ pose, spec }))
     }
 
     // Ramps
@@ -341,18 +363,29 @@ class MidriseComplex extends Structure {
       for (const bearing of rampBearings) {
         // parcel
         pose = this._shiftedPose({ x: x, y: y, z: 0 }, bearing)
-        this.add(new Storey({ pose, outline: BASEMENT, deprecatedSpec: { use: Use.PARCEL } }))
 
         // lower floors
         for (const altitude of count(0, z, STOREY_HEIGHT)) {
           pose = this._shiftedPose({ x: x, y: y, z: altitude }, bearing)
-          this.add(new Storey({ pose, outline: BASEMENT, deprecatedSpec: { use: Use.ROOM } }))
+          const spec = {
+            floors: [{ outline: BASEMENT_OUTLINE }]
+          }
+          this.add(new Storey({ pose, spec }))
         }
 
         // upper floors
         for (const altitude of count(z, ROOFLINE, STOREY_HEIGHT)) {
           pose = this._shiftedPose({ x: x, y: y, z: altitude }, bearing)
-          this.add(new Storey({ pose, outline: APARTMENT, deprecatedSpec: { use: Use.ROOM, wall: STOREY_HEIGHT, openings: APARTMENT_WINDOWS } }))
+          const spec = {
+            floors: [{ outline: APARTMENT_OUTLINE }],
+            height: STOREY_HEIGHT
+            // TODO:
+            // walls: {
+            //   exterior: []
+            // }
+            // windows: APARTMENT_WINDOWS
+          }
+          this.add(new Storey({ pose, spec }))
         }
         pose = this._shiftedPose({ x: x, y: y, z: z }, bearing)
         this.mediumGroup.add(this.makePlaceholder(pose, Use.WALL, APARTMENT, ROOFLINE - z))

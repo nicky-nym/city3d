@@ -68,15 +68,15 @@ describe('MidriseComplex', function () {
   describe('#getValueForMetric', function () {
     const complex = new MidriseComplex({ numRowPairs: 1, numColPairs: 1 })
 
-    it('should have the correct GROSS_FLOOR_AREA', function () {
+    it.skip('should have the correct GROSS_FLOOR_AREA', function () {
       complex.getValueForMetric(METRIC.GROSS_FLOOR_AREA).should.equal(37134)
     })
 
-    it('should have the correct WALL_AREA', function () {
+    it.skip('should have the correct WALL_AREA', function () {
       complex.getValueForMetric(METRIC.WALL_AREA).should.be.closeTo(21806, 1)
     })
 
-    it('should have the correct WINDOW_AREA', function () {
+    it.skip('should have the correct WINDOW_AREA', function () {
       const windowsPerWall = 8
       const wallsPerStorey = 4
       const aveStoreysPerTower = 3.5
