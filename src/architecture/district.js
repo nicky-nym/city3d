@@ -107,7 +107,7 @@ class District extends Model {
         if (spec.repeat) {
           const repeatSpecs = District._copySpecFragment(array(spec.repeat))
           let allPoses = District._makePosesFromRepeatSpec(repeatSpecs)
-          const surface = new Pavement({ spec, pose: Pose.origin() })
+          const surface = new Pavement({ spec, pose: Pose.DEFAULT })
           allPoses = allPoses.map(p => Pose.combine(p, pose))
           this.add(new InstancedFeature(surface, allPoses, { materialCost: 'high', useNormals: true }))
         } else {
@@ -130,7 +130,7 @@ class District extends Model {
   static _makePosesFromRepeatSpec (repeatSpecs) {
     let allPoses
     repeatSpecs.forEach(spec => {
-      const { x, y, z, rotated } = { ...Pose.origin(), ...spec.offset }
+      const { x, y, z, rotated } = { ...Pose.DEFAULT, ...spec.offset }
       const lineOfPoses = countTo(spec.count).map(i => ({ x: i * x, y: i * y, z: i * z, rotated: i * rotated }))
       if (allPoses) {
         allPoses = District._outer(Pose.combine, allPoses, lineOfPoses).flat()
@@ -158,7 +158,7 @@ class District extends Model {
       partitions[0] = allPoses
     }
     partitions.forEach(p => {
-      const modelObject = specReader.makeModelFromSpecName(specName, Pose.origin())
+      const modelObject = specReader.makeModelFromSpecName(specName, Pose.DEFAULT)
       this.add(new InstancedFeature(modelObject, p, { materialCost: 'high', useNormals: true }))
     })
   }

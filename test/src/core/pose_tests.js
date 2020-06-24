@@ -227,9 +227,9 @@ describe('Pose', function () {
     const P3 = { x: X3, y: Y3, z: Z3, rotated: R3, mirrored: true, subPose: P2 }
 
     it('should collapse origin pose to origin pose', function () {
-      const collapsedOriginPose = Pose.collapse(Pose.origin())
+      const collapsedOriginPose = Pose.collapse(Pose.DEFAULT)
 
-      collapsedOriginPose.should.eql(Pose.origin())
+      collapsedOriginPose.should.eql(Pose.DEFAULT)
     })
 
     it('should collapse flat pose (pose without subPose) to itself', function () {

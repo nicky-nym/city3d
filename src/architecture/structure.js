@@ -52,12 +52,12 @@ class Structure extends Model {
     super({ spec, ...remainingOptions, layer })
 
     if (!pose) {
-      pose = Pose.origin()
+      pose = Pose.DEFAULT
     }
 
     this.offset = Pose.collapse(pose)
 
-    this._pose = Pose.set(Pose.origin(), { rotated: this.offset.rotated })
+    this._pose = Pose.set(Pose.DEFAULT, { rotated: this.offset.rotated })
     if (spec) {
       this.makeModelFromSpec(spec, this._pose)
     }

@@ -80,7 +80,7 @@ class Storey extends Model {
   constructor ({
     name,
     outline,
-    pose = Pose.origin(),
+    pose = Pose.DEFAULT,
     spec
   } = {}) {
     name = name || (spec && spec.name) || 'Storey'

@@ -46,7 +46,7 @@ class Wall extends Model {
    */
   constructor ({
     name = 'Wall',
-    pose = Pose.origin(),
+    pose = Pose.DEFAULT,
     spec
   } = {}) {
     super({ name, layer: LAYER.WALLS })

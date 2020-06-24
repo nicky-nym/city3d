@@ -14,7 +14,7 @@ import { xy } from '../../../src/core/util.js'
 /* eslint-disable no-unused-expressions */
 
 describe('Storey', function () {
-  const pose = Pose.origin()
+  const pose = Pose.DEFAULT
   const A = xy(0, 0)
   const B = xy(50, 0)
   const C = xy(50, 20)

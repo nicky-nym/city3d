@@ -18,7 +18,7 @@ import { xy, xyz, rectangleOfSize } from '../../../src/core/util.js'
 /* global describe, it, beforeEach */
 
 describe('District', function () {
-  const pose = Pose.origin()
+  const pose = Pose.DEFAULT
   const [X1, Y1, Z1] = [50, 20, 8]
   const A1 = xy(0, 0)
   const B1 = xy(X1, 0)
@@ -81,7 +81,7 @@ describe('District', function () {
     let city
     let district
     let parcel
-    let pose = Pose.origin()
+    let pose = Pose.DEFAULT
     const parcelRect = [xy(0, 0), xy(50, 0), xy(50, 20), xy(0, 20)]
     const parcelSpec = {
       border: {
@@ -112,7 +112,7 @@ describe('District', function () {
     beforeEach(function () {
       city = new City({ name: 'Testopia' })
       district = new District({
-        pose: Pose.origin(),
+        pose: Pose.DEFAULT,
         spec: {
           name: 'test district',
           border: {
@@ -199,7 +199,7 @@ describe('District', function () {
       beforeEach(function () {
         parcel = new Parcel({ spec: parcelSpec, pose })
         district = new District({
-          pose: Pose.origin(),
+          pose: Pose.DEFAULT,
           spec: {
             name: 'test district',
             border: {

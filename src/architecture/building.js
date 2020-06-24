@@ -27,7 +27,7 @@ class Building extends Structure {
    * @param {pose} [pose] - the location and orientation of this building
    */
   constructor (options = {}) {
-    const { pose = Pose.origin(), ...remainingOptions } = options
+    const { pose = Pose.DEFAULT, ...remainingOptions } = options
     super({ pose, ...remainingOptions, copyLayer: LAYER.COPIES })
   }
 

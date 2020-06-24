@@ -30,23 +30,13 @@ import { UNIT } from '../core/unit.js'
 
 /**
  * Pose is a class for representing how an instance of a 3D object is placed in a position.
+ * A pose is a simple sort of 3D transformation. It allows for 3D translations,
+ * 2D rotations, and 1D mirroring.
  * See: pose.schema.json.js
  */
 class Pose {
   static freeze (pose) {
     return Object.freeze(pose)
-  }
-
-  static origin () {
-    return Pose.freeze({ x: 0, y: 0, z: 0, rotated: 0, mirrored: false })
-  }
-
-  static _deepCopy (pose) {
-    const copy = { ...pose }
-    if (copy.subPose) {
-      copy.subPose = Pose.copy(copy.subPose)
-    }
-    return copy
   }
 
   /**
@@ -121,6 +111,18 @@ class Pose {
     }
   }
 
+  static collapse (pose) {
+    return Pose._collapsePose(pose)
+  }
+
+  static _deepCopy (pose) {
+    const copy = { ...pose }
+    if (copy.subPose) {
+      copy.subPose = Pose.copy(copy.subPose)
+    }
+    return copy
+  }
+
   static _collapsePose (pose) {
     let { x, y, z, rotated, mirrored, subPose } = pose
     let poseIn = {
@@ -152,10 +154,6 @@ class Pose {
     }
     const newPose = Pose.copy(poseIn)
     return newPose
-  }
-
-  static collapse (pose) {
-    return Pose._collapsePose(pose)
   }
 
   static _relocatePoint (pose, xyz) {
@@ -220,5 +218,7 @@ class Pose {
     return { x: xOut, y: yOut }
   }
 }
+
+Pose.DEFAULT = Pose.freeze({ x: 0, y: 0, z: 0, rotated: 0, mirrored: false })
 
 export { Pose }

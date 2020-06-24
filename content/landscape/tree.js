@@ -17,7 +17,7 @@ const TRUNK_HEIGHT = UNIT.feet(8)
 const CROWN_HEIGHT = UNIT.feet(9)
 
 class Tree extends Model {
-  constructor ({ pose = Pose.origin(), trunkHeight = TRUNK_HEIGHT, name = 'Tree' } = {}) {
+  constructor ({ pose = Pose.DEFAULT, trunkHeight = TRUNK_HEIGHT, name = 'Tree' } = {}) {
     super({ name, layer: LAYER.PLANTS })
     this.add(this.makeTrunk(pose, trunkHeight))
     pose = Pose.set(pose, { z: pose.z + trunkHeight })

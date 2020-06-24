@@ -16,7 +16,7 @@ import { Wall } from '../../../src/architecture/wall.js'
 describe('Feature ', function () {
   const spec = { form: 'flat' }
   const walls = []
-  const pose = Pose.origin()
+  const pose = Pose.DEFAULT
   let origNumRegisteredLayers
   let origNumCategories
   let origNumBuildingLayers
