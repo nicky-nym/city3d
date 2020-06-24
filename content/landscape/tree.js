@@ -20,8 +20,8 @@ class Tree extends Model {
   constructor ({ pose = Pose.DEFAULT, trunkHeight = TRUNK_HEIGHT, name = 'Tree' } = {}) {
     super({ name, layer: LAYER.PLANTS })
     this.add(this.makeTrunk(pose, trunkHeight))
-    pose = Pose.set(pose, { z: pose.z + trunkHeight })
-    this.add(this.makeCrown(pose))
+    const crownPose = Pose.collapse(Pose.combine({ z: pose.z + trunkHeight }, pose))
+    this.add(this.makeCrown(crownPose))
   }
 
   makeTrunk (atXy, trunkHeight) {

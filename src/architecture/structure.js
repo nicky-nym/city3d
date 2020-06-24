@@ -57,7 +57,7 @@ class Structure extends Model {
 
     this.offset = Pose.collapse(pose)
 
-    this._pose = Pose.set(Pose.DEFAULT, { rotated: this.offset.rotated })
+    this._pose = Pose.create({ rotated: this.offset.rotated })
     if (spec) {
       this.makeModelFromSpec(spec, this._pose)
     }

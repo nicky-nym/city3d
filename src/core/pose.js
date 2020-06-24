@@ -35,6 +35,11 @@ import { UNIT } from '../core/unit.js'
  * See: pose.schema.json.js
  */
 class Pose {
+  static create (values) {
+    const pose = { ...Pose.DEFAULT, ...values }
+    return Pose.freeze(pose)
+  }
+
   static freeze (pose) {
     return Object.freeze(pose)
   }
@@ -46,11 +51,6 @@ class Pose {
    */
   static copy (pose) {
     return Pose._deepCopy(pose)
-  }
-
-  static set (pose, values) {
-    pose = Pose.copy(pose)
-    return { ...pose, ...values }
   }
 
   /**
