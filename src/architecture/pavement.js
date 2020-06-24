@@ -18,12 +18,12 @@ const DARK_GRAY = 0x404040
 const LIGHT_GRAY = 0xdddddd
 const BROWN = 0x806633
 
-const COLORS_BY_SURFACE = {
+const COLORS_BY_SURFACE = Object.freeze({
   asphalt: BLACKTOP,
   gravel: DARK_GRAY,
   concrete: LIGHT_GRAY,
   dirt: BROWN
-}
+})
 
 /**
 * Pavement is a class for representing paved outdoor surfaces, like streets, sidewalks, driveways, and bike paths

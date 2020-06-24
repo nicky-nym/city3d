@@ -7,7 +7,7 @@
 
 import { Layer } from '../core/layer.js'
 
-const LAYER = {
+const LAYER_ID = Object.freeze({
   // buildings
   ROOFS: 'roofs',
   WALLS: 'walls',
@@ -51,53 +51,53 @@ const LAYER = {
   BUILDING_SERVICES: 'building services (TODO)',
   MECHANICAL: 'mechanical (TODO)',
   STRUCTURAL: 'structural (TODO)'
-}
+})
 
 const CATEGORIES = [{
   category: 'Buildings',
   layers: [
-    { id: LAYER.ROOFS },
-    { id: LAYER.WALLS },
-    { id: LAYER.FLOORS },
-    { id: LAYER.COPIES },
-    { id: LAYER.PORTALS },
-    { id: LAYER.PAVEMENT, description: 'streets, sidewalks, bike paths, parking lots' },
-    { id: LAYER.STRUCTURES }
+    { id: LAYER_ID.ROOFS },
+    { id: LAYER_ID.WALLS },
+    { id: LAYER_ID.FLOORS },
+    { id: LAYER_ID.COPIES },
+    { id: LAYER_ID.PORTALS },
+    { id: LAYER_ID.PAVEMENT, description: 'streets, sidewalks, bike paths, parking lots' },
+    { id: LAYER_ID.STRUCTURES }
   ]
 }, {
   category: 'Occupants',
   layers: [
-    { id: LAYER.PEOPLE },
-    { id: LAYER.ANIMALS },
-    { id: LAYER.VEHICLES },
-    { id: LAYER.FURNITURE }
+    { id: LAYER_ID.PEOPLE },
+    { id: LAYER_ID.ANIMALS },
+    { id: LAYER_ID.VEHICLES },
+    { id: LAYER_ID.FURNITURE }
   ]
 }, {
   category: 'Landscape',
   layers: [
-    { id: LAYER.GROUND },
-    { id: LAYER.WATER },
-    { id: LAYER.PLANTS },
-    { id: LAYER.CLOUDS },
-    { id: LAYER.FOG },
-    { id: LAYER.LIGHTNING }
+    { id: LAYER_ID.GROUND },
+    { id: LAYER_ID.WATER },
+    { id: LAYER_ID.PLANTS },
+    { id: LAYER_ID.CLOUDS },
+    { id: LAYER_ID.FOG },
+    { id: LAYER_ID.LIGHTNING }
   ]
 }, {
   category: 'Highlighting',
   layers: [
-    { id: LAYER.DISTRICTS },
-    { id: LAYER.PARCELS },
-    { id: LAYER.ROUTES },
-    { id: LAYER.GRID }
+    { id: LAYER_ID.DISTRICTS },
+    { id: LAYER_ID.PARCELS },
+    { id: LAYER_ID.ROUTES },
+    { id: LAYER_ID.GRID }
   ]
 }, {
   category: 'Floor area (TODO)',
   layers: [
-    { id: LAYER.ASSIGNABLE, description: 'homes, apartments, retail stores, office space' },
-    { id: LAYER.CIRCULATION, description: 'stairs, elevators, ramps, lobbies, hallways' },
-    { id: LAYER.BUILDING_SERVICES, description: 'bathrooms, trash rooms, supply closets' },
-    { id: LAYER.MECHANICAL, description: 'boiler rooms, ventilation shafts' },
-    { id: LAYER.STRUCTURAL, description: 'walls' }
+    { id: LAYER_ID.ASSIGNABLE, description: 'homes, apartments, retail stores, office space' },
+    { id: LAYER_ID.CIRCULATION, description: 'stairs, elevators, ramps, lobbies, hallways' },
+    { id: LAYER_ID.BUILDING_SERVICES, description: 'bathrooms, trash rooms, supply closets' },
+    { id: LAYER_ID.MECHANICAL, description: 'boiler rooms, ventilation shafts' },
+    { id: LAYER_ID.STRUCTURAL, description: 'walls' }
   ]
 }]
 
@@ -109,9 +109,11 @@ for (const categorySpec of CATEGORIES) {
   }
 }
 
-const keys = Object.keys(LAYER)
+const LAYER = {}
+const keys = Object.keys(LAYER_ID)
 for (const key of keys) {
-  LAYER[key] = Layer.getLayer(LAYER[key])
+  LAYER[key] = Layer.getLayer(LAYER_ID[key])
 }
+Object.freeze(LAYER)
 
 export { LAYER }

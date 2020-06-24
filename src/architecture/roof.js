@@ -21,7 +21,7 @@ const GREEN = 0x003300
 /**
  * The overall shape of the roof as a whole, including all the different roof faces and/or surfaces.
  */
-const FORM = {
+const FORM = Object.freeze({
   // NOTE: these values must exactly match the values in roof.schema.json.js
   NONE: 'none',
   FLAT: 'flat',
@@ -30,7 +30,7 @@ const FORM = {
   SHED: 'shed',
   LIVING: 'living',
   VAULTED: 'vaulted'
-}
+})
 
 const ROOF_THICKNESS = 0.05
 

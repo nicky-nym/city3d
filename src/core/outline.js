@@ -8,17 +8,17 @@
 import { Pitch } from './pitch.js'
 import { rectangleOfSize, xyzAdd } from './util.js'
 
-const SHAPE = {
+const SHAPE = Object.freeze({
   // NOTE: these values must exactly match the values in outline.schema.json.js
   RECTANGLE: 'rectangle',
   POLYGON: 'polygon'
-}
+})
 
-const STYLE = {
+const STYLE = Object.freeze({
   // NOTE: these values must exactly match the values in outline.schema.json.js
   ARCHED: 'arched',
   GABLED: 'gabled'
-}
+})
 
 /**
  * Outline is a class for representing any simple 2D outline shape

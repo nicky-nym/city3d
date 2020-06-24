@@ -42,7 +42,7 @@ const BROWN = 0x806633
 //   DOOR: YELLOW
 // }
 
-const METRICS_BY_USE = {
+const METRICS_BY_USE = Object.freeze({
   STREET: METRIC.TRANSPORTATION_AREA,
   BIKEPATH: METRIC.TRANSPORTATION_AREA,
   WALKWAY: METRIC.TRANSPORTATION_AREA,
@@ -53,7 +53,7 @@ const METRICS_BY_USE = {
   PARCEL: METRIC.LAND_AREA,
   CANAL: METRIC.WATER_AREA,
   ROOF: METRIC.ROOF_AREA
-}
+})
 
 /**
 * Floor is a class for representing the floorboards or flooring surface of a storey

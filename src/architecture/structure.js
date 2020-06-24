@@ -26,7 +26,7 @@ const LIGHT_GRAY = 0xdddddd
 const BLUE_GLASS = 0x9a9aff // eslint-disable-line no-unused-vars
 const MARTIAN_ORANGE = 0xdf4911
 
-const COLORS_BY_USE = {
+const COLORS_BY_USE = Object.freeze({
   STREET: BLACKTOP,
   BIKEPATH: MARTIAN_ORANGE,
   WALKWAY: YELLOW,
@@ -37,7 +37,7 @@ const COLORS_BY_USE = {
   WALL: WHITE,
   ROOF: DARK_GRAY,
   DOOR: YELLOW
-}
+})
 
 /**
  * Structure is an abstract superclass for buildings, city blocks, and other types of structures.

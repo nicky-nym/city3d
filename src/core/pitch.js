@@ -70,7 +70,7 @@ class Pitch {
    * @returns {object} an object with rise and run values
    */
   pitch () {
-    return { rise: this.rise, run: this.run }
+    return Object.freeze({ rise: this.rise, run: this.run })
   }
 }
 

@@ -61,10 +61,10 @@ const METRICS_BY_USE = {
 }
 */
 
-const LOD = {
+const LOD = Object.freeze({
   HIGH: 'high',
   LOW: 'low'
-}
+})
 
 /**
  * Storey is a class for representing one storey of a building.

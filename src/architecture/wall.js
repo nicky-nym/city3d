@@ -22,13 +22,13 @@ const DEFAULT_WALL_THICKNESS = 0.5
 /**
  * The shape of this section of wall as it meets the roof.
  */
-const ROOFLINE = {
+const ROOFLINE = Object.freeze({
   // NOTE: these values must exactly match the values in wall.schema.json.js
   NONE: 'none',
   GABLED: 'gabled',
   PITCHED: 'pitched',
   SHED: 'shed'
-}
+})
 
 /**
 * Wall is a class to represent a single flat wall on a single storey of a building.

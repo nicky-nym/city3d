@@ -20,7 +20,7 @@ import { Window } from './window.js'
 
 // 'NA': schema does not have an associated class and is not expected to
 // 'Pending': associated class not yet implemented, or not yet known if it will be
-const classesByType = {
+const classesByType = Object.freeze({
   'definitions.json': 'NA',
   'metadata.schema.json': 'NA',
   'building.schema.json': Building,
@@ -47,7 +47,7 @@ const classesByType = {
   'window.schema.json': Window,
   'xy.schema.json': 'NA',
   'xyz.schema.json': 'NA'
-}
+})
 
 /**
  * Class representing a catalog of model specification objects.
