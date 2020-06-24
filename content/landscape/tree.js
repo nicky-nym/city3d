@@ -20,7 +20,7 @@ class Tree extends Model {
   constructor ({ pose = Pose.origin(), trunkHeight = TRUNK_HEIGHT, name = 'Tree' } = {}) {
     super({ name, layer: LAYER.PLANTS })
     this.add(this.makeTrunk(pose, trunkHeight))
-    pose.z += trunkHeight
+    pose = Pose.set(pose, { z: pose.z + trunkHeight })
     this.add(this.makeCrown(pose))
   }
 

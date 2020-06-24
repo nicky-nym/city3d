@@ -33,8 +33,20 @@ import { UNIT } from '../core/unit.js'
  * See: pose.schema.json.js
  */
 class Pose {
+  static freeze (pose) {
+    return Object.freeze(pose)
+  }
+
   static origin () {
-    return { x: 0, y: 0, z: 0, rotated: 0, mirrored: false }
+    return Pose.freeze({ x: 0, y: 0, z: 0, rotated: 0, mirrored: false })
+  }
+
+  static _deepCopy (pose) {
+    const copy = { ...pose }
+    if (copy.subPose) {
+      copy.subPose = Pose.copy(copy.subPose)
+    }
+    return copy
   }
 
   /**
@@ -43,11 +55,12 @@ class Pose {
    * @returns {pose} a new copy of the pose
    */
   static copy (pose) {
-    const copy = { ...pose }
-    if (copy.subPose) {
-      copy.subPose = Pose.copy(copy.subPose)
-    }
-    return copy
+    return Pose._deepCopy(pose)
+  }
+
+  static set (pose, values) {
+    pose = Pose.copy(pose)
+    return { ...pose, ...values }
   }
 
   /**
