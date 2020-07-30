@@ -6,111 +6,111 @@ export default /* eslint-disable */
       "required": [],
       "additionalProperties": false,
       "properties": {
-        "context": {},
-        "name": {},
-        "metadata": {},
-        "comments": {},
-        "extras": {}
+        "context": null,
+        "name": null,
+        "metadata": null,
+        "comments": null,
+        "extras": null
       }
     },
     "city": {
       "description": "A city full of buildings, people, streets, and vehicles",
       "properties": {
         "type": { "const": "city.schema.json" },
-        "unit": {},
-        "border": {},
-        "districts": {},
-        "contents": {}
+        "unit": null,
+        "border": null,
+        "districts": null,
+        "contents": null
       }
     },
     "district": {
       "description": "A district in a city",
       "properties": {
         "type": { "const": "district.schema.json" },
-        "unit": {},
-        "border": {},
-        "parcels": {},
-        "contents": {},
-        "pavement": {},
+        "unit": null,
+        "border": null,
+        "parcels": null,
+        "contents": null,
+        "pavement": null,
       }
     },
     "parcel": {
       "description": "A parcel of land in a city district",
       "properties": {
         "type": { "const": "parcel.schema.json" },
-        "unit": {},
-        "anchorPoint": {},
-        "border": {},
-        "contents": {},
-        "pavement": {},
-        "water": {},
-        "routes": {}
+        "unit": null,
+        "anchorPoint": null,
+        "border": null,
+        "contents": null,
+        "pavement": null,
+        "water": null,
+        "routes": null
       }
     },
     "structure": {
       "description": "Any structure that is not a building, such as a street light or a swing set.",
       "properties": {
         "type": { "const": "structure.schema.json" },
-        "unit": {},
-        "def": {},
-        "anchorPoint": {},
-        "lines": {}
+        "unit": null,
+        "def": null,
+        "anchorPoint": null,
+        "lines": null
       }
     },
     "building": {
       "description": "Any building, with walls, floors, a roof, etc.",
       "properties": {
         "type": { "const": "building.schema.json" },
-        "unit": {},
-        "def": {},
-        "anchorPoint": {},
-        "routes": {},
-        "storeys": {}
+        "unit": null,
+        "def": null,
+        "anchorPoint": null,
+        "routes": null,
+        "storeys": null
       }
     },
     "storey": {
       "description": "A single storey, with walls, rooms, a floor, a ceiling, etc.",
       "properties": {
         "type": { "const": "storey.schema.json" },
-        "unit": {},
-        "repeat": {},
-        "altitude": {},
-        "height": {},
-        "incline": {},
-        "floors": {},
-        "stairs": {},
-        "roof": {},
-        "ceiling": {},
-        "walls": {},
-        "rooms": {}
+        "unit": null,
+        "repeat": null,
+        "altitude": null,
+        "height": null,
+        "incline": null,
+        "floors": null,
+        "stairs": null,
+        "roof": null,
+        "ceiling": null,
+        "walls": null,
+        "rooms": null
       }
     },
     "wall": {
       "description": "A single wall, on one side of one storey of a building'",
       "properties": {
         "type": { "const": "wall.schema.json" },
-        "unit": {},
-        "height": {},
+        "unit": null,
+        "height": null,
         "begin": { "$ref": "definitions.json#/def/xyOrRef" },
         "end": { "$ref": "definitions.json#/def/xyOrRef" },
-        "roofline": {},
-        "doors": {},
-        "windows": {},
+        "roofline": null,
+        "doors": null,
+        "windows": null,
         "outside": { 
           "type": "object",
           "required": [  ],
           "properties": {
-            "surface": {},
-            "fixtures": {},
-            "downspouts": {}
+            "surface": null,
+            "fixtures": null,
+            "downspouts": null
           }
         },
         "inside": { 
           "type": "object",
           "required": [  ],
           "properties": {
-            "surface": {},
-            "fixtures": {}
+            "surface": null,
+            "fixtures": null
           }
         }
       }
@@ -120,26 +120,26 @@ export default /* eslint-disable */
       "properties": {
         "$ref": { "$ref": "definitions.json#/def/$$ref" },
         "type": { "const": "window.schema.json" },
-        "unit": {},
-        "motion": {},
-        "outline": {},
-        "leafCount": {},
-        "lites": {},
-        "at": {},
-        "casing": {}
+        "unit": null,
+        "motion": null,
+        "outline": null,
+        "leafCount": null,
+        "lites": null,
+        "at": null,
+        "casing": null
       }
     },
     "door": {
       "description": "A door in a door frame, or a set of doors sharing a door frame.",
       "properties": {
         "type": { "const": "door.schema.json" },
-        "unit": { },
-        "motion": {},
-        "outline": {},
-        "leafCount": {},
-        "handleSide": {},
-        "at": {},
-        "casing": {}
+        "unit": null,
+        "motion": null,
+        "outline": null,
+        "leafCount": null,
+        "handleSide": null,
+        "at": null,
+        "casing": null
       }
     },
     "stairs": {
@@ -149,58 +149,58 @@ export default /* eslint-disable */
       "description": "The roof of a building'",
       "properties": {
         "type": { "const": "roof.schema.json" },
-        "unit": {},
-        "outline": {},
-        "openings": {},
-        "form": {},
-        "parapetHeight": {},
-        "pitch": {},
-        "eaves": {},
-        "surface": {}
+        "unit": null,
+        "outline": null,
+        "openings": null,
+        "form": null,
+        "parapetHeight": null,
+        "pitch": null,
+        "eaves": null,
+        "surface": null
       }
     },
     "ceiling": {
       "description": "The ceiling of a room or a of a whole storey.",
       "properties": {
         "type": { "const": "ceiling.schema.json" },
-        "unit": {},
-        "outline": {},
-        "surface": {},
-        "fixtures": {}
+        "unit": null,
+        "outline": null,
+        "surface": null,
+        "fixtures": null
       }
     },
     "floor": {
       "description": "The floor of a room or a of a whole storey. NOT an entire storey, like the '3rd floor'",
       "properties": {
         "type": { "const": "floor.schema.json" },
-        "unit": {},
-        "incline": {},
-        "outline": {},
-        "openings": {},
-        "surface": {}
+        "unit": null,
+        "incline": null,
+        "outline": null,
+        "openings": null,
+        "surface": null
       }
     },
     "room": {
       "description": "A room in a building'",
       "properties": {
         "type": { "const": "room.schema.json" },
-        "unit": {},
-        "outline": {},
-        "use": {},
-        "contents": {}
+        "unit": null,
+        "outline": null,
+        "use": null,
+        "contents": null
       }
     },
     "route": {
       "description": "Any path that a vehicle travels along",
       "properties": {
-        "name": {},
-        "mode": {},
-        "waypoints": {}
+        "name": null,
+        "mode": null,
+        "waypoints": null
       }
     }
   },
   /* TODO: delete me */
-  "attributes": {
+  "todoAttributes": {
     "$$ref": {
       "type": "string",
       "format": "uri-reference"

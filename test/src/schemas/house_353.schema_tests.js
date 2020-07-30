@@ -6,7 +6,7 @@
  */
 
 import Ajv from '../../../node_modules/ajv/dist/ajv.min.js'
-import { SCHEMA } from '../../../src/schemas/schema.js'
+import { SCHEMA } from '../../../test/src/schemas/schema.js'
 import HOUSE_SPEC from '../../../content/buildings/house_353.json.js'
 
 /* global describe, it */

@@ -7,7 +7,7 @@
 
 import Ajv from '../../../node_modules/ajv/dist/ajv.min.js'
 import { Pose } from '../../../src/core/pose.js'
-import { SCHEMA } from '../../../src/schemas/schema.js'
+import { SCHEMA } from '../../../test/src/schemas/schema.js'
 import { SpecReader } from '../../../src/architecture/spec_reader.js'
 
 /* global describe, it, before, after, expect */
