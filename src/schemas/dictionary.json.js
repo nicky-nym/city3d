@@ -118,7 +118,7 @@ export default /* eslint-disable */
     "window": {
       "description": "A window in a window frame, or a set of windows sharing a window frame.",
       "properties": {
-        "$ref": { "$ref": "definitions.json#/def/$$ref" },
+        "$ref": { "$ref": "#/typeDefinitions/$$ref" },
         "type": { "const": "window.schema.json" },
         "unit": null,
         "motion": null,
@@ -207,13 +207,13 @@ export default /* eslint-disable */
   },
   /* These are definitions of the properties used in the "entityDefinitions" section above */
   "propertyDefinitions": {
-    "altitude": { "$ref": "definitions.json#/def/number" },
+    "altitude": { "$ref": "#/typeDefinitions/numberOrRandom" },
     "anchorPoint": {
       "description": "the point that serves as the center of the building when the building is place on a parcel",
       "$ref": "xy.schema.json"
     },
     "at": { "$ref": "pose.schema.json" },
-    "begin": { "$ref": "definitions.json#/def/xyOrRef" },
+    "begin": { "$ref": "#/typeDefinitions/xyOrRef" },
     "border": { "$ref": "outline.schema.json" },
     "casing": { 
       "type": "object",
@@ -262,7 +262,7 @@ export default /* eslint-disable */
     "eaves": {
       "type": "number"
     },
-    "end": { "$ref": "definitions.json#/def/xyOrRef" },
+    "end": { "$ref": "#/typeDefinitions/xyOrRef" },
     "extras": {
       "description": "any additional data to keep track of",
       "type": "object"
@@ -281,8 +281,8 @@ export default /* eslint-disable */
     "handleSide": {
       "enum": ["left", "center", "right"]
     },
-    "height": { "$ref": "definitions.json#/def/number" },
-    "incline": { "$ref": "definitions.json#/def/number" },
+    "height": { "$ref": "#/typeDefinitions/numberOrRandom" },
+    "incline": { "$ref": "#/typeDefinitions/numberOrRandom" },
     "leafCount": { "$ref": "grid.schema.json" },
     "lines": {
       "type": "array",
@@ -326,9 +326,9 @@ export default /* eslint-disable */
       }
     },
     "pitch": { "$ref": "pitch.schema.json" },
-    "repeat": { "$ref": "definitions.json#/def/number" },
+    "repeat": { "$ref": "#/typeDefinitions/numberOrRandom" },
     /* TODO: fix me! */
-    "$ref": { "$ref": "definitions.json#/def/$$ref" },
+    "$ref": { "$ref": "#/typeDefinitions/$$ref" },
     "roof": { "$ref": "roof.schema.json" },
     "roofline": {
       "enum": ["none", "gabled", "pitched", "shed"]
@@ -386,7 +386,7 @@ export default /* eslint-disable */
     "waypoints": {
       "type": "array",
       "minItems": 2,
-      "items": { "$ref": "definitions.json#/def/xyOrRef" }
+      "items": { "$ref": "#/typeDefinitions/xyOrRef" }
     },
     "windows": {
       "type": "array",
@@ -399,7 +399,7 @@ export default /* eslint-disable */
       "type": "string",
       "format": "uri-reference"
     },
-    "number": {
+    "numberOrRandom": {
       "description": "a number literal, or a specification for a random number",
       "oneOf": [{
         "type": "number"

@@ -15,7 +15,7 @@ import { SCHEMA } from '../../../test/src/schemas/schema.js'
 /* eslint-disable no-unused-expressions */
 
 describe('Schematic', function () {
-  const numberSpec = { $ref: 'definitions.json#/def/number' }
+  const numberSpec = { $ref: '#/typeDefinitions/numberOrRandom' }
 
   describe('#getAttribute', function () {
     it('should return a dictionary.json attribute entry', function () {
