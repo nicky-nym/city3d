@@ -143,7 +143,13 @@ export default /* eslint-disable */
       }
     },
     "staircase": {
-
+      "description": "A flight of stairs.",
+      "properties": {
+        "unit": null,
+        "pitch": null,
+        "outline": null,
+        "surface": null
+      }
     },
     "roof": {
       "description": "The roof of a building'",
@@ -335,20 +341,9 @@ export default /* eslint-disable */
       "type": "array",
       "items": { "$ref": "route.schema.json" }
     },
-    /* TODO: make this an entity */
     "staircases": {
       "type": "array",
-      "items": {
-        "type": "object",
-        "required": [  ],
-        "properties": {
-          "name": { "$ref": "definitions.json#/def/name" },
-          "unit": { "$ref": "definitions.json#/def/unit" },
-          "pitch": { "$ref": "pitch.schema.json" },
-          "outline": { "$ref": "outline.schema.json" },
-          "surface": { "$ref": "surface.schema.json" }
-        }
-      }
+      "items": { "$ref": "staircase.schema.json" }
     },
     "storeys": {
       "type": "array",
