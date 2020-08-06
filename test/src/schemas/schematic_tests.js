@@ -5,8 +5,11 @@
  * For more information, please refer to <http://unlicense.org>
  */
 
+import Ajv from '../../../node_modules/ajv/dist/ajv.min.js'
+
 import { Schematic } from '../../../src/schemas/schematic.js'
 import DICTIONARY from '../../../src/schemas/dictionary.json.js'
+import { SCHEMA } from '../../../test/src/schemas/schema.js'
 
 /* global describe, it, should */
 /* eslint-disable no-unused-expressions */
@@ -36,6 +39,27 @@ describe('Schematic', function () {
       schema.$schema.should.equal('http://json-schema.org/draft-07/schema#')
       schema.title.should.equal('building')
       schema.description.should.equal(DICTIONARY.entities.building.description)
+    })
+
+    it('should return a valid JSON Schema object', function () {
+      const ajv = new Ajv()
+      Object.keys(SCHEMA).forEach(item => SCHEMA[item].$id !== 'building.schema.json' ? ajv.addSchema(SCHEMA[item], SCHEMA[item].$id) : null)
+      const schema = Schematic.getSchema('building')
+      ajv.addSchema(schema, schema.$id)
+      const validator = ajv.compile(schema)
+      // console.log(schema)
+      // 'foo'.should.equal(schema)
+      const goodJSON = {
+        context: 'city3d',
+        type: 'building.schema.json',
+        name: 'Empire State Building'
+      }
+      validator(goodJSON).should.equal(true)
+    })
+
+    it.skip('should return the expected JSON Schema object', function () {
+      const schema = Schematic.getSchema('building')
+      schema.should.deep.equal(SCHEMA.BUILDING)
     })
   })
 })

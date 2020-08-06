@@ -64,7 +64,7 @@ class Schematic {
     if (schema) {
       return schema
     }
-    schema = Schematic.buildSchemaForEntity(entityName)
+    schema = Schematic._buildSchemaForEntity(entityName)
     Schematic._schemas[entityName] = schema
     return schema
   }
@@ -72,7 +72,7 @@ class Schematic {
   /**
    * Builds a JSON Schema object for the entity definition in definitions.json.js
    */
-  static buildSchemaForEntity (entityName) {
+  static _buildSchemaForEntity (entityName) {
     const entity = Schematic.getEntity(entityName)
     const schema = {
       $id: `${entityName}.schema.json`,
@@ -85,15 +85,20 @@ class Schematic {
       additionalProperties: false,
       properties: {}
     }
+    Schematic._addProperties(schema, Schematic.getEntity('file'))
+    Schematic._addProperties(schema, entity)
+    return schema
+  }
+
+  static _addProperties (schema, entity) {
     const keys = Object.keys(entity.properties)
-    for (const key in keys) {
+    for (const key of keys) {
       let value = entity.properties[key]
       if (value === null) {
         value = Schematic.getAttribute(key)
       }
       schema.properties[key] = value
     }
-    return schema
   }
 }
 

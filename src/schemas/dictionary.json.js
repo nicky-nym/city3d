@@ -91,8 +91,8 @@ export default /* eslint-disable */
         "type": { "const": "wall.schema.json" },
         "unit": null,
         "height": null,
-        "begin": { "$ref": "definitions.json#/def/xyOrRef" },
-        "end": { "$ref": "definitions.json#/def/xyOrRef" },
+        "begin": null,
+        "end": null,
         "roofline": null,
         "doors": null,
         "windows": null,
@@ -248,39 +248,7 @@ export default /* eslint-disable */
           }
         }
       }]
-    },
-    "xyzOrRef": {
-      "anyOf": [{
-        "type": "object",
-        "required": [ "$ref" ],
-        "properties": {
-          "$ref": {
-            "type": "string",
-            "format": "uri-reference"
-          }
-        }
-      }, {
-        "type": "object",
-        "required": [  ],
-        "properties": {
-          "x": {
-            "description": "an x-axis distance, in the default unit of measure",
-            "default": 0,
-            "type": "number"
-          },
-          "y": {
-            "description": "a y-axis distance, in the default unit of measure",
-            "default": 0,
-            "type": "number"
-          },
-          "z": {
-            "description": "a z-axis distance, in the default unit of measure",
-            "default": 0,
-            "type": "number"
-          }
-        }
-      }]
-    },
+    }
   },
   /* These are definitions of the properties used in the "entities" section above */
   "attributes": {
