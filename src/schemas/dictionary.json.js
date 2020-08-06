@@ -78,7 +78,7 @@ export default /* eslint-disable */
         "height": null,
         "incline": null,
         "floors": null,
-        "stairs": null,
+        "staircases": null,
         "roof": null,
         "ceiling": null,
         "walls": null,
@@ -142,7 +142,7 @@ export default /* eslint-disable */
         "casing": null
       }
     },
-    "stairs": {
+    "staircase": {
 
     },
     "roof": {
@@ -336,7 +336,7 @@ export default /* eslint-disable */
       "items": { "$ref": "route.schema.json" }
     },
     /* TODO: make this an entity */
-    "stairs": {
+    "staircases": {
       "type": "array",
       "items": {
         "type": "object",

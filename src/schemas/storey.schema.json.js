@@ -51,7 +51,7 @@ export default /* eslint-disable */
         "$ref": "floor.schema.json"
       }
     },
-    "stairs": {
+    "staircases": {
       "type": "array",
       "items": {
         "type": "object",

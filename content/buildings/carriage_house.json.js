@@ -20,7 +20,7 @@ export default /* eslint-disable */
     '          A------B                   ',
     '                                     ',
     ' 960 square feet ground floor        ',
-    ' 840 square feet upperstairs (about) ',
+    ' 840 square feet upstairs (about) ',
     '                                     '
   ],
   anchorPoint: { x: 0, y: 0, z: 0 },

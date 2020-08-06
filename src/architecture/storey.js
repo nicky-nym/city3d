@@ -13,7 +13,7 @@ import { Model } from './model.js'
 import { Pose } from '../core/pose.js'
 import { Roof } from './roof.js'
 // import { Room } from './room.js'
-import { Stairs } from './stairs.js'
+import { Staircase } from './staircase.js'
 // import { Use } from './use.js'
 import { Wall } from './wall.js'
 
@@ -145,7 +145,7 @@ class Storey extends Model {
    * @param {pose} [pose] - the location and orientation of this storey
    */
   makeModelForOneLOD (parentGroup, levelOfDetail, spec, pose) {
-    const { name, unit, altitude = 0, height = 0, repeat = 1, incline = 0, floors, stairs, ceiling, walls, rooms, roof } = spec
+    const { name, unit, altitude = 0, height = 0, repeat = 1, incline = 0, floors, staircases, ceiling, walls, rooms, roof } = spec
 
     this.name = name || this.name
     this._altitude = altitude
@@ -162,7 +162,7 @@ class Storey extends Model {
 
     if (levelOfDetail === LOD.LOW) {
       if (floors) {} // do not include at LOD.LOW
-      if (stairs) {} // do not include at LOD.LOW
+      if (staircases) {} // do not include at LOD.LOW
       if (rooms) {} // do not include at LOD.LOW
       if (ceiling) {} // do not include at LOD.LOW
       if (walls && walls.exterior && walls.exterior.length) {
@@ -185,9 +185,9 @@ class Storey extends Model {
           }
         }
 
-        if (stairs) {
-          for (const stairSpec of stairs) {
-            const flight = new Stairs({ spec: stairSpec, pose })
+        if (staircases) {
+          for (const stairSpec of staircases) {
+            const flight = new Staircase({ spec: stairSpec, pose })
             parentGroup.add(flight)
           }
         }

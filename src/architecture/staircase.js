@@ -1,4 +1,4 @@
-/** @file stairs.js
+/** @file staircase.js
  * @author Authored in 2020 at <https://github.com/nicky-nym/city3d>
  * @license UNLICENSE
  * This is free and unencumbered software released into the public domain.
@@ -19,15 +19,15 @@ const BROWN = 0x806633
 /**
 * Stairs is a class for representing a flight of stairs
 */
-class Stairs extends Model {
+class Staircase extends Model {
   /**
    * Creates an instance of a flight of stairs.
    * @param {string} [name]
    * @param {pose} [pose] - the location and orientation
-   * @param {object} [spec] - a specification object that is valid against stairs.schema.json.js
+   * @param {object} [spec] - a specification object that is valid against staircase.schema.json.js
    */
   constructor ({
-    name = 'Stairs',
+    name = 'Staircase',
     pose,
     spec
   } = {}) {
@@ -39,7 +39,7 @@ class Stairs extends Model {
 
   /**
    * Generate Geometry objects corresponding to a specification.
-   * @param {object} spec - an specification object that is valid against stairs.schema.json.js
+   * @param {object} spec - an specification object that is valid against staircase.schema.json.js
    * @param {pose} [pose] - the location and orientation
    */
   makeModelFromSpec (spec, pose) {
@@ -97,4 +97,4 @@ class Stairs extends Model {
   }
 }
 
-export { Stairs }
+export { Staircase }

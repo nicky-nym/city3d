@@ -70,7 +70,7 @@ export default /* eslint-disable */
     f: { x: -27, y: 23 },
     g: { x: -27, y: 27 },
     h: { x: -33, y: 27 },
-    /* TODO: determine accurate locations for front stairs */
+    /* TODO: determine accurate locations for front staircase */
     i: { x: -25.792 + 5.333 + 5.5, y: 32 },
     j: { x: -25.792 + 5.333, y: 32 },
     k: { x: -25.792 + 5.333, y: 27 },
@@ -184,7 +184,7 @@ export default /* eslint-disable */
         end: { $ref: '#/def/U' }
       }]
     },
-    stairs: [{
+    staircases: [{
       name: 'front stairs',
       surface: { material: 'wood' },
       pitch: { rise: 6.857, run: 11 },
