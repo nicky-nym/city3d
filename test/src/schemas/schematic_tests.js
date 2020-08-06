@@ -19,16 +19,16 @@ describe('Schematic', function () {
 
   describe('#getAttribute', function () {
     it('should return a dictionary.json attribute entry', function () {
-      Schematic.getAttribute('altitude').should.deep.equal(numberSpec)
-      Schematic.getAttribute('height').should.deep.equal(numberSpec)
-      Schematic.getAttribute('incline').should.deep.equal(numberSpec)
+      Schematic.getPropertyDefinition('altitude').should.deep.equal(numberSpec)
+      Schematic.getPropertyDefinition('height').should.deep.equal(numberSpec)
+      Schematic.getPropertyDefinition('incline').should.deep.equal(numberSpec)
     })
   })
 
   describe('#getEntity', function () {
     it('should return dictionary.json entity entry', function () {
-      Schematic.getEntity('building').description.should.equal(DICTIONARY.entities.building.description)
-      should.equal(Schematic.getEntity('building').properties.storeys, null)
+      Schematic.getEntityDefinition('building').description.should.equal(DICTIONARY.entityDefinitions.building.description)
+      should.equal(Schematic.getEntityDefinition('building').properties.storeys, null)
     })
   })
 
@@ -38,7 +38,7 @@ describe('Schematic', function () {
       schema.$id.should.equal('building.schema.json')
       schema.$schema.should.equal('http://json-schema.org/draft-07/schema#')
       schema.title.should.equal('building')
-      schema.description.should.equal(DICTIONARY.entities.building.description)
+      schema.description.should.equal(DICTIONARY.entityDefinitions.building.description)
     })
 
     it('should return a valid JSON Schema object', function () {

@@ -22,30 +22,30 @@ class Schematic {
    * Creates a new Schematic
    */
   constructor () {
-    this.entityKeys = Object.keys(DICTIONARY.entities)
-    this.attributeKeys = Object.keys(DICTIONARY.attributes)
+    this.entityKeys = Object.keys(DICTIONARY.entityDefinitions)
+    this.propertyKeys = Object.keys(DICTIONARY.propertyDefinitions)
     this.schemas = {}
   }
 
   /**
-   * Returns an attribute definition found in definitions.json.js
+   * Returns an property definition found in definitions.json.js
    */
-  static getAttribute (attributeName) {
-    const attribute = DICTIONARY.attributes[attributeName]
-    if (attribute) {
-      return attribute
+  static getPropertyDefinition (propertyName) {
+    const propertyDefinition = DICTIONARY.propertyDefinitions[propertyName]
+    if (propertyDefinition) {
+      return propertyDefinition
     } else {
-      throw new Error(`Schematic.getAttribute('${attributeName}'): no schema dictionary entry for '${attributeName}'`)
+      throw new Error(`Schematic.getAttribute('${propertyName}'): no schema dictionary entry for '${propertyName}'`)
     }
   }
 
   /**
    * Returns an entity definition found in definitions.json.js
    */
-  static getEntity (entityName) {
-    const entity = DICTIONARY.entities[entityName]
-    if (entity) {
-      return entity
+  static getEntityDefinition (entityName) {
+    const entityDefinition = DICTIONARY.entityDefinitions[entityName]
+    if (entityDefinition) {
+      return entityDefinition
     } else {
       throw new Error(`Schematic.getEntity('${entityName}'): no schema dictionary entry for '${entityName}'`)
     }
@@ -73,7 +73,7 @@ class Schematic {
    * Builds a JSON Schema object for the entity definition in definitions.json.js
    */
   static _buildSchemaForEntity (entityName) {
-    const entity = Schematic.getEntity(entityName)
+    const entity = Schematic.getEntityDefinition(entityName)
     const schema = {
       $id: `${entityName}.schema.json`,
       $schema: 'http://json-schema.org/draft-07/schema#',
@@ -85,7 +85,7 @@ class Schematic {
       additionalProperties: false,
       properties: {}
     }
-    Schematic._addProperties(schema, Schematic.getEntity('file'))
+    Schematic._addProperties(schema, Schematic.getEntityDefinition('file'))
     Schematic._addProperties(schema, entity)
     return schema
   }
@@ -95,7 +95,7 @@ class Schematic {
     for (const key of keys) {
       let value = entity.properties[key]
       if (value === null) {
-        value = Schematic.getAttribute(key)
+        value = Schematic.getPropertyDefinition(key)
       }
       schema.properties[key] = value
     }

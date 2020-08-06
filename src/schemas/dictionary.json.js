@@ -1,7 +1,7 @@
 export default /* eslint-disable */
 {
-  /* See "attributes" section below for definitions of the properties */
-  "entities": {
+  /* See "propertyDefinitions" section below for definitions of the properties */
+  "entityDefinitions": {
     "file": {
       "required": [],
       "additionalProperties": false,
@@ -199,59 +199,8 @@ export default /* eslint-disable */
       }
     }
   },
-  /* TODO: delete me */
-  "todoAttributes": {
-    "$$ref": {
-      "type": "string",
-      "format": "uri-reference"
-    },
-    "number": {
-      "description": "a number literal, or a specification for a random number",
-      "oneOf": [{
-        "type": "number"
-      }, {
-        "type": "object",
-        "required": [ "$random" ],
-        "properties": {
-          "$random": {
-            "type": "array",
-            "items": { 
-              "type": "number"
-            }
-          }
-        }
-      }]
-    },
-    "xyOrRef": {
-      "anyOf": [{
-        "type": "object",
-        "required": [ "$ref" ],
-        "properties": {
-          "$ref": {
-            "type": "string",
-            "format": "uri-reference"
-          }
-        }
-      }, {
-        "type": "object",
-        "required": [  ],
-        "properties": {
-          "x": {
-            "description": "an x-axis distance, in the default unit of measure",
-            "default": 0,
-            "type": "number"
-          },
-          "y": {
-            "description": "a y-axis distance, in the default unit of measure",
-            "default": 0,
-            "type": "number"
-          }
-        }
-      }]
-    }
-  },
-  /* These are definitions of the properties used in the "entities" section above */
-  "attributes": {
+  /* These are definitions of the properties used in the "entityDefinitions" section above */
+  "propertyDefinitions": {
     "altitude": { "$ref": "definitions.json#/def/number" },
     "anchorPoint": {
       "description": "the point that serves as the center of the building when the building is place on a parcel",
@@ -447,6 +396,57 @@ export default /* eslint-disable */
     "windows": {
       "type": "array",
       "items": { "$ref": "window.schema.json" }
+    }
+  },
+  /* TODO: delete me */
+  "typeDefinitions": {
+    "$$ref": {
+      "type": "string",
+      "format": "uri-reference"
+    },
+    "number": {
+      "description": "a number literal, or a specification for a random number",
+      "oneOf": [{
+        "type": "number"
+      }, {
+        "type": "object",
+        "required": [ "$random" ],
+        "properties": {
+          "$random": {
+            "type": "array",
+            "items": { 
+              "type": "number"
+            }
+          }
+        }
+      }]
+    },
+    "xyOrRef": {
+      "anyOf": [{
+        "type": "object",
+        "required": [ "$ref" ],
+        "properties": {
+          "$ref": {
+            "type": "string",
+            "format": "uri-reference"
+          }
+        }
+      }, {
+        "type": "object",
+        "required": [  ],
+        "properties": {
+          "x": {
+            "description": "an x-axis distance, in the default unit of measure",
+            "default": 0,
+            "type": "number"
+          },
+          "y": {
+            "description": "a y-axis distance, in the default unit of measure",
+            "default": 0,
+            "type": "number"
+          }
+        }
+      }]
     }
   }
 }

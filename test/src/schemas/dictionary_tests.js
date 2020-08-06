@@ -11,28 +11,28 @@ import DICTIONARY from '../../../src/schemas/dictionary.json.js'
 /* eslint-disable no-unused-expressions */
 
 describe('dictionary', function () {
-  describe('dictionary.entities', function () {
-    const entities = DICTIONARY.entities
-    const entityKeys = Object.keys(DICTIONARY.entities)
+  describe('dictionary.entityDefinitions', function () {
+    const entityDefinitions = DICTIONARY.entityDefinitions
+    const entityKeys = Object.keys(entityDefinitions)
 
-    it('should have an entry for the "building" entity', function () {
-      entities.building.should.exist
+    it('should have an entry for the "building" entity definition', function () {
+      entityDefinitions.building.should.exist
     })
 
-    it('should have properties for the "building" entity', function () {
-      entities.building.properties.should.exist
+    it('should have properties for the "building" entity definition', function () {
+      entityDefinitions.building.properties.should.exist
     })
 
-    it('should have entries for all the entities', function () {
+    it('should have entries for all the entity definitions', function () {
       entityKeys.length.should.equal(16)
     })
   })
 
-  describe('dictionary.attributes', function () {
-    const attributeKeys = Object.keys(DICTIONARY.attributes)
+  describe('dictionary.propertyDefinitions', function () {
+    const propertyDefinitionKeys = Object.keys(DICTIONARY.propertyDefinitions)
 
-    it('should have entries for lots of attributes', function () {
-      attributeKeys.length.should.equal(51)
+    it('should have entries for lots of property definitions', function () {
+      propertyDefinitionKeys.length.should.equal(51)
     })
   })
 })
