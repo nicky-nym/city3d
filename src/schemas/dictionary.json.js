@@ -401,6 +401,115 @@ export default /* eslint-disable */
       "type": "string",
       "format": "uri-reference"
     },
+    "copy": {
+      "description": "The specification of how to place an object in 3D space",
+      "type": "object",
+      "required": [ "copy" ],
+      "properties": {
+        "name": {
+          "description": "the name of this particular copy, if this copy has it's own name",
+          "type": "string",
+        },
+        "pose": {
+          "description": "where the copy goes, and the direction it is oriented in",
+          "$ref": "pose.schema.json"
+        },
+        // "repeat": {
+        //   "description": "to make multiple copies at once, set the number of rows and columns",
+        //   "$ref": "grid.schema.json"
+        // },
+        "repeat": {
+          "description": "to make multiple copies at once, set the repeat count and offset",
+          "type": "object",
+          "required": [ "count", "offset" ],
+          "properties": {
+            "count": {
+              "type": "number"
+            },
+            "offset": {
+              "$ref": "pose.schema.json"
+            }
+          }
+        },
+        "numRandomPartitions": {
+          "description": "number of partitions into which copy poses can be randomly put",
+        },
+        "copy": {
+          "description": "an identifier that specifies what model this is a copy of",
+          "type": "object",
+          "required": [ "$ref" ],
+          "properties": {
+            "$ref": {
+              "type": "string"
+            }
+          }
+        },
+        "settings": {
+          "description": "override settings for any property values specific to this copy",
+          "type": "object"
+        }
+      }
+    },
+    "grid": {
+      "description": "A grid of rows and columns",
+      "type": "object",
+      "properties": {
+        "rows": {
+          "description": "the number of rows in the grid",
+          "default": 0,
+          "type": "integer",
+          "minimum": 0
+        },
+        "cols": {
+          "description": "the number of columns in the grid",
+          "default": 0,
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "line": {
+      "description": "The specification of how to place an object in 3D space",
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "the name of this line",
+          "type": "string",
+        },
+        "material": {
+          "description": "TODO: refactor this with the 'material' in surface.schema.json.js",
+          "type": "string",
+        },
+        "vertices": {
+          "description": "a list of end points and corner points",
+          "type": "array",
+          "minItems": 2,
+          "uniqueItems": false,
+          "items": { "$ref": "definitions.json#/def/xyzOrRef" }
+        },
+        "radius": {
+          "type": "number"
+        }
+      }
+    },
+    "metadata": {
+      "description": "descriptive info about a resource, such as the license and creation data",
+      "type": "object",
+      "properties": {
+        "license": {
+          "description": "the legal terms this content is available under",
+          "type": "string"
+        },
+        "creator": {
+          "description": "the person or entity primarily responsible for making this content",
+          "type": "string"
+        },
+        "date": {
+          "description": "the year(s) (or dates) of authorship",
+          "type": "string"
+        }
+      }
+    },
     "numberOrRandom": {
       "description": "a number literal, or a specification for a random number",
       "oneOf": [{
@@ -417,6 +526,166 @@ export default /* eslint-disable */
           }
         }
       }]
+    },
+    "outline": {
+      "description": "Any simple 2D outline shape (like a triangle or a trapezoid) that forms a closed, counterclockwise loop",
+      "type": "object",
+      "properties": {
+        "shape": {
+          "enum": [ "polygon", "rectangle" ]
+        },
+        "corners": {
+          "description": "for irregular polygons, the list of corner points",
+          "type": "array",
+          "minItems": 3,
+          "uniqueItems": false,
+          "items": { "$ref": "definitions.json#/def/xyOrRef" }
+        },
+        "size": { 
+          "description": "for rectangles (or regular polygons), the size of the bounding box",
+          "$ref": "xy.schema.json" 
+        },
+        "top": { 
+          "type": "object",
+          "required": [ "style" ],
+          "properties": {
+            "style": {
+              "enum": [ "gabled", "arched" ]
+            },
+            "pitch": {
+              "$ref": "pitch.schema.json"
+            },
+            "curvature": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          }
+        },
+        "$ref": {
+          "type": "string",
+          "format": "uri-reference"
+        }
+      }
+    },
+    "pitch": {
+      "description": "A ratio of rise-to-run, to specify a roof pitch",
+      "type": "object",
+      "required": ["rise", "run"],
+      "properties": {
+        "rise": {
+          "description": "the amount of height increase per run length",
+          "type": "number",
+          "minimum": 0
+        },
+        "run": {
+          "description": "the amount of horizontal distance per rise height",
+          "type": "number",
+          "exclusiveMinimum": 0
+        }
+      }
+    },
+    "pose": {
+      "description": "The specification of how to place an object in 3D space",
+      "type": "object",
+      "properties": {
+        "x": {
+          "description": "an x-axis distance, in the default unit of measure",
+          "default": 0,
+          "type": "number"
+        },
+        "y": {
+          "description": "a y-axis distance, in the default unit of measure",
+          "default": 0,
+          "type": "number"
+        },
+        "z": {
+          "description": "a z-axis distance, in the default unit of measure",
+          "default": 0,
+          "type": "number"
+        },
+        "from": {
+          "enum": ["left", "center", "right"]
+        },
+        "rotated": {
+          "description": "a compass bearing in degrees (0 to 360)",
+          "type": "number",
+          "default": 0,
+          "minimum": 0,
+          "exclusiveMaximum": 360,
+        },
+        "mirrored": {
+          "description": "true if the xy-geometry of this object should be 'flipped' around the axis of rotation",
+          "type": "boolean",
+          "default": false
+        }
+      }
+    },
+    "surface": {
+      "description": "Any building surface finish, such as a asphalt shingle roof surface, a clapboard wall siding, or a hardwood floor surface",
+      "type": "object",
+      "properties": {
+        "style": {
+          "enum": [
+            "flat",
+            "clapboard",
+            "shingled",
+            "standing seam",
+            "parquet",
+            "batten",
+            "rusticated"
+          ]
+        },
+        "material": {
+          "enum": [
+            "ceramic tile",
+            "rammed earth",
+            "brick",
+            "cinder block",
+            "stone",
+            "gravel",
+            "wood",
+            "glulam",
+            "bamboo",
+            "thatch",
+            "straw bale",
+            "drywall",
+            "plaster",
+            "stucco",
+            "concrete",
+            "fiber-cement", 
+            "asphalt composition",
+            "glass",
+            "steel",
+            "steel, weathering",
+            "aluminum",
+            "zinc",
+            "copper",
+            "brass",
+            "bronze",
+            "fiberglass",
+            "vinyl",
+            "carpet",
+            "fabric"
+          ]
+        }
+      }
+    },
+    "xy": {
+      "description": "A point (or vector) in a 2D space",
+      "type": "object",
+      "properties": {
+        "x": {
+          "description": "an x-axis distance, in the default unit of measure",
+          "default": 0,
+          "type": "number"
+        },
+        "y": {
+          "description": "a y-axis distance, in the default unit of measure",
+          "default": 0,
+          "type": "number"
+        }
+      }
     },
     "xyOrRef": {
       "anyOf": [{
