@@ -398,11 +398,28 @@ export default /* eslint-disable */
   /* These are definitions of the data types used in the "propertyDefinitions" section above */
   "typeDefinitions": {
     "$$ref": {
+      "examples": [
+        '#/def/RECTANGLE',
+        'definitions.json#/def/TRIANGLE',
+      ],
       "type": "string",
       "format": "uri-reference"
     },
     "copy": {
       "description": "The specification of how to place an object in 3D space",
+      "examples": [
+        {
+          name: '1414 Ivy Street',
+          copy: { $ref: 'CITY.buildings.cottage' },
+          pose: { x: 1, y: 2, z: 0 }
+        },
+        {
+          name: 'telephone poles',
+          copy: { $ref: 'CITY.structures.utility_pole' },
+          pose: { x: 0, y: 0, z: 0 },
+          repeat: { count: 5, offset: { y: 160 } }
+        }
+      ],
       "type": "object",
       "required": [ "copy" ],
       "properties": {
@@ -434,6 +451,8 @@ export default /* eslint-disable */
         "numRandomPartitions": {
           "description": "number of partitions into which copy poses can be randomly put",
         },
+        /* TODO: consider renaming this so that "copy" is not both the name of the type and the name of the property */
+        /* TODO: allow not just a $ref value, but alternatively an inline model spec */
         "copy": {
           "description": "an identifier that specifies what model this is a copy of",
           "type": "object",
@@ -452,6 +471,11 @@ export default /* eslint-disable */
     },
     "grid": {
       "description": "A grid of rows and columns",
+      "examples": [
+        { rows: 0, cols: 0 },
+        { rows: 2 },
+        { cols: 10 }
+      ],
       "type": "object",
       "properties": {
         "rows": {
@@ -470,6 +494,16 @@ export default /* eslint-disable */
     },
     "line": {
       "description": "The specification of how to place an object in 3D space",
+      "examples": [
+        {
+          material: 'wood',
+          vertices: [
+            { x: 11, y: -4.5, z: 0 },
+            { x: 0, y: 0, z: 8 },
+            { x: 11, y: +4.5, z: 0 }
+          ]
+        }
+      ],
       "type": "object",
       "properties": {
         "name": {
@@ -494,6 +528,17 @@ export default /* eslint-disable */
     },
     "metadata": {
       "description": "descriptive info about a resource, such as the license and creation data",
+      "examples": [
+        {
+          creator: 'Scrooge McDuck',
+          license: 'All rights reserved'
+        },
+        {
+          license: 'UNLICENSE: This is free and unencumbered software released into the public domain. For more information, please refer to <http://unlicense.org>',
+          creator: 'Authored at <https://github.com/nicky-nym/city3d>',
+          date: '2020'
+        }
+      ],
       "type": "object",
       "properties": {
         "license": {
@@ -512,6 +557,10 @@ export default /* eslint-disable */
     },
     "numberOrRandom": {
       "description": "a number literal, or a specification for a random number",
+      "examples": [
+        -8,
+        { $random: [2, 4, 8, 16] }
+      ],
       "oneOf": [{
         "type": "number"
       }, {
@@ -529,6 +578,16 @@ export default /* eslint-disable */
     },
     "outline": {
       "description": "Any simple 2D outline shape (like a triangle or a trapezoid) that forms a closed, counterclockwise loop",
+      "examples": [
+        { shape: 'rectangle', size: { x: 1, y: 2 } },
+        { $ref: '#/def/RECTANGLE' },
+        { shape: 'polygon',
+          corners: [
+            { x: 1, y: 1 },
+            { x: 2, y: 2 },
+            { x: 3, y: 3 }
+          ] }
+      ],
       "type": "object",
       "properties": {
         "shape": {
@@ -570,6 +629,11 @@ export default /* eslint-disable */
     },
     "pitch": {
       "description": "A ratio of rise-to-run, to specify a roof pitch",
+      "examples": [
+        { rise: 4, run: 12 },
+        { rise: 2.2, run: 1 },
+        { rise: 0, run: 12.0 }
+      ],
       "type": "object",
       "required": ["rise", "run"],
       "properties": {
@@ -587,6 +651,13 @@ export default /* eslint-disable */
     },
     "pose": {
       "description": "The specification of how to place an object in 3D space",
+      "examples": [
+        { x: 1, y: 2, z: 0 },
+        { x: 1, y: -2, from: 'left' },
+        { x: 1, y: 2, z: 0, rotated: 90 },
+        { x: 1, y: 2, z: 0, rotated: 90, mirrored: true },
+        { rotated: 270, mirrored: true },
+      ],
       "type": "object",
       "properties": {
         "x": {
@@ -623,6 +694,11 @@ export default /* eslint-disable */
     },
     "surface": {
       "description": "Any building surface finish, such as a asphalt shingle roof surface, a clapboard wall siding, or a hardwood floor surface",
+      "examples": [
+        { style: 'flat', material: 'drywall' },
+        { style: 'shingled', material: 'asphalt composition' },
+        { style: 'parquet', material: 'wood' }
+      ],
       "type": "object",
       "properties": {
         "style": {
@@ -673,6 +749,12 @@ export default /* eslint-disable */
     },
     "xy": {
       "description": "A point (or vector) in a 2D space",
+      "examples": [
+        { x: 0, y: 0 },
+        { x: 10, y: -20 },
+        { x: 4 },
+        { y: 5 }
+      ],
       "type": "object",
       "properties": {
         "x": {
@@ -688,6 +770,10 @@ export default /* eslint-disable */
       }
     },
     "xyOrRef": {
+      "examples": [
+        { x: 5, y: 10 },
+        { $ref: "#/def/pointA"}
+      ],
       "anyOf": [{
         "type": "object",
         "required": [ "$ref" ],
