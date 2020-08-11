@@ -13,6 +13,27 @@ export default /* eslint-disable */
         "extras": null
       }
     },
+    "building": {
+      "description": "Any building, with walls, floors, a roof, etc.",
+      "properties": {
+        "type": { "const": "building.schema.json" },
+        "unit": null,
+        "def": null,
+        "anchorPoint": null,
+        "routes": null,
+        "storeys": null
+      }
+    },
+    "ceiling": {
+      "description": "The ceiling of a room or a of a whole storey.",
+      "properties": {
+        "type": { "const": "ceiling.schema.json" },
+        "unit": null,
+        "outline": null,
+        "surface": null,
+        "fixtures": null
+      }
+    },
     "city": {
       "description": "A city full of buildings, people, streets, and vehicles",
       "properties": {
@@ -34,6 +55,30 @@ export default /* eslint-disable */
         "pavement": null,
       }
     },
+    "door": {
+      "description": "A door in a door frame, or a set of doors sharing a door frame.",
+      "properties": {
+        "type": { "const": "door.schema.json" },
+        "unit": null,
+        "motion": null,
+        "outline": null,
+        "leafCount": null,
+        "handleSide": null,
+        "at": null,
+        "casing": null
+      }
+    },
+    "floor": {
+      "description": "The floor of a room or a of a whole storey. NOT an entire storey, like the '3rd floor'",
+      "properties": {
+        "type": { "const": "floor.schema.json" },
+        "unit": null,
+        "incline": null,
+        "outline": null,
+        "openings": null,
+        "surface": null
+      }
+    },
     "parcel": {
       "description": "A parcel of land in a city district",
       "properties": {
@@ -47,25 +92,45 @@ export default /* eslint-disable */
         "routes": null
       }
     },
-    "structure": {
-      "description": "Any structure that is not a building, such as a street light or a swing set.",
+    "roof": {
+      "description": "The roof of a building'",
       "properties": {
-        "type": { "const": "structure.schema.json" },
+        "type": { "const": "roof.schema.json" },
         "unit": null,
-        "def": null,
-        "anchorPoint": null,
-        "lines": null
+        "outline": null,
+        "openings": null,
+        "form": null,
+        "parapetHeight": null,
+        "pitch": null,
+        "eaves": null,
+        "surface": null
       }
     },
-    "building": {
-      "description": "Any building, with walls, floors, a roof, etc.",
+    "room": {
+      "description": "A room in a building'",
       "properties": {
-        "type": { "const": "building.schema.json" },
+        "type": { "const": "room.schema.json" },
         "unit": null,
-        "def": null,
-        "anchorPoint": null,
-        "routes": null,
-        "storeys": null
+        "outline": null,
+        "use": null,
+        "contents": null
+      }
+    },
+    "route": {
+      "description": "Any path that a vehicle travels along",
+      "properties": {
+        "name": null,
+        "mode": null,
+        "waypoints": null
+      }
+    },
+    "staircase": {
+      "description": "A flight of stairs.",
+      "properties": {
+        "unit": null,
+        "pitch": null,
+        "outline": null,
+        "surface": null
       }
     },
     "storey": {
@@ -83,6 +148,16 @@ export default /* eslint-disable */
         "ceiling": null,
         "walls": null,
         "rooms": null
+      }
+    },
+    "structure": {
+      "description": "Any structure that is not a building, such as a street light or a swing set.",
+      "properties": {
+        "type": { "const": "structure.schema.json" },
+        "unit": null,
+        "def": null,
+        "anchorPoint": null,
+        "lines": null
       }
     },
     "wall": {
@@ -127,81 +202,6 @@ export default /* eslint-disable */
         "lites": null,
         "at": null,
         "casing": null
-      }
-    },
-    "door": {
-      "description": "A door in a door frame, or a set of doors sharing a door frame.",
-      "properties": {
-        "type": { "const": "door.schema.json" },
-        "unit": null,
-        "motion": null,
-        "outline": null,
-        "leafCount": null,
-        "handleSide": null,
-        "at": null,
-        "casing": null
-      }
-    },
-    "staircase": {
-      "description": "A flight of stairs.",
-      "properties": {
-        "unit": null,
-        "pitch": null,
-        "outline": null,
-        "surface": null
-      }
-    },
-    "roof": {
-      "description": "The roof of a building'",
-      "properties": {
-        "type": { "const": "roof.schema.json" },
-        "unit": null,
-        "outline": null,
-        "openings": null,
-        "form": null,
-        "parapetHeight": null,
-        "pitch": null,
-        "eaves": null,
-        "surface": null
-      }
-    },
-    "ceiling": {
-      "description": "The ceiling of a room or a of a whole storey.",
-      "properties": {
-        "type": { "const": "ceiling.schema.json" },
-        "unit": null,
-        "outline": null,
-        "surface": null,
-        "fixtures": null
-      }
-    },
-    "floor": {
-      "description": "The floor of a room or a of a whole storey. NOT an entire storey, like the '3rd floor'",
-      "properties": {
-        "type": { "const": "floor.schema.json" },
-        "unit": null,
-        "incline": null,
-        "outline": null,
-        "openings": null,
-        "surface": null
-      }
-    },
-    "room": {
-      "description": "A room in a building'",
-      "properties": {
-        "type": { "const": "room.schema.json" },
-        "unit": null,
-        "outline": null,
-        "use": null,
-        "contents": null
-      }
-    },
-    "route": {
-      "description": "Any path that a vehicle travels along",
-      "properties": {
-        "name": null,
-        "mode": null,
-        "waypoints": null
       }
     }
   },
@@ -327,7 +327,7 @@ export default /* eslint-disable */
     },
     "pitch": { "$ref": "pitch.schema.json" },
     "repeat": { "$ref": "#/typeDefinitions/numberOrRandom" },
-    /* TODO: fix me! */
+    /* TODO: fix me $$ref */
     "$ref": { "$ref": "#/typeDefinitions/$$ref" },
     "roof": { "$ref": "#/entityDefinitions/roof" },
     "roofline": {
@@ -395,7 +395,7 @@ export default /* eslint-disable */
       "items": { "$ref": "#/entityDefinitions/window" }
     }
   },
-  /* TODO: delete me */
+  /* These are definitions of the data types used in the "propertyDefinitions" section above */
   "typeDefinitions": {
     "$$ref": {
       "type": "string",
