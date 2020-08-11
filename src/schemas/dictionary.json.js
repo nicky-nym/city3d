@@ -224,7 +224,7 @@ export default /* eslint-disable */
         }
       }
     },
-    "ceiling": { "$ref": "ceiling.schema.json" },
+    "ceiling": { "$ref": "#/entityDefinitions/ceiling" },
     "comments": {
       "description": "just a space for any notes the author wants to include",
       "type": "array",
@@ -249,7 +249,7 @@ export default /* eslint-disable */
     },
     "doors": {
       "type": "array",
-      "items": { "$ref": "door.schema.json" }
+      "items": { "$ref": "#/entityDefinitions/door" }
     },
     "downspouts": {
       "type": "array",
@@ -273,7 +273,7 @@ export default /* eslint-disable */
     },
     "floors": {
       "type": "array",
-      "items": { "$ref": "floor.schema.json" }
+      "items": { "$ref": "#/entityDefinitions/floor" }
     },
     "form": {
       "enum": ["none", "flat", "pitched", "hipped", "shed", "living", "vaulted"]
@@ -329,24 +329,26 @@ export default /* eslint-disable */
     "repeat": { "$ref": "#/typeDefinitions/numberOrRandom" },
     /* TODO: fix me! */
     "$ref": { "$ref": "#/typeDefinitions/$$ref" },
-    "roof": { "$ref": "roof.schema.json" },
+    "roof": { "$ref": "#/entityDefinitions/roof" },
     "roofline": {
       "enum": ["none", "gabled", "pitched", "shed"]
     },
     "rooms": {
       "type": "array",
-      "items": { "$ref": "room.schema.json" }
+      "items": { "$ref": "#/entityDefinitions/room" }
     },
     "routes": {
       "type": "array",
+      /* TODO: { "$ref": "#/entityDefinitions/route" } */
       "items": { "$ref": "route.schema.json" }
     },
     "staircases": {
       "type": "array",
-      "items": { "$ref": "staircase.schema.json" }
+      "items": { "$ref": "#/entityDefinitions/staircase" }
     },
     "storeys": {
       "type": "array",
+      /* TODO: { "$ref": "#/entityDefinitions/storey" } */
       "items": { "$ref": "storey.schema.json" }
     },
     "surface": { "$ref": "surface.schema.json" },
@@ -363,11 +365,11 @@ export default /* eslint-disable */
       "properties": {
         "exterior": {
           "type": "array",
-          "items": { "$ref": "wall.schema.json" }
+          "items": { "$ref": "#/entityDefinitions/wall" }
         },
         "interior": {
           "type": "array",
-          "items": { "$ref": "wall.schema.json" }
+          "items": { "$ref": "#/entityDefinitions/wall" }
         }
       }
     },
@@ -390,7 +392,7 @@ export default /* eslint-disable */
     },
     "windows": {
       "type": "array",
-      "items": { "$ref": "window.schema.json" }
+      "items": { "$ref": "#/entityDefinitions/window" }
     }
   },
   /* TODO: delete me */
