@@ -14,12 +14,9 @@ describe('DICTIONARY', function () {
   describe('DICTIONARY.typeDefinitions.outline', function () {
     const ajv = new Ajv()
 
-    // ajv.addSchema(DICTIONARY.typeDefinitions.xy, 'xy.schema.json')
-    // ajv.addSchema(DICTIONARY.typeDefinitions.pitch, 'pitch.schema.json')
-    // ajv.addSchema(DICTIONARY.typeDefinitions.xyOrRef, 'xyOrRef.schema.json')
-    ajv.addSchema(DICTIONARY.typeDefinitions.xy, '#/typeDefinitions/xy')
-    ajv.addSchema(DICTIONARY.typeDefinitions.pitch, '#/typeDefinitions/pitch')
-    ajv.addSchema(DICTIONARY.typeDefinitions.xyOrRef, '#/typeDefinitions/xyOrRef')
+    ajv.addSchema(DICTIONARY.typeDefinitions.xy, '~/typeDefinitions/xy')
+    ajv.addSchema(DICTIONARY.typeDefinitions.pitch, '~/typeDefinitions/pitch')
+    ajv.addSchema(DICTIONARY.typeDefinitions.xyOrRef, '~/typeDefinitions/xyOrRef')
     const validator = ajv.compile(DICTIONARY.typeDefinitions.outline)
 
     it('should accept a simple valid polygon spec', function () {

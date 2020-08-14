@@ -15,7 +15,7 @@ import { SCHEMA } from '../../../test/src/schemas/schema.js'
 /* eslint-disable no-unused-expressions */
 
 describe('Schematic', function () {
-  const numberSpec = { $ref: '#/typeDefinitions/numberOrRandom' }
+  const numberSpec = { $ref: '~/typeDefinitions/numberOrRandom' }
 
   describe('#getAttribute', function () {
     it('should return a dictionary.json attribute entry', function () {
@@ -44,6 +44,7 @@ describe('Schematic', function () {
     it('should return a valid JSON Schema object', function () {
       const ajv = new Ajv()
       Object.keys(SCHEMA).forEach(item => SCHEMA[item].$id !== 'building.schema.json' ? ajv.addSchema(SCHEMA[item], SCHEMA[item].$id) : null)
+      Object.keys(DICTIONARY.typeDefinitions).forEach(item => ajv.addSchema(DICTIONARY.typeDefinitions[item], `~/typeDefinitions/${item}`))
       const schema = Schematic.getSchema('building')
       ajv.addSchema(schema, schema.$id)
       const validator = ajv.compile(schema)
