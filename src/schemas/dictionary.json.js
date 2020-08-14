@@ -598,7 +598,7 @@ export default /* eslint-disable */
           "type": "array",
           "minItems": 3,
           "uniqueItems": false,
-          "items": { "$ref": "definitions.json#/def/xyOrRef" }
+          "items": { "$ref": "xyOrRef.schema.json" }
         },
         "size": { 
           "description": "for rectangles (or regular polygons), the size of the bounding box",
@@ -785,7 +785,7 @@ export default /* eslint-disable */
         }
       }, {
         "type": "object",
-        "required": [  ],
+        "required": [],
         "properties": {
           "x": {
             "description": "an x-axis distance, in the default unit of measure",
@@ -794,6 +794,43 @@ export default /* eslint-disable */
           },
           "y": {
             "description": "a y-axis distance, in the default unit of measure",
+            "default": 0,
+            "type": "number"
+          }
+        }
+      }]
+    },
+    "xyzOrRef": {
+      "description": "A point (or vector) in a 3D space",
+      "examples": [
+        { x: 5, y: 10, z: 88 },
+        { $ref: "#/def/pointA"}
+      ],
+      "anyOf": [{
+        "type": "object",
+        "required": [ "$ref" ],
+        "properties": {
+          "$ref": {
+            "type": "string",
+            "format": "uri-reference"
+          }
+        }
+      }, {
+        "type": "object",
+        "required": [],
+        "properties": {
+          "x": {
+            "description": "an x-axis distance, in the default unit of measure",
+            "default": 0,
+            "type": "number"
+          },
+          "y": {
+            "description": "a y-axis distance, in the default unit of measure",
+            "default": 0,
+            "type": "number"
+          },
+          "z": {
+            "description": "a z-axis distance, in the default unit of measure",
             "default": 0,
             "type": "number"
           }

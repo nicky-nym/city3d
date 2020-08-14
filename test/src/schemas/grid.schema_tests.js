@@ -6,14 +6,14 @@
  */
 
 import Ajv from '../../../node_modules/ajv/dist/ajv.min.js'
-import { SCHEMA } from '../../../test/src/schemas/schema.js'
+import DICTIONARY from '../../../src/schemas/dictionary.json.js'
 
 /* global describe, it */
 
-describe('SCHEMA', function () {
-  describe('SCHEMA.GRID', function () {
+describe('DICTIONARY', function () {
+  describe('DICTIONARY.typeDefinitions.grid', function () {
     const ajv = new Ajv()
-    const validator = ajv.compile(SCHEMA.GRID)
+    const validator = ajv.compile(DICTIONARY.typeDefinitions.grid)
 
     it('should accept a simple valid grid object', function () {
       const goodJSON = { rows: 3, cols: 8 }

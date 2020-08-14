@@ -6,16 +6,16 @@
  */
 
 import Ajv from '../../../node_modules/ajv/dist/ajv.min.js'
-import { SCHEMA } from '../../../test/src/schemas/schema.js'
+import DICTIONARY from '../../../src/schemas/dictionary.json.js'
 
 /* global describe, it */
 
-describe('SCHEMA', function () {
-  describe('SCHEMA.COPY', function () {
+describe('DICTIONARY', function () {
+  describe('DICTIONARY.typeDefinitions.copy', function () {
     const ajv = new Ajv()
-    ajv.addSchema(SCHEMA.GRID, SCHEMA.GRID.$id)
-    ajv.addSchema(SCHEMA.POSE, SCHEMA.POSE.$id)
-    const validator = ajv.compile(SCHEMA.COPY)
+    ajv.addSchema(DICTIONARY.typeDefinitions.grid, 'grid.schema.json')
+    ajv.addSchema(DICTIONARY.typeDefinitions.pose, 'pose.schema.json')
+    const validator = ajv.compile(DICTIONARY.typeDefinitions.copy)
 
     it('should accept a simple valid copy spec', function () {
       const goodJSON = {

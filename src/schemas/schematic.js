@@ -28,19 +28,31 @@ class Schematic {
   }
 
   /**
-   * Returns an property definition found in definitions.json.js
+   * Returns a type definition found in dictionary.json.js
+   */
+  static getTypeDefinition (typeName) {
+    const typeDefinition = DICTIONARY.typeDefinitions[typeName]
+    if (typeDefinition) {
+      return typeDefinition
+    } else {
+      throw new Error(`Schematic.getTypeDefinition('${typeName}'): no schema dictionary entry for '${typeName}'`)
+    }
+  }
+
+  /**
+   * Returns an property definition found in dictionary.json.js
    */
   static getPropertyDefinition (propertyName) {
     const propertyDefinition = DICTIONARY.propertyDefinitions[propertyName]
     if (propertyDefinition) {
       return propertyDefinition
     } else {
-      throw new Error(`Schematic.getAttribute('${propertyName}'): no schema dictionary entry for '${propertyName}'`)
+      throw new Error(`Schematic.getPropertyDefinition('${propertyName}'): no schema dictionary entry for '${propertyName}'`)
     }
   }
 
   /**
-   * Returns an entity definition found in definitions.json.js
+   * Returns an entity definition found in dictionary.json.js
    */
   static getEntityDefinition (entityName) {
     const entityDefinition = DICTIONARY.entityDefinitions[entityName]

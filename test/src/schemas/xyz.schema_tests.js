@@ -6,15 +6,15 @@
  */
 
 import Ajv from '../../../node_modules/ajv/dist/ajv.min.js'
-import { SCHEMA } from '../../../test/src/schemas/schema.js'
+import DICTIONARY from '../../../src/schemas/dictionary.json.js'
 import { xyz } from '../../../src/core/util.js'
 
 /* global describe, it */
 
-describe('SCHEMA', function () {
-  describe('SCHEMA.XYZ', function () {
+describe('DICTIONARY', function () {
+  describe('DICTIONARY.typeDefinitions.xyzOrRef', function () {
     const ajv = new Ajv()
-    const validator = ajv.compile(SCHEMA.XYZ)
+    const validator = ajv.compile(DICTIONARY.typeDefinitions.xyzOrRef)
 
     it('should accept a simple valid {xyz} object', function () {
       const goodJSON = { x: 0, y: 0, z: 0 }

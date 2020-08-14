@@ -6,14 +6,14 @@
  */
 
 import Ajv from '../../../node_modules/ajv/dist/ajv.min.js'
-import { SCHEMA } from '../../../test/src/schemas/schema.js'
+import DICTIONARY from '../../../src/schemas/dictionary.json.js'
 
 /* global describe, it */
 
-describe('SCHEMA', function () {
-  describe('SCHEMA.SURFACE', function () {
+describe('DICTIONARY', function () {
+  describe('DICTIONARY.typeDefinitions.surface', function () {
     const ajv = new Ajv()
-    const validator = ajv.compile(SCHEMA.SURFACE)
+    const validator = ajv.compile(DICTIONARY.typeDefinitions.surface)
 
     it('should accept a simple valid surface object', function () {
       const goodJSON = {

@@ -6,14 +6,14 @@
  */
 
 import Ajv from '../../../node_modules/ajv/dist/ajv.min.js'
-import { SCHEMA } from '../../../test/src/schemas/schema.js'
+import DICTIONARY from '../../../src/schemas/dictionary.json.js'
 
 /* global describe, it */
 
-describe('SCHEMA', function () {
-  describe('SCHEMA.POSE', function () {
+describe('DICTIONARY', function () {
+  describe('DICTIONARY.typeDefinitions.pose', function () {
     const ajv = new Ajv()
-    const validator = ajv.compile(SCHEMA.POSE)
+    const validator = ajv.compile(DICTIONARY.typeDefinitions.pose)
 
     it('should accept a simple valid pose object', function () {
       const goodJSON = {

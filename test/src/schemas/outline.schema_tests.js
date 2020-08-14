@@ -6,18 +6,18 @@
  */
 
 import Ajv from '../../../node_modules/ajv/dist/ajv.min.js'
-import { SCHEMA } from '../../../test/src/schemas/schema.js'
+import DICTIONARY from '../../../src/schemas/dictionary.json.js'
 
 /* global describe, it */
 
-describe('SCHEMA', function () {
-  describe('SCHEMA.OUTLINE', function () {
+describe('DICTIONARY', function () {
+  describe('DICTIONARY.typeDefinitions.outline', function () {
     const ajv = new Ajv()
-    ajv.addSchema(SCHEMA.XY, SCHEMA.XY.$id)
-    ajv.addSchema(SCHEMA.PITCH, SCHEMA.PITCH.$id)
-    ajv.addSchema(SCHEMA.DEFINITIONS, SCHEMA.DEFINITIONS.$id)
-    ajv.addSchema(SCHEMA.OUTLINE, SCHEMA.OUTLINE.$id)
-    const validator = ajv.compile(SCHEMA.OUTLINE)
+
+    ajv.addSchema(DICTIONARY.typeDefinitions.xy, 'xy.schema.json')
+    ajv.addSchema(DICTIONARY.typeDefinitions.pitch, 'pitch.schema.json')
+    ajv.addSchema(DICTIONARY.typeDefinitions.xyOrRef, 'xyOrRef.schema.json')
+    const validator = ajv.compile(DICTIONARY.typeDefinitions.outline)
 
     it('should accept a simple valid polygon spec', function () {
       const goodJSON = {
