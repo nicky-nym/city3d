@@ -212,7 +212,7 @@ export default /* eslint-disable */
       "description": "the point that serves as the center of the building when the building is place on a parcel",
       "$ref": "xy.schema.json"
     },
-    "at": { "$ref": "pose.schema.json" },
+    "at": { "$ref": "#/typeDefinitions/pose" },
     "begin": { "$ref": "#/typeDefinitions/xyOrRef" },
     "border": { "$ref": "outline.schema.json" },
     "casing": { 
@@ -283,12 +283,12 @@ export default /* eslint-disable */
     },
     "height": { "$ref": "#/typeDefinitions/numberOrRandom" },
     "incline": { "$ref": "#/typeDefinitions/numberOrRandom" },
-    "leafCount": { "$ref": "grid.schema.json" },
+    "leafCount": { "$ref": "#/typeDefinitions/grid" },
     "lines": {
       "type": "array",
       "items": { "$ref": "line.schema.json" }
     },
-    "lites": { "$ref": "grid.schema.json" },
+    "lites": { "$ref": "#/typeDefinitions/grid" },
     "metadata": { "$ref": "metadata.schema.json" },
     "mode": {
       "enum": ["canal", "walkway", "bikeway", "roadway"]
@@ -429,11 +429,11 @@ export default /* eslint-disable */
         },
         "pose": {
           "description": "where the copy goes, and the direction it is oriented in",
-          "$ref": "pose.schema.json"
+          "$ref": "#/typeDefinitions/pose"
         },
         // "repeat": {
         //   "description": "to make multiple copies at once, set the number of rows and columns",
-        //   "$ref": "grid.schema.json"
+        //   "$ref": "#/typeDefinitions/grid"
         // },
         "repeat": {
           "description": "to make multiple copies at once, set the repeat count and offset",
@@ -444,7 +444,7 @@ export default /* eslint-disable */
               "type": "number"
             },
             "offset": {
-              "$ref": "pose.schema.json"
+              "$ref": "#/typeDefinitions/pose"
             }
           }
         },
@@ -598,11 +598,11 @@ export default /* eslint-disable */
           "type": "array",
           "minItems": 3,
           "uniqueItems": false,
-          "items": { "$ref": "xyOrRef.schema.json" }
+          "items": { "$ref": "#/typeDefinitions/xyOrRef" }
         },
         "size": { 
           "description": "for rectangles (or regular polygons), the size of the bounding box",
-          "$ref": "xy.schema.json" 
+          "$ref": "#/typeDefinitions/xy" 
         },
         "top": { 
           "type": "object",
@@ -612,7 +612,7 @@ export default /* eslint-disable */
               "enum": [ "gabled", "arched" ]
             },
             "pitch": {
-              "$ref": "pitch.schema.json"
+              "$ref": "#/typeDefinitions/pitch"
             },
             "curvature": {
               "type": "number",

@@ -13,8 +13,8 @@ import DICTIONARY from '../../../src/schemas/dictionary.json.js'
 describe('DICTIONARY', function () {
   describe('DICTIONARY.typeDefinitions.copy', function () {
     const ajv = new Ajv()
-    ajv.addSchema(DICTIONARY.typeDefinitions.grid, 'grid.schema.json')
-    ajv.addSchema(DICTIONARY.typeDefinitions.pose, 'pose.schema.json')
+    ajv.addSchema(DICTIONARY.typeDefinitions.grid, '#/typeDefinitions/grid')
+    ajv.addSchema(DICTIONARY.typeDefinitions.pose, '#/typeDefinitions/pose')
     const validator = ajv.compile(DICTIONARY.typeDefinitions.copy)
 
     it('should accept a simple valid copy spec', function () {
