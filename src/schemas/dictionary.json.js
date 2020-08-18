@@ -339,7 +339,7 @@ export default /* eslint-disable */
     },
     "routes": {
       "type": "array",
-      /* TODO: { "$ref": "#/entityDefinitions/route" } */
+      /* TODO: "items": { "$ref": "~/entityDefinitions/route" } */
       "items": { "$ref": "route.schema.json" }
     },
     "staircases": {

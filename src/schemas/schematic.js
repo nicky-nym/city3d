@@ -34,6 +34,11 @@ class Schematic {
   static createAjv () {
     const ajv = new Ajv()
     Object.keys(DICTIONARY.typeDefinitions).forEach(item => ajv.addSchema(DICTIONARY.typeDefinitions[item], `~/typeDefinitions/${item}`))
+    // Object.keys(DICTIONARY.typeDefinitions).forEach(item => ajv.addSchema(DICTIONARY.typeDefinitions[item], `~/typeDefinitions/${item}`))
+    const item = 'route'
+    const schema = Schematic.getSchema(item)
+    // ajv.addSchema(schema, `~/entityDefinitions/${item}`)
+    ajv.addSchema(schema, `${item}.schema.json`)
     return ajv
   }
 
