@@ -5,6 +5,7 @@
  * For more information, please refer to <http://unlicense.org>
  */
 
+import Ajv from '../../node_modules/ajv/dist/ajv.min.js'
 import DICTIONARY from './dictionary.json.js'
 
 /// import DEFINITIONS from './definitions.json.js'
@@ -25,6 +26,12 @@ class Schematic {
     this.entityKeys = Object.keys(DICTIONARY.entityDefinitions)
     this.propertyKeys = Object.keys(DICTIONARY.propertyDefinitions)
     this.schemas = {}
+  }
+
+  static createAjv () {
+    const ajv = new Ajv()
+    Object.keys(DICTIONARY.typeDefinitions).forEach(item => ajv.addSchema(DICTIONARY.typeDefinitions[item], `~/typeDefinitions/${item}`))
+    return ajv
   }
 
   /**

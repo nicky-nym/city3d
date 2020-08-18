@@ -294,7 +294,7 @@ export default /* eslint-disable */
       "enum": ["canal", "walkway", "bikeway", "roadway"]
     },
     "motion": {
-      "enum": ["casement", "awning", "sliding", "hung", "picture", "open"]
+      "enum": ["casement", "awning", "sliding", "pocket", "hung", "picture", "open", "overhead", "pivoting", "folding", "up-and-over", "revolving", "rolling", "collapsible"]
     },
     "name": {
       "description": "a display name for users to see",

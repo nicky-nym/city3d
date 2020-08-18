@@ -5,16 +5,15 @@
  * For more information, please refer to <http://unlicense.org>
  */
 
-import Ajv from '../../../node_modules/ajv/dist/ajv.min.js'
-import { SCHEMA } from '../../../test/src/schemas/schema.js'
+import { Schematic } from '../../../src/schemas/schematic.js'
 
 /* global describe, it */
 
-describe('SCHEMA', function () {
-  describe('SCHEMA.DOOR', function () {
-    const ajv = new Ajv()
-    Object.keys(SCHEMA).forEach(item => ajv.addSchema(SCHEMA[item], SCHEMA[item].$id))
-    const validator = ajv.compile(SCHEMA.DOOR)
+describe('DICTIONARY', function () {
+  describe('DICTIONARY.entityDefinitions.door', function () {
+    const ajv = Schematic.createAjv()
+    const schema = Schematic.getSchema('door')
+    const validator = ajv.compile(schema)
 
     it('should accept a simple valid door spec', function () {
       const goodJSON = {
@@ -22,7 +21,7 @@ describe('SCHEMA', function () {
         type: 'door.schema.json',
         name: 'garage door',
         unit: 'feet',
-        motion: 'overhead',
+        motion: 'pocket',
         outline: { shape: 'rectangle', size: { x: 16, y: 7 } },
         leafCount: { rows: 5 },
         handleSide: 'left',
