@@ -35,10 +35,8 @@ class Schematic {
     const ajv = new Ajv()
     Object.keys(DICTIONARY.typeDefinitions).forEach(item => ajv.addSchema(DICTIONARY.typeDefinitions[item], `~/typeDefinitions/${item}`))
     // Object.keys(DICTIONARY.typeDefinitions).forEach(item => ajv.addSchema(DICTIONARY.typeDefinitions[item], `~/typeDefinitions/${item}`))
-    const item = 'route'
-    const schema = Schematic.getSchema(item)
-    // ajv.addSchema(schema, `~/entityDefinitions/${item}`)
-    ajv.addSchema(schema, `${item}.schema.json`)
+    const items = ['route', 'door', 'window', 'room', 'wall', 'ceiling', 'roof', 'floor', 'staircase', 'storey']
+    items.forEach(item => ajv.addSchema(Schematic.getSchema(item), `${item}.schema.json`))
     return ajv
   }
 
@@ -142,6 +140,10 @@ class Schematic {
       let value = entity.properties[key]
       if (value === null) {
         value = Schematic.getPropertyDefinition(key)
+      } else if (typeof value === 'object' && typeof value.properties === 'object') {
+        // TODO: this modifies the original entity definition itself,
+        // which is a bug, because we want it to only modify the generated schema
+        Schematic._addProperties(value, value)
       }
       schema.properties[key] = value
     }

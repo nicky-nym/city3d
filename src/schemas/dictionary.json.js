@@ -173,7 +173,7 @@ export default /* eslint-disable */
         "windows": null,
         "outside": { 
           "type": "object",
-          "required": [  ],
+          "required": [],
           "properties": {
             "surface": null,
             "fixtures": null,
@@ -182,7 +182,7 @@ export default /* eslint-disable */
         },
         "inside": { 
           "type": "object",
-          "required": [  ],
+          "required": [],
           "properties": {
             "surface": null,
             "fixtures": null
@@ -224,7 +224,7 @@ export default /* eslint-disable */
         }
       }
     },
-    "ceiling": { "$ref": "#/entityDefinitions/ceiling" },
+    "ceiling": { "$ref": "ceiling.schema.json" },
     "comments": {
       "description": "just a space for any notes the author wants to include",
       "type": "array",
@@ -249,7 +249,7 @@ export default /* eslint-disable */
     },
     "doors": {
       "type": "array",
-      "items": { "$ref": "#/entityDefinitions/door" }
+      "items": { "$ref": "door.schema.json" }
     },
     "downspouts": {
       "type": "array",
@@ -273,7 +273,7 @@ export default /* eslint-disable */
     },
     "floors": {
       "type": "array",
-      "items": { "$ref": "#/entityDefinitions/floor" }
+      "items": { "$ref": "floor.schema.json" }
     },
     "form": {
       "enum": ["none", "flat", "pitched", "hipped", "shed", "living", "vaulted"]
@@ -329,13 +329,13 @@ export default /* eslint-disable */
     "repeat": { "$ref": "~/typeDefinitions/numberOrRandom" },
     /* TODO: fix me $$ref */
     "$ref": { "$ref": "~/typeDefinitions/$$ref" },
-    "roof": { "$ref": "#/entityDefinitions/roof" },
+    "roof": { "$ref": "roof.schema.json" },
     "roofline": {
       "enum": ["none", "gabled", "pitched", "shed"]
     },
     "rooms": {
       "type": "array",
-      "items": { "$ref": "#/entityDefinitions/room" }
+      "items": { "$ref": "room.schema.json" }
     },
     "routes": {
       "type": "array",
@@ -344,7 +344,7 @@ export default /* eslint-disable */
     },
     "staircases": {
       "type": "array",
-      "items": { "$ref": "#/entityDefinitions/staircase" }
+      "items": { "$ref": "staircase.schema.json" }
     },
     "storeys": {
       "type": "array",
@@ -365,11 +365,11 @@ export default /* eslint-disable */
       "properties": {
         "exterior": {
           "type": "array",
-          "items": { "$ref": "#/entityDefinitions/wall" }
+          "items": { "$ref": "wall.schema.json" }
         },
         "interior": {
           "type": "array",
-          "items": { "$ref": "#/entityDefinitions/wall" }
+          "items": { "$ref": "wall.schema.json" }
         }
       }
     },
@@ -392,7 +392,7 @@ export default /* eslint-disable */
     },
     "windows": {
       "type": "array",
-      "items": { "$ref": "#/entityDefinitions/window" }
+      "items": { "$ref": "window.schema.json" }
     }
   },
   /* These are definitions of the data types used in the "propertyDefinitions" section above */
