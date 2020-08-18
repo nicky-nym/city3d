@@ -5,15 +5,13 @@
  * For more information, please refer to <http://unlicense.org>
  */
 
-import DICTIONARY from '../../../src/schemas/dictionary.json.js'
 import { Schematic } from '../../../src/schemas/schematic.js'
 
 /* global describe, it */
 
 describe('DICTIONARY', function () {
   describe('DICTIONARY.typeDefinitions.copy', function () {
-    const ajv = Schematic.createAjv()
-    const validator = ajv.compile(DICTIONARY.typeDefinitions.copy)
+    const validator = Schematic.getTypeValidator('copy')
 
     it('should accept a simple valid copy spec', function () {
       const goodJSON = {

@@ -11,9 +11,7 @@ import { Schematic } from '../../../src/schemas/schematic.js'
 
 describe('DICTIONARY', function () {
   describe('DICTIONARY.entityDefinitions.door', function () {
-    const ajv = Schematic.createAjv()
-    const schema = Schematic.getSchema('door')
-    const validator = ajv.compile(schema)
+    const validator = Schematic.getEntityValidator('door')
 
     it('should accept a simple valid door spec', function () {
       const goodJSON = {

@@ -5,16 +5,14 @@
  * For more information, please refer to <http://unlicense.org>
  */
 
-import Ajv from '../../../node_modules/ajv/dist/ajv.min.js'
-import DICTIONARY from '../../../src/schemas/dictionary.json.js'
+import { Schematic } from '../../../src/schemas/schematic.js'
 import { xy } from '../../../src/core/util.js'
 
 /* global describe, it */
 
 describe('DICTIONARY', function () {
   describe('DICTIONARY.typeDefinitions.xy', function () {
-    const ajv = new Ajv()
-    const validator = ajv.compile(DICTIONARY.typeDefinitions.xy)
+    const validator = Schematic.getTypeValidator('xy')
 
     it('should accept a simple valid {xy} object', function () {
       const goodJSON = { x: 0, y: 0 }

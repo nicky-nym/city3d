@@ -28,10 +28,32 @@ class Schematic {
     this.schemas = {}
   }
 
+  /**
+   * Factory to create a new Ajv instance initialized with our entity schemas.
+   */
   static createAjv () {
     const ajv = new Ajv()
     Object.keys(DICTIONARY.typeDefinitions).forEach(item => ajv.addSchema(DICTIONARY.typeDefinitions[item], `~/typeDefinitions/${item}`))
     return ajv
+  }
+
+  /**
+   * Returns an Ajv schema validator function for an data type schema.
+   */
+  static getTypeValidator (typeName) {
+    const ajv = Schematic.createAjv()
+    const validator = ajv.compile(DICTIONARY.typeDefinitions[typeName])
+    return validator
+  }
+
+  /**
+   * Returns an Ajv schema validator function for an entity schema.
+   */
+  static getEntityValidator (entityName) {
+    const ajv = Schematic.createAjv()
+    const schema = Schematic.getSchema(entityName)
+    const validator = ajv.compile(schema)
+    return validator
   }
 
   /**

@@ -11,9 +11,7 @@ import { Schematic } from '../../../src/schemas/schematic.js'
 
 describe('DICTIONARY', function () {
   describe('DICTIONARY.entityDefinitions.ceiling', function () {
-    const ajv = Schematic.createAjv()
-    const schema = Schematic.getSchema('ceiling')
-    const validator = ajv.compile(schema)
+    const validator = Schematic.getEntityValidator('ceiling')
 
     it('should accept a simple valid ceiling spec', function () {
       const goodJSON = {
