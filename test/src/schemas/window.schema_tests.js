@@ -5,16 +5,13 @@
  * For more information, please refer to <http://unlicense.org>
  */
 
-import Ajv from '../../../node_modules/ajv/dist/ajv.min.js'
-import { SCHEMA } from '../../../test/src/schemas/schema.js'
+import { Schematic } from '../../../src/schemas/schematic.js'
 
 /* global describe, it */
 
-describe('SCHEMA', function () {
-  describe('SCHEMA.WINDOW', function () {
-    const ajv = new Ajv()
-    Object.keys(SCHEMA).forEach(item => ajv.addSchema(SCHEMA[item], SCHEMA[item].$id))
-    const validator = ajv.compile(SCHEMA.WINDOW)
+describe('DICTIONARY', function () {
+  describe('DICTIONARY.entityDefinitions.window', function () {
+    const validator = Schematic.getEntityValidator('window')
 
     it('should accept a simple valid window spec', function () {
       const goodJSON = {

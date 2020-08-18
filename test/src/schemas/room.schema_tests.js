@@ -5,16 +5,13 @@
  * For more information, please refer to <http://unlicense.org>
  */
 
-import Ajv from '../../../node_modules/ajv/dist/ajv.min.js'
-import { SCHEMA } from '../../../test/src/schemas/schema.js'
+import { Schematic } from '../../../src/schemas/schematic.js'
 
 /* global describe, it */
 
-describe('SCHEMA', function () {
-  describe('SCHEMA.ROOM', function () {
-    const ajv = new Ajv()
-    Object.keys(SCHEMA).forEach(item => ajv.addSchema(SCHEMA[item], SCHEMA[item].$id))
-    const validator = ajv.compile(SCHEMA.ROOM)
+describe('DICTIONARY', function () {
+  describe('DICTIONARY.entityDefinitions.room', function () {
+    const validator = Schematic.getEntityValidator('room')
 
     it('should accept a simple valid room spec', function () {
       const goodJSON = {
