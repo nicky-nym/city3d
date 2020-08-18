@@ -6,46 +6,44 @@
  */
 
 import Ajv from '../../../node_modules/ajv/dist/ajv.min.js'
-import { SCHEMA } from '../../../test/src/schemas/schema.js'
+import VEHICLE from '../../../src/schemas/vehicle.schema.json.js'
 import VEHICLE_SPECS from '../../../content/movers/vehicles.json.js'
 
 /* global describe, it */
 
-describe('SCHEMA', function () {
-  describe('SCHEMA.VEHICLE', function () {
-    const ajv = new Ajv()
-    const validator = ajv.compile(SCHEMA.VEHICLE)
+describe('VEHICLE schema', function () {
+  const ajv = new Ajv()
+  const validator = ajv.compile(VEHICLE)
 
-    it('should accept a simple valid vehicle(s) object', function () {
-      const goodJSON = {
-        unicycle: {
-          color: 0xff6600,
-          saddles: [{ up: 3.8, bottomOffset: 0 }],
-          wheels: [{
-            diameter: 2.25,
-            spokes: 18
-          }]
-        }
+  it('should accept a simple valid vehicle(s) object', function () {
+    const goodJSON = {
+      unicycle: {
+        color: 0xff6600,
+        saddles: [{ up: 3.8, bottomOffset: 0 }],
+        wheels: [{
+          diameter: 2.25,
+          spokes: 18
+        }]
       }
-      validator(goodJSON).should.equal(true)
-    })
+    }
+    validator(goodJSON).should.equal(true)
+  })
 
-    it('should accept all the vehicles we define in our /content directory', function () {
-      const goodJSON = VEHICLE_SPECS
-      validator(goodJSON).should.equal(true)
-    })
+  it('should accept all the vehicles we define in our /content directory', function () {
+    const goodJSON = VEHICLE_SPECS
+    validator(goodJSON).should.equal(true)
+  })
 
-    it('should reject any non-object substitute for the vehicle(s) object', function () {
-      const badJSON = true
-      const alsoBad = 88
-      const worse = []
-      const omg = null
+  it('should reject any non-object substitute for the vehicle(s) object', function () {
+    const badJSON = true
+    const alsoBad = 88
+    const worse = []
+    const omg = null
 
-      validator(badJSON).should.equal(false)
-      validator(alsoBad).should.equal(false)
-      validator(worse).should.equal(false)
-      validator(omg).should.equal(false)
-      validator().should.equal(false)
-    })
+    validator(badJSON).should.equal(false)
+    validator(alsoBad).should.equal(false)
+    validator(worse).should.equal(false)
+    validator(omg).should.equal(false)
+    validator().should.equal(false)
   })
 })

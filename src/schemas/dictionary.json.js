@@ -10,6 +10,7 @@ export default /* eslint-disable */
         "name": null,
         "metadata": null,
         "comments": null,
+        "def": null,
         "extras": null
       }
     },
@@ -18,7 +19,6 @@ export default /* eslint-disable */
       "properties": {
         "type": { "const": "building.schema.json" },
         "unit": null,
-        "def": null,
         "anchorPoint": null,
         "routes": null,
         "storeys": null
@@ -294,7 +294,8 @@ export default /* eslint-disable */
       "enum": ["canal", "walkway", "bikeway", "roadway"]
     },
     "motion": {
-      "enum": ["casement", "awning", "sliding", "pocket", "hung", "picture", "open", "overhead", "pivoting", "folding", "up-and-over", "revolving", "rolling", "collapsible"]
+      /* TODO: remove "hung" and just use "swinging" instead */
+      "enum": ["casement", "awning", "sliding", "pocket", "hung", "swinging", "picture", "open", "overhead", "pivoting", "folding", "up-and-over", "revolving", "rolling", "collapsible"]
     },
     "name": {
       "description": "a display name for users to see",

@@ -5,21 +5,20 @@
  * For more information, please refer to <http://unlicense.org>
  */
 
-import Ajv from '../../../node_modules/ajv/dist/ajv.min.js'
-import { SCHEMA } from '../../../test/src/schemas/schema.js'
 import GARAGE_SPEC from '../../../content/buildings/garage.json.js'
+import { Schematic } from '../../../src/schemas/schematic.js'
 
 /* global describe, it */
 
 describe('garage.json.js', function () {
   describe('garage schema validation', function () {
-    const ajv = new Ajv()
-    Object.keys(SCHEMA).forEach(item => ajv.addSchema(SCHEMA[item], SCHEMA[item].$id))
-    const validator = ajv.compile(SCHEMA.BUILDING)
+    const validator = Schematic.getEntityValidator('building')
 
     it('should accept all the entire garage spec', function () {
       const goodJSON = GARAGE_SPEC
       validator(goodJSON).should.equal(true)
+      // validator(goodJSON)
+      // console.log(validator.errors)
     })
   })
 })
