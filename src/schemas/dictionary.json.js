@@ -119,7 +119,7 @@ export default /* eslint-disable */
     "route": {
       "description": "Any path that a vehicle travels along",
       "properties": {
-        "name": null,
+        "type": { "const": "route.schema.json" },
         "mode": null,
         "waypoints": null
       }

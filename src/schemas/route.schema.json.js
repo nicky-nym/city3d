@@ -2,7 +2,7 @@ export default /* eslint-disable */
 {
   "$id": "route.schema.json",
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "route",
+  "title": "Route",
   "description": "Any path that a vehicle travels along",
   "type": "object",
   "examples": [

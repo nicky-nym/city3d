@@ -3,7 +3,7 @@ export default /* eslint-disable */
   "$id": "room.schema.json",
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "Room",
-  "description": "A room in a building'",
+  "description": "A room in a building",
   "type": "object",
   "examples": [
     {

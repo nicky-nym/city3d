@@ -5,11 +5,8 @@
  * For more information, please refer to <http://unlicense.org>
  */
 
-import Ajv from '../../../node_modules/ajv/dist/ajv.min.js'
-
 import { Schematic } from '../../../src/schemas/schematic.js'
 import DICTIONARY from '../../../src/schemas/dictionary.json.js'
-import { SCHEMA } from '../../../test/src/schemas/schema.js'
 
 /* global describe, it, should */
 /* eslint-disable no-unused-expressions */
@@ -40,27 +37,17 @@ describe('Schematic', function () {
       schema.title.should.equal('building')
       schema.description.should.equal(DICTIONARY.entityDefinitions.building.description)
     })
+  })
 
-    it('should return a valid JSON Schema object', function () {
-      const ajv = new Ajv()
-      Object.keys(SCHEMA).forEach(item => SCHEMA[item].$id !== 'building.schema.json' ? ajv.addSchema(SCHEMA[item], SCHEMA[item].$id) : null)
-      Object.keys(DICTIONARY.typeDefinitions).forEach(item => ajv.addSchema(DICTIONARY.typeDefinitions[item], `~/typeDefinitions/${item}`))
-      const schema = Schematic.getSchema('building')
-      ajv.addSchema(schema, schema.$id)
-      const validator = ajv.compile(schema)
-      // console.log(schema)
-      // 'foo'.should.equal(schema)
+  describe('#getEntityValidator', function () {
+    it('should return a working validator function', function () {
+      const validator = Schematic.getEntityValidator('building')
       const goodJSON = {
         context: 'city3d',
         type: 'building.schema.json',
         name: 'Empire State Building'
       }
       validator(goodJSON).should.equal(true)
-    })
-
-    it.skip('should return the expected JSON Schema object', function () {
-      const schema = Schematic.getSchema('building')
-      schema.should.deep.equal(SCHEMA.BUILDING)
     })
   })
 })

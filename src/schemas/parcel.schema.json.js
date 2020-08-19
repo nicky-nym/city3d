@@ -2,6 +2,7 @@ export default /* eslint-disable */
 {
   "$id": "parcel.schema.json",
   "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "parcel",
   "description": "A parcel of land in a city district",
   "type": "object",
   "examples": [
