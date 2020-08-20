@@ -95,7 +95,7 @@ class Schematic {
   /**
    * Returns a JSON Schema object for the given entityName.
    * If necessary, builds the Schema object based on the entity
-   * definition found in definitions.json.js
+   * definition found in dictionary.json.js
    */
   static getSchema (entityName) {
     if (!Schematic._schemas) {
@@ -111,7 +111,7 @@ class Schematic {
   }
 
   /**
-   * Builds a JSON Schema object for the entity definition in definitions.json.js
+   * Builds a JSON Schema object for the entity definition in dictionary.json.js
    */
   static _buildSchemaForEntity (entityName) {
     const entity = Schematic.getEntityDefinition(entityName)
