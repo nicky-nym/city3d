@@ -69,7 +69,6 @@ describe('Storey', function () {
 
   describe('#makeModelFromSpec', function () {
     it('should succeed if passed a good spec.', function () {
-      // See also model_tests.js, which tests all the examples in storey.schema.json.js.
       // TODO: test the result.
       const goodJSON = {
         context: 'city3d',

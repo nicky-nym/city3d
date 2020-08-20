@@ -28,7 +28,7 @@ class District extends Model {
    * Create a new instance of a specified District, and generate the Geometry objects for it.
    * @param {string} [name] - a display name for this individual instance at a given placement
    * @param {pose} [pose] - the location and orientation of this parcel
-   * @param {object} [spec] - a specification object that is valid against district.schema.json.js
+   * @param {object} [spec] - a specification object that is valid against dictionary.json.js
    * @param {SpecReader} [specReader] - an instance of a SpecReader, for adding content models in the district
    */
   constructor ({
@@ -46,7 +46,7 @@ class District extends Model {
 
   /**
    * Generate Geometry objects corresponding to a specification.
-   * @param {object} spec - an specification object that is valid against district.schema.json.js
+   * @param {object} spec - an specification object that is valid against dictionary.json.js
    * @param {pose} [pose] - the location and orientation of this part
    */
   makeModelFromSpec (spec, pose, specReader) {

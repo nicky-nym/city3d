@@ -32,7 +32,6 @@ import { UNIT } from '../core/unit.js'
  * Pose is a class for representing how an instance of a 3D object is placed in a position.
  * A pose is a simple sort of 3D transformation. It allows for 3D translations,
  * 2D rotations, and 1D mirroring.
- * See: pose.schema.json.js
  */
 class Pose {
   static create (values) {

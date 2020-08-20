@@ -23,7 +23,7 @@ class Model extends FeatureLODGroup {
    * Creates a Model instance.
    * @param {object} [args] - an object with key-value arguments
    * @param {string} [args.name] - optional name for this model instance
-   * @param {object} [args.spec] - optional specification object that is valid against building.schema.json.js
+   * @param {object} [args.spec] - optional specification object that is valid against dictionary.json.js
    */
   constructor (options = {}) {
     const { name, spec, ...remainingOptions } = options

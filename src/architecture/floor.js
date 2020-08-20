@@ -63,7 +63,7 @@ class Floor extends Model {
    * Creates an instance for the floor of a storey.
    * @param {string} [name]
    * @param {pose} [pose] - the location and orientation
-   * @param {object} [spec] - a specification object that is valid against floor.schema.json.js
+   * @param {object} [spec] - a specification object that is valid against dictionary.json.js
    */
   constructor ({
     name = 'Floor',
@@ -78,7 +78,7 @@ class Floor extends Model {
 
   /**
    * Generate Geometry objects corresponding to a specification.
-   * @param {object} spec - an specification object that is valid against floor.schema.json.js
+   * @param {object} spec - an specification object that is valid against dictionary.json.js
    * @param {pose} [pose] - the location and orientation
    */
   makeModelFromSpec (spec, pose) {

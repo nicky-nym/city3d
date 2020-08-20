@@ -7,28 +7,31 @@
 
 import { Schematic } from '../../../src/schemas/schematic.js'
 
-import BUILDING from '../../../src/schemas/building.schema.json.js'
-import CEILING from '../../../src/schemas/ceiling.schema.json.js'
-import CITY from '../../../src/schemas/city.schema.json.js'
-import COPY from '../../../src/schemas/copy.schema.json.js'
-import DISTRICT from '../../../src/schemas/district.schema.json.js'
-import DOOR from '../../../src/schemas/door.schema.json.js'
-import FLOOR from '../../../src/schemas/floor.schema.json.js'
-import GRID from '../../../src/schemas/grid.schema.json.js'
-import LINE from '../../../src/schemas/line.schema.json.js'
-import OUTLINE from '../../../src/schemas/outline.schema.json.js'
-import PARCEL from '../../../src/schemas/parcel.schema.json.js'
-import PITCH from '../../../src/schemas/pitch.schema.json.js'
-import POSE from '../../../src/schemas/pose.schema.json.js'
-import ROOF from '../../../src/schemas/roof.schema.json.js'
-import ROOM from '../../../src/schemas/room.schema.json.js'
-import ROUTE from '../../../src/schemas/route.schema.json.js'
-import STOREY from '../../../src/schemas/storey.schema.json.js'
-import STRUCTURE from '../../../src/schemas/structure.schema.json.js'
-import SURFACE from '../../../src/schemas/surface.schema.json.js'
-import WALL from '../../../src/schemas/wall.schema.json.js'
-import WINDOW from '../../../src/schemas/window.schema.json.js'
-import XY from '../../../src/schemas/xy.schema.json.js'
+// TODO: refactor to merge lists in all_examples.schema_tests.js and spec_reader_tests.js
+import BUILDING from '../../../content/entities/building/building.examples.json.js'
+import CEILING from '../../../content/entities/ceiling/ceiling.examples.json.js'
+import CITY from '../../../content/entities/city/city.examples.json.js'
+import COPY from '../../../content/datatypes/copy/copy.examples.json.js'
+import DISTRICT from '../../../content/entities/district/district.examples.json.js'
+import DOOR from '../../../content/entities/door/door.examples.json.js'
+import FLOOR from '../../../content/entities/floor/floor.examples.json.js'
+import GRID from '../../../content/datatypes/grid/grid.examples.json.js'
+import LINE from '../../../content/datatypes/line/line.examples.json.js'
+import METADATA from '../../../content/datatypes/metadata/metadata.examples.json.js'
+import OUTLINE from '../../../content/datatypes/outline/outline.examples.json.js'
+import PARCEL from '../../../content/entities/parcel/parcel.examples.json.js'
+import PITCH from '../../../content/datatypes/pitch/pitch.examples.json.js'
+import POSE from '../../../content/datatypes/pose/pose.examples.json.js'
+import ROOF from '../../../content/entities/roof/roof.examples.json.js'
+import ROOM from '../../../content/entities/room/room.examples.json.js'
+import ROUTE from '../../../content/entities/route/route.examples.json.js'
+import STOREY from '../../../content/entities/storey/storey.examples.json.js'
+import STRUCTURE from '../../../content/entities/structure/structure.examples.json.js'
+import SURFACE from '../../../content/datatypes/surface/surface.examples.json.js'
+import WALL from '../../../content/entities/wall/wall.examples.json.js'
+import WINDOW from '../../../content/entities/window/window.examples.json.js'
+import XY from '../../../content/datatypes/xy/xy.examples.json.js'
+// import XYZ from '../../../content/datatypes/xyz/xyz.examples.json.js'
 
 /* global describe, it */
 
@@ -37,30 +40,29 @@ describe('TYPES', function () {
     COPY,
     GRID,
     LINE,
+    METADATA,
     OUTLINE,
     PITCH,
     POSE,
     SURFACE,
     XY
+    // TODO: XYZ
   }
   const types = Object.keys(TYPES).map(item => TYPES[item])
 
   types.forEach(schema => {
-    describe(schema.$id, function () {
+    describe(schema.$type, function () {
       it('should have examples.', function () {
         schema.should.have.property('examples')
         schema.examples.should.have.length.at.least(1)
       })
 
       it('should have only valid examples.', function () {
-        const validator = Schematic.getTypeValidator(schema.title.toLowerCase())
+        const validator = Schematic.getTypeValidator(schema.$type)
 
         schema.examples.forEach(example => {
           const msg = `example.name = ${example.name}`
           validator(example).should.equal(true, msg)
-          if (example.type) {
-            example.type.should.equal(schema.$id, msg)
-          }
         })
       })
     })
@@ -87,21 +89,19 @@ describe('ENTITIES', function () {
   const entities = Object.keys(ENTITIES).map(item => ENTITIES[item])
 
   entities.forEach(schema => {
-    describe(schema.$id, function () {
+    describe(schema.$type, function () {
       it('should have examples.', function () {
         schema.should.have.property('examples')
         schema.examples.should.have.length.at.least(1)
       })
 
       it('should have only valid examples.', function () {
-        const validator = Schematic.getEntityValidator(schema.title.toLowerCase())
+        const entityName = schema.$type.replace('.schema.json', '')
+        const validator = Schematic.getEntityValidator(entityName)
 
         schema.examples.forEach(example => {
           const msg = `example.name = ${example.name}`
           validator(example).should.equal(true, msg)
-          if (example.type) {
-            example.type.should.equal(schema.$id, msg)
-          }
         })
       })
     })

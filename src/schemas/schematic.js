@@ -8,9 +8,6 @@
 import Ajv from '../../node_modules/ajv/dist/ajv.min.js'
 import DICTIONARY from './dictionary.json.js'
 
-/// import DEFINITIONS from './definitions.json.js'
-/// import METADATA from './metadata.schema.json.js'
-
 /**
  * Schematic is a class for generating and providing JSON Schemas.
  * The Schematic code reads schema info in a DRY, concise format from

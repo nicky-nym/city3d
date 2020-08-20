@@ -16,7 +16,7 @@ class Window extends Opening {
    * Creates an instance of a window in a wall.
    * @param {string} [name]
    * @param {pose} [pose] - the location and orientation
-   * @param {object} [spec] - a specification object that is valid against window.schema.json.js
+   * @param {object} [spec] - a specification object that is valid against dictionary.json.js
    */
   constructor ({
     name = 'Window',
@@ -31,7 +31,7 @@ class Window extends Opening {
 
   /**
    * Generate Geometry objects corresponding to a specification.
-   * @param {object} spec - an specification object that is valid against window.schema.json.js
+   * @param {object} spec - an specification object that is valid against dictionary.json.js
    * @param {pose} [pose] - the location and orientation
    */
   makeModelFromSpec (spec, pose) {

@@ -24,7 +24,7 @@ class Staircase extends Model {
    * Creates an instance of a flight of stairs.
    * @param {string} [name]
    * @param {pose} [pose] - the location and orientation
-   * @param {object} [spec] - a specification object that is valid against staircase.schema.json.js
+   * @param {object} [spec] - a specification object that is valid against dictionary.json.js
    */
   constructor ({
     name = 'Staircase',
@@ -39,7 +39,7 @@ class Staircase extends Model {
 
   /**
    * Generate Geometry objects corresponding to a specification.
-   * @param {object} spec - an specification object that is valid against staircase.schema.json.js
+   * @param {object} spec - an specification object that is valid against dictionary.json.js
    * @param {pose} [pose] - the location and orientation
    */
   makeModelFromSpec (spec, pose) {

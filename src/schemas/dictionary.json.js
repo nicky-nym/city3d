@@ -512,7 +512,7 @@ export default /* eslint-disable */
           "type": "string",
         },
         "material": {
-          "description": "TODO: refactor this with the 'material' in surface.schema.json.js",
+          "description": "TODO: refactor this with the 'material' in 'surface'",
           "type": "string",
         },
         "vertices": {

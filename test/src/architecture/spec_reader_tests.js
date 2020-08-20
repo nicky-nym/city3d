@@ -8,34 +8,36 @@
 import { Pose } from '../../../src/core/pose.js'
 import { SpecReader } from '../../../src/architecture/spec_reader.js'
 
-import METADATA from '../../../src/schemas/metadata.schema.json.js'
+// TODO: refactor to merge lists in all_examples.schema_tests.js and spec_reader_tests.js
+import BUILDING from '../../../content/entities/building/building.examples.json.js'
+import CEILING from '../../../content/entities/ceiling/ceiling.examples.json.js'
+import CITY from '../../../content/entities/city/city.examples.json.js'
+import COPY from '../../../content/datatypes/copy/copy.examples.json.js'
+import DISTRICT from '../../../content/entities/district/district.examples.json.js'
+import DOOR from '../../../content/entities/door/door.examples.json.js'
+import FLOOR from '../../../content/entities/floor/floor.examples.json.js'
+import GRID from '../../../content/datatypes/grid/grid.examples.json.js'
+import LINE from '../../../content/datatypes/line/line.examples.json.js'
+import METADATA from '../../../content/datatypes/metadata/metadata.examples.json.js'
+import OUTLINE from '../../../content/datatypes/outline/outline.examples.json.js'
+import PARCEL from '../../../content/entities/parcel/parcel.examples.json.js'
+import PITCH from '../../../content/datatypes/pitch/pitch.examples.json.js'
+import POSE from '../../../content/datatypes/pose/pose.examples.json.js'
+import ROOF from '../../../content/entities/roof/roof.examples.json.js'
+import ROOM from '../../../content/entities/room/room.examples.json.js'
+import ROUTE from '../../../content/entities/route/route.examples.json.js'
+import STOREY from '../../../content/entities/storey/storey.examples.json.js'
+import STRUCTURE from '../../../content/entities/structure/structure.examples.json.js'
+import SURFACE from '../../../content/datatypes/surface/surface.examples.json.js'
+import WALL from '../../../content/entities/wall/wall.examples.json.js'
+import WINDOW from '../../../content/entities/window/window.examples.json.js'
+import XY from '../../../content/datatypes/xy/xy.examples.json.js'
+import XYZ from '../../../content/datatypes/xyz/xyz.examples.json.js'
 
-import BUILDING from '../../../src/schemas/building.schema.json.js'
-import CEILING from '../../../src/schemas/ceiling.schema.json.js'
-import CITY from '../../../src/schemas/city.schema.json.js'
-import COPY from '../../../src/schemas/copy.schema.json.js'
-import DISTRICT from '../../../src/schemas/district.schema.json.js'
-import DOOR from '../../../src/schemas/door.schema.json.js'
-import FLOOR from '../../../src/schemas/floor.schema.json.js'
-import GRID from '../../../src/schemas/grid.schema.json.js'
-import LINE from '../../../src/schemas/line.schema.json.js'
-import OUTLINE from '../../../src/schemas/outline.schema.json.js'
-import PARCEL from '../../../src/schemas/parcel.schema.json.js'
-import PITCH from '../../../src/schemas/pitch.schema.json.js'
-import POSE from '../../../src/schemas/pose.schema.json.js'
-import ROOF from '../../../src/schemas/roof.schema.json.js'
-import ROOM from '../../../src/schemas/room.schema.json.js'
-import ROUTE from '../../../src/schemas/route.schema.json.js'
-import STOREY from '../../../src/schemas/storey.schema.json.js'
-import STRUCTURE from '../../../src/schemas/structure.schema.json.js'
-import SURFACE from '../../../src/schemas/surface.schema.json.js'
-import VEHICLE from '../../../src/schemas/vehicle.schema.json.js'
-import WALL from '../../../src/schemas/wall.schema.json.js'
-import WINDOW from '../../../src/schemas/window.schema.json.js'
-import XY from '../../../src/schemas/xy.schema.json.js'
-import XYZ from '../../../src/schemas/xyz.schema.json.js'
+/* global describe, it, expect */
+/* eslint-disable no-unused-expressions */
 
-const SCHEMA = {
+const EXAMPLES = {
   METADATA,
 
   BUILDING,
@@ -57,15 +59,38 @@ const SCHEMA = {
   STOREY,
   STRUCTURE,
   SURFACE,
-  VEHICLE,
   WALL,
   WINDOW,
   XY,
   XYZ
 }
 
-/* global describe, it, expect */
-/* eslint-disable no-unused-expressions */
+const schemaIds = [
+  'metadata.schema.json',
+  'building.schema.json',
+  'ceiling.schema.json',
+  'city.schema.json',
+  'copy.schema.json',
+  'district.schema.json',
+  'door.schema.json',
+  'floor.schema.json',
+  'grid.schema.json',
+  'line.schema.json',
+  'outline.schema.json',
+  'parcel.schema.json',
+  'pitch.schema.json',
+  'pose.schema.json',
+  'roof.schema.json',
+  'room.schema.json',
+  'route.schema.json',
+  'storey.schema.json',
+  'structure.schema.json',
+  'surface.schema.json',
+  'wall.schema.json',
+  'window.schema.json',
+  'xy.schema.json',
+  'xyz.schema.json'
+]
 
 const notYetWorking = [
   'district.schema.json', // needs unit conversion
@@ -76,8 +101,6 @@ const notYetWorking = [
 ]
 
 describe('SpecReader', function () {
-  const schemas = Object.keys(SCHEMA).filter(item => item !== 'DEFINITIONS').map(item => SCHEMA[item])
-
   describe('#_isVanillaObject', function () {
     it('should accept a simple object', function () {
       SpecReader._isVanillaObject({}).should.be.true
@@ -187,10 +210,10 @@ describe('SpecReader', function () {
       expect(() => SpecReader.canInstantiateType('orange.schema.json')).to.throw(expectedSubstring)
     })
 
-    schemas.forEach(schema => {
-      describe(schema.$id, function () {
-        it('should not throw for schemas in SCHEMA.', function () {
-          expect(() => SpecReader.canInstantiateType(schema.$id)).not.to.throw()
+    schemaIds.forEach(schemaId => {
+      describe(schemaId, function () {
+        it('should not throw for known schemas.', function () {
+          expect(() => SpecReader.canInstantiateType(schemaId)).not.to.throw()
         })
       })
     })
@@ -222,15 +245,20 @@ describe('SpecReader', function () {
       expect(() => reader.makeObjectFromSpec(spec, new Pose())).to.throw(expectedSubstring)
     })
 
-    schemas.forEach(schema => {
-      describe(schema.$id, function () {
-        if (SpecReader.canInstantiateType(schema.$id)) {
+    const exampleFiles = Object.keys(EXAMPLES).map(item => EXAMPLES[item])
+    exampleFiles.forEach(content => {
+      describe(content.$type, function () {
+        let contentType = content.$type
+        if (!contentType.includes('.schema.json')) {
+          contentType += '.schema.json'
+        }
+        if (SpecReader.canInstantiateType(contentType)) {
           it('should succeed for every example.', function () {
-            if (notYetWorking.includes(schema.$id)) {
+            if (notYetWorking.includes(contentType)) {
               this.skip()
             }
 
-            schema.examples.forEach(example => {
+            content.examples.forEach(example => {
               const msg = `example.name = '${example.name}'`
 
               expect(() => reader.makeObjectFromSpec(example, new Pose()), msg).to.not.throw()
