@@ -6,13 +6,13 @@
  */
 
 import PARCEL_353_SPEC from '../../../content/parcels/parcel_353.json.js'
-import { Schematic } from '../../../src/schemas/schematic.js'
+import { Schema } from '../../../src/schemas/schema.js'
 
 /* global describe, it */
 
 describe('parcel_353.json.js', function () {
   describe('parcel 353 schema validation', function () {
-    const validator = Schematic.getEntityValidator('parcel')
+    const validator = Schema.getEntityValidator('parcel')
 
     it('should accept the entire parcel spec', function () {
       const goodJSON = PARCEL_353_SPEC

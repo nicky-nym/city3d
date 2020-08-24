@@ -6,13 +6,13 @@
  */
 
 import GARAGE_SPEC from '../../../content/buildings/garage.json.js'
-import { Schematic } from '../../../src/schemas/schematic.js'
+import { Schema } from '../../../src/schemas/schema.js'
 
 /* global describe, it */
 
 describe('garage.json.js', function () {
   describe('garage schema validation', function () {
-    const validator = Schematic.getEntityValidator('building')
+    const validator = Schema.getEntityValidator('building')
 
     it('should accept all the entire garage spec', function () {
       const goodJSON = GARAGE_SPEC

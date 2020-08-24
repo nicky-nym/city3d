@@ -5,13 +5,13 @@
  * For more information, please refer to <http://unlicense.org>
  */
 
-import { Schematic } from '../../../src/schemas/schematic.js'
+import { Schema } from '../../../src/schemas/schema.js'
 
 /* global describe, it */
 
 describe('SCHEMA', function () {
   describe('SCHEMA.typeDefs.surface', function () {
-    const validator = Schematic.getTypeValidator('surface')
+    const validator = Schema.getTypeValidator('surface')
 
     it('should accept a simple valid surface object', function () {
       const goodJSON = {

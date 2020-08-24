@@ -5,7 +5,7 @@
  * For more information, please refer to <http://unlicense.org>
  */
 
-import { Schematic } from '../../../src/schemas/schematic.js'
+import { Schema } from '../../../src/schemas/schema.js'
 
 // TODO: refactor to merge lists in all_examples.schema_tests.js and spec_reader_tests.js
 import BUILDING from '../../../content/entities/building/building.examples.json.js'
@@ -58,7 +58,7 @@ describe('TYPES', function () {
       })
 
       it('should have only valid examples.', function () {
-        const validator = Schematic.getTypeValidator(schema.$type)
+        const validator = Schema.getTypeValidator(schema.$type)
 
         schema.examples.forEach(example => {
           const msg = `example.name = ${example.name}`
@@ -97,7 +97,7 @@ describe('ENTITIES', function () {
 
       it('should have only valid examples.', function () {
         const entityName = schema.$type.replace('.schema.json', '')
-        const validator = Schematic.getEntityValidator(entityName)
+        const validator = Schema.getEntityValidator(entityName)
 
         schema.examples.forEach(example => {
           const msg = `example.name = ${example.name}`

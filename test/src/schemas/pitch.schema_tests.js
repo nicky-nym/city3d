@@ -5,13 +5,13 @@
  * For more information, please refer to <http://unlicense.org>
  */
 
-import { Schematic } from '../../../src/schemas/schematic.js'
+import { Schema } from '../../../src/schemas/schema.js'
 
 /* global describe, it */
 
 describe('SCHEMA', function () {
   describe('SCHEMA.typeDefs.pitch', function () {
-    const validator = Schematic.getTypeValidator('pitch')
+    const validator = Schema.getTypeValidator('pitch')
 
     it('should accept a simple valid {rise:, run:} object', function () {
       const goodJSON = { rise: 4, run: 12 }

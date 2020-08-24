@@ -5,13 +5,13 @@
  * For more information, please refer to <http://unlicense.org>
  */
 
-import { Schematic } from '../../../src/schemas/schematic.js'
+import { Schema } from '../../../src/schemas/schema.js'
 
 /* global describe, it */
 
 describe('SCHEMA', function () {
   describe('SCHEMA.entityDefs.district', function () {
-    const validator = Schematic.getEntityValidator('district')
+    const validator = Schema.getEntityValidator('district')
 
     it('should accept a simple valid district spec', function () {
       const goodJSON = {

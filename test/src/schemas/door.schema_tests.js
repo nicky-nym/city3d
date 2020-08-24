@@ -5,13 +5,13 @@
  * For more information, please refer to <http://unlicense.org>
  */
 
-import { Schematic } from '../../../src/schemas/schematic.js'
+import { Schema } from '../../../src/schemas/schema.js'
 
 /* global describe, it */
 
 describe('SCHEMA', function () {
   describe('SCHEMA.entityDefs.door', function () {
-    const validator = Schematic.getEntityValidator('door')
+    const validator = Schema.getEntityValidator('door')
 
     it('should accept a simple valid door spec', function () {
       const goodJSON = {

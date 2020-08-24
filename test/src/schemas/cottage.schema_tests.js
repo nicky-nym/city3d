@@ -6,13 +6,13 @@
  */
 
 import COTTAGE_SPEC from '../../../content/buildings/cottage.json.js'
-import { Schematic } from '../../../src/schemas/schematic.js'
+import { Schema } from '../../../src/schemas/schema.js'
 
 /* global describe, it */
 
 describe('cottage.json.js', function () {
   describe('cottage schema validation', function () {
-    const validator = Schematic.getEntityValidator('building')
+    const validator = Schema.getEntityValidator('building')
 
     it('should accept all the entire cottage spec', function () {
       const goodJSON = COTTAGE_SPEC

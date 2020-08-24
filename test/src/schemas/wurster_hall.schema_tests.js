@@ -6,13 +6,13 @@
  */
 
 import WURSTER_HALL_SPEC from '../../../content/buildings/wurster_hall.json.js'
-import { Schematic } from '../../../src/schemas/schematic.js'
+import { Schema } from '../../../src/schemas/schema.js'
 
 /* global describe, it */
 
 describe('wurster_hall.json.js', function () {
   describe('wurster hall schema validation', function () {
-    const validator = Schematic.getEntityValidator('building')
+    const validator = Schema.getEntityValidator('building')
 
     it('should accept all the entire wurster hall spec', function () {
       const goodJSON = WURSTER_HALL_SPEC

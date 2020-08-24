@@ -6,13 +6,13 @@
  */
 
 import HIGHRISE_SPEC from '../../../content/buildings/highrise.json.js'
-import { Schematic } from '../../../src/schemas/schematic.js'
+import { Schema } from '../../../src/schemas/schema.js'
 
 /* global describe, it */
 
 describe('highrise.json.js', function () {
   describe('highrise schema validation', function () {
-    const validator = Schematic.getEntityValidator('building')
+    const validator = Schema.getEntityValidator('building')
 
     it('should accept all the entire highrise spec', function () {
       const goodJSON = HIGHRISE_SPEC

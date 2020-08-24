@@ -5,13 +5,13 @@
  * For more information, please refer to <http://unlicense.org>
  */
 
-import { Schematic } from '../../../src/schemas/schematic.js'
+import { Schema } from '../../../src/schemas/schema.js'
 
 /* global describe, it */
 
 describe('SCHEMA', function () {
   describe('SCHEMA.typeDefs.pose', function () {
-    const validator = Schematic.getTypeValidator('pose')
+    const validator = Schema.getTypeValidator('pose')
 
     it('should accept a simple valid pose object', function () {
       const goodJSON = {

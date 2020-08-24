@@ -5,13 +5,13 @@
  * For more information, please refer to <http://unlicense.org>
  */
 
-import { Schematic } from '../../../src/schemas/schematic.js'
+import { Schema } from '../../../src/schemas/schema.js'
 
 /* global describe, it */
 
 describe('SCHEMA', function () {
   describe('SCHEMA.typeDefs.outline', function () {
-    const validator = Schematic.getTypeValidator('outline')
+    const validator = Schema.getTypeValidator('outline')
 
     it('should accept a simple valid polygon spec', function () {
       const goodJSON = {

@@ -5,13 +5,13 @@
  * For more information, please refer to <http://unlicense.org>
  */
 
-import { Schematic } from '../../../src/schemas/schematic.js'
+import { Schema } from '../../../src/schemas/schema.js'
 
 /* global describe, it */
 
 describe('SCHEMA', function () {
   describe('SCHEMA.typeDefs.copy', function () {
-    const validator = Schematic.getTypeValidator('copy')
+    const validator = Schema.getTypeValidator('copy')
 
     it('should accept a simple valid copy spec', function () {
       const goodJSON = {

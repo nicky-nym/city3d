@@ -5,14 +5,14 @@
  * For more information, please refer to <http://unlicense.org>
  */
 
-import { Schematic } from '../../../src/schemas/schematic.js'
+import { Schema } from '../../../src/schemas/schema.js'
 import { xyz } from '../../../src/core/util.js'
 
 /* global describe, it */
 
 describe('SCHEMA', function () {
   describe('SCHEMA.typeDefs.xyzOrRef', function () {
-    const validator = Schematic.getTypeValidator('xyzOrRef')
+    const validator = Schema.getTypeValidator('xyzOrRef')
 
     it('should accept a simple valid {xyz} object', function () {
       const goodJSON = { x: 0, y: 0, z: 0 }

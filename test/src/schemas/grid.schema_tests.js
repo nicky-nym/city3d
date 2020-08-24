@@ -5,13 +5,13 @@
  * For more information, please refer to <http://unlicense.org>
  */
 
-import { Schematic } from '../../../src/schemas/schematic.js'
+import { Schema } from '../../../src/schemas/schema.js'
 
 /* global describe, it */
 
 describe('SCHEMA', function () {
   describe('SCHEMA.typeDefs.grid', function () {
-    const validator = Schematic.getTypeValidator('grid')
+    const validator = Schema.getTypeValidator('grid')
 
     it('should accept a simple valid grid object', function () {
       const goodJSON = { rows: 3, cols: 8 }
