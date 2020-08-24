@@ -33,7 +33,7 @@ class Building extends Structure {
 
   /**
    * Generate Geometry objects corresponding to a specification.
-   * @param {object} spec - an specification object that is valid against dictionary.json.js
+   * @param {object} spec - an specification object that is valid against schema.defs.json.js
    * @param {pose} [pose] - the location and orientation of this parcel
    */
   makeModelFromSpec (spec, pose) {

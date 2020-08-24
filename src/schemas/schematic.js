@@ -6,12 +6,13 @@
  */
 
 import Ajv from '../../node_modules/ajv/dist/ajv.min.js'
-import DICTIONARY from './dictionary.json.js'
+import DICTIONARY from './schema.defs.json.js'
 
 /**
  * Schematic is a class for generating and providing JSON Schemas.
  * The Schematic code reads schema info in a DRY, concise format from
- * dictionary.json.js, and then uses that concise info to generate full-fledged
+ * schema.defs.json.js
+ *, and then uses that concise info to generate full-fledged
  * schemas in the JSON Schema format (see https://json-schema.org/), which are
  * used to run schema validation checks on building spec files.
  */
@@ -57,7 +58,8 @@ class Schematic {
   }
 
   /**
-   * Returns a type definition found in dictionary.json.js
+   * Returns a type definition found in schema.defs.json.js
+   *
    */
   static getTypeDefinition (typeName) {
     const typeDefinition = DICTIONARY.typeDefinitions[typeName]
@@ -69,7 +71,8 @@ class Schematic {
   }
 
   /**
-   * Returns an property definition found in dictionary.json.js
+   * Returns an property definition found in schema.defs.json.js
+   *
    */
   static getPropertyDefinition (propertyName) {
     const propertyDefinition = DICTIONARY.propertyDefinitions[propertyName]
@@ -81,7 +84,8 @@ class Schematic {
   }
 
   /**
-   * Returns an entity definition found in dictionary.json.js
+   * Returns an entity definition found in schema.defs.json.js
+   *
    */
   static getEntityDefinition (entityName) {
     const entityDefinition = DICTIONARY.entityDefinitions[entityName]
@@ -95,7 +99,8 @@ class Schematic {
   /**
    * Returns a JSON Schema object for the given entityName.
    * If necessary, builds the Schema object based on the entity
-   * definition found in dictionary.json.js
+   * definition found in schema.defs.json.js
+   *
    */
   static getSchema (entityName) {
     if (!Schematic._schemas) {
@@ -111,7 +116,8 @@ class Schematic {
   }
 
   /**
-   * Builds a JSON Schema object for the entity definition in dictionary.json.js
+   * Builds a JSON Schema object for the entity definition in schema.defs.json.js
+   *
    */
   static _buildSchemaForEntity (entityName) {
     const entity = Schematic.getEntityDefinition(entityName)

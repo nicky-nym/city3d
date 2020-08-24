@@ -6,7 +6,7 @@
  */
 
 import { Schematic } from '../../../src/schemas/schematic.js'
-import DICTIONARY from '../../../src/schemas/dictionary.json.js'
+import DICTIONARY from '../../../src/schemas/schema.defs.json.js'
 
 /* global describe, it, should */
 /* eslint-disable no-unused-expressions */

@@ -22,7 +22,7 @@ const GREEN = 0x003300
  * The overall shape of the roof as a whole, including all the different roof faces and/or surfaces.
  */
 const FORM = Object.freeze({
-  // NOTE: these values must exactly match the values in dictionary.json.js
+  // NOTE: these values must exactly match the values in schema.defs.json.js
   NONE: 'none',
   FLAT: 'flat',
   PITCHED: 'pitched',
@@ -51,7 +51,7 @@ class Roof extends Model {
   /**
    * Create a new instance of a specified Roof, and generate the Geometry objects for it.
    * @param {pose} [pose] - the location and orientation
-   * @param {object} [spec] - an specification object that is valid against dictionary.json.js
+   * @param {object} [spec] - an specification object that is valid against schema.defs.json.js
    * @param {Wall[]} [walls] - an array of Wall instances
    */
   constructor ({ pose, spec, walls } = {}) {
@@ -88,7 +88,7 @@ class Roof extends Model {
 
   /**
    * Generate Geometry objects corresponding to a specification.
-   * @param {object} spec - a specification object that is valid against dictionary.json.js
+   * @param {object} spec - a specification object that is valid against schema.defs.json.js
    * @param {pose} [pose] - the location and orientation
    */
   makeModelFromSpec (spec, pose, walls) {

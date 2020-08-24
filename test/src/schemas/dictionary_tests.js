@@ -5,7 +5,7 @@
  * For more information, please refer to <http://unlicense.org>
  */
 
-import DICTIONARY from '../../../src/schemas/dictionary.json.js'
+import DICTIONARY from '../../../src/schemas/schema.defs.json.js'
 
 /* global describe, it */
 /* eslint-disable no-unused-expressions */

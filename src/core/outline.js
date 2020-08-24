@@ -9,13 +9,13 @@ import { Pitch } from './pitch.js'
 import { rectangleOfSize, xyzAdd } from './util.js'
 
 const SHAPE = Object.freeze({
-  // NOTE: these values must exactly match the values in dictionary.json.js
+  // NOTE: these values must exactly match the values in schema.defs.json.js
   RECTANGLE: 'rectangle',
   POLYGON: 'polygon'
 })
 
 const STYLE = Object.freeze({
-  // NOTE: these values must exactly match the values in dictionary.json.js
+  // NOTE: these values must exactly match the values in schema.defs.json.js
   ARCHED: 'arched',
   GABLED: 'gabled'
 })
@@ -27,7 +27,7 @@ const STYLE = Object.freeze({
 class Outline {
   /**
    * Creates a new instance with a given shape.
-   * @param {object} outlineSpec - an outline spec value, as defined in dictionary.json.js
+   * @param {object} outlineSpec - an outline spec value, as defined in schema.defs.json.js
    * @param {number} [inset] - an optional inner border distance to subtract around the whole outline
    */
   constructor (outlineSpec, inset) {
@@ -64,7 +64,7 @@ class Outline {
    * outline.cornersFromSpec({ shape: 'rectangle', size: xy(10, 20) })
    * @example:
    * outline.cornersFromSpec({ shape: 'polygon', corners: [xy(0, 0), xy(5, 10), xy(-5, 10) })
-   * @param {object} spec - shape specification object as defined in dictionary.json.js
+   * @param {object} spec - shape specification object as defined in schema.defs.json.js
    * @param {number} [inset] - an optional inner border distance to subtract around the whole outline
    * @returns {array} an array of {x, y} corners
    */

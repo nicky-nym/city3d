@@ -23,7 +23,7 @@ const DEFAULT_WALL_THICKNESS = 0.5
  * The shape of this section of wall as it meets the roof.
  */
 const ROOFLINE = Object.freeze({
-  // NOTE: these values must exactly match the values in dictionary.json.js
+  // NOTE: these values must exactly match the values in schema.defs.json.js
   NONE: 'none',
   GABLED: 'gabled',
   PITCHED: 'pitched',
@@ -42,7 +42,7 @@ class Wall extends Model {
    * Creates an instance of a wall between two points.
    * @param {string} [name]
    * @param {pose} [pose] - the location and orientation
-   * @param {object} [spec] - a specification object that is valid against dictionary.json.js
+   * @param {object} [spec] - a specification object that is valid against schema.defs.json.js
    */
   constructor ({
     name = 'Wall',
@@ -118,7 +118,7 @@ class Wall extends Model {
 
   /**
    * Generate Geometry objects corresponding to a specification.
-   * @param {object} spec - an specification object that is valid against dictionary.json.js
+   * @param {object} spec - an specification object that is valid against schema.defs.json.js
    * @param {pose} [pose] - the location and orientation
    */
   makeModelFromSpec (spec, pose) {

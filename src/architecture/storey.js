@@ -75,7 +75,7 @@ class Storey extends Model {
    * @param {string} [name] - name of the storey
    * @param {xy[]} outline - vertices of floor, expected to be in counterclockwise order
    * @param {pose} [pose] - the location and orientation of this storey
-   * @param {object} [spec] - a specification object that is valid against dictionary.json.js
+   * @param {object} [spec] - a specification object that is valid against schema.defs.json.js
    */
   constructor ({
     name,
@@ -108,7 +108,7 @@ class Storey extends Model {
 
   /**
    * Generate Geometry objects corresponding to a specification.
-   * @param {object} spec - an specification object that is valid against dictionary.json.js
+   * @param {object} spec - an specification object that is valid against schema.defs.json.js
    * @param {pose} [pose] - the location and orientation of this storey
    */
   makeModelFromSpec (spec, pose) {
@@ -141,7 +141,7 @@ class Storey extends Model {
 
   /**
    * Generate Geometry objects corresponding to a specification.
-   * @param {object} spec - an specification object that is valid against dictionary.json.js
+   * @param {object} spec - an specification object that is valid against schema.defs.json.js
    * @param {pose} [pose] - the location and orientation of this storey
    */
   makeModelForOneLOD (parentGroup, levelOfDetail, spec, pose) {
