@@ -10,7 +10,7 @@ import { Schematic } from '../../../src/schemas/schematic.js'
 /* global describe, it */
 
 describe('DICTIONARY', function () {
-  describe('DICTIONARY.typeDefinitions.pose', function () {
+  describe('DICTIONARY.typeDefs.pose', function () {
     const validator = Schematic.getTypeValidator('pose')
 
     it('should accept a simple valid pose object', function () {

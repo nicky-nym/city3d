@@ -11,16 +11,16 @@ import DICTIONARY from '../../../src/schemas/schema.defs.json.js'
 /* eslint-disable no-unused-expressions */
 
 describe('dictionary', function () {
-  describe('dictionary.entityDefinitions', function () {
-    const entityDefinitions = DICTIONARY.entityDefinitions
-    const entityKeys = Object.keys(entityDefinitions)
+  describe('dictionary.entityDefs', function () {
+    const entityDefs = DICTIONARY.entityDefs
+    const entityKeys = Object.keys(entityDefs)
 
     it('should have an entry for the "building" entity definition', function () {
-      entityDefinitions.building.should.exist
+      entityDefs.building.should.exist
     })
 
     it('should have properties for the "building" entity definition', function () {
-      entityDefinitions.building.properties.should.exist
+      entityDefs.building.properties.should.exist
     })
 
     it('should have entries for all the entity definitions', function () {
@@ -28,8 +28,8 @@ describe('dictionary', function () {
     })
   })
 
-  describe('dictionary.propertyDefinitions', function () {
-    const propertyDefinitionKeys = Object.keys(DICTIONARY.propertyDefinitions)
+  describe('dictionary.propertyDefs', function () {
+    const propertyDefinitionKeys = Object.keys(DICTIONARY.propertyDefs)
 
     it('should have entries for lots of property definitions', function () {
       propertyDefinitionKeys.length.should.equal(51)

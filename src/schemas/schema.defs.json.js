@@ -1,7 +1,7 @@
 export default /* eslint-disable */
 {
-  /* See "propertyDefinitions" section below for definitions of the properties */
-  "entityDefinitions": {
+  /* See "propertyDefs" section below for definitions of the properties */
+  "entityDefs": {
     "file": {
       "required": [],
       "additionalProperties": false,
@@ -193,7 +193,7 @@ export default /* eslint-disable */
     "window": {
       "description": "A window in a window frame, or a set of windows sharing a window frame.",
       "properties": {
-        "$ref": { "$ref": "~/typeDefinitions/$$ref" },
+        "$ref": { "$ref": "~/typeDefs/$$ref" },
         "type": { "const": "window.schema.json" },
         "unit": null,
         "motion": null,
@@ -205,16 +205,16 @@ export default /* eslint-disable */
       }
     }
   },
-  /* These are definitions of the properties used in the "entityDefinitions" section above */
-  "propertyDefinitions": {
-    "altitude": { "$ref": "~/typeDefinitions/numberOrRandom" },
+  /* These are definitions of the properties used in the "entityDefs" section above */
+  "propertyDefs": {
+    "altitude": { "$ref": "~/typeDefs/numberOrRandom" },
     "anchorPoint": {
       "description": "the point that serves as the center of the building when the building is place on a parcel",
-      "$ref": "~/typeDefinitions/xy"
+      "$ref": "~/typeDefs/xy"
     },
-    "at": { "$ref": "~/typeDefinitions/pose" },
-    "begin": { "$ref": "~/typeDefinitions/xyOrRef" },
-    "border": { "$ref": "~/typeDefinitions/outline" },
+    "at": { "$ref": "~/typeDefs/pose" },
+    "begin": { "$ref": "~/typeDefs/xyOrRef" },
+    "border": { "$ref": "~/typeDefs/outline" },
     "casing": { 
       "type": "object",
       "required": [  ],
@@ -233,7 +233,7 @@ export default /* eslint-disable */
     "contents": {
       "description": "other model objects that are inside this one, like a car in a garage, or a sofa in a living room",
       "type": "array",
-      "items": { "$ref": "~/typeDefinitions/copy" }
+      "items": { "$ref": "~/typeDefs/copy" }
     },
     "context": {
       "description": "use this so that people who come across our json file will have a chance of knowing what the file is about",
@@ -245,7 +245,7 @@ export default /* eslint-disable */
     },
     "districts": {
       "type": "array",
-      "items": { "$ref": "~/typeDefinitions/copy" }
+      "items": { "$ref": "~/typeDefs/copy" }
     },
     "doors": {
       "type": "array",
@@ -262,14 +262,14 @@ export default /* eslint-disable */
     "eaves": {
       "type": "number"
     },
-    "end": { "$ref": "~/typeDefinitions/xyOrRef" },
+    "end": { "$ref": "~/typeDefs/xyOrRef" },
     "extras": {
       "description": "any additional data to keep track of",
       "type": "object"
     },
     "fixtures": {
       "type": "array",
-      "items": { "$ref": "~/typeDefinitions/copy" }
+      "items": { "$ref": "~/typeDefs/copy" }
     },
     "floors": {
       "type": "array",
@@ -281,15 +281,15 @@ export default /* eslint-disable */
     "handleSide": {
       "enum": ["left", "center", "right"]
     },
-    "height": { "$ref": "~/typeDefinitions/numberOrRandom" },
-    "incline": { "$ref": "~/typeDefinitions/numberOrRandom" },
-    "leafCount": { "$ref": "~/typeDefinitions/grid" },
+    "height": { "$ref": "~/typeDefs/numberOrRandom" },
+    "incline": { "$ref": "~/typeDefs/numberOrRandom" },
+    "leafCount": { "$ref": "~/typeDefs/grid" },
     "lines": {
       "type": "array",
-      "items": { "$ref": "~/typeDefinitions/line" }
+      "items": { "$ref": "~/typeDefs/line" }
     },
-    "lites": { "$ref": "~/typeDefinitions/grid" },
-    "metadata": { "$ref": "~/typeDefinitions/metadata" },
+    "lites": { "$ref": "~/typeDefs/grid" },
+    "metadata": { "$ref": "~/typeDefs/metadata" },
     "mode": {
       "enum": ["canal", "walkway", "bikeway", "roadway"]
     },
@@ -303,15 +303,15 @@ export default /* eslint-disable */
     },
     "openings": {
       "type": "array",
-      "items": { "$ref": "~/typeDefinitions/outline" }
+      "items": { "$ref": "~/typeDefs/outline" }
     },
-    "outline": { "$ref": "~/typeDefinitions/outline" },
+    "outline": { "$ref": "~/typeDefs/outline" },
     "parapetHeight": {
       "type": "number"
     },
     "parcels": {
       "type": "array",
-      "items": { "$ref": "~/typeDefinitions/copy" }
+      "items": { "$ref": "~/typeDefs/copy" }
     },
     "pavement": {
       "description": "paved surfaces, like streets, sidewalks, driveways, and bike paths",
@@ -321,15 +321,15 @@ export default /* eslint-disable */
         "required": [],
         "properties": {
           "name": { "type": "string" },
-          "surface": { "$ref": "~/typeDefinitions/surface" },
-          "outline": { "$ref": "~/typeDefinitions/outline" }
+          "surface": { "$ref": "~/typeDefs/surface" },
+          "outline": { "$ref": "~/typeDefs/outline" }
         }
       }
     },
-    "pitch": { "$ref": "~/typeDefinitions/pitch" },
-    "repeat": { "$ref": "~/typeDefinitions/numberOrRandom" },
+    "pitch": { "$ref": "~/typeDefs/pitch" },
+    "repeat": { "$ref": "~/typeDefs/numberOrRandom" },
     /* TODO: fix me $$ref */
-    "$ref": { "$ref": "~/typeDefinitions/$$ref" },
+    "$ref": { "$ref": "~/typeDefs/$$ref" },
     "roof": { "$ref": "roof.schema.json" },
     "roofline": {
       "enum": ["none", "gabled", "pitched", "shed"]
@@ -340,7 +340,7 @@ export default /* eslint-disable */
     },
     "routes": {
       "type": "array",
-      /* TODO: "items": { "$ref": "~/entityDefinitions/route" } */
+      /* TODO: "items": { "$ref": "~/entityDefs/route" } */
       "items": { "$ref": "route.schema.json" }
     },
     "staircases": {
@@ -349,10 +349,10 @@ export default /* eslint-disable */
     },
     "storeys": {
       "type": "array",
-      /* TODO: { "$ref": "#/entityDefinitions/storey" } */
+      /* TODO: { "$ref": "#/entityDefs/storey" } */
       "items": { "$ref": "storey.schema.json" }
     },
-    "surface": { "$ref": "~/typeDefinitions/surface" },
+    "surface": { "$ref": "~/typeDefs/surface" },
     "unit": {
       "description": "the name of default unit of measure for distances",
       "type": "string"
@@ -382,22 +382,22 @@ export default /* eslint-disable */
         "required": [],
         "properties": {
           "name": { "type": "string" },
-          "outline": { "$ref": "~/typeDefinitions/outline" }
+          "outline": { "$ref": "~/typeDefs/outline" }
         }
       }
     },
     "waypoints": {
       "type": "array",
       "minItems": 2,
-      "items": { "$ref": "~/typeDefinitions/xyOrRef" }
+      "items": { "$ref": "~/typeDefs/xyOrRef" }
     },
     "windows": {
       "type": "array",
       "items": { "$ref": "window.schema.json" }
     }
   },
-  /* These are definitions of the data types used in the "propertyDefinitions" section above */
-  "typeDefinitions": {
+  /* These are definitions of the data types used in the "propertyDefs" section above */
+  "typeDefs": {
     "$$ref": {
       "examples": [
         '#/def/RECTANGLE',
@@ -430,11 +430,11 @@ export default /* eslint-disable */
         },
         "pose": {
           "description": "where the copy goes, and the direction it is oriented in",
-          "$ref": "~/typeDefinitions/pose"
+          "$ref": "~/typeDefs/pose"
         },
         // "repeat": {
         //   "description": "to make multiple copies at once, set the number of rows and columns",
-        //   "$ref": "~/typeDefinitions/grid"
+        //   "$ref": "~/typeDefs/grid"
         // },
         "repeat": {
           "description": "to make multiple copies at once, set the repeat count and offset",
@@ -445,7 +445,7 @@ export default /* eslint-disable */
               "type": "number"
             },
             "offset": {
-              "$ref": "~/typeDefinitions/pose"
+              "$ref": "~/typeDefs/pose"
             }
           }
         },
@@ -520,7 +520,7 @@ export default /* eslint-disable */
           "type": "array",
           "minItems": 2,
           "uniqueItems": false,
-          "items": { "$ref": "~/typeDefinitions/xyzOrRef" }
+          "items": { "$ref": "~/typeDefs/xyzOrRef" }
         },
         "radius": {
           "type": "number"
@@ -599,11 +599,11 @@ export default /* eslint-disable */
           "type": "array",
           "minItems": 3,
           "uniqueItems": false,
-          "items": { "$ref": "~/typeDefinitions/xyOrRef" }
+          "items": { "$ref": "~/typeDefs/xyOrRef" }
         },
         "size": { 
           "description": "for rectangles (or regular polygons), the size of the bounding box",
-          "$ref": "~/typeDefinitions/xy" 
+          "$ref": "~/typeDefs/xy" 
         },
         "top": { 
           "type": "object",
@@ -613,7 +613,7 @@ export default /* eslint-disable */
               "enum": [ "gabled", "arched" ]
             },
             "pitch": {
-              "$ref": "~/typeDefinitions/pitch"
+              "$ref": "~/typeDefs/pitch"
             },
             "curvature": {
               "type": "number",

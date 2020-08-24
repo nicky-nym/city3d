@@ -11,7 +11,7 @@ import { xyz } from '../../../src/core/util.js'
 /* global describe, it */
 
 describe('DICTIONARY', function () {
-  describe('DICTIONARY.typeDefinitions.xyzOrRef', function () {
+  describe('DICTIONARY.typeDefs.xyzOrRef', function () {
     const validator = Schematic.getTypeValidator('xyzOrRef')
 
     it('should accept a simple valid {xyz} object', function () {

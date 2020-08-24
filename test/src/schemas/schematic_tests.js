@@ -12,7 +12,7 @@ import DICTIONARY from '../../../src/schemas/schema.defs.json.js'
 /* eslint-disable no-unused-expressions */
 
 describe('Schematic', function () {
-  const numberSpec = { $ref: '~/typeDefinitions/numberOrRandom' }
+  const numberSpec = { $ref: '~/typeDefs/numberOrRandom' }
 
   describe('#getAttribute', function () {
     it('should return a dictionary.json attribute entry', function () {
@@ -24,7 +24,7 @@ describe('Schematic', function () {
 
   describe('#getEntity', function () {
     it('should return dictionary.json entity entry', function () {
-      Schematic.getEntityDefinition('building').description.should.equal(DICTIONARY.entityDefinitions.building.description)
+      Schematic.getEntityDefinition('building').description.should.equal(DICTIONARY.entityDefs.building.description)
       should.equal(Schematic.getEntityDefinition('building').properties.storeys, null)
     })
   })
@@ -35,7 +35,7 @@ describe('Schematic', function () {
       schema.$id.should.equal('building.schema.json')
       schema.$schema.should.equal('http://json-schema.org/draft-07/schema#')
       schema.title.should.equal('building')
-      schema.description.should.equal(DICTIONARY.entityDefinitions.building.description)
+      schema.description.should.equal(DICTIONARY.entityDefs.building.description)
     })
   })
 

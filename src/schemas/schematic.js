@@ -21,8 +21,8 @@ class Schematic {
    * Creates a new Schematic
    */
   constructor () {
-    this.entityKeys = Object.keys(DICTIONARY.entityDefinitions)
-    this.propertyKeys = Object.keys(DICTIONARY.propertyDefinitions)
+    this.entityKeys = Object.keys(DICTIONARY.entityDefs)
+    this.propertyKeys = Object.keys(DICTIONARY.propertyDefs)
     this.schemas = {}
   }
 
@@ -31,8 +31,8 @@ class Schematic {
    */
   static createAjv () {
     const ajv = new Ajv()
-    Object.keys(DICTIONARY.typeDefinitions).forEach(item => ajv.addSchema(DICTIONARY.typeDefinitions[item], `~/typeDefinitions/${item}`))
-    // Object.keys(DICTIONARY.typeDefinitions).forEach(item => ajv.addSchema(DICTIONARY.typeDefinitions[item], `~/typeDefinitions/${item}`))
+    Object.keys(DICTIONARY.typeDefs).forEach(item => ajv.addSchema(DICTIONARY.typeDefs[item], `~/typeDefs/${item}`))
+    // Object.keys(DICTIONARY.typeDefs).forEach(item => ajv.addSchema(DICTIONARY.typeDefs[item], `~/typeDefs/${item}`))
     const items = ['route', 'door', 'window', 'room', 'wall', 'ceiling', 'roof', 'floor', 'staircase', 'storey']
     items.forEach(item => ajv.addSchema(Schematic.getSchema(item), `${item}.schema.json`))
     return ajv
@@ -43,7 +43,7 @@ class Schematic {
    */
   static getTypeValidator (typeName) {
     const ajv = Schematic.createAjv()
-    const validator = ajv.compile(DICTIONARY.typeDefinitions[typeName])
+    const validator = ajv.compile(DICTIONARY.typeDefs[typeName])
     return validator
   }
 
@@ -62,7 +62,7 @@ class Schematic {
    *
    */
   static getTypeDefinition (typeName) {
-    const typeDefinition = DICTIONARY.typeDefinitions[typeName]
+    const typeDefinition = DICTIONARY.typeDefs[typeName]
     if (typeDefinition) {
       return typeDefinition
     } else {
@@ -75,7 +75,7 @@ class Schematic {
    *
    */
   static getPropertyDefinition (propertyName) {
-    const propertyDefinition = DICTIONARY.propertyDefinitions[propertyName]
+    const propertyDefinition = DICTIONARY.propertyDefs[propertyName]
     if (propertyDefinition) {
       return propertyDefinition
     } else {
@@ -88,7 +88,7 @@ class Schematic {
    *
    */
   static getEntityDefinition (entityName) {
-    const entityDefinition = DICTIONARY.entityDefinitions[entityName]
+    const entityDefinition = DICTIONARY.entityDefs[entityName]
     if (entityDefinition) {
       return entityDefinition
     } else {

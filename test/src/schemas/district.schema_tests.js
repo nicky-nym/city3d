@@ -10,7 +10,7 @@ import { Schematic } from '../../../src/schemas/schematic.js'
 /* global describe, it */
 
 describe('DICTIONARY', function () {
-  describe('DICTIONARY.entityDefinitions.district', function () {
+  describe('DICTIONARY.entityDefs.district', function () {
     const validator = Schematic.getEntityValidator('district')
 
     it('should accept a simple valid district spec', function () {

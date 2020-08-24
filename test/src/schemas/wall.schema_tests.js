@@ -10,7 +10,7 @@ import { Schematic } from '../../../src/schemas/schematic.js'
 /* global describe, it */
 
 describe('DICTIONARY', function () {
-  describe('DICTIONARY.entityDefinitions.wall', function () {
+  describe('DICTIONARY.entityDefs.wall', function () {
     const validator = Schematic.getEntityValidator('wall')
 
     it('should accept a simple valid wall spec', function () {
