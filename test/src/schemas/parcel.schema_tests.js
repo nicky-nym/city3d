@@ -9,8 +9,8 @@ import { Schematic } from '../../../src/schemas/schematic.js'
 
 /* global describe, it */
 
-describe('DICTIONARY', function () {
-  describe('DICTIONARY.entityDefs.parcel', function () {
+describe('SCHEMA', function () {
+  describe('SCHEMA.entityDefs.parcel', function () {
     const validator = Schematic.getEntityValidator('parcel')
 
     it('should accept a simple valid parcel spec', function () {

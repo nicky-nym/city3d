@@ -9,8 +9,8 @@ import { Schematic } from '../../../src/schemas/schematic.js'
 
 /* global describe, it */
 
-describe('DICTIONARY', function () {
-  describe('DICTIONARY.typeDefs.outline', function () {
+describe('SCHEMA', function () {
+  describe('SCHEMA.typeDefs.outline', function () {
     const validator = Schematic.getTypeValidator('outline')
 
     it('should accept a simple valid polygon spec', function () {

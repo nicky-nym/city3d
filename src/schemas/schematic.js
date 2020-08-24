@@ -6,7 +6,7 @@
  */
 
 import Ajv from '../../node_modules/ajv/dist/ajv.min.js'
-import DICTIONARY from './schema.defs.json.js'
+import SCHEMA from './schema.defs.json.js'
 
 /**
  * Schematic is a class for generating and providing JSON Schemas.
@@ -21,8 +21,8 @@ class Schematic {
    * Creates a new Schematic
    */
   constructor () {
-    this.entityKeys = Object.keys(DICTIONARY.entityDefs)
-    this.propertyKeys = Object.keys(DICTIONARY.propertyDefs)
+    this.entityKeys = Object.keys(SCHEMA.entityDefs)
+    this.propertyKeys = Object.keys(SCHEMA.propertyDefs)
     this.schemas = {}
   }
 
@@ -31,8 +31,8 @@ class Schematic {
    */
   static createAjv () {
     const ajv = new Ajv()
-    Object.keys(DICTIONARY.typeDefs).forEach(item => ajv.addSchema(DICTIONARY.typeDefs[item], `~/typeDefs/${item}`))
-    // Object.keys(DICTIONARY.typeDefs).forEach(item => ajv.addSchema(DICTIONARY.typeDefs[item], `~/typeDefs/${item}`))
+    Object.keys(SCHEMA.typeDefs).forEach(item => ajv.addSchema(SCHEMA.typeDefs[item], `~/typeDefs/${item}`))
+    // Object.keys(SCHEMA.typeDefs).forEach(item => ajv.addSchema(SCHEMA.typeDefs[item], `~/typeDefs/${item}`))
     const items = ['route', 'door', 'window', 'room', 'wall', 'ceiling', 'roof', 'floor', 'staircase', 'storey']
     items.forEach(item => ajv.addSchema(Schematic.getSchema(item), `${item}.schema.json`))
     return ajv
@@ -43,7 +43,7 @@ class Schematic {
    */
   static getTypeValidator (typeName) {
     const ajv = Schematic.createAjv()
-    const validator = ajv.compile(DICTIONARY.typeDefs[typeName])
+    const validator = ajv.compile(SCHEMA.typeDefs[typeName])
     return validator
   }
 
@@ -62,11 +62,11 @@ class Schematic {
    *
    */
   static getTypeDefinition (typeName) {
-    const typeDefinition = DICTIONARY.typeDefs[typeName]
+    const typeDefinition = SCHEMA.typeDefs[typeName]
     if (typeDefinition) {
       return typeDefinition
     } else {
-      throw new Error(`Schematic.getTypeDefinition('${typeName}'): no schema dictionary entry for '${typeName}'`)
+      throw new Error(`Schematic.getTypeDefinition('${typeName}'): no schema definition entry for '${typeName}'`)
     }
   }
 
@@ -75,11 +75,11 @@ class Schematic {
    *
    */
   static getPropertyDefinition (propertyName) {
-    const propertyDefinition = DICTIONARY.propertyDefs[propertyName]
+    const propertyDefinition = SCHEMA.propertyDefs[propertyName]
     if (propertyDefinition) {
       return propertyDefinition
     } else {
-      throw new Error(`Schematic.getPropertyDefinition('${propertyName}'): no schema dictionary entry for '${propertyName}'`)
+      throw new Error(`Schematic.getPropertyDefinition('${propertyName}'): no schema definition entry for '${propertyName}'`)
     }
   }
 
@@ -88,11 +88,11 @@ class Schematic {
    *
    */
   static getEntityDefinition (entityName) {
-    const entityDefinition = DICTIONARY.entityDefs[entityName]
+    const entityDefinition = SCHEMA.entityDefs[entityName]
     if (entityDefinition) {
       return entityDefinition
     } else {
-      throw new Error(`Schematic.getEntity('${entityName}'): no schema dictionary entry for '${entityName}'`)
+      throw new Error(`Schematic.getEntity('${entityName}'): no schema definition entry for '${entityName}'`)
     }
   }
 

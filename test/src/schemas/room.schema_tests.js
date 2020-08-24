@@ -9,8 +9,8 @@ import { Schematic } from '../../../src/schemas/schematic.js'
 
 /* global describe, it */
 
-describe('DICTIONARY', function () {
-  describe('DICTIONARY.entityDefs.room', function () {
+describe('SCHEMA', function () {
+  describe('SCHEMA.entityDefs.room', function () {
     const validator = Schematic.getEntityValidator('room')
 
     it('should accept a simple valid room spec', function () {

@@ -9,8 +9,8 @@ import { Schematic } from '../../../src/schemas/schematic.js'
 
 /* global describe, it */
 
-describe('DICTIONARY', function () {
-  describe('DICTIONARY.entityDefs.roof', function () {
+describe('SCHEMA', function () {
+  describe('SCHEMA.entityDefs.roof', function () {
     const validator = Schematic.getEntityValidator('roof')
 
     it('should accept a simple valid roof spec', function () {

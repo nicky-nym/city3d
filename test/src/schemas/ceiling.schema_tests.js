@@ -9,8 +9,8 @@ import { Schematic } from '../../../src/schemas/schematic.js'
 
 /* global describe, it */
 
-describe('DICTIONARY', function () {
-  describe('DICTIONARY.entityDefs.ceiling', function () {
+describe('SCHEMA', function () {
+  describe('SCHEMA.entityDefs.ceiling', function () {
     const validator = Schematic.getEntityValidator('ceiling')
 
     it('should accept a simple valid ceiling spec', function () {

@@ -9,8 +9,8 @@ import { Schematic } from '../../../src/schemas/schematic.js'
 
 /* global describe, it */
 
-describe('DICTIONARY', function () {
-  describe('DICTIONARY.typeDefs.surface', function () {
+describe('SCHEMA', function () {
+  describe('SCHEMA.typeDefs.surface', function () {
     const validator = Schematic.getTypeValidator('surface')
 
     it('should accept a simple valid surface object', function () {

@@ -1,18 +1,18 @@
-/** @file dictionary_tests.js
+/** @file schema.defs_tests.js
  * @author Authored in 2020 at <https://github.com/nicky-nym/city3d>
  * @license UNLICENSE
  * This is free and unencumbered software released into the public domain.
  * For more information, please refer to <http://unlicense.org>
  */
 
-import DICTIONARY from '../../../src/schemas/schema.defs.json.js'
+import SCHEMA from '../../../src/schemas/schema.defs.json.js'
 
 /* global describe, it */
 /* eslint-disable no-unused-expressions */
 
-describe('dictionary', function () {
-  describe('dictionary.entityDefs', function () {
-    const entityDefs = DICTIONARY.entityDefs
+describe('SCHEMA', function () {
+  describe('SCHEMA.entityDefs', function () {
+    const entityDefs = SCHEMA.entityDefs
     const entityKeys = Object.keys(entityDefs)
 
     it('should have an entry for the "building" entity definition', function () {
@@ -28,8 +28,8 @@ describe('dictionary', function () {
     })
   })
 
-  describe('dictionary.propertyDefs', function () {
-    const propertyDefinitionKeys = Object.keys(DICTIONARY.propertyDefs)
+  describe('SCHEMA.propertyDefs', function () {
+    const propertyDefinitionKeys = Object.keys(SCHEMA.propertyDefs)
 
     it('should have entries for lots of property definitions', function () {
       propertyDefinitionKeys.length.should.equal(51)

@@ -6,7 +6,7 @@
  */
 
 import { Schematic } from '../../../src/schemas/schematic.js'
-import DICTIONARY from '../../../src/schemas/schema.defs.json.js'
+import SCHEMA from '../../../src/schemas/schema.defs.json.js'
 
 /* global describe, it, should */
 /* eslint-disable no-unused-expressions */
@@ -15,7 +15,7 @@ describe('Schematic', function () {
   const numberSpec = { $ref: '~/typeDefs/numberOrRandom' }
 
   describe('#getAttribute', function () {
-    it('should return a dictionary.json attribute entry', function () {
+    it('should return a schema.defs.json attribute entry', function () {
       Schematic.getPropertyDefinition('altitude').should.deep.equal(numberSpec)
       Schematic.getPropertyDefinition('height').should.deep.equal(numberSpec)
       Schematic.getPropertyDefinition('incline').should.deep.equal(numberSpec)
@@ -23,8 +23,8 @@ describe('Schematic', function () {
   })
 
   describe('#getEntity', function () {
-    it('should return dictionary.json entity entry', function () {
-      Schematic.getEntityDefinition('building').description.should.equal(DICTIONARY.entityDefs.building.description)
+    it('should return schema.defs.json entity entry', function () {
+      Schematic.getEntityDefinition('building').description.should.equal(SCHEMA.entityDefs.building.description)
       should.equal(Schematic.getEntityDefinition('building').properties.storeys, null)
     })
   })
@@ -35,7 +35,7 @@ describe('Schematic', function () {
       schema.$id.should.equal('building.schema.json')
       schema.$schema.should.equal('http://json-schema.org/draft-07/schema#')
       schema.title.should.equal('building')
-      schema.description.should.equal(DICTIONARY.entityDefs.building.description)
+      schema.description.should.equal(SCHEMA.entityDefs.building.description)
     })
   })
 

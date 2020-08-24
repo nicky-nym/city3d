@@ -10,8 +10,8 @@ import { xy } from '../../../src/core/util.js'
 
 /* global describe, it */
 
-describe('DICTIONARY', function () {
-  describe('DICTIONARY.typeDefs.xy', function () {
+describe('SCHEMA', function () {
+  describe('SCHEMA.typeDefs.xy', function () {
     const validator = Schematic.getTypeValidator('xy')
 
     it('should accept a simple valid {xy} object', function () {
