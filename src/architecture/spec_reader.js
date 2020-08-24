@@ -21,7 +21,6 @@ import { Window } from './window.js'
 // 'NA': schema does not have an associated class and is not expected to
 // 'Pending': associated class not yet implemented, or not yet known if it will be
 const classesByType = Object.freeze({
-  'definitions.json': 'NA',
   'metadata.schema.json': 'NA',
   'building.schema.json': Building,
   'ceiling.schema.json': 'Pending',
