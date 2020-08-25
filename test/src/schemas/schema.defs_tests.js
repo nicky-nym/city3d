@@ -32,7 +32,7 @@ describe('SCHEMA', function () {
     const propertyDefinitionKeys = Object.keys(SCHEMA.propertyDefs)
 
     it('should have entries for lots of property definitions', function () {
-      propertyDefinitionKeys.length.should.equal(51)
+      propertyDefinitionKeys.length.should.equal(53)
     })
   })
 })

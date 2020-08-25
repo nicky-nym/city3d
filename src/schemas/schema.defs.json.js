@@ -21,7 +21,8 @@ export default /* eslint-disable */
         "unit": null,
         "anchorPoint": null,
         "routes": null,
-        "storeys": null
+        "storeys": null,
+        "lines": null
       }
     },
     "ceiling": {
@@ -41,7 +42,10 @@ export default /* eslint-disable */
         "unit": null,
         "border": null,
         "districts": null,
-        "contents": null
+        "contents": null,
+        "pavement": null,
+        "water": null,
+        "routes": null
       }
     },
     "district": {
@@ -52,7 +56,10 @@ export default /* eslint-disable */
         "border": null,
         "parcels": null,
         "contents": null,
+        "zoning": null,
         "pavement": null,
+        "water": null,
+        "routes": null
       }
     },
     "door": {
@@ -87,6 +94,8 @@ export default /* eslint-disable */
         "anchorPoint": null,
         "border": null,
         "contents": null,
+        "setbacks": null,
+        "zoning": null,
         "pavement": null,
         "water": null,
         "routes": null
@@ -155,8 +164,9 @@ export default /* eslint-disable */
       "properties": {
         "type": { "const": "structure.schema.json" },
         "unit": null,
-        "def": null,
         "anchorPoint": null,
+        "routes": null,
+        "storeys": null,
         "lines": null
       }
     },
@@ -343,6 +353,10 @@ export default /* eslint-disable */
       /* TODO: "items": { "$ref": "~/entityDefs/route" } */
       "items": { "$ref": "route.schema.json" }
     },
+    "setbacks": {
+      "description": "minimum distances that structures must be set back from a parcel boundary",
+      "$ref": "~/typeDefs/$$reservedForFutureUse"
+    },
     "staircases": {
       "type": "array",
       "items": { "$ref": "staircase.schema.json" }
@@ -394,6 +408,10 @@ export default /* eslint-disable */
     "windows": {
       "type": "array",
       "items": { "$ref": "window.schema.json" }
+    },
+    "zoning": {
+      "description": "a land use zone, such as 'resdential R1' or 'commercial C2'",
+      "$ref": "~/typeDefs/$$reservedForFutureUse"
     }
   },
   /* These are definitions of the data types used in the "propertyDefs" section above */
@@ -406,6 +424,7 @@ export default /* eslint-disable */
       "type": "string",
       "format": "uri-reference"
     },
+    "$$reservedForFutureUse": {},
     "copy": {
       "description": "The specification of how to place an object in 3D space",
       "examples": [
