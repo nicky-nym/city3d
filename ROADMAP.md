@@ -466,3 +466,151 @@ classes in xylo to make models of the architectural content objects like
 MidriseComplex, and then the xylo models serve as engraved woodcuts to
 "print" the designs into Outputs like ThreeOutput.
     
+---
+
+## Feedback about the [Impossible Cities](https://nicky-nym.github.io/cities/) paper
+
+There are a couple of important things that I don’t understand. First, I
+don’t understand how the ramp system to get the bikes up to the second
+floor works. Where is it located in your cutaway image? Either it has to
+be to the side of the bike lane (in which case it would take up part of
+the ground level sidewalk) or underneath the bike lane (in which case it
+would take up the area that seems to be a theater or classroom). Are
+there entrance and exit ramps on every block? That seems like a lot of
+area to occupy, particularly if they are no steeper than a typical
+wheelchair ramp. You have likely thought of this in some way (the
+Koolhaas library in Seattle comes to mind), but it needs explaining and
+illustrating since it's not intuitive (at least to me).
+
+
+Also, aren’t one set of bikeways actually on the third floor, since they
+are stacked? This makes the ramp question somewhat harder, and has
+implications for the pedestrian experience on both the upper and ground
+floor levels (see below, about shade and separation).
+
+> Sorry about the lack of info on the ramp system. I left the whole ramp
+system out of the cutaway image since there was too much going on in the
+cutaway image already, but I should make a new section just about the ramps.
+> 
+> I've made a 3D model of the entire structure (including ramps), which
+would definitely help to clarify, but I didn't have a good way to
+include the model in the write-up, so I left it out. I'll work on either
+making drawings of the ramps or on including the entire interactive 3D
+model within the web page for the write-up.
+> 
+> Anyway, to answer your question, in my 3D model the ramps are to the
+sides of bike lanes (as opposed to underneath it). That makes the whole
+bikeway structure wider, so the "sidewalk" space to the side is pushed
+out another 20 or 30 feet or so. There's also some space for parking and
+for retail shops integrated into the landings of the ramp system.
+> 
+> There are entrance and exit ramps on every block. They are not steep, so
+they are quite long. They do take up an unfortunate amount of space, but
+the whole design still manages to be fairly space efficient. I'm working
+on compiling a set of statistics about Floor Area Ratio, circulation
+overhead, etc.
+> 
+> The ramps actually run *only* between the third floor north-south
+bikeways and the second floor east-west bikeways. The ground level is
+intended to be a pedestrian only zone, without regular bike access, so
+there are no bike ramps down to the ground level, just pedestrian ramps
+(or, alternatively, stairs, elevators, or escalators). Likewise for the
+top level (the highline). The pedestrian ramps are not part of the
+bikeway buildings, but are instead integrated into the other buildings
+(at the edges of the drawings).
+
+
+
+My second point of mystification is how bicycle intersections would
+work. That is, if NS and EW lanes are on separate levels, what happens
+when I’m going south and want to turn east? This may relate to the ramp
+question above.  I’m concerned again that any ramp system connecting the
+two levels is either very steep or very long, occupying a lot of space
+you haven’t accounted for. Also, how tight are the turns at the
+“intersections”, especially for bikes moving at a good clip, or cargo
+vehicles?
+
+> Yes, making turns requires the ramps. To turn from a third floor
+northbound bikeway to a second floor eastbound bikeway, you exit the
+third floor bikeway, go down a pair of straight ramps and then around a
+curved-but-level 90-degree turn.
+> 
+> The turn has a roughly 40-foot centerline radius. A bicycle should be
+able to go around the curve at 15 mph, if the rider has a leaning angle
+of 20 degrees, but I had a 10-mph speed limit in mind. The curve could
+also be banked slightly. The 40-foot centerline radius is intended to be
+large enough to accommodate a school bus, truck, or medium-size
+tractor-trailer semi-truck.
+
+
+Then I have some concerns about the experience that this plan would
+create. This may sound trivial but I don’t think it is: you’ve
+engineered out scenery, impulse, and serendipity, which are some of the
+main pleasures of city living. The bike paths are very efficient from
+getting from A to B, but along the way a cyclist is not going to be able
+to notice a new restaurant (presumably on the ground floor), or see a
+friend on the sidewalk (above or below), or be attracted to stop by a
+shop window, or really see much of anything (especially if she is using
+the inner lane). And even if you do end up with, say, display windows on
+the second or third floor, the cyclist isn’t going to be able to just
+stop to take a closer look. This makes the bike experience much more
+like the car experience (e.g., getting from A to B without much caring
+what’s in between) which I think is fundamentally anti-urban.
+
+> Yes, I agree, the bikeways mostly just serve as efficient thoroughfares,
+without offering pleasant scenery or serendipitous stops. I'm hoping to
+make a few small changes in my next version to try improve that a
+little, by curving the bikeways, and by adding bikeway-level storefronts
+that you could stop at. But I don't want to sacrifice throughput, so I'm
+not sure how successful I'll be. In the end, the bikeway experience will
+be a commuter experience, not a new-urbanism experience. But, once
+you're off your bike, the pedestrian experience has the potential to be
+quite good, with lots and lots of pedestrian-mall streets, entirely free
+of both cars and bikes. I'm cautiously optimistic that the net
+experience could be quite a bit better than our current cities, while
+still having higher commuter throughput and zero cars.
+
+
+These same problems apply for the people utilizing the path on the top
+level. This makes the length of the blocks particularly problematic. One
+of things that’s great for walking in New York is exactly the shortness
+of the blocks, which give you a sense of movement. Having long blocks,
+and separation from shops and other amenities, makes walking quite
+tedious. Although this looks a lot more attractive than walking in, say,
+Fresno (especially if it’s not 110 degrees out, wherever it is), I think
+the experience would be similar: long blocks that make you feel as if
+you’re not getting anywhere, and a discouraging separation (in Fresno,
+by seas of parking lots) from anything you might want on the way. The
+High Line works in part because it’s special, not an everyday
+experience. The distance it provides works as a sort of respite from
+constant connection and stimulation. But it doesn't remove you entirely
+-- and I also think the High Line is lower than the walkway level in
+your plan (especially if the bikeways are actually taking up 2 floors),
+which is important for a feeling of connectedness to the street. Anyway,
+respite is nice if you have that constant connection, but you don't want
+it as the norm.
+
+> Yes, the top level High Line space is intentionally disconnected from
+the city's street life. My goal would be to have the lively pedestrian
+street life not at the High Line level, nor along the bikeways, but
+rather on separate pedestrian streets. The High Line level would be a
+place to go for a respite. It might have playgrounds, hiking trails, hot
+dog carts, etc.
+
+Which brings me to your street level. I’m worried that the street level
+will be in near constant shade, and also have the potential to be wind
+tunnels. The shade could be something of a feature, depending on the
+climate. In Fresno, you might want the shade, and in rainy areas you
+could do something with awnings (I recall downtown Melbourne did a great
+job with them). But in general I think constant shade is more of a bug. 
+It would almost certainly make things like sidewalk cafe seating less
+attractive, again reducing street life.
+
+> My current drawings are misleading, in that they make it look like the
+pedestrian street life (shops, restaurants, etc.) all has to happen down
+on that lowest level, in the dark and narrow little gap between the
+bikeway buildings and the neighboring buildings. It doesn't need to be
+like that. The super-blocks made by the bikeways are quite large, with
+each block having a land area of about 7 acres. I'm imagining that space
+being divided up into a separate grid of smaller-scale pedestrian street
+and pedestrian malls. I'll work on making drawings!
