@@ -49,5 +49,263 @@
 |    | Unit tests *(via mocha, chai, & standard)* |                           |
 |    | Build step *(via rollup)*                  | minification *(via terser)* |
 |    | Schema validation *(via Ajv)*              |                           |
-|    | Online demo page                           |                           |
+|    | Online demo page                           | posted on a web page that people can visit on the web, using their own computers -- versus the current setup where the only way to visit sandbox.html is to first download all the source code and launch your own web server                          |
 
+## Other things to work on
+
+### 2020-02-28
+
+#### (1) Instanced repeats in JSON
+
+In district.js (and in the district schemas & specs), have the
+properties for "parcels:" and "contents:" take advantage of
+InstancedFeature. For example, in suburbia.json.js, the 'Utility pole'
+on line 68 could be an InstancedFeature instead of 5 individual model
+objects. Likewise, the two 'Parcel 353' entries could be a single entry
+with a "repeat:" value, like how 'Utility pole' is done.
+
+
+#### (2) Bigger cities
+
+If the new Instanced Feature trick lets us get away with having more objects in the scene without running out of memory, then it would be great to see how much we can take advantage of that. Could we expand suburbia to be a grid that's 5 blocks by 5 blocks, with hundreds of houses, utility poles, trees, etc? Could we expand the lattice district to be a grid that's 5 by 5?
+
+
+#### (3) Lazy loading
+
+Right now in sandbox.html and sandbox.js, we instantiate all of the
+1,000+ model objects right when the page loads, and we generate high LOD
+for all of them. But at page load the only thing we actually show is
+'River Tethys'. If we're giving a demo of the car-free city, then
+Manhattan and Suburbia might never be shown. Would we save a lot of
+memory if we didn't load things until the user asked for them, and would
+that allow for bigger demos and better orbit and render performance?
+
+
+#### (4) Better trees
+
+It'd be great to have better looking trees and bushes, maybe with some
+variety to them. And then lots and lots of them, sprinkled all over the
+lattice highline. (Maybe find public domain low-poly trees available
+online, and write code to both load those files and to associate names
+with them in SpecReader, so that the JSON spec files can include
+references to them?)
+
+
+#### (5) Parked bikes, plus cars and pedestrians
+
+Add parked bikes in longhouse_ramps.json.js, on the "lower plaza" at
+rect XYVW, and on the "landing" at rect "JKkj".
+
+In suburbia, replace the bicycles with cars. And add parked cars along
+the curbs.
+
+Figure out how to make person.json.js be a Mover that follows routes
+along sidewalks and along the pedestrian access walkway ramps in
+longhouse_ramps.json.js
+
+
+### 2020-02-23
+
+It would be great if we had unit tests that actually
+ensured the validity of all the spec examples in storey.schema.json.js
+and the other schema files. What's the best way to do that? Maybe have
+the unit tests just read the "examples:" array from the the
+storey.schema.json.js file itself and then iterate through the array and
+run tests on each example? One test for the schema validation, and
+another test to for makeModelFromSpec()?
+
+Also, speaking of validation, right now we only do schema validation
+when the unit tests are run, and the unit tests only cover a fraction of
+the spec files in the content directory. Would it be good to have the
+unit tests automatically cover 100% of the content specs?
+
+Or, alternatively, in package.json, should we move the schema validation
+tool (ajv version 6.10.2) so that it's listed in "dependencies" instead
+of "devDependencies"? That would increase our build file size (once we
+set up a build step), but it would allow us to have a schema validation
+error-check step every time some content models are loaded, regardless
+of where they are loaded from (e.g. model files loaded over HTTP, vs.
+built-in pre-compiled model files, vs. model files that a user copies
+and pastes into a text field in the UI.)
+
+### 2020-02-21
+
+Our existing code base seems to have developed a few different idioms:
+
+
+#### (1) "placement"
+
+In the JSON schemas (and the declarative JSON spec files), I introduced
+a schema called "placement.schema.json.js", which is used (indirectly)
+by a number of other schemas, like the parcel.schema, district.schema,
+and city.schema.
+
+In practice, I've found the syntax that "placement" defines to be
+convenient, so I'm inclined to keep it. Here are a few examples of valid
+placements:
+```
+  { x: 10, y: 20, z: 0 }
+  { x: 10, y: 20, z: 0, rotated: 90 }
+  { x: 10, y: 20, z: 0, rotated: 90, mirrored: true }
+```
+
+#### (2) "Ray"
+
+On the JavaScript side of things, we have the Ray class. We make new
+instances of Ray to represent the "placement" entries in the JSON. But
+the constructor for Ray does not accept a placement object, and instead
+takes two or three positional args:
+```
+  new Ray (90, { x: 10, y: 20, z: 0  })
+  new Ray (90, { x: 10, y: 20, z: 0  }, { mirror: true })
+```
+
+#### (3) "xyz"
+
+In util.js, we also have an xyz() function, which returns objects that
+can look somewhat similar to "placements" and like partial Ray instances:
+```
+ { x: 10, y: 20, z: 0 }
+```
+
+#### (4) "at"
+
+In the JavaScript code, we often have local variables named "at", and in
+the JSON schemas I also introduced schema properties called "at" in the
+schemas for doors and windows, and in the copy.schema (which is used by
+parcel, district, city, etc.).
+
+Unfortunately, in some files, an "at" property or an "at" variable is
+expected to be a simple xyz() value, and in other files an "at" property
+will be a "placement" that includes values for rotated and mirrored.
+
+
+---
+
+Ideally, I'd like to try to do some refactoring to bring all of this
+into better alignment, but I'm not sure what the best approach is.
+
+Here are some of the things I'm thinking about:
+
+
+#### (A) Ray constructor
+
+If the JSON spec files are full of placement objects, it would be
+convenient if the Ray constructor accepted placement objects, like this:
+```
+  new Ray({ x: 10, y: 20, z: 0, rotated: 90, mirrored: true })
+```
+That would mean getting rid of the current constructor syntax that we've
+got now:
+```
+  new Ray (90, { x: 10, y: 20, z: 0  })
+  new Ray (90, { x: 10, y: 20, z: 0  }, { mirror: true })
+```
+
+#### (B) rename: "Ray" and/or "placement" => ???
+
+If "Ray" and "placement" are really the same concept, then it might be
+good to change the name of one of them (or both of them!) so that they
+share the same name. I feel like the term "placement" better describes
+the semantics, but I'm bummed that the word "placement" is so long,
+which is why I end up using the word "at" so often in the code. I feel
+like "Ray" isn't a good term, since our representation of it (and our
+semantics and uses for it) don't quite match the mathematical notion of
+a Ray.
+
+Ideally I'd like to come up with some better new word, but I can't think
+of anything good. Here's my brainstorming so far:
+
+```
+  "placement" (too long?)
+  "position"  (sounds too much like just an xyz, without an angle)
+  "pose"   (e.g. a parcel spec has buildings placed in different poses)
+  "socket" (e.g. a parcel spec has buildings placed in sockets)
+  "mark"   (e.g. a building is placed at a mark, like a stage mark)
+  "spike"  (e.g. a building is placed at a spike, like a stage spike)
+           https://en.wikipedia.org/wiki/Spike_(stagecraft)
+  "place"  (???)
+```
+
+#### (C) "at" considered harmful
+
+I've used the name "at" all through the code and the JSON specs, but now
+I find it confusing because often when I come across an "at" without any
+context I don't know whether it represents an xyz() or a "placement".
+
+I'm halfway tempted to try to purge all the "at" properties and "at"
+variables in all of the code and all the spec files, and replace them
+with either "xyz" or "placement", but maybe I'm overreacting.
+
+
+
+### 2020-02-18
+
+I'd like to change the code for registering layers so that it does a "lazy loading" style of layer registration.
+
+I like the new "layer registration in JSON" found in tree.json.js, but
+as a result tree.json.js now requires an import statement, which means
+it would break if we moved the file from tree.json.js to plain old
+tree.json. Also, having the import statement means that we can't rely on
+other JSON standard features, like JSON.parse(), JSON.stringify(), and
+JSON schema validation.
+
+So, in tree.json.js, I propose to change line 8 from being this:
+```
+  layer: Feature.registerLayer(
+    'trees & plants', { category: 'Landscape' }
+  ),
+```
+to being this:
+```
+  layer: { name: 'trees & plants', category: 'Landscape' },
+```
+And then in SpecReader.js I'll add the code that notices the "layer:"
+property and calls Feature.registerLayer().
+
+I might also experiment with making a few other changes while I'm at it,
+like:
+ + adding keyboard shortcuts to toggle some of the layers,
+ + maybe having a separate "name" vs "displayName" for each layer
+ + maybe assigning layers to categories as a separate step from
+assigning features to layers
+
+
+### 2020-02-07
+
+We could use the model-switcher feature for on-demand model
+additions, so that none of the Manhattan objects are even created until
+the user selects the "Manhattan" drop-down.
+
+
+### 2020-02-06
+
+..starting at the Building level
+seems like the most promising approach for instancing. I can also
+imagine using instancing at the Parcel level (for example, for a grid of
+city blocks each with 20 identical parcels), or at the Block level (for
+a city district with a big grid of identical blocks).
+
+I think Storeys in Highrise is a less promising idea for instancing, for
+a couple reasons. For one thing, Highrise is probably the building we
+care about least; it's really just there to serve as a basic
+counter-example for Lattice and Midrise (both as a visual aid, and so
+that we can generate comparison metrics). And, if we did ever start
+investing more time and effort into Manhattan, then one of the first
+things I would want to do is start making many of the Highrise buildings
+look less like a giant cube and more like the Empire State Building or
+the Chrysler Building, with different set-backs at different floors, so
+that Storeys get smaller as the building rises, which means we'd have
+more different Storey types and less instance sharing.
+
+... I added mirroring last month in placement.schema.json.js, but
+there are no content files that use it yet, and there's no code written
+to support it. If we do add mirroring as a feature, then I think we need
+to add a "mirrored" instance variable flag to Ray, or, if we leave Ray
+as is, then maybe we need to subclass Ray and add the "mirrored" flag there?
+
+Scaling seems way less important than mirroring, but if it's easy to
+add, I do think there are use cases. We might want to use it for things
+like trees, bushes, birds, etc. And we could use it for things like
+bicycles, people, etc. Scaling could go in Ray too, or in the new Ray
+subclass.
