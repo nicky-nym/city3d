@@ -470,6 +470,12 @@ MidriseComplex, and then the xylo models serve as engraved woodcuts to
 
 ## Feedback about the [Impossible Cities](https://nicky-nym.github.io/cities/) paper
 
+
+### A
+One initial comment: I like the Impossible City Design Summary section you now have at the end.   I think you should move that compiled information to the start, like an introduction before your current chapter One. I was having trouble understanding the big picture and was overwhelmed until I got to that section near the end.
+
+### B
+
 There are a couple of important things that I don’t understand. First, I
 don’t understand how the ramp system to get the bikes up to the second
 floor works. Where is it located in your cutaway image? Either it has to
