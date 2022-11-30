@@ -9,8 +9,6 @@
 |    | Animation & path-following                  | Shadows
 |    | Layers                                      | Light bulbs
 |    | Instanced features                          | make a big instanced feature version of the lattice district, like Suburbia and Manhattan
-
-
 |    |                                            |                     |
 | **Architectural<br>modeling<br>features** | ___current___ | ___future___ |
 |    | Basic components:<br>~ walls<br>~ floors<br>~ roofs<br>~ pavement<br>~ window & door openings<br>~ stairs | More components:<br>~ railings & fences <br>~ elevators<br>~ ceilings<br>~ light fixtures<br>~ window panes<br>~ door panels<br>~ skylights & atriums
