@@ -309,3 +309,155 @@ add, I do think there are use cases. We might want to use it for things
 like trees, bushes, birds, etc. And we could use it for things like
 bicycles, people, etc. Scaling could go in Ray too, or in the new Ray
 subclass.
+
+
+### 2020-01-10
+
+I was worried about the issue with "center: xy(a,b)" as distances
+vs. "lites: xy(a, b)" as integer counts. In these JSON spec files, it
+seems like 90% of values are distances, but then occasionally there will
+be an integer count. Maybe we should only use xy() for distance values,
+and then for "lites:" we would use something else, like "lites: {rows:
+3, columns: 2}"
+
+Plain old numbers might be the right answer, but then when you see a "2"
+in the file, it may not be obvious whether it represents a distance (2
+feet), a count (2 doors), an identifier (door #2), or some other value.
+
+I thought it would make the file more readable if the value itself
+contained a little bit of data-type info (distance vs. count vs. id), so
+you don't have to guess the data type based on the property name:
+"doorCount: 6" vs. "doorHeight: 6" vs. "destinationDoor: 6".
+
+Also, I think it might be useful to set a default unit of distance for
+an entire file. Our overall default base unit for distance is "feet",
+and most of our spec files are in feet, but for the EiffelTower and
+Kalpana I really wanted to specify the default as "meters", and for
+SoccerField I wanted to specify "yards" as the default, and for
+PyramidOfKhufu I actually wanted "cubits".
+
+If a file has a default unit specified at the top of the file (e.g.
+"yards"), then we could automatically convert all the distance values in
+the file: "doorHeight: 2" becomes "doorHeight: 6", but that only works
+if we know which numbers are distances (vs. counts or identifiers).
+
+See: [issue 27](https://github.com/nicky-nym/city3d/issues/27)
+
+
+### 2020-01-09
+
+I added x() to util a few days ago, but now I'm having second thoughts.
+
+In order to use x(), you of course have to
+```
+  import { x } from 'util.js'
+```
+and then you've just globally defined the "x" identifier through the
+whole file. But the problem is that you then can't conveniently use "x"
+as a local identifier in, for example, code that does destructuring
+assignments:
+```
+  const { x, y, z } = ray.xyz
+```
+So far, the x() function is only used in a couple places, Cottage and
+Garage, so it would be easy to delete it again.
+
+We could replace the name x() with something else, like d(), or
+even feet() or ft().
+
+
+### 2019-12-27
+
+Okay, how about this proposal...
+
+Right now we have:
+
+```
+    >       src/core/facing.js
+    >       src/core/geometry.js
+    >       src/core/ray.js
+    >       src/core/unit.js
+    >       src/core/util.js
+    >                  array()
+    >                  cornersFromShape()
+    >                  count()
+    >                  countTo()
+    >                  hypotenuse()
+    >                  length()
+    >                  randomInt()
+    >                  randomPseudoGaussian()
+    >                  xy()
+    >                  xyz()
+    >                  xyzAdd()
+    >                  xyzSubtract()
+    >                  xyRotate()
+    >                  xywh2rect()
+    >                  rectangleOfSize()
+    >                  fullName()
+```
+
+What do you think about a proposal where we move things to end up with this:
+```
+    >       src/util.js
+    >                  array()
+    >                  count()
+    >                  countTo()
+    >                  randomInt()
+    >                  randomPseudoGaussian()
+    >
+    >       src/metrics/unit.js
+    >
+    >       src/xyz/facing.js
+    >       src/xyz/geometry.js
+    >       src/xyz/ray.js
+    >       src/xyz/helper.js
+    >                  cornersFromShape()
+    >                  hypotenuse()
+    >                  length()
+    >                  xy()
+    >                  xyz()
+    >                  xyzAdd()
+    >                  xyzSubtract()
+    >                  xyRotate()
+    >                  xywh2rect()
+    >                  rectangleOfSize()
+    >       src/xyz/feature.js
+    >                  fullName()
+```
+
+Alternatively, the directory "src/xyz/" could be named something like "src/geometry/". The file "helper.js" could be named "helpers", "util", or something else.
+
+I think Ray and XYPolygon both probably belong in the same place.
+Meaning, they probably belong in the same directory ("geometry/" or
+"xyz/"), and they probably belong in the same namespace ("Geometry." or
+"xyz.").
+
+My vote would be take all the classes that are in geometry.js (Line,
+XYPolygon, ThickPolygon, etc), and move them out so that they're each in
+their own file, with each file exporting exactly one named thing at the
+bottom of the file, so that it's more like the rest of the code. And
+then whatever directory those files are in, I think the name of that
+directory should match the name of the namespace the classes are in. So,
+if we have geometry/thick_polygon.js, then we also have
+Geometry.ThickPolygon.
+
+I'm worried that "Geometry." is a little long for a namespace name,
+especially if we end up moving a lot of simple helper functions into it,
+so that we have Geometry.xyRotate() and Geometry.xyzAdd(). I like "xyz."
+just because it's so short, and you then the helper functions could just
+be things like xyz.rotate() and xyz.add(), with the classes as xyz.Line
+and xyz.ThickPolygon.
+
+... In the spirit
+of brainstorming, I also came across the word "xylograph", which I think
+is a cool word because it's both a noun and a verb, and it describes the
+object (and process) used for recording a geometric design and making
+instances of it. The prefix "xylo" means wood, which ties in to the idea
+of architecture, and ties in to the idea of "xy" axes, while also being
+short for "xylograph".
+
+So, "xylo" could be the name of our geometry library, and we use the
+classes in xylo to make models of the architectural content objects like
+MidriseComplex, and then the xylo models serve as engraved woodcuts to
+"print" the designs into Outputs like ThreeOutput.
+    
