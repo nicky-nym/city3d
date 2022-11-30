@@ -227,6 +227,8 @@ of anything good. Here's my brainstorming so far:
   "place"  (???)
 ```
 
+> I really like "pose". I think it's the best of the bunch, and it's short. I might want to use it in FeatureInstance, too (instead of p0), because I'd like to clean up some of the incoherency in ThreeOutputScene around that.
+
 #### (C) "at" considered harmful
 
 I've used the name "at" all through the code and the JSON specs, but now
@@ -263,6 +265,8 @@ to being this:
 And then in SpecReader.js I'll add the code that notices the "layer:"
 property and calls Feature.registerLayer().
 
+> I tried something like this (because I wanted to make it so that a layer would only be added if something with that layer had actually been constructed), but the problem is that layers need to be registered before the GUI is constructed - either that, or you need a way to regenerate the GUI. Just keep that in mind. 
+
 I might also experiment with making a few other changes while I'm at it,
 like:
  + adding keyboard shortcuts to toggle some of the layers,
@@ -270,6 +274,7 @@ like:
  + maybe assigning layers to categories as a separate step from
 assigning features to layers
 
+> The third point could be a problem if you have layers with the same name (e.g. "copies") in two different categories. However, the second point might fix that problem. I don't object to any changes you want to make, and hopefully the few tests I wrote will catch at least some problems. It'd be nice to have tests that actually test whether something is visible, but that's probably hard, especially because of the tree structure - e.g. a THREE.Group might itself be visible, but none of its children are. One more thing to remember is that there's a three.js limit of 31 layers.
 
 ### 2020-02-07
 
